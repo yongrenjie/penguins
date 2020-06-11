@@ -1,0 +1,31 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= bjoern.heitmann
+$$ 2016-06-21 14:12:49.217 +0200  INTRA-BRKR-CORP/bjoern.heitmann@NBFAE01-J2X8H12
+$$ C:/Bruker/TopSpin3.5.b.74pl6/examdata/exam_CMCse_1/1/pdata/1/cmcq
+$$ process C:\Bruker\TopSpin3.5.b.74pl6/classes/lib/top_base.jar
+##$VERSION= <13049>
+##$COMPOUND= <>
+##$NMR= <>
+##$MOL= <>
+##$SJRACK_NO= 
+##$HOLDER= 
+##$PANEL_COL= <>
+##$PANEL_ROW= <>
+##$RACK_ID= <>
+##$IMPURITIES= <>
+##$CUSTOM_IMPURITIES= <>
+##$SUPPFREQ_SOURCE= <UNSUPPRESSED>
+##$SUPPFREQ_NO= 0
+##$SUPPFREQ_FILE= <>
+##$SUPPFREQ= <>
+##$REMREG= <>
+##$INREG= <>
+##$OUTREG= <>
+##$ERETIC_TRUE= no
+##$ERETICPOS= 
+##$DEC13C= yes
+##END=

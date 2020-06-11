@@ -1,0 +1,6 @@
+**/__pycache__
+nmr_penguins.egg-info/
+venv-plot/
+*.swp
+**/.DS_Store
+.mypy_cache

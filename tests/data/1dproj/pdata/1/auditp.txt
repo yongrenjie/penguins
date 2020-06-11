@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TopSpin 4.0.8
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ /Users/yongrenjie/dphil/exp/200412/nmr/jy-200412-ferulic-SSseSplusC/11/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-04-12 06:48:18.427 +0100>,<CHEM\nmr-user>,<GOLDFISH-CRL>,<go4>,<TopSpin 3.6.2>,
+      <created by zg
+	started at 2020-04-12 06:17:47.497 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       0C 6F BE 03 29 CC A1 D9 6F BD E2 13 49 25 92 1E
+       data hash MD5: 2K * 256
+       C8 F9 F6 E5 B7 53 00 80 11 53 E7 9A 3A 3B B8 39>)
+(   2,<2020-04-12 18:28:09.206 +0800>,<yongrenjie>,<jymbp.local>,<proc2d>,<TopSpin 4.0.8>,
+      <Start of raw data processing
+       xfb F2: SI = 2K WDW = 4 SSB = 2 FT_mod = 6 PKNL = 1 PHC0 = -71.8856 PHC1 = -11.44609 F1: SI = 1K ME_mod = 2 NCOEF = 60 WDW = 4 SSB = 2 FT_mod = 6 FCOR = 0.5 PHC0 = 1.353704 PHC1 = 0
+       data hash MD5: 2K * 1K
+       08 D8 A2 29 6B 49 D1 AD B9 63 B0 3F 18 4D 52 17>)
+##END=
+
+$$ hash MD5
+$$ E6 AB 6D 53 19 2B 09 4D 3C D6 C8 53 E6 FF 11 DA

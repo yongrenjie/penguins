@@ -1,0 +1,27 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 2	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-04-12 06:08:27.990 +0100  CHEM\nmr-user@GOLDFISH-CRL
+$$ C:/NMR/data/mfgroup/nmr/jy-200412-ferulic-SSseSplusC/11/pdata/1/clevels
+$$ process C:\Bruker\TopSpin3.6.2\prog\mod\edparproc.exe
+##$LEVELS= (0..255)
+-840654.63144 -467030.3508 -259461.306 -144145.17 -80080.65 -44489.25 -24716.25
+-13731.25 13731.25 24716.25 44489.25 80080.65 144145.17 259461.306 467030.3508
+840654.63144 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+##$LEVSIGN= 3
+##$MAXLEV= 8
+##$METHOD= 0
+##$NEGBASE= -13731.25
+##$NEGINCR= 1.8
+##$POSBASE= 13731.25
+##$POSINCR= 1.8
+##END=

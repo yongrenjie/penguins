@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full reference &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="TopSpin directories" href="topspin.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="full-reference">
+<h1>Full reference<a class="headerlink" href="#full-reference" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="penguins.read">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">expno</span></em>, <em class="sig-param"><span class="n">procno</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a <a class="reference internal" href="#penguins.dataset.Dataset" title="penguins.dataset.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> object from the spectrum name folder, expno, and procno. Automatically detects the dimensionality of the spectrum being read in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><em>pathlib.Path</em></a>) – Path to the spectrum name folder.</p></li>
+<li><p><strong>expno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Expno of desired spectrum.</p></li>
+<li><p><strong>procno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Procno of desired spectrum.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object belonging to the appropriate subclass of <a class="reference internal" href="#penguins.dataset.Dataset" title="penguins.dataset.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> corresponding to the spectrum.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, or <a class="reference internal" href="#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py function">
+<dt id="penguins.read_abs">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">read_abs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.read_abs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>, but takes only one parameter, which is the procno folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em>) – Direct path to the procno folder.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object belonging to the appropriate subclass of <a class="reference internal" href="#penguins.dataset.Dataset" title="penguins.dataset.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> corresponding to the spectrum.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, or <a class="reference internal" href="#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py class">
+<dt id="penguins.dataset.Dataset">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.dataset.</code><code class="sig-name descname">Dataset</code><a class="headerlink" href="#penguins.dataset.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parent class of <a class="reference internal" href="#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, and <a class="reference internal" href="#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a>. The general interface is described here, but the methods are not actually implemented on this superclass. Refer to the specific subclasses for implementation details.</p>
+<p>You can instantiate subclasses of <a class="reference internal" href="#penguins.dataset.Dataset" title="penguins.dataset.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> directly, but there should never be a <em>need</em> to. Use <a class="reference internal" href="#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> or <a class="reference internal" href="#penguins.read_abs" title="penguins.read_abs"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_abs()</span></code></a> for that instead.</p>
+<dl class="py attribute">
+<dt id="penguins.dataset.Dataset.pars">
+<code class="sig-name descname">pars</code><a class="headerlink" href="#penguins.dataset.Dataset.pars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Case-insensitive dictionary (<a class="reference internal" href="#penguins.dataset._parDict" title="penguins.dataset._parDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">_parDict</span></code></a>) which holds values of acquisition and processing parameters. The <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> and <code class="docutils literal notranslate"><span class="pre">__setitem__</span></code> special methods of <a class="reference internal" href="#penguins.dataset.Dataset" title="penguins.dataset.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> are redirected to the corresponding special methods of the underlying <a class="reference internal" href="#penguins.dataset._parDict" title="penguins.dataset._parDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">_parDict</span></code></a>, which means that parameters can be accessed easily using <code class="docutils literal notranslate"><span class="pre">dataset[&quot;param&quot;]</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="penguins.dataset.Dataset.ppm_scale">
+<code class="sig-name descname">ppm_scale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset.ppm_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a linearly spaced array of SI points from the highest chemical shift to the lowest. This can then be used as the frequency axis when plotting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="penguins.dataset.Dataset.hz_scale">
+<code class="sig-name descname">hz_scale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset.hz_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a linearly spaced array of SI points from the highest frequency to the lowest (in Hz).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="penguins.dataset.Dataset.proc_data">
+<code class="sig-name descname">proc_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset.proc_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the pure real part of the processed data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="penguins.dataset.Dataset.raw_data">
+<code class="sig-name descname">raw_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset.raw_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the raw data (<cite>fid</cite> or <cite>ser</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py class">
+<dt id="penguins.dataset.Dataset1D">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.dataset.</code><code class="sig-name descname">Dataset1D</code><a class="headerlink" href="#penguins.dataset.Dataset1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a 1D spectrum.</p>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py class">
+<dt id="penguins.dataset.Dataset1DProj">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.dataset.</code><code class="sig-name descname">Dataset1DProj</code><a class="headerlink" href="#penguins.dataset.Dataset1DProj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a 1D projection of a 2D spectrum.</p>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py class">
+<dt id="penguins.dataset.Dataset2D">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.dataset.</code><code class="sig-name descname">Dataset2D</code><a class="headerlink" href="#penguins.dataset.Dataset2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a 2D spectrum.</p>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py class">
+<dt id="penguins.dataset._parDict">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.dataset.</code><code class="sig-name descname">_parDict</code><a class="headerlink" href="#penguins.dataset._parDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified dictionary which holds acquisition and processing parameters. The keys are case-insensitive and are internally always converted to lowercase.</p>
+<p>Unlike in other packages (e.g. <code class="docutils literal notranslate"><span class="pre">nmrglue</span></code>), parameters are not immediately loaded when the <a class="reference internal" href="#penguins.dataset.Dataset" title="penguins.dataset.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> class is instantiated. Only a few key parameters (e.g. <code class="docutils literal notranslate"><span class="pre">TD</span></code>, <code class="docutils literal notranslate"><span class="pre">SI</span></code>, <code class="docutils literal notranslate"><span class="pre">O1</span></code>, <code class="docutils literal notranslate"><span class="pre">SW</span></code>, <code class="docutils literal notranslate"><span class="pre">SFO1</span></code>) are initially set. This is meant to avoid cluttering the dictionary with irrelevant parameters.</p>
+<p>Parameters are loaded (by parsing the <code class="docutils literal notranslate"><span class="pre">procs</span></code>/<code class="docutils literal notranslate"><span class="pre">acqus</span></code>/<code class="docutils literal notranslate"><span class="pre">proc2s</span></code>/<code class="docutils literal notranslate"><span class="pre">acqu2s</span></code> files) simply by looking them up (via <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>). Therefore, the dictionary behaves <em>as if</em> it is fully populated, in the sense that calling <code class="docutils literal notranslate"><span class="pre">pardict[&quot;par&quot;]</span></code> will always return the corresponding value (if it exists), but the value is only read <em>on demand</em>.</p>
+<p>The lookup function attempts to be clever and convert the parameters to floats if possible; otherwise, the parameters are stored as strings. There are currently two exceptions to this rule, which are <code class="docutils literal notranslate"><span class="pre">TD</span></code> and <code class="docutils literal notranslate"><span class="pre">SI</span></code>. These are stored as ints.</p>
+<p>For 2D spectra, string parameters are stored as a tuple of <code class="docutils literal notranslate"><span class="pre">(f1_value,</span> <span class="pre">f2_value)</span></code>. Float parameters are stored as a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> to facilitate elementwise manipulations (e.g. calculating <code class="docutils literal notranslate"><span class="pre">O1P</span></code> in both dimensions at one go).</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Full reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="topspin.html" title="previous chapter">TopSpin directories</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/reference.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quickstart &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TopSpin directories" href="topspin.html" />
+    <link rel="prev" title="Welcome to penguins!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="quickstart">
+<span id="id1"></span><h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="importing-a-spectrum">
+<h2>Importing a spectrum<a class="headerlink" href="#importing-a-spectrum" title="Permalink to this headline">¶</a></h2>
+<p>Importing spectra is done with <a class="reference internal" href="reference.html#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="n">hsqc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/opt/topspin4.0.8/examdata/exam2d_HC&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="reference.html#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> takes three parameters: the path to the <em>spectrum folder</em>, the expno, and the procno. (If you are not familiar with TopSpin’s directory layout yet, see <a class="reference internal" href="topspin.html#topspin"><span class="std std-ref">TopSpin directories</span></a>.)</p>
+<p>This returns one of several possible Dataset objects, depending on the dimensionality of the spectrum selected. Note that there is no support for 3D or higher spectra.</p>
+</div>
+<div class="section" id="reading-parameters">
+<h2>Reading parameters<a class="headerlink" href="#reading-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Spectral parameters (both acquisition and processing) can be accessed via their TopSpin names using dictionary-like syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;ns&quot;</span><span class="p">]</span>            <span class="c1"># 16</span>
+<span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;td&quot;</span><span class="p">]</span>            <span class="c1"># np.array(256, 1024)</span>
+<span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;si&quot;</span><span class="p">]</span>            <span class="c1"># np.array(1024, 1024)</span>
+<span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;nuc1&quot;</span><span class="p">]</span>          <span class="c1"># (&#39;13C&#39;, &#39;1H&#39;)</span>
+</pre></div>
+</div>
+<p>For 2D spectra, parameters which have values in both the indirect and direct dimensions are stored as either a tuple or a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, depending on whether the underlying values can be coerced to a float or not.
+The first element is always the value for the indirect (<em>f</em><sub>1</sub>) dimension, and the second element the value for the direct (<em>f</em><sub>2</sub>) dimension.</p>
+</div>
+<div class="section" id="plotting-one-spectrum">
+<h2>Plotting one spectrum<a class="headerlink" href="#plotting-one-spectrum" title="Permalink to this headline">¶</a></h2>
+<p>Plotting is probably the most developed part of this package, so it is worth having a look at the detailed guides in <span class="xref std std-ref">plot</span> as well.</p>
+<p>To plot just one spectrum, use the <code class="xref py py-func docutils literal notranslate"><span class="pre">plot1d()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">plot2d()</span></code> functions as appropriate:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">plot2d</span><span class="p">(</span><span class="n">hsqc</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/path/to/image&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The penguins functions <code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">pause()</span></code>, and <code class="xref py py-func docutils literal notranslate"><span class="pre">savefig()</span></code> are simply wrappers around the equivalent <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions (see: <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.show()</span></code></a>, <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.pause.html#matplotlib.pyplot.pause" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.pause()</span></code></a>, and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.savefig()</span></code></a>), and have exactly the same interface. They are solely there so that there is no need to import <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> itself for most routine usage.</p>
+<p>However, if greater customisation is desired, then it is perfectly possible to import <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and use any of the functions therein <em>before</em> calling <code class="docutils literal notranslate"><span class="pre">show()</span></code>.</p>
+</div>
+<div class="section" id="plotting-multiple-spectra">
+<h2>Plotting multiple spectra<a class="headerlink" href="#plotting-multiple-spectra" title="Permalink to this headline">¶</a></h2>
+<p>One way is to simply make multiple calls to <code class="xref py py-func docutils literal notranslate"><span class="pre">plot1d()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">plot2d()</span></code>.</p>
+<p>However, it is probably easier to use the <code class="xref py py-func docutils literal notranslate"><span class="pre">plot1ds()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">plot2ds()</span></code> functions (note the added <code class="docutils literal notranslate"><span class="pre">s</span></code>). These functions accept a list or tuple of Dataset objects:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spec_one</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/spec&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">spec_two</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/spec&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot1ds</span><span class="p">([</span><span class="n">spec_one</span><span class="p">,</span> <span class="n">spec_two</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#importing-a-spectrum">Importing a spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-parameters">Reading parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-one-spectrum">Plotting one spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-multiple-spectra">Plotting multiple spectra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to penguins!</a></li>
+      <li>Next: <a href="topspin.html" title="next chapter">TopSpin directories</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/quickstart.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

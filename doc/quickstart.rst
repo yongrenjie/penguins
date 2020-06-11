@@ -1,0 +1,61 @@
+.. _quickstart:
+
+Quickstart
+==========
+
+
+Importing a spectrum
+--------------------
+
+Importing spectra is done with :func:`~penguins.read`::
+
+   import penguins as pg
+   hsqc = pg.read("/opt/topspin4.0.8/examdata/exam2d_HC", 3, 1)
+
+:func:`~penguins.read` takes three parameters: the path to the *spectrum folder*, the expno, and the procno. (If you are not familiar with TopSpin's directory layout yet, see :ref:`topspin`.)
+
+This returns one of several possible Dataset objects, depending on the dimensionality of the spectrum selected. Note that there is no support for 3D or higher spectra.
+
+
+Reading parameters
+------------------
+
+Spectral parameters (both acquisition and processing) can be accessed via their TopSpin names using dictionary-like syntax::
+
+   hsqc["ns"]            # 16
+   hsqc["td"]            # np.array(256, 1024)
+   hsqc["si"]            # np.array(1024, 1024)
+   hsqc["nuc1"]          # ('13C', '1H')
+
+For 2D spectra, parameters which have values in both the indirect and direct dimensions are stored as either a tuple or a :class:`numpy.ndarray`, depending on whether the underlying values can be coerced to a float or not.
+The first element is always the value for the indirect (*f*:subscript:`1`) dimension, and the second element the value for the direct (*f*:subscript:`2`) dimension.
+
+
+Plotting one spectrum
+---------------------
+
+Plotting is probably the most developed part of this package, so it is worth having a look at the detailed guides in :ref:`plot` as well.
+
+To plot just one spectrum, use the :func:`~penguins.pgplot.plot1d` or :func:`~penguins.pgplot.plot2d` functions as appropriate::
+
+   pg.plot2d(hsqc)
+   pg.show()
+   pg.savefig("/path/to/image", dpi=500)
+
+The penguins functions :func:`~penguins.pgplot.show`, :func:`~penguins.pgplot.pause`, and :func:`~penguins.pgplot.savefig` are simply wrappers around the equivalent ``matplotlib`` functions (see: :func:`plt.show() <matplotlib.pyplot.show>`, :func:`plt.pause() <matplotlib.pyplot.pause>`, and :func:`plt.savefig() <matplotlib.pyplot.savefig>`), and have exactly the same interface. They are solely there so that there is no need to import ``matplotlib`` itself for most routine usage.
+
+However, if greater customisation is desired, then it is perfectly possible to import ``matplotlib`` and use any of the functions therein *before* calling ``show()``.
+
+
+Plotting multiple spectra
+-------------------------
+
+One way is to simply make multiple calls to :func:`~penguins.pgplot.plot1d` or :func:`~penguins.pgplot.plot2d`.
+
+However, it is probably easier to use the :func:`~penguins.pgplot.plot1ds` or :func:`~penguins.pgplot.plot2ds` functions (note the added ``s``). These functions accept a list or tuple of Dataset objects::
+
+   spec_one = pg.read("/path/to/specname", 1, 1)
+   spec_two = pg.read("/path/to/specname", 2, 1)
+   pg.plot1ds([spec_one, spec_two])
+
+

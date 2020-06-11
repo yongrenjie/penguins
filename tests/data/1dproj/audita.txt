@@ -1,0 +1,18 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:/NMR/data/mfgroup/nmr/jy-200412-ferulic-SSseSplusC/11/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-04-12 06:48:18.427 +0100>,<CHEM\nmr-user>,<GOLDFISH-CRL>,<go4>,<TopSpin 3.6.2>,
+      <created by zg
+	started at 2020-04-12 06:17:47.497 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       0C 6F BE 03 29 CC A1 D9 6F BD E2 13 49 25 92 1E
+       data hash MD5: 2K * 256
+       C8 F9 F6 E5 B7 53 00 80 11 53 E7 9A 3A 3B B8 39>)
+##END=
+
+$$ hash MD5
+$$ AE 09 5B 3E B5 F6 96 7D C4 76 18 DE 05 B8 22 EE

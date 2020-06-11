@@ -1,0 +1,23 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 258	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-04-12 06:48:15.927 +0100  CHEM\nmr-user@GOLDFISH-CRL
+$$ C:/NMR/data/mfgroup/nmr/jy-200412-ferulic-SSseSplusC/11/acqu2s
+$$ process C:\Bruker\TopSpin3.6.2\prog\mod\go4.exe
+##$ACQT0= 0
+##$BF1= 125.757788526
+##$FnMODE= 6
+##$NUC1= <13C>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 256
+##$O1= 11318.20096734
+##$ProjAngle= 0
+##$SFO1= 125.769106726967
+##$SW= 179.888646567681
+##$SW_h= 22624.4343891403
+##$TD= 256
+##END=

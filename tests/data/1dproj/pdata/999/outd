@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 4.0.8
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2020-04-12 18:29:17.032 +0800  yongrenjie@jymbp.local
+$$ /Users/yongrenjie/dphil/exp/200412/nmr/jy-200412-ferulic-SSseSplusC/11/pdata/999/outd
+$$ process /opt/topspin4.0.8/prog/mod/mvrow
+##$CURPLOT= <\\CHEM-Print\Spectrum>
+##$CURPRIN= <$1#1#0#1#1#1#1#1#0#-1#-1#1#-1>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/1D_X.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

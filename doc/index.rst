@@ -13,15 +13,14 @@ Welcome to penguins!
 ::
 
    import penguins as pg
-   import matplotlib.pyplot as plt
 
    example_spec = pg.read("data/exam2d_HC/", 3, 1)
    pg.plot2d(example_spec,
              contour_levels=(1e6, None, None),
-             contour_colors=("blue", "red"))
-   plt.xlim(7.4, 0.6)
-   plt.ylim(133.8, 6.8)
-   plt.show()
+             contour_colors=("blue", "red")),
+             bounds=((133.8, 6.8), (7.4, 0.6))
+             )
+   pg.show()
 
 .. image:: images/exam2d_hc.png
    :width: 400

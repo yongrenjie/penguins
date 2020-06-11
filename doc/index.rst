@@ -35,6 +35,7 @@ Navigation
 .. toctree::
    :hidden:
    
+   install
    quickstart
    topspin
    reference

@@ -24,6 +24,9 @@ author = 'Jonathan Yong'
 
 # -- General configuration ---------------------------------------------------
 
+# https://stackoverflow.com/questions/56336234/
+master_doc = 'index'
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.

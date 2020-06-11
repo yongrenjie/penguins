@@ -29,16 +29,17 @@ Welcome to penguins!
    :alt: HSQC spectrum of cyclosporin (TopSpin example data)
    :class: no-scaled-link
 
-Navigation
-==========
+Contents
+========
 
 .. toctree::
-   :hidden:
+   :maxdepth: 2
    
+   install
    quickstart
    topspin
+   plot
    reference
 
-* :doc:`reference`
 * :ref:`genindex`
 * :ref:`search`

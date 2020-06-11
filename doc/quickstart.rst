@@ -1,5 +1,3 @@
-.. _quickstart:
-
 Quickstart
 ==========
 
@@ -12,7 +10,7 @@ Importing spectra is done with :func:`~penguins.read`::
    import penguins as pg
    hsqc = pg.read("/opt/topspin4.0.8/examdata/exam2d_HC", 3, 1)
 
-:func:`~penguins.read` takes three parameters: the path to the *spectrum folder*, the expno, and the procno. (If you are not familiar with TopSpin's directory layout yet, see :ref:`topspin`.)
+:func:`~penguins.read` takes three parameters: the path to the *spectrum folder*, the expno, and the procno. (If you are not familiar with TopSpin's directory layout yet, see :doc:`topspin`.)
 
 This returns one of several possible Dataset objects, depending on the dimensionality of the spectrum selected. Note that there is no support for 3D or higher spectra.
 
@@ -34,7 +32,7 @@ The first element is always the value for the indirect (*f*:subscript:`1`) dimen
 Plotting one spectrum
 ---------------------
 
-Plotting is probably the most developed part of this package, so it is worth having a look at the detailed guides in :ref:`plot` as well.
+Plotting is probably the most developed part of this package, so it is worth having a look at the detailed guides in :doc:`plot` as well.
 
 To plot just one spectrum, use the :func:`~penguins.pgplot.plot1d` or :func:`~penguins.pgplot.plot2d` functions as appropriate::
 

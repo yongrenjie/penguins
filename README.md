@@ -1,4 +1,6 @@
-Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra
+[![Documentation Status](https://readthedocs.org/projects/penguins/badge/?version=latest)](https://penguins.readthedocs.io/en/latest/?badge=latest)
+
+**Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra**
 
 Fed up of `java.lang.NullPointerException`? I was, too, so I made this.
 

@@ -39,6 +39,7 @@ intersphinx_mapping = {
     'python3': ('https://docs.python.org/3', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
     'matplotlib': ('https://matplotlib.org', None),
+    'seaborn': ('https://seaborn.pydata.org/', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.

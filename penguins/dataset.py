@@ -13,67 +13,6 @@ from . import pgplot
 from .type_aliases import *
 
 
-class _DSProtocol(Protocol):
-    """
-    Specifies the protocol for a generic dataset object.
-
-    The problem is that in our mixins, Mixin1 references attributes and methods
-    which are provided in Mixin2. Thus, in general, it is not possible to
-    guarantee that any class deriving Mixin1 has the necessary attributes and
-    methods. Thus, mypy throws lots of errors: "_Dataset has no attribute X",
-    and so on. This is one way of remedying it.
-
-    See: mypy documentation on "Protocols and structural subtypings", and also
-    on "More types" > "Advanced uses of self-types".
-    """
-    path: Path
-    pars: _parDict
-    _p_procs: Path
-    _p_proc2s: Path
-    _p_acqus: Path
-    _p_acqu2s: Path
-    _p_fid: Path
-    _p_real: Path
-    _p_imag: Path
-    _p_ser: Path
-    _p_rr: Path
-    _p_ir: Path
-    _p_ri: Path
-    _p_ii: Path
-    fid: np.ndarray
-    ser: np.ndarray
-    real: np.ndarray
-    imag: np.ndarray
-    rr: np.ndarray
-    ir: np.ndarray
-    ri: np.ndarray
-    ii: np.ndarray
-    proj_axis: int
-    proj_type: str
-    index: Optional[int]
-    bounds: Optional[slice]
-    sign: Optional[str]
-
-    __getitem__: Callable
-    __setitem__: Callable
-    _initialise_pars: Callable
-    _find_raw_data_paths: Callable
-    _find_proc_data_paths: Callable
-    _find_param_file_paths: Callable
-    _read_raw_data: Callable
-    _read_spec: Callable
-
-    @overload
-    def _ppm_to_index(self, ppm: Optional[float]) -> Optional[int]: ...
-    @overload
-    def _ppm_to_index(self, axis: int, ppm: Optional[float]) -> Optional[int]: ...
-
-    @overload
-    def _ppm_to_slice(self, bounds: Optional[TBounds1D]) -> slice: ...
-    @overload
-    def _ppm_to_slice(self, axis: int, bounds: Optional[TBounds1D]) -> slice: ...
-
-
 def _try_convert(x: Any, type: Any):
     # Tries to convert an input to a specific type.
     # Returns the original input if it fails.
@@ -137,7 +76,9 @@ class _parDict(UserDict):
                 val_indirect = self._get_procs_par(par, self._p_proc2s)
             val_indirect = _try_convert(val_indirect, float)
             # Make a tuple if the indirect dimension was found
-            if val_indirect is not None:
+            # We make an exception for NS because for some reason, TopSpin stores
+            # an "NS" in the indirect dimension which is just 1.
+            if val_indirect is not None and par.upper() != "NS":
                 if isinstance(val, float) and isinstance(val_indirect, float):
                     # ndarrays are good, so that we can do elementwise stuff
                     # like self["o1p] = self["o1"] / self["sfo1"]
@@ -145,7 +86,7 @@ class _parDict(UserDict):
                 else:
                     val = (val_indirect, val)
         # Some parameters must be ints, this will save the user headaches
-        int_pars = ["TD", "SI"]
+        int_pars = ["TD", "SI", "NS"]
         if par.upper() in int_pars:
             val = _try_convert(val, int)
         return val
@@ -244,7 +185,7 @@ class _Dataset():
     Defines behaviour that is common to all datasets.
     """
 
-    def __init__(self: _DSProtocol,
+    def __init__(self,
                  path: Union[str, Path],
                  **kwargs
                  ) -> None:
@@ -255,14 +196,14 @@ class _Dataset():
         # Initialise _parDict and some key parameters
         self._initialise_pars()
         # Get paths to data and parameter files
-        self._find_raw_data_paths()
-        self._find_proc_data_paths()
-        self._find_param_file_paths()
+        self._find_raw_data_paths()     # type: ignore # mixin
+        self._find_proc_data_paths()    # type: ignore # mixin
+        self._find_param_file_paths()   # type: ignore # mixin
         # Read in the spectral data
-        self._read_raw_data()
-        self._read_spec()
+        self._read_raw_data()           # type: ignore # mixin
+        self._read_spec()               # type: ignore # mixin
 
-    def _initialise_pars(self: _DSProtocol):
+    def _initialise_pars(self):
         self.pars = _parDict(self.path)
         self["aq"] = (self["td"] / 2) / (self["sw"] * self["sfo1"])
         self["dw"] = self["aq"] * 1000000 / self["td"]
@@ -286,41 +227,42 @@ class _Dataset():
 # -- 1D mixins ------------------------------------------
 
 class _1D_RawDataMixin():
-    def _find_raw_data_paths(self: _DSProtocol) -> None:
+    def _find_raw_data_paths(self) -> None:
+        self.path: Path
         self._p_fid = self.path.parents[1] / "fid"
 
-    def _find_param_file_paths(self: _DSProtocol) -> None:
+    def _find_param_file_paths(self) -> None:
         self._p_procs = self.path / "procs"
         self._p_acqus = self.path.parents[1] / "acqus"
 
-    def _read_raw_data(self: _DSProtocol) -> np.ndarray:
+    def _read_raw_data(self) -> np.ndarray:
         fid = np.fromfile(self._p_fid, dtype=np.int32)
-        fid = fid.reshape(int(self["td"]/2), 2)
-        fid = np.transpose(fid) * (2 ** self["nc"])
+        fid = fid.reshape(int(self["td"]/2), 2)      # type: ignore # mixin
+        fid = np.transpose(fid) * (2 ** self["nc"])  # type: ignore # mixin
         self.fid = fid[0] + (1j * fid[1])
 
-    def raw_data(self: _DSProtocol) -> np.ndarray:
+    def raw_data(self) -> np.ndarray:
         return self.fid
 
 
 class _1D_ProcDataMixin():
 
-    def _find_proc_data_paths(self: _DSProtocol):
+    def _find_proc_data_paths(self):
         self._p_real = self.path / "1r"
         if (self.path / "1i").exists():
             self._p_imag = self.path / "1i"
 
-    def _read_spec(self: _DSProtocol) -> np.ndarray:
-        self.real = np.fromfile(self._p_real, dtype=np.int32) * (2 ** self["nc_proc"])
+    def _read_spec(self) -> np.ndarray:
+        self.real = np.fromfile(self._p_real, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
         if hasattr(self, "_p_imag"):
-            self.imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])
+            self.imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
 
-    def proc_data(self: _DSProtocol,
-                  bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
+    def proc_data(self,
+                  bounds: Optional[TBounds1D] = None,
                   ) -> np.ndarray:
         return self.real[self._ppm_to_slice(bounds)]
 
-    def _ppm_to_slice(self: _DSProtocol,
+    def _ppm_to_slice(self,
                       bounds: Optional[TBounds1D] = None,
                       ) -> slice:
         """
@@ -332,55 +274,57 @@ class _1D_ProcDataMixin():
         upper, lower = bounds
         if upper is not None and lower is not None and upper < lower:
             raise ValueError("Bounds should be specified as (upper, lower), not the other way around.")
-        return slice(self._ppm_to_index(upper) or 0,
-                     (self._ppm_to_index(lower) or self["si"] - 1) + 1)
+        return slice(self._ppm_to_index(upper) or 0,                      # type: ignore # mixin
+                     (self._ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
 
 
 class _1D_PlotMixin():
 
-    def plot(self, *args, **kwargs):
-        pgplot.plot1d(self, *args, **kwargs)
+    def stage(self, *args, **kwargs):
+        pgplot.stage1d(self, *args, **kwargs)
 
 
 # -- 2D mixins ------------------------------------------
 
 class _2D_RawDataMixin():
 
-    def _find_raw_data_paths(self: _DSProtocol) -> None:
+    def _find_raw_data_paths(self) -> None:
+        self.path: Path
         self._p_ser = self.path.parents[1] / "ser"
 
-    def _find_param_file_paths(self: _DSProtocol) -> None:
+    def _find_param_file_paths(self) -> None:
         self._p_procs = self.path / "procs"
         self._p_acqus = self.path.parents[1] / "acqus"
         self._p_proc2s = self.path / "proc2s"
         self._p_acqu2s = self.path.parents[1] / "acqu2s"
 
-    def _read_raw_data(self: _DSProtocol) -> np.ndarray:
+    def _read_raw_data(self) -> np.ndarray:
         # TODO
         # ser = np.fromfile(self._p_ser, dtype=??)
         pass
 
-    def raw_data(self: _DSProtocol):
+    def raw_data(self):
         # TODO
         raise NotImplementedError
 
 
 class _2D_ProcDataMixin():
 
-    def _find_proc_data_paths(self: _DSProtocol) -> None:
+    def _find_proc_data_paths(self) -> None:
+        self.path: Path
         # TODO: not all of these will exist for NUS data
         self._p_rr = self.path / "2rr"
         self._p_ri = self.path / "2ri"
         self._p_ir = self.path / "2ir"
         self._p_ii = self.path / "2ii"
 
-    def _read_spec(self: _DSProtocol) -> np.ndarray:
+    def _read_spec(self) -> np.ndarray:
         rr = np.fromfile(self._p_rr, dtype=np.int32)
-        rr = rr.reshape(int(self["si"][0]), int(self["si"][1]))
-        self.rr = rr * (2 ** self["nc_proc"][1])
+        rr = rr.reshape(int(self["si"][0]), int(self["si"][1]))  # type: ignore # mixin
+        self.rr = rr * (2 ** self["nc_proc"][1])                 # type: ignore # mixin
         # TODO: the remainder (ri, ir, ii)
 
-    def proc_data(self: _DSProtocol,
+    def proc_data(self,
                   f1_bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
                   f2_bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
                   ) -> np.ndarray:
@@ -388,7 +332,7 @@ class _2D_ProcDataMixin():
         f2_slice = self._ppm_to_slice(axis=1, bounds=f2_bounds)
         return self.rr[f1_slice, f2_slice]
 
-    def _ppm_to_slice(self: _DSProtocol,
+    def _ppm_to_slice(self,
                       axis: int,
                       bounds: Optional[TBounds1D] = None,
                       ) -> slice:
@@ -402,14 +346,14 @@ class _2D_ProcDataMixin():
         upper, lower = bounds
         if upper is not None and lower is not None and upper < lower:
             raise ValueError("Bounds should be specified as (upper, lower), not the other way around.")
-        return slice(self._ppm_to_index(axis, upper) or 0,
-                     (self._ppm_to_index(axis, lower) or self["si"][axis] - 1) + 1)
+        return slice(self._ppm_to_index(axis, upper) or 0,                           # type: ignore # mixin
+                     (self._ppm_to_index(axis, lower) or self["si"][axis] - 1) + 1)  # type: ignore # mixin
 
 
 class _2D_PlotMixin():
 
-    def plot(self, *args, **kwargs):
-        pgplot.plot2d(self, *args, **kwargs)
+    def stage(self, *args, **kwargs):
+        pgplot.stage2d(self, *args, **kwargs)
 
 
 # -- Actual dataset classes -----------------------------
@@ -419,7 +363,7 @@ class Dataset1D(_1D_RawDataMixin,
                 _1D_PlotMixin,
                 _Dataset):
 
-    def _ppm_to_index(self: _DSProtocol,
+    def _ppm_to_index(self,
                       ppm: Optional[float]
                       ) -> Optional[int]:
         """
@@ -436,15 +380,15 @@ class Dataset1D(_1D_RawDataMixin,
         x = 1 + round((max_ppm - ppm)/spacing)
         return int(x)
 
-    def ppm_scale(self: _DSProtocol,
-                  bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
+    def ppm_scale(self,
+                  bounds: Optional[TBounds1D] = None,
                   ) -> np.ndarray:
         max_ppm = self["o1p"] + self["sw"]/2
         min_ppm = self["o1p"] - self["sw"]/2
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self._ppm_to_slice(bounds)]
 
-    def hz_scale(self: _DSProtocol) -> np.ndarray:
+    def hz_scale(self) -> np.ndarray:
         max_hz = self["o1"] + self["sw"]/(2 * self["sfo1"])
         min_hz = self["o1"] - self["sw"]/(2 * self["sfo1"])
         return np.linspace(max_hz, min_hz, self["si"])
@@ -469,7 +413,7 @@ class Dataset1DProj(_2D_RawDataMixin,
             raise ValueError("Projection dimension was not found in "
                              "'used_from' file.")
 
-    def _ppm_to_index(self: _DSProtocol,
+    def _ppm_to_index(self,
                       ppm: Optional[float]
                       ) -> Optional[int]:
         """
@@ -486,7 +430,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         x = 1 + round((max_ppm - ppm)/spacing)
         return int(x)
 
-    def ppm_scale(self: _DSProtocol,
+    def ppm_scale(self,
                   bounds: Optional[TBounds1D] = None,
                   ) -> np.ndarray:
         max_ppm = self["o1p"][self.proj_axis] + self["sw"][self.proj_axis]/2
@@ -494,7 +438,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self._ppm_to_slice(bounds)]
 
-    def hz_scale(self: _DSProtocol) -> np.ndarray:
+    def hz_scale(self) -> np.ndarray:
         max_hz = self["o1"][self.proj_axis] + self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
         min_hz = self["o1"][self.proj_axis] - self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
         return np.linspace(max_hz, min_hz, self["si"])
@@ -505,7 +449,7 @@ class Dataset2D(_2D_RawDataMixin,
                 _2D_PlotMixin,
                 _Dataset):
 
-    def _ppm_to_index(self: _DSProtocol,
+    def _ppm_to_index(self,
                       axis: int,
                       ppm: Optional[float]
                       ) -> Optional[int]:
@@ -524,7 +468,7 @@ class Dataset2D(_2D_RawDataMixin,
         x = 1 + round((max_ppm - ppm)/spacing)
         return int(x)
 
-    def ppm_scale(self: _DSProtocol,
+    def ppm_scale(self,
                   axis: int,
                   bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
                   ) -> np.ndarray:
@@ -533,7 +477,7 @@ class Dataset2D(_2D_RawDataMixin,
         full_scale = np.linspace(max_ppm, min_ppm, int(self["si"][axis]))
         return full_scale[self._ppm_to_slice(axis, bounds)]
 
-    def hz_scale(self: _DSProtocol,
+    def hz_scale(self,
                  axis: int
                  ) -> np.ndarray:
         max_hz = self["o1"][axis] + (self["sw"][axis] / (2 * self["sfo1"][axis]))
@@ -592,7 +536,7 @@ class Dataset1DProjVirtual(Dataset1DProj):
     integrals may not be entirely accurate.
     """
 
-    def __init__(self: _DSProtocol,
+    def __init__(self,
                  path: Union[str, Path],
                  **kwargs
                  ) -> None:
@@ -616,7 +560,7 @@ class Dataset1DProjVirtual(Dataset1DProj):
         # tries to look for the used_from file, and we don't have that.
         _Dataset._initialise_pars(self)
 
-    def _read_spec(self: _DSProtocol) -> np.ndarray:
+    def _read_spec(self) -> np.ndarray:
         # There's no 1r or 1i to read here, since the data isn't
         # from TopSpin.
         del self._p_real

@@ -36,18 +36,16 @@
 <h1>Welcome to penguins!<a class="headerlink" href="#welcome-to-penguins" title="Permalink to this headline">¶</a></h1>
 <p>🐧 <em>Penguins: an Easy and NullPointerException-free Gateway to Unpacking and Illustrating NMR Spectra</em> 🐧</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">example_spec</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/exam2d_HC/&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">plot2d</span><span class="p">(</span><span class="n">example_spec</span><span class="p">,</span>
-          <span class="n">contour_levels</span><span class="o">=</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-          <span class="n">contour_colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">133.8</span><span class="p">,</span> <span class="mf">6.8</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">example_spec</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/opt/topspin4.0.8/examdata/exam2d_HH/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">example_spec</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">((</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+                   <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;seagreen&quot;</span><span class="p">,</span> <span class="s2">&quot;hotpink&quot;</span><span class="p">),</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="p">(</span><span class="mf">5e4</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                   <span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span> <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="HSQC spectrum of cyclosporin (TopSpin example data)" class="no-scaled-link align-center" src="_images/exam2d_hc.png" style="width: 400px;" />
+<img alt="COSY spectrum of cyclosporin (TopSpin example data)" class="no-scaled-link align-center" src="_images/splash_cosy.png" style="width: 400px;" />
 </div>
 <div class="section" id="contents">
 <h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
@@ -57,12 +55,15 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#importing-a-spectrum">Importing a spectrum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#reading-parameters">Reading parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#plotting-one-spectrum">Plotting one spectrum</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#plotting-multiple-spectra">Plotting multiple spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#plotting-spectra">Plotting spectra</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Plotting in detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">1D Plotting in Detail</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#step-1-staging-spectra">Step 1: Staging spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#step-2-constructing-the-plot">Step 2: Constructing the plot</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
 </ul>
 </div>
@@ -93,7 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Plotting in detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">1D Plotting in Detail</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
 </ul>
 

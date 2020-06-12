@@ -54,30 +54,45 @@
 <span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;nuc1&quot;</span><span class="p">]</span>          <span class="c1"># (&#39;13C&#39;, &#39;1H&#39;)</span>
 </pre></div>
 </div>
-<p>For 2D spectra, parameters which have values in both the indirect and direct dimensions are stored as either a tuple or a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, depending on whether the underlying values can be coerced to a float or not.
-The first element is always the value for the indirect (<em>f</em><sub>1</sub>) dimension, and the second element the value for the direct (<em>f</em><sub>2</sub>) dimension.</p>
+<p>For 2D spectra, parameters which have values in both the indirect and direct dimensions are stored as either a tuple or a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, depending on whether the underlying values can be coerced to a float or not. Some parameters (such as those above) only make sense as ints, and those are stored as ints, not floats.</p>
+<p>The first element is always the value for the indirect (<em>f</em><sub>1</sub>) dimension, and the second element the value for the direct (<em>f</em><sub>2</sub>) dimension.</p>
 </div>
-<div class="section" id="plotting-one-spectrum">
-<h2>Plotting one spectrum<a class="headerlink" href="#plotting-one-spectrum" title="Permalink to this headline">¶</a></h2>
-<p>Plotting is probably the most developed part of this package, so it is worth having a look at the detailed guides in <a class="reference internal" href="plot.html"><span class="doc">Plotting in detail</span></a> as well.</p>
-<p>To plot just one spectrum, use the <code class="xref py py-func docutils literal notranslate"><span class="pre">plot1d()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">plot2d()</span></code> functions as appropriate:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">plot2d</span><span class="p">(</span><span class="n">hsqc</span><span class="p">)</span>
+<div class="section" id="plotting-spectra">
+<h2>Plotting spectra<a class="headerlink" href="#plotting-spectra" title="Permalink to this headline">¶</a></h2>
+<p>Plotting is done in three stages:</p>
+<ol class="arabic">
+<li><p><em>Stage</em> the spectrum (or spectra) to be plotted.</p>
+<p>Options that are specific to each individual spectrum, such as bounds on the plotting window, colours, etc. are specified at this stage.</p>
+</li>
+<li><p><em>Construct</em> the plot.</p>
+<p>Options that affect the entire plot, such as horizontal/vertical offset between spectra, plot limits, etc. are specified at this stage.</p>
+</li>
+<li><p><em>Display</em> the plot.</p>
+<p>You can either display the window using <code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code>, or save a figure using <code class="xref py py-func docutils literal notranslate"><span class="pre">savefig()</span></code>. Both act as wrappers around the corresponding <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions.</p>
+</li>
+</ol>
+<p>An example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hsqc</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">((</span><span class="mi">57</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)),</span>     <span class="c1"># STAGING</span>
+           <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">),</span>
+           <span class="n">levels</span><span class="o">=</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+           <span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>                                  <span class="c1"># CONSTRUCT</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                                  <span class="c1"># DISPLAY</span>
+</pre></div>
+</div>
+<p>will give the following inset of the alkyl region of that HSQC:</p>
+<img alt="_images/quickstart_plot2d.png" class="align-center" src="_images/quickstart_plot2d.png" />
+<p>An example of a 1D plot is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prot</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/opt/topspin4.0.8/examdata/exam1d_1H&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">prot</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">6.2</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">),</span>  <span class="c1"># use (None, 5) for everything ≥ 5 ppm</span>
+           <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkviolet&quot;</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Cyclosporin $^1$H&quot;</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/path/to/image&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The penguins functions <code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">pause()</span></code>, and <code class="xref py py-func docutils literal notranslate"><span class="pre">savefig()</span></code> are simply wrappers around the equivalent <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions (see: <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.show()</span></code></a>, <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.pause.html#matplotlib.pyplot.pause" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.pause()</span></code></a>, and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.savefig()</span></code></a>), and have exactly the same interface. They are solely there so that there is no need to import <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> itself for most routine usage.</p>
-<p>However, if greater customisation is desired, then it is perfectly possible to import <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and use any of the functions therein <em>before</em> calling <code class="docutils literal notranslate"><span class="pre">show()</span></code>.</p>
-</div>
-<div class="section" id="plotting-multiple-spectra">
-<h2>Plotting multiple spectra<a class="headerlink" href="#plotting-multiple-spectra" title="Permalink to this headline">¶</a></h2>
-<p>One way is to simply make multiple calls to <code class="xref py py-func docutils literal notranslate"><span class="pre">plot1d()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">plot2d()</span></code>.</p>
-<p>However, it is probably easier to use the <code class="xref py py-func docutils literal notranslate"><span class="pre">plot1ds()</span></code> or <code class="xref py py-func docutils literal notranslate"><span class="pre">plot2ds()</span></code> functions (note the added <code class="docutils literal notranslate"><span class="pre">s</span></code>). These functions accept a list or tuple of Dataset objects:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spec_one</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/specname&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">spec_two</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/specname&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">plot1ds</span><span class="p">([</span><span class="n">spec_one</span><span class="p">,</span> <span class="n">spec_two</span><span class="p">])</span>
-</pre></div>
-</div>
+<img alt="_images/quickstart_plot1d.png" class="align-center" src="_images/quickstart_plot1d.png" />
+<p>For a more complete explanation of the options, please see <a class="reference internal" href="plot.html"><span class="doc">1D Plotting in Detail</span></a>.</p>
 </div>
 </div>
 
@@ -103,12 +118,11 @@ The first element is always the value for the indirect (<em>f</em><sub>1</sub>) 
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#importing-a-spectrum">Importing a spectrum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reading-parameters">Reading parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plotting-one-spectrum">Plotting one spectrum</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plotting-multiple-spectra">Plotting multiple spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-spectra">Plotting spectra</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Plotting in detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">1D Plotting in Detail</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
 </ul>
 

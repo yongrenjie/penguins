@@ -14,18 +14,17 @@ Welcome to penguins!
 
    import penguins as pg
 
-   example_spec = pg.read("data/exam2d_HC/", 3, 1)
-   pg.plot2d(example_spec,
-             contour_levels=(1e6, None, None),
-             contour_colors=("blue", "red")),
-             bounds=((133.8, 6.8), (7.4, 0.6))
-             )
-   pg.show()
+   example_spec = pg.read("/opt/topspin4.0.8/examdata/exam2d_HH/", 1, 1)
+   example_spec.stage(bounds=((9, 0), (9, 0)),
+                      colors=("seagreen", "hotpink"),
+                      levels=(5e4, None, None)
+                      )
+   pg.plot(); pg.show()
 
-.. image:: images/exam2d_hc.png
+.. image:: images/splash_cosy.png
    :width: 400
    :align: center
-   :alt: HSQC spectrum of cyclosporin (TopSpin example data)
+   :alt: COSY spectrum of cyclosporin (TopSpin example data)
    :class: no-scaled-link
 
 Contents

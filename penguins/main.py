@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Union
 
 from . import dataset as ds
-from .pgplot import *
+from .pgplot import stage1d, stage2d, plot, show, savefig
 
 # sp.read() is the main entry point for users.
 def read(path: Union[str, Path],

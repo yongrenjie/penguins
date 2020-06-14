@@ -1,0 +1,50 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 6
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ Q:/AVB400/2018/data/eaagrp/nmr/jy q34 p HCYSB/5/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2018-02-17 00:32:40.168 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<go4>,<TopSpin 3.5.6>,
+      <created by zg
+	started at 2018-02-17 00:23:29.644 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       87 58 47 12 FF 1A 48 CA 99 3D 32 FD FF 47 B0 D9
+       data hash MD5: 4K * 128
+       25 01 C6 37 B5 38 5A AA B2 9B D4 A7 F9 1B 00 20>)
+(   2,<2018-02-17 00:32:40.261 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<audit>,<TopSpin 3.5.6>,
+      <user comment:
+       ICON-NMR User ID: eaagrp
+       data hash MD5: 4K * 128
+       25 01 C6 37 B5 38 5A AA B2 9B D4 A7 F9 1B 00 20>)
+(   3,<2018-02-17 00:32:41.338 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<proc2d>,<TopSpin 3.5.6>,
+      <Start of raw data processing
+       xfb same F2: SI = 1K WDW = 3 SSB = 0 FT_mod = 6 PKNL = 1 F1: SI = 1K ME_mod = 2 NCOEF = 32 WDW = 3 SSB = 0 FT_mod = 6 FCOR = 0.5 PH_mod = 2
+       data hash MD5: 1K * 1K
+       E3 59 69 A9 FA 6B CB 3B F3 C6 F1 F6 C2 DA 67 FB>)
+(   4,<2018-02-17 00:32:41.416 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<proc2d>,<TopSpin 3.5.6>,
+      <abs2 F2: ABSG = 5 ABSF1 = 10.9923 ABSF2 = -0.992296
+       data hash MD5: 1K * 1K
+       BB 99 55 07 89 BD B9 43 14 2D EF 72 BE 11 DF 19>)
+(   5,<2018-02-17 00:32:41.478 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<proc2d>,<TopSpin 3.5.6>,
+      <abs1 F1: ABSG = 5 ABSF1 = 210.9274 ABSF2 = -10.92743
+       data hash MD5: 1K * 1K
+       C6 AD F5 3B C5 99 17 23 E7 7B 63 8E 0A D5 B0 16>)
+(   6,<2018-02-17 00:32:43.896 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<dirdata>,<TopSpin 3.5.6>,
+      <wrpa from 1 5 "jy q34 p HCYSB" "C:/NMR/data/eaagrp/nmr"
+       data hash MD5: 1K * 1K
+       C6 AD F5 3B C5 99 17 23 E7 7B 63 8E 0A D5 B0 16>)
+(   7,<2018-02-18 02:56:02.124 +0000>,<yongrenjie>,<lincdhcp23647.linc.ox.ac.uk>,<audit>,<TopSpin 4.0.1>,
+      <user comment:
+       TITLE=AVB400 17.02.18TITLE_END
+       data hash MD5: 1K * 1K
+       C6 AD F5 3B C5 99 17 23 E7 7B 63 8E 0A D5 B0 16>)
+(   8,<2018-02-18 02:56:02.228 +0000>,<yongrenjie>,<lincdhcp23647.linc.ox.ac.uk>,<audit>,<TopSpin 4.0.1>,
+      <user comment:
+       TITLE=AVB400 17.02.18TITLE_END
+       data hash MD5: 1K * 1K
+       C6 AD F5 3B C5 99 17 23 E7 7B 63 8E 0A D5 B0 16>)
+##END=
+
+$$ hash MD5
+$$ 80 07 25 51 53 EE A0 D5 4C 3D 8F AF B4 28 93 83

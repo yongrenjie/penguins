@@ -1,15 +1,18 @@
 from __future__ import annotations   # PEP 563
 
-from itertools import zip_longest
+from itertools import zip_longest, cycle
 from collections import abc
 from typing import (Union, Iterable, MutableMapping,
                     Optional, Tuple, Any, Deque)
+from numbers import Real
 
 import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.ticker import AutoMinorLocator  # type: ignore
+from matplotlib.legend_handler import HandlerBase  # type: ignore
 
 from . import dataset as ds
+from . import main
 from .type_aliases import *
 
 
@@ -38,13 +41,14 @@ class PlotHoldingArea():
         self.colors_2d = self.color_generator_2d()
 
     def color_generator_1d(self):
-        while True:
-            yield from SEABORN_PALETTES["deep"]
+        yield from cycle(SEABORN_PALETTES["deep"])
 
     def color_generator_2d(self):
+        i = 0
         while True:
-            yield from [("blue", "red"),
-                        ("seagreen", "hotpink")]
+            yield (SEABORN_PALETTES["deep"][i % 10],
+                   SEABORN_PALETTES["deep"][(i + 5) % 10])
+            i += 1
 
 # Not a good idea to use this directly!
 _globalPHA = PlotHoldingArea()
@@ -57,25 +61,6 @@ def get_pha():
 def reset_pha():
     global _globalPHA
     _globalPHA = PlotHoldingArea()
-
-
-def plot(**kwargs):
-    """
-    Delegates to _plot1d() or _plot2d() as necessary.
-    """
-    PHA = get_pha()
-    if len(PHA.plot_queue) == 0:
-        raise ValueError("No spectra have been staged yet.")
-    else:
-        if isinstance(PHA.plot_queue[0], PlotObject1D):
-            fig, ax = _plot1d(PHA, **kwargs)
-        elif isinstance(PHA.plot_queue[0], PlotObject2D):
-            fig, ax = _plot2d(PHA, **kwargs)
-        else:
-            raise TypeError("Plot holding area has invalid entries.")
-    # Reset the PHA to being empty
-    reset_pha()
-    return (fig, ax)
 
 
 # -- 1D PLOTTING ----------------------------------------------
@@ -156,6 +141,7 @@ def _plot1d(holding_area: PlotHoldingArea,
             title: OS = None,
             xlabel: str = "Chemical shift (ppm)",
             ylabel: str = "Intensity (au)",
+            legend_loc: Any = "best",
             ) -> Tuple[Any, Any]:
     """
     Plots all the 1D objects in the PHA.
@@ -192,11 +178,16 @@ def _plot1d(holding_area: PlotHoldingArea,
     # Only if y-axis is enabled.
     # plt.ylabel(ylabel)
     # ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 4), useMathText=True)
+    if title:
+        plt.title(title)
     plt.xlabel(xlabel)
     ax.invert_xaxis()
     if make_legend:
-        plt.legend()
+        plt.legend(loc=legend_loc)
     # Apply other styles.
+    if figstyle not in ["default", "mpl_natural"]:
+        print(f"No figure style corresponding to {figstyle}. Using default.")
+        figstyle = "default"
     if figstyle == "default":
         # Remove the other spines
         for s in ["top", "left", "right"]:
@@ -209,11 +200,9 @@ def _plot1d(holding_area: PlotHoldingArea,
         ax.tick_params(which="both", width=1.3)
         ax.tick_params(which="major", length=5)
         ax.tick_params(which="minor", length=3)
+        plt.tight_layout()
     elif figstyle == "mpl_natural":
         pass
-    if title:
-        plt.title(title)
-    plt.tight_layout()
     return (plt.gcf(), plt.gca())
 
 
@@ -222,21 +211,25 @@ def _plot1d(holding_area: PlotHoldingArea,
 class Contours:
     """2D plot contours."""
     def __init__(self,
+                 dataset: ds.Dataset2D,
                  levels: Optional[TLevels] = None,
                  colors: Optional[TColors] = None):
-        levels = levels or (None, None, None)
-        self.read_levels(*levels)
-        colors = colors or (None, None)
-        self.read_colors(*colors)
+        self.dataset = dataset
+        if isinstance(levels, Real):
+            levels = (levels, None, None)
+        self.levels = levels or (None, None, None)
+        self.make_levels(*self.levels)
+        self.colors = colors or (None, None)
+        self.make_colors(*self.colors)
 
-    def read_levels(self, base: OF = None,
+    def make_levels(self, base: OF = None,
                     increment: OF = None,
                     number: Optional[int] = None):
-        self.base = base or 2e4
+        self.base = base or self.dataset._tsbaselev
         self.increment = increment or 1.5
         self.number = number or 10
 
-    def read_colors(self,
+    def make_colors(self,
                     color_positive: OS = None,
                     color_negative: OS = None):
         if color_positive is None or color_negative is None:
@@ -267,21 +260,26 @@ class PlotObject2D():
     default_2d_plotoptions = {"linewidths": 0.7}
     def __init__(self,
                  dataset: ds.Dataset2D,
-                 bounds: Optional[TBounds2D] = None,
+                 f1_bounds: Optional[TBounds1D] = None,
+                 f2_bounds: Optional[TBounds1D] = None,
                  levels: Optional[TLevels] = None,
                  colors: Optional[TColors] = None,
+                 label: OS = None,
                  plot_options: Optional[MutableMapping] = None):
         self.dataset = dataset
-        self._init_bounds(bounds)
-        self.contours = Contours(levels, colors)
+        self.f1_bounds = f1_bounds
+        self.f2_bounds = f2_bounds
+        self.contours = Contours(self.dataset, levels, colors)
+        # can access cpos and cneg with self.contours.color_[positive|negative]
         self.clevels = self.contours.generate_contour_levels()
         self.ccolors = self.contours.generate_contour_colors()
         self._init_options(plot_options)
+        self.label = label
         # self.options will include the colors key.
-        self.f1_scale = self.dataset.ppm_scale(axis=0, bounds=self.bounds[0])
-        self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.bounds[1])
-        self.proc_data = self.dataset.proc_data(f1_bounds=self.bounds[0],
-                                                f2_bounds=self.bounds[1])
+        self.f1_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
+        self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
+        self.proc_data = self.dataset.proc_data(f1_bounds=self.f1_bounds,
+                                                f2_bounds=self.f2_bounds)
 
     def _init_bounds(self, bounds):
         if bounds is None:
@@ -303,17 +301,32 @@ class PlotObject2D():
         self.options = options
 
 
+class ContourLegendHandler(HandlerBase):
+    # code lifted mostly from https://stackoverflow.com/a/41765095/
+    def create_artists(self, legend, orig_handle,
+                       x0, y0, width, height, fontsize, trans):
+        line_cpos = plt.Line2D([x0, y0 + width], [0.7 * height, 0.7 * height],
+                               color=orig_handle[0])
+        line_cneg = plt.Line2D([x0, y0 + width], [0.3 * height, 0.3 * height],
+                               color=orig_handle[1])
+        return [line_cpos, line_cneg]
+
+
 def stage2d(dataset: ds.Dataset2D,
-            bounds: Optional[TBounds2D] = None,
+            f1_bounds: Optional[TBounds1D] = None,
+            f2_bounds: Optional[TBounds1D] = None,
             levels: Optional[TLevels] = None,
             colors: Optional[TColors] = None,
+            label: OS = None,
             plot_options: Optional[MutableMapping] = None,
             ) -> None:
     """
     Stages a 2D spectrum.
     """
-    plot_obj = PlotObject2D(dataset=dataset, bounds=bounds,
+    plot_obj = PlotObject2D(dataset=dataset,
+                            f1_bounds=f1_bounds, f2_bounds=f2_bounds,
                             levels=levels, colors=colors,
+                            label=label,
                             plot_options=plot_options)
 
     # Check that the plot queue doesn't have 1D spectra.
@@ -327,41 +340,145 @@ def stage2d(dataset: ds.Dataset2D,
 
 
 def _plot2d(holding_area: PlotHoldingArea,
+            figstyle: str = "default",
             offset: Tuple[float, float] = (0, 0),
+            title: OS = None,
+            xlabel: str = r"$f_2$ (ppm)",
+            ylabel: str = r"$f_1$ (ppm)",
+            legend_loc: Any = "best",
             ) -> Tuple[Any, Any]:
     """
     Plots all the 2D objects in the PHA.
     """
-    # Iterate over plot objects. Isn't it easy?
+    make_legend = False
+    legend_colors, legend_labels = [], []
+    # Iterate over plot objects
     for n, pobj in enumerate(holding_area.plot_queue):
         plt.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
                     pobj.f1_scale - (n * offset[0]),   # y-axis
                     pobj.proc_data,
                     levels=pobj.clevels,
                     **pobj.options)
+        # Construct lists for plt.legend
+        if pobj.label is not None:
+            make_legend = True
+            legend_colors.append((pobj.contours.color_positive,
+                                  pobj.contours.color_negative)
+                                 )
+            legend_labels.append(pobj.label)
     # Axis formatting
     ax = plt.gca()
     ax.invert_xaxis()
     ax.invert_yaxis()
-    plt.xlabel(r"$f_2$ (ppm)")
-    plt.ylabel(r"$f_1$ (ppm)")
-    plt.tight_layout()
-    return (plt.gca(), plt.gcf())
+    if title is not None:
+        plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    # Apply other styles.
+    if figstyle not in ["default", "mpl_natural"]:
+        print(f"No figure style corresponding to {figstyle}. Using default.")
+        figstyle = "default"
+    if figstyle == "default":
+        # Make spines thicker
+        for s in ["top", "left", "right", "bottom"]:
+            ax.spines[s].set_linewidth(1.3)
+        # Enable minor ticks and make the ticks more visible
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which="both", width=1.3)
+        ax.tick_params(which="major", length=5)
+        ax.tick_params(which="minor", length=3)
+        plt.tight_layout()
+    elif figstyle == "mpl_natural":
+        pass
+
+    # Make legend. This part is not easy...
+    # See https://stackoverflow.com/questions/41752309/ for an example
+    if make_legend:
+        plt.legend(legend_colors, legend_labels,
+                   handler_map={tuple: ContourLegendHandler()},
+                   loc=legend_loc)
+    return (plt.gcf(), plt.gca())
 
 
-# -- Matplotlib wrappers ------------------------------------
+def _make_contour_slider(dataset: ds.Dataset2D,
+                         increment: float = None,
+                         nlev: int = 4,
+                         ) -> None:
+    # Choose contour levels. We reduce nlev to 4 by default so that the
+    # plotting is faster -- otherwise it's super laggy. We try to cover the
+    # same dynamic range as 1.5 ** 10 by default, unless the user specified
+    # an increment.
+    initial_baselev = dataset._tsbaselev
+    increment = increment or (1.5 ** 10) ** (1 / nlev)
+    initial_clev = (initial_baselev, increment, nlev)
+    dataset.stage(levels=initial_clev)
+    # Maximum level should be the highest intensity of the spectrum.
+    max_baselev = np.max(np.abs(dataset.rr))
 
-def show(*args, **kwargs):
-    PHA = get_pha()
-    if len(PHA.plot_queue) != 0:
-        print("Warning: plot staging area is not empty. "
-              "Did you mean to call pg.plot()?")
-    plt.show(*args, **kwargs)
+    # Plot the spectrum on the top portion of the figure.
+    fig, ax = plt.subplots()
+    _, plot_axes = main.plot(empty_pha=False,
+                             figstyle="mpl_natural",
+                             )
+    plt.subplots_adjust(left=0.1, bottom=0.25)
 
+    # Generate a slider.
+    from matplotlib.widgets import Slider, Button     # type: ignore
+    baselev_axes = plt.axes([0.1, 0.1, 0.8, 0.03], facecolor="lavender")
+    baselev_slider = Slider(baselev_axes, "",
+                            2, np.log10(max_baselev),
+                            valinit=np.log10(initial_baselev), color="purple")
+    # Add some text
+    plt.text(0.5, -1.2, r"log$_{10}$(base contour level)",
+             horizontalalignment="center",
+             transform=baselev_axes.transAxes)
 
-def savefig(*args, **kwargs):
-    PHA = get_pha()
-    if len(PHA.plot_queue) != 0:
-        print("Warning: plot staging area is not empty. "
-              "Did you mean to call pg.plot()?")
-    plt.savefig(*args, **kwargs)
+    # Define the behaviour when redrawn
+    def redraw(plot_axes: Any, val: float) -> None:
+        # Update the internal Contours object
+        pobj = get_pha().plot_queue[0]
+        pobj.contours.base = 10 ** val
+        # Regenerate the contours
+        pobj.clevels = pobj.contours.generate_contour_levels()
+        # Replot
+        plot_axes.cla()
+        plt.sca(plot_axes)
+        main.plot(close=False, empty_pha=False, figstyle="mpl_natural")
+
+    # Register the redraw function. The argument to on_changed must be a
+    # function taking val as its only parameter.
+    baselev_slider.on_changed(lambda val: redraw(plot_axes, val))
+
+    # Generate the "OK" button
+    okay_axes = plt.axes([0.84, 0.025, 0.1, 0.04])
+    okay_button = Button(okay_axes, "OK", color="plum", hovercolor='0.95')
+    okay = 0
+    # Add the close behaviour
+    def set_okay(button):
+        nonlocal okay
+        okay = 1
+        plt.close()
+    okay_button.on_clicked(set_okay)
+
+    # Generate the "Reset" button
+    reset_axes = plt.axes([0.72, 0.025, 0.1, 0.04])
+    reset_button = Button(reset_axes, "Reset", color="plum", hovercolor='0.95')
+    # Add the close behaviour
+    def reset(button):
+        baselev_slider.reset()
+    reset_button.on_clicked(reset)
+
+    # Show it to the user.
+    main.show()
+
+    # Post-OK actions
+    if okay:
+        # Print the final value
+        fval = 10 ** baselev_slider.val
+        fval_short = f"{fval:.2e}".replace("e+0", "e")
+        print(f"\n[[{dataset!r}]]\nThe final base level was: {fval} (or {fval_short})\n")
+    # Clear out the PHA
+    reset_pha()
+    plt.close("all")
+

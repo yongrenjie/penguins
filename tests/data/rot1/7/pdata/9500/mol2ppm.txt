@@ -1,0 +1,4 @@
+# 2019-05-01 15:24:03 +0100 yongrenjie@Jonathan-Yongs-MacBook-Pro-9986.local
+# TOPSPIN Molecule to PPM ranges correlations
+# /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4007/pdata/9500
+# Start [PPM]     End [PPM]     Atom Numbers

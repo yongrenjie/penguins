@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList modified="2019-05-01T15:32:10">
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=5.408726ppm, F2=5.406477ppm, MI=0.00cm, MAXI=0.30cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=5.406467ppm, F2=5.405443ppm, MI=-0.02cm, MAXI=0.00cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=5.405433ppm, F2=5.374475ppm, MI=-0.05cm, MAXI=0.29cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.40206" intensity="0.09259742" type="0"/>
+    <Peak1D F1="5.399848" intensity="0.2403478" type="0"/>
+    <Peak1D F1="5.397589" intensity="0.242785" type="0"/>
+    <Peak1D F1="5.39535" intensity="0.0979353" type="0"/>
+    <Peak1D F1="5.392923" intensity="0.003125973" type="0"/>
+    <Peak1D F1="5.384839" intensity="0.1002306" type="0"/>
+    <Peak1D F1="5.382609" intensity="0.2482919" type="0"/>
+    <Peak1D F1="5.380358" intensity="0.2480544" type="0"/>
+    <Peak1D F1="5.378104" intensity="0.09881343" type="0"/>
+    <Peak1D F1="5.375624" intensity="0.005547457" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=5.374475ppm, F2=5.373064ppm, MI=-0.02cm, MAXI=0.28cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=3.971471ppm, F2=3.962195ppm, MI=0.71cm, MAXI=1.08cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=3.962195ppm, F2=3.953380ppm, MI=0.54cm, MAXI=0.75cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=3.953380ppm, F2=3.948385ppm, MI=0.71cm, MAXI=1.08cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=3.601949ppm, F2=3.545340ppm, MI=0.41cm, MAXI=1.85cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="3.571665" intensity="0.6345082" type="0"/>
+    <Peak1D F1="3.561004" intensity="1.264789" type="0"/>
+    <Peak1D F1="3.550487" intensity="0.6577481" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=3.482157ppm, F2=3.432160ppm, MI=0.05cm, MAXI=0.57cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="3.470463" intensity="0.1340809" type="0"/>
+    <Peak1D F1="3.46523" intensity="0.144842" type="0"/>
+    <Peak1D F1="3.460173" intensity="0.146855" type="0"/>
+    <Peak1D F1="3.455257" intensity="0.3186886" type="0"/>
+    <Peak1D F1="3.450185" intensity="0.1240956" type="0"/>
+    <Peak1D F1="3.445235" intensity="0.20066" type="0"/>
+    <Peak1D F1="3.439887" intensity="0.1589869" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=2.548259ppm, F2=2.470968ppm, MI=0.02cm, MAXI=0.11cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="2.532727" intensity="0.05986718" type="0"/>
+    <Peak1D F1="2.485232" intensity="0.08147672" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=2.470968ppm, F2=2.466407ppm, MI=0.02cm, MAXI=0.15cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-01T15:32:10" expNo="4001" name="jy48552803" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=1.684299ppm, F2=1.657349ppm, MI=3.34cm, MAXI=4.43cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+</PeakList>

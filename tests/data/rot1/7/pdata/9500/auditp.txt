@@ -1,0 +1,15 @@
+##TITLE= Audit trail, TopSpin 4.0.1
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4007/pdata/9500/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2019-05-01 15:23:09.897 +0100>,<yongrenjie>,<Jonathan-Yongs-MacBook-Pro-9986.local>,<mvrow>,<TopSpin 4.0.1>,
+      <f1projp 9491 9503 from
+       1 4007 "jy48552803" "/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr"
+       data hash MD5: 512
+       4B 9E 8B 73 56 59 4F 00 35 17 3B FF 6F B3 99 75>)
+##END=
+
+$$ hash MD5
+$$ DD 7E A7 26 DF 0A 0C 7F F9 7C D5 FE 4F 02 C3 9A

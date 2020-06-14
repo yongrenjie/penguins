@@ -1,0 +1,19 @@
+# 2019-05-01 15:33:49 +0100 yongrenjie@Jonathan-Yongs-MacBook-Pro-9986.local
+# TOPSPIN Daisy Multiplet Table
+# /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4001/pdata/1
+
+1D TopSPIN Multiplet Table
+
+----------------------------------------------------------------------
+Number     Shift [Hz]    J [Hz]    M         Connection     Identifier
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+
+
+1D TopSPIN Multiplet Lines Table
+
+--------------------------
+Number       Position [Hz]
+--------------------------
+--------------------------

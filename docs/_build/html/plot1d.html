@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1D Plotting in Detail &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2D Plotting in Detail" href="plot2d.html" />
+    <link rel="prev" title="TopSpin directories" href="topspin.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="d-plotting-in-detail">
+<h1>1D Plotting in Detail<a class="headerlink" href="#d-plotting-in-detail" title="Permalink to this headline">¶</a></h1>
+<p>As described in <a class="reference internal" href="quickstart.html"><span class="doc">Quickstart</span></a>, routine plotting of spectra can be done fairly easily. This page aims to describe the various options available when plotting spectra.</p>
+<p>The options here are applicable to all 1D datasets (<a class="reference internal" href="reference.html#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="reference.html#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, and <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset1DProjVirtual</span></code>).</p>
+<div class="section" id="step-1-staging-spectra">
+<h2>Step 1: Staging spectra<a class="headerlink" href="#step-1-staging-spectra" title="Permalink to this headline">¶</a></h2>
+<p>Firstly, it should be noted that the <code class="xref py py-meth docutils literal notranslate"><span class="pre">stage()</span></code> methods on 1D dataset classes simply call <a class="reference internal" href="#penguins.pgplot.stage1d" title="penguins.pgplot.stage1d"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.pgplot.stage1d()</span></code></a> on the Dataset object itself, with all the arguments passed along. Therefore, if <code class="docutils literal notranslate"><span class="pre">ds</span></code> is a 1D dataset object, the following invocations are entirely equivalent (although the former is easier to type):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">pgplot</span><span class="o">.</span><span class="n">stage1d</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Multiple spectra can be plotted by staging each of them individually.</p>
+<dl class="py function">
+<dt id="penguins.pgplot.stage1d">
+<code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">stage1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot.stage1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Penguins maintains a <em>“holding area”</em>, which is a global list of plots which have been registered but not yet plotted. The <a class="reference internal" href="#penguins.pgplot.stage1d" title="penguins.pgplot.stage1d"><code class="xref py py-func docutils literal notranslate"><span class="pre">stage1d()</span></code></a> function uses the information provided to create a <code class="xref py py-class docutils literal notranslate"><span class="pre">penguins.pgplot.PlotObject1D</span></code> object, which is then appended to that list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> – A 1D dataset object.</p></li>
+<li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – <em>(optional)</em> Indicates factor to scale spectrum intensity by.</p></li>
+<li><p><strong>bounds</strong> – <em>(optional)</em> A tuple of floats <code class="docutils literal notranslate"><span class="pre">(upper,</span> <span class="pre">lower)</span></code> specifying the section of the spectrum to plot. Both should be chemical shifts. If either <code class="docutils literal notranslate"><span class="pre">upper</span></code> or <code class="docutils literal notranslate"><span class="pre">lower</span></code> are none, then the upper (lower) bound is the leftmost (or rightmost) edge of the spectrum. If not provided, defaults to the entire spectrum. Note that this does not merely affect the <em>plot limits</em>. It restricts the portion of the spectrum which is actually plotted (and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> chooses sensible plot limits to reflect that).</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <em>(optional)</em> Text to be displayed in the plot legend. Some LaTeX-like syntax is possible using raw strings: see <a class="reference external" href="https://matplotlib.org/tutorials/text/mathtext.html" title="(in Matplotlib v3.2.1)"><span>Writing mathematical expressions</span></a>.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <em>(optional)</em> A valid <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> color. See <a class="reference external" href="https://matplotlib.org/tutorials/colors/colors.html" title="(in Matplotlib v3.2.1)"><span>Specifying Colors</span></a> for more information. The default colour palette used is Seaborn’s “deep” (see Seaborn’s <a class="reference external" href="https://seaborn.pydata.org/tutorial/color_palettes.html" title="(in seaborn v0.10.1)"><span>Choosing color palettes</span></a>).</p></li>
+<li><p><strong>plot_options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <em>(optional)</em> Key-value options which are passed on directly to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.plot()</span></code></a>. Note that the <code class="docutils literal notranslate"><span class="pre">color</span></code> and <code class="docutils literal notranslate"><span class="pre">label</span></code> parameters will override the corresponding keys in <code class="docutils literal notranslate"><span class="pre">plot_options</span></code>, if present.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ds1</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/pt2&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># This label demonstrates some of the LaTeX capabilities.</span>
+<span class="c1"># The colour for this one defaults to the first item in Seaborn/deep.</span>
+<span class="n">ds1</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">8.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span>
+          <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mathrm{C_</span><span class="si">{20}</span><span class="s2">H_</span><span class="si">{28}</span><span class="s2">N_2O_4S}$&quot;</span><span class="p">,</span>
+          <span class="n">plot_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">})</span>
+
+<span class="c1"># You can stage the same dataset multiple times with different options.</span>
+<span class="n">ds1</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>           <span class="c1"># 1/5 the height of first spectrum</span>
+          <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">8.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+          <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Yes, that is the actual formula&quot;</span><span class="p">,</span>
+          <span class="n">color</span><span class="o">=</span><span class="s2">&quot;hotpink&quot;</span><span class="p">)</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span> <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/plot1d_stage.png" class="align-center" src="_images/plot1d_stage.png" />
+</div>
+<div class="section" id="step-2-constructing-the-plot">
+<h2>Step 2: Constructing the plot<a class="headerlink" href="#step-2-constructing-the-plot" title="Permalink to this headline">¶</a></h2>
+<p>Plot construction is done using <a class="reference internal" href="#penguins.plot" title="penguins.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot()</span></code></a>.</p>
+<dl class="py function">
+<dt id="penguins.plot">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figstyle</span><span class="o">=</span><span class="default_value">'default'</span></em>, <em class="sig-param"><span class="n">stacked</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">voffset</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">hoffset</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">'Chemical shift (ppm)'</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">'Intensity(au)'</span></em>, <em class="sig-param"><span class="n">close</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">empty_pha</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.plot()</span></code></a> on each spectrum in the holding area. Also calls several <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if <code class="docutils literal notranslate"><span class="pre">empty_pha</span></code> is set to True.</p>
+<p>All keyword arguments below are optional:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>)</em>) – (width, height) of plot in inches.</p></li>
+<li><p><strong>figstyle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>Specifies the overall plot style.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code> removes all spines except the bottom one, enables minor ticks, and makes the axis slightly thicker.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;mpl_natural&quot;</span></code> does not change any settings from the original.</p></li>
+</ul>
+<p>There are no other styles right now, but this list may be expanded in future. In any case, this can later be customised further (see below).</p>
+</p></li>
+<li><p><strong>stacked</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – True to make spectra tightly stacked (i.e. not superimposed). Overrides any value given in the <code class="docutils literal notranslate"><span class="pre">voffset</span></code> parameter.</p></li>
+<li><p><strong>voffset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of maximum height to vertically offset spectra by. The height of a spectrum refers to the total width it spans in the <em>y</em>-axis, and the maximum height refers to the largest such height of all spectra in the holding area. This is useful for offsetting spectra by a <em>constant amount</em>. Note that stacked spectra have a <em>variable</em> vertical offset between each spectrum, because each spectrum will have a different height. An example of the difference is shown below.</p></li>
+<li><p><strong>hoffset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Amount of horizontal offset between adjacent spectra in ppm. If this is positive, then later spectra are shifted to the right.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Plot title.</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for <em>x</em>-axis.</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for <em>y</em>-axis. This would never be used unless you use <code class="docutils literal notranslate"><span class="pre">figstyle=mpl_natural</span></code>, or manually reenable the <em>y</em>-axis display.</p></li>
+<li><p><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Close all previously used figures before constructing a new plot. This shouldn’t be changed by the end user.</p></li>
+<li><p><strong>empty_pha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Empty the holding area after constructing a plot. This also causes the <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> colour generator to restart. Setting this to False can be useful if one wants to construct several figures by adding one spectrum at at time, since you don’t have to stage the first dataset every time after calling <a class="reference internal" href="#penguins.show" title="penguins.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code></a> or <a class="reference internal" href="#penguins.savefig" title="penguins.savefig"><code class="xref py py-func docutils literal notranslate"><span class="pre">savefig()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a>, <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>) objects corresponding to the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p><a class="reference internal" href="#penguins.plot" title="penguins.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot()</span></code></a> conveniently returns <code class="docutils literal notranslate"><span class="pre">(fig,</span> <span class="pre">ax)</span></code>, so that you do not need to call <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.gcf.html#matplotlib.pyplot.gcf" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.gcf()</span></code></a> or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.gca()</span></code></a>. Therefore you can carry out any other operations you wish to after this. For example, to add extra text to the plot:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>    <span class="c1"># _ denotes a throwaway variable</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;Aromatic region&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(see <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.text()</span></code></a> for an explanation of the parameters). For even more customisation you can of course import <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> itself and utilise the full library of functions there.</p>
+<p>Here is an example of a stacked plot versus one with <code class="docutils literal notranslate"><span class="pre">voffset=1.1</span></code>. The extra 0.1 is there to ensure that there is some padding between adjacent spectra (when using <code class="docutils literal notranslate"><span class="pre">stacked</span></code>, penguins also makes sure to add <code class="docutils literal notranslate"><span class="pre">0.1</span> <span class="pre">*</span> <span class="pre">maxheight</span></code> padding):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ds2</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/pt2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>          <span class="c1"># 13C spectrum</span>
+<span class="n">ds2</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>    <span class="c1"># Full spectrum</span>
+<span class="n">ds2</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>             <span class="c1"># Three subspectra</span>
+<span class="n">ds2</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="n">ds2</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stacked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;stacked&quot;</span><span class="p">)</span>   <span class="c1"># Either this...</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">voffset</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;voffset&quot;</span><span class="p">)</span>    <span class="c1"># ...or this, but not both!</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/plot1d_stacked.png" class="no-scaled-link" src="_images/plot1d_stacked.png" style="width: 49%;" />
+<img alt="_images/plot1d_voffset.png" class="no-scaled-link" src="_images/plot1d_voffset.png" style="width: 49%;" />
+<p>In the <code class="docutils literal notranslate"><span class="pre">stacked</span></code> plot, the second spectrum (from the bottom; in blue) occupies a relatively small vertical space, because its intensity is relatively low (does not contain the large CDCl<sub>3</sub> peak at 77 ppm).
+However, in the <code class="docutils literal notranslate"><span class="pre">voffset</span></code> plot, it occupies the same vertical space as the other spectra, because the vertical offset between spectra is a constant.
+The question of which is <em>better</em> is left as a personal decision for you to make. Indeed, you may find that different situations call for different settings.</p>
+</div>
+<div class="section" id="step-3-displaying-the-plot">
+<span id="plot1d-display"></span><h2>Step 3: Displaying the plot<a class="headerlink" href="#step-3-displaying-the-plot" title="Permalink to this headline">¶</a></h2>
+<p>This step is exactly analogous to using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.show()</span></code></a>. You can also save an image using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.savefig()</span></code></a>. For convenience, penguins provides functions of the same name which are simply wrappers around the corresponding <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># These are entirely equivalent to plt.show() and plt.savefig()</span>
+<span class="c1"># Display the plot:</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># or save an image:</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/yongrenjie/Desktop/nice_plot.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt id="penguins.show">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">show</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.show(*args,</span> <span class="pre">**kwargs)</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="penguins.savefig">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">savefig</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.savefig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.savefig(*args,</span> <span class="pre">**kwargs)</span></code></a>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1D Plotting in Detail</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-staging-spectra">Step 1: Staging spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-constructing-the-plot">Step 2: Constructing the plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-displaying-the-plot">Step 3: Displaying the plot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plot2d.html">2D Plotting in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="topspin.html" title="previous chapter">TopSpin directories</a></li>
+      <li>Next: <a href="plot2d.html" title="next chapter">2D Plotting in Detail</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/plot1d.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

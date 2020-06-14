@@ -1,0 +1,6 @@
+P    #regions in PPM
+# 2019-05-04 01:54:56 +0100  yongrenjie@Jonathan-Yongs-MacBook-Pro-9986.local
+# low field   high field   mi   maxi
+  5.4315246954633905  5.4032622680035525  1.888  4.233  # for region 1
+  5.379282026522478  5.360440408215919  1.373  3.261  # for region 2
+  3.9629402357839236  3.939036244702073  10.297  24.599  # for region 3

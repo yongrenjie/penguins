@@ -4,14 +4,16 @@ import penguins as pg
 datadir = Path(__file__).parent / "data"
 
 # Test 1D data
-spec1d = pg.read(datadir / "1d", 1, 1)
+spec1d = pg.read(datadir / "pt2", 1, 1)
+print(spec1d.pars)
 spec1d.stage(bounds=(None, 3), label="Quack?", color="brown")
 spec1d.stage(bounds=(3, None), label="Quack!", color="green")
 pg.plot()   # returns fig, ax
 pg.show()
 
 # Test 2D data
-spec2d = pg.read(datadir / "exam2d_HC", 3, 1)
+spec2d = pg.read(datadir / "pt2", 4, 1)
+print(spec2d.pars)
 # plt.figure(figsize=(7,5))
 spec2d.stage(levels=(5e4, None, None),
              colors=("green", "purple"),

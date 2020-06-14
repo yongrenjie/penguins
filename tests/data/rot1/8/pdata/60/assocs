@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TopSpin 4.0.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 2	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2019-05-04 02:53:07.223 +0100  yongrenjie@Jonathan-Yongs-MacBook-Pro-9986.local
+$$ /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4008/pdata/60/assocs
+$$ process /opt/topspin4.0.1/prog/mod/dataserver
+##$MULTDISP= </Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4016/pdata/27|/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4016/pdata/26>
+##END=

@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 3.6.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2019-04-24 12:34:05.835 +0100  CHEM\nmr-user@JELLYFISH-CRL
+$$ Q:/AV600/2019/data/service/nmr/jy48552803/4007/pdata/1/outd
+$$ process C:\Bruker\TopSpin3.6.1\prog\mod\dirdata.exe
+##$CURPLOT= <\\CHEM-Print01\Spectrum>
+##$CURPRIN= <$Cups-PDF>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/1D_H.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

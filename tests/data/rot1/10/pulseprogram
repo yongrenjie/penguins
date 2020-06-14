@@ -1,0 +1,150 @@
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+;selnogp
+;avance-version (12/01/11)
+;1D NOESY using selective refocussing with a shaped pulse
+;dipolar coupling may be due to noe or chemical exchange.
+;
+;H. Kessler, H. Oschkinat, C. Griesinger & W. Bermel,
+;   J. Magn. Reson. 70, 106 (1986)
+;J. Stonehouse, P. Adell, J. Keeler & A.J. Shaka, 
+;   J. Am. Chem. Soc 116, 6037 (1994)
+;K. Stott, J. Stonehouse, J. Keeler, T.L. Hwang & A.J. Shaka, 
+;   J. Am. Chem. Soc 117, 4199-4200 (1995)
+;
+;$CLASS=HighRes
+;$DIM=1D
+;$TYPE=
+;$SUBTYPE=
+;$COMMENT=
+
+
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Avance.incl" 1
+;Avance3aqs.incl
+;   for AV III with AQS IPSO
+;
+;avance-version (15/06/05)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+# 170 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Avance.incl"
+;$Id: Avance3aqs.incl,v 1.1.8.3 2015/03/05 16:46:54 ber Exp $
+# 20 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp" 2
+
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Grad.incl" 1
+;Grad2.incl  -  include file for Gradient Spectroscopy
+;   for TCU3
+;
+;avance-version (07/01/17)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 27 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Grad.incl"
+define list<gradient> EA=<EA>
+
+
+# 31 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Grad.incl"
+;$Id: Grad2.incl,v 1.14 2012/01/31 17:49:21 ber Exp $
+# 21 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp" 2
+
+
+# 24 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+"p2=p1*2"
+
+
+"d20=d8*0.5-p16-d16"
+# 36 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+"acqt0=-p1*2/3.1416-4u"
+
+
+# 1 "mc_line 39 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp exp. def. part of mc cmd. before ze"
+; dimension 1D; AQ_mode 
+define delay MCWRK
+define delay MCREST
+"MCREST = 30m - 30m"
+"MCWRK = 0.333333*30m"
+
+    dccorr
+# 39 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+1 ze
+# 1 "mc_line 39 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp exp. def. of mc cmd. after ze"
+# 40 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+# 1 "mc_line 40 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp exp. start label for mc cmd."
+2 MCWRK  * 2
+LBLF0, MCWRK
+  MCREST
+# 41 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+  20u pl1:f1
+  d1
+  50u setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+  (p1 ph1):f1
+  3u
+  p16:gp1
+  d16 pl0:f1
+  p12:sp2:f1 ph2:r
+  3u
+  p16:gp1
+  d16 pl1:f1
+  (p1 ph3):f1
+  d20
+  p16:gp2
+  d16
+  3u
+  (p2 ph4):f1
+  3u
+  p16:gp2*-1
+  d16
+  d20
+  (p1 ph5):f1
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
+  go=2 ph31
+# 1 "mc_line 65 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp exp. mc cmd. in line"
+  MCWRK wr #0
+  MCWRK zd
+  lo to LBLF0 times td0
+
+# 66 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+exit
+# 69 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+ph1=0 2 
+ph2=0 0 1 1 2 2 3 3
+ph3=0
+ph4=0
+ph5=0
+ph31=0 2 2 0 
+
+
+;pl0 : 0W
+;pl1 : f1 channel - power level for pulse (default)
+;sp2: f1 channel - shaped pulse
+;p1 : f1 channel -  90 degree high power pulse
+;p2 : f1 channel - 180 degree high power pulse
+;p12: f1 channel - 180 degree shaped pulse
+;p16: homospoil/gradient pulse                            [1 msec]
+;d1 : relaxation delay; 1-5 * T1
+;d8 : mixing time
+;d16: delay for homospoil/gradient recovery
+;d20: d8*0.5 - p16 - d16
+;cnst21: chemical shift for selective pulse (offset, in ppm)
+;ns: 2 * n, total number of scans: NS * TD0
+;ds: 4
+# 93 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+;phcor 2 : phasedifference between power levels sp1 and pl1
+
+;choose p12 according to desired selectivity
+;the flip-angle is determined by the amplitude
+;set O1 on resonance on the multiplet to be excited or use spoffs
+
+# 100 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+;use gradient ratio:    gp 1 : gp 2
+;                         15 :   40
+
+;for z-only gradients:
+;gpz1: 15%
+;gpz2: 40%
+
+;use gradient files:   
+;gpnam1: SMSQ10.100
+;gpnam2: SMSQ10.100
+# 113 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/selnogp"
+;$Id: selnogp,v 1.20 2012/01/31 17:49:28 ber Exp $

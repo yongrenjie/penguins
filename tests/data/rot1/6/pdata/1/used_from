@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 3.6.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2019-04-24 10:52:38.327 +0100  CHEM\nmr-user@JELLYFISH-CRL
+$$ C:\NMR\data\service\nmr/jy48552803/4006/pdata/1/used_from
+$$ process C:\Bruker\TopSpin3.6.1\prog\mod\mvrow.exe
+##$CUREXP= <ser>
+##$DATPATH= <C:\NMR\data\service\nmr>
+##$EXPNO= 4005
+##$NAME= <jy48552803>
+##$PROCNO= 1
+##$PROCNO2= 1
+##END=

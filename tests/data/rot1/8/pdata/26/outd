@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 4.0.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2019-05-04 02:41:36.633 +0100  yongrenjie@Jonathan-Yongs-MacBook-Pro-9986.local
+$$ /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4008/pdata/26/outd
+$$ process /opt/topspin4.0.1/prog/mod/mvrow
+##$CURPLOT= <HP LJ400 color>
+##$CURPRIN= <$HP LJ400 color>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/1D_X.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

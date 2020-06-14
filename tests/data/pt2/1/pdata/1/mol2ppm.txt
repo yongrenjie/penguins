@@ -1,0 +1,4 @@
+# 2018-02-20 10:58:01 +0000 yongrenjie@Jonathan-Yongs-MacBook-Pro-3129.local
+# TOPSPIN Molecule to PPM ranges correlations
+# /Users/yongrenjie/Desktop/Oxford/PtIINMR-final/q34 HCYSB/1/pdata/1
+# Start [PPM]     End [PPM]     Atom Numbers

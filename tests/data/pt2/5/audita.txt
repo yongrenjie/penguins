@@ -1,0 +1,27 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 6
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ Q:/AVB400/2018/data/eaagrp/nmr/jy q34 p HCYSB/5/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2018-02-17 00:32:40.168 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<go4>,<TopSpin 3.5.6>,
+      <created by zg
+	started at 2018-02-17 00:23:29.644 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       87 58 47 12 FF 1A 48 CA 99 3D 32 FD FF 47 B0 D9
+       data hash MD5: 4K * 128
+       25 01 C6 37 B5 38 5A AA B2 9B D4 A7 F9 1B 00 20>)
+(   2,<2018-02-17 00:32:40.261 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<audit>,<TopSpin 3.5.6>,
+      <user comment:
+       ICON-NMR User ID: eaagrp
+       data hash MD5: 4K * 128
+       25 01 C6 37 B5 38 5A AA B2 9B D4 A7 F9 1B 00 20>)
+(   3,<2018-02-17 00:32:43.319 +0000>,<CHEM\nmr-user>,<DOGFISH-CRL>,<dirdata>,<TopSpin 3.5.6>,
+      <wrpa from 1 5 "jy q34 p HCYSB" "C:/NMR/data/eaagrp/nmr"
+       data hash MD5: 4K * 128
+       25 01 C6 37 B5 38 5A AA B2 9B D4 A7 F9 1B 00 20>)
+##END=
+
+$$ hash MD5
+$$ 91 55 E7 24 80 2F 7C 95 D0 A6 BE 43 92 F2 E4 8C

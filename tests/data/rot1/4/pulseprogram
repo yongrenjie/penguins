@@ -1,0 +1,270 @@
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+;hmbcgpl2ndqf
+;avance-version (12/01/11)
+;HMBC
+;2D H-1/X correlation via heteronuclear zero and double quantum
+;   coherence
+;optimized on long range couplings
+;with two-fold low-pass J-filter to suppress one-bond correlations
+;no decoupling during acquisition
+;using gradient pulses for selection
+;
+;$CLASS=HighRes
+;$DIM=2D
+;$TYPE=
+;$SUBTYPE=
+;$COMMENT=
+
+
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Avance.incl" 1
+;Avance3aqs.incl
+;   for AV III with AQS IPSO
+;
+;avance-version (15/06/05)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+# 170 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Avance.incl"
+;$Id: Avance3aqs.incl,v 1.1.8.3 2015/03/05 16:46:54 ber Exp $
+# 18 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf" 2
+
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Grad.incl" 1
+;Grad2.incl  -  include file for Gradient Spectroscopy
+;   for TCU3
+;
+;avance-version (07/01/17)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 27 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Grad.incl"
+define list<gradient> EA=<EA>
+
+
+# 31 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Grad.incl"
+;$Id: Grad2.incl,v 1.14 2012/01/31 17:49:21 ber Exp $
+# 19 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf" 2
+
+# 1 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Delay.incl" 1
+;Delay.incl  -  include file for commonly used delays
+;
+;version (13/08/07)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 9 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Delay.incl"
+;general delays
+
+define delay DELTA
+define delay DELTA1
+define delay DELTA2
+define delay DELTA3
+define delay DELTA4
+define delay DELTA5
+define delay DELTA6
+define delay DELTA7
+define delay DELTA8
+define delay DELTA9
+define delay DELTA10
+define delay DELTA11
+define delay DELTA12
+define delay DELTA13
+define delay DELTA14
+define delay DELTA15
+define delay DELTA16
+
+define delay TAU
+define delay TAU1
+define delay TAU2
+define delay TAU3
+define delay TAU4
+define delay TAU5
+define delay TAU6
+define delay TAU7
+define delay TAU8
+define delay TAU9
+# 40 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Delay.incl"
+define delay INCR1
+define delay INCR2
+define delay INCR3
+define delay INCR4
+define delay INCR5
+define delay INCR6
+
+
+;delays for centering pulses
+# 50 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Delay.incl"
+define delay CEN_HN1
+define delay CEN_HN2
+define delay CEN_HN3
+define delay CEN_HC1
+define delay CEN_HC2
+define delay CEN_HC3
+define delay CEN_HC4
+define delay CEN_HP1
+define delay CEN_HP2
+define delay CEN_CN1
+define delay CEN_CN2
+define delay CEN_CN3
+define delay CEN_CN4
+define delay CEN_CP1
+define delay CEN_CP2
+
+
+;loop counters
+# 69 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Delay.incl"
+define loopcounter COUNTER
+define loopcounter SCALEF
+define loopcounter FACTOR1
+define loopcounter FACTOR2
+define loopcounter FACTOR3
+define loopcounter FACTOR4
+define loopcounter FACTOR5
+define loopcounter FACTOR6
+
+
+# 80 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/Delay.incl"
+;$Id: Delay.incl,v 1.14.2.1 2013/08/30 09:43:33 ber Exp $
+# 20 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf" 2
+
+
+# 23 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+"p2=p1*2"
+"d6=1s/(cnst13*2)"
+
+
+"d0=3u"
+# 29 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+"in0=inf1/2"
+
+
+"DELTA1=1s/(2 * cnst6)-p16-d16"
+"DELTA2=1s/(2 * cnst7)-p16-d16"
+"DELTA3=d6-p16-d16-4u"
+# 1 "mc_line 37 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf exp. def. part of mc cmd. before ze"
+; dimension 2D; AQ_mode  (F1) QF
+define delay MCWRK
+define delay MCREST
+define delay d0orig
+"d0orig=d0"
+define list<loopcounter> SPARSELIST = <$NUSLIST>
+define loopcounter t1loop
+"t1loop=0"
+define loopcounter ph1loop
+"ph1loop=0"
+define loopcounter STNCNT
+"STNCNT=SPARSELIST.len/1"
+"MCREST = d1 - d1"
+"MCWRK = 0.250000*d1"
+
+    dccorr
+# 37 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+# 37 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+1 ze
+# 1 "mc_line 37 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf exp. def. of mc cmd. after ze"
+LBLAV, MCWRK
+  MCWRK
+  "t1loop = SPARSELIST"
+  MCWRK  SPARSELIST.inc
+      "d0=d0orig + t1loop * in0 "
+# 38 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+# 1 "mc_line 38 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf exp. start label for mc cmd."
+2 MCWRK  * 3
+LBLSTN, MCWRK
+  MCREST
+# 39 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+3 p1 ph1
+  DELTA1 setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+  p16:gp4
+  d16
+  p3:f2 ph3
+  DELTA2
+  p16:gp5
+  d16
+  p3:f2 ph3
+  4u
+  p16:gp6
+  d16
+  DELTA3
+  p3:f2 ph4
+  d0
+  4u
+  p16:gp1
+  d16
+  p2 ph2
+  4u
+  p16:gp2
+  d16
+  d0
+  p3:f2 ph5
+  4u
+  p16:gp3
+  d16
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
+  go=2 ph31
+# 1 "mc_line 68 file C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf exp. mc cmd. in line"
+  MCWRK  wr #0 if #0 zd 
+
+  MCWRK
+  "t1loop = SPARSELIST"
+  MCWRK  SPARSELIST.inc
+      "d0=d0orig + t1loop * in0 "
+  lo to LBLSTN times STNCNT
+  MCWRK rf #0 SPARSELIST.res
+  lo to LBLAV times tdav
+# 69 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+exit
+
+
+ph1=0
+ph2=0 0 0 0 2 2 2 2
+ph3=0 0 2 2
+ph4=0 2
+ph5=0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2
+ph31=0 2 0 2 0 2 0 2 2 0 2 0 2 0 2 0
+# 80 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+;pl1 : f1 channel - power level for pulse (default)
+;pl2 : f2 channel - power level for pulse (default)
+;p1 : f1 channel -  90 degree high power pulse
+;p2 : f1 channel - 180 degree high power pulse
+;p3 : f2 channel -  90 degree high power pulse
+;p16: homospoil/gradient pulse
+;d0 : incremented delay (2D)                         [3 usec]
+;d1 : relaxation delay; 1-5 * T1
+;d6 : delay for evolution of long range couplings
+;d16: delay for homospoil/gradient recovery
+;cnst6: = 1J(XH)min
+;cnst7: = 1J(XH)max
+;cnst13: = J(XH) long range
+;inf1: 1/SW(X) = 2 * DW(X)
+;in0: 1/(2 * SW(X)) = DW(X)
+;nd0: 2
+;ns: 2 * n
+;ds: 16
+;td1: number of experiments
+;FnMODE: QF
+
+
+;use gradient ratio:
+;     gp 1 : gp 2 : gp 3 : gp 4 : gp 5 : gp 6
+;       50 :   30 : 40.1 :   15 :  -10 :   -5   for C-13
+# 106 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+;for z-only gradients:
+;gpz1: 50%   for C-13
+;gpz2: 30%
+;gpz3: 40.1%   for C-13
+;gpz4: 15%
+;gpz5: -10%
+;gpz6: -5%
+
+;use gradient files:
+;gpnam1: SMSQ10.100
+;gpnam2: SMSQ10.100
+;gpnam3: SMSQ10.100
+;gpnam4: SMSQ10.100
+;gpnam5: SMSQ10.100
+;gpnam6: SMSQ10.100
+
+# 124 "C:/Bruker/TopSpin3.6.1/exp/stan/nmr/lists/pp/hmbcgpl2ndqf"
+;$Id: hmbcgpl2ndqf,v 1.6 2012/01/31 17:49:23 ber Exp $

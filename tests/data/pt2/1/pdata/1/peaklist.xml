@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList modified="2018-02-20T10:53:23">
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=8.158498ppm, F2=8.101662ppm, MI=2.18cm, MAXI=2.82cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="8.143066" intensity="2.272457" type="0"/>
+    <Peak1D F1="8.140387" intensity="2.398662" type="0"/>
+    <Peak1D F1="8.124612" intensity="2.598765" type="0"/>
+    <Peak1D F1="8.120586" intensity="2.778984" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.547828ppm, F2=5.533674ppm, MI=0.10cm, MAXI=0.56cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.541165" intensity="0.5519259" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.530390ppm, F2=5.516576ppm, MI=0.29cm, MAXI=1.21cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.522959" intensity="1.150224" type="0"/>
+    <Peak1D F1="5.51901" intensity="0.8622087" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.516350ppm, F2=5.512953ppm, MI=0.38cm, MAXI=0.57cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.511707ppm, F2=5.511481ppm, MI=0.16cm, MAXI=0.36cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.511481ppm, F2=5.507518ppm, MI=0.01cm, MAXI=0.24cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.506951ppm, F2=5.504121ppm, MI=0.29cm, MAXI=0.45cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.500497ppm, F2=5.489740ppm, MI=0.31cm, MAXI=1.34cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.499722" intensity="0.9966866" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.484871ppm, F2=5.471510ppm, MI=0.16cm, MAXI=0.85cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.477914" intensity="0.7458262" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.344641ppm, F2=5.331873ppm, MI=0.15cm, MAXI=0.51cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.33428" intensity="0.4262891" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.326767ppm, F2=5.314134ppm, MI=0.39cm, MAXI=1.16cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.323114" intensity="0.8641511" type="0"/>
+    <Peak1D F1="5.315537" intensity="1.037695" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.311984ppm, F2=5.309834ppm, MI=0.28cm, MAXI=0.40cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.307818ppm, F2=5.304862ppm, MI=0.13cm, MAXI=0.24cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.302443ppm, F2=5.284434ppm, MI=0.18cm, MAXI=0.95cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.301152" intensity="0.8036801" type="0"/>
+    <Peak1D F1="5.288951" intensity="0.6548082" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=5.281209ppm, F2=5.267232ppm, MI=0.08cm, MAXI=0.50cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.277849" intensity="0.3444593" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=3.565858ppm, F2=3.444107ppm, MI=3.01cm, MAXI=6.54cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.508876384570088" intensity="0.10787771637427616" type="1"/>
+    <Peak1D F1="5.306877272854956" intensity="0.11794287753237581" type="1"/>
+    <Peak1D F1="3.542749" intensity="3.741824" type="0"/>
+    <Peak1D F1="3.524651" intensity="5.532373" type="0"/>
+    <Peak1D F1="3.505921" intensity="4.069272" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.498947ppm, F2=2.428551ppm, MI=0.93cm, MAXI=3.33cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="2.492654" intensity="1.133233" type="0"/>
+    <Peak1D F1="2.474438" intensity="3.08921" type="0"/>
+    <Peak1D F1="2.456123" intensity="3.031772" type="0"/>
+    <Peak1D F1="2.4378" intensity="1.085986" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.313268ppm, F2=2.168818ppm, MI=2.03cm, MAXI=10.83cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="2.268546" intensity="4.058816" type="0"/>
+    <Peak1D F1="2.251209" intensity="8.66819" type="0"/>
+    <Peak1D F1="2.233666" intensity="4.420006" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.112748ppm, F2=2.103155ppm, MI=0.23cm, MAXI=0.50cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.095961ppm, F2=2.083970ppm, MI=1.10cm, MAXI=1.55cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.077514ppm, F2=2.064785ppm, MI=1.68cm, MAXI=2.00cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.060543ppm, F2=2.048183ppm, MI=1.11cm, MAXI=1.52cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=2.044125ppm, F2=2.027153ppm, MI=0.28cm, MAXI=0.91cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="2.034876" intensity="0.6253009" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=1.504246ppm, F2=1.486606ppm, MI=0.26cm, MAXI=0.90cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="1.494088" intensity="0.5333387" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=1.486606ppm, F2=1.427270ppm, MI=1.55cm, MAXI=3.22cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="1.477478" intensity="1.829308" type="0"/>
+    <Peak1D F1="1.459122" intensity="2.732502" type="0"/>
+    <Peak1D F1="1.440181" intensity="2.551088" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=1.427270ppm, F2=1.416044ppm, MI=0.60cm, MAXI=1.29cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="1.422716" intensity="1.056622" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=1.024748ppm, F2=0.944564ppm, MI=6.10cm, MAXI=15.72cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="0.991985" intensity="7.554338" type="0"/>
+    <Peak1D F1="0.973191" intensity="15.0" type="0"/>
+    <Peak1D F1="0.954345" intensity="7.16586" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2018-02-20T10:53:23" expNo="1" name="q34 HCYSB" owner="" procNo="1" source="/Users/yongrenjie/Desktop/Oxford/PtIINMR-final">
+      <PeakPickDetails>F1=0.920509ppm, F2=0.841929ppm, MI=3.74cm, MAXI=12.24cm, PC=1.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="0.895852" intensity="4.472525" type="0"/>
+    <Peak1D F1="0.879018" intensity="11.17854" type="0"/>
+    <Peak1D F1="0.861227" intensity="4.97423" type="0"/>
+  </PeakList1D>
+</PeakList>

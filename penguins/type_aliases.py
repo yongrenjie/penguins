@@ -7,5 +7,4 @@ OS = Optional[str]
 TBounds1D = Tuple[OF, OF]
 TBounds2D = Tuple[TBounds1D, TBounds1D]
 TColors = Tuple[OS, OS]
-TLevels = Tuple[OF, OF, OI]
-
+TLevels = Union[Tuple[OF, OF, OI], float]

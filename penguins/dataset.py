@@ -78,16 +78,17 @@ class _parDict(UserDict):
             # Make a tuple if the indirect dimension was found
             # We make an exception for NS because for some reason, TopSpin stores
             # an "NS" in the indirect dimension which is just 1.
-            if val_indirect is not None and par.upper() != "NS":
+            if val_indirect is not None and par.lower() != "ns":
                 if isinstance(val, float) and isinstance(val_indirect, float):
                     # ndarrays are good, so that we can do elementwise stuff
-                    # like self["o1p] = self["o1"] / self["sfo1"]
+                    # like self["o1p] = self["o1"] / self["bf1"]
                     val = np.array([val_indirect, val])
                 else:
                     val = (val_indirect, val)
-        # Some parameters must be ints, this will save the user headaches
-        int_pars = ["TD", "SI", "NS"]
-        if par.upper() in int_pars:
+        # Some parameters must be ints, this will save the user (and me) headaches
+        int_pars = ["td", "si", "ns", "xdim", "nustd", "bytorda", "bytordp",
+                    "dtypa", "dtypp"]
+        if par.lower() in int_pars:
             val = _try_convert(val, int)
         return val
 
@@ -205,11 +206,12 @@ class _Dataset():
 
     def _initialise_pars(self):
         self.pars = _parDict(self.path)
-        self["aq"] = (self["td"] / 2) / (self["sw"] * self["sfo1"])
+        self["aq"] = (self["td"] / 2) / (self["sw"] * self["sfo1"])  # This is sfo1
         self["dw"] = self["aq"] * 1000000 / self["td"]
-        self["o1p"] = self["o1"] / self["sfo1"]
+        self["o1p"] = self["o1"] / self["bf1"]   # This is BF1
         self["si"]
         self["nuc1"]
+        # print(self.pars)
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self.path}')"
@@ -236,9 +238,11 @@ class _1D_RawDataMixin():
         self._p_acqus = self.path.parents[1] / "acqus"
 
     def _read_raw_data(self) -> np.ndarray:
-        fid = np.fromfile(self._p_fid, dtype=np.int32)
-        fid = fid.reshape(int(self["td"]/2), 2)      # type: ignore # mixin
-        fid = np.transpose(fid) * (2 ** self["nc"])  # type: ignore # mixin
+        datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
+        datatype += "i4"
+        fid = np.fromfile(self._p_fid, dtype=datatype)
+        fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
+        fid = np.transpose(fid) * (2 ** self["nc"])      # type: ignore # mixin
         self.fid = fid[0] + (1j * fid[1])
 
     def raw_data(self) -> np.ndarray:
@@ -253,7 +257,12 @@ class _1D_ProcDataMixin():
             self._p_imag = self.path / "1i"
 
     def _read_spec(self) -> np.ndarray:
-        self.real = np.fromfile(self._p_real, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
+        if self["dtypp"] == 0:                            # type: ignore # mixin
+            dt = "<" if self["bytordp"] == 0 else ">"     # type: ignore # mixin
+            dt += "i4"
+        else:
+            raise NotImplementedError("float data not yet accepted")
+        self.real = np.fromfile(self._p_real, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
         if hasattr(self, "_p_imag"):
             self.imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
 
@@ -299,6 +308,11 @@ class _2D_RawDataMixin():
         self._p_acqu2s = self.path.parents[1] / "acqu2s"
 
     def _read_raw_data(self) -> np.ndarray:
+        if self["dtypa"] == 0:                             # type: ignore # mixin
+            dtype = "<" if self["bytorda"] == 0 else ">"   # type: ignore # mixin
+            dtype += "i4"
+        else:
+            raise NotImplementedError("float data not yet accepted")
         # TODO
         # ser = np.fromfile(self._p_ser, dtype=??)
         pass
@@ -312,17 +326,47 @@ class _2D_ProcDataMixin():
 
     def _find_proc_data_paths(self) -> None:
         self.path: Path
-        # TODO: not all of these will exist for NUS data
         self._p_rr = self.path / "2rr"
-        self._p_ri = self.path / "2ri"
-        self._p_ir = self.path / "2ir"
-        self._p_ii = self.path / "2ii"
+        if (self.path / "2ri").exists():
+            self._p_ri = self.path / "2ri"
+        if (self.path / "2ir").exists():
+            self._p_ir = self.path / "2ir"
+        if (self.path / "2ii").exists():
+            self._p_ii = self.path / "2ii"
 
     def _read_spec(self) -> np.ndarray:
-        rr = np.fromfile(self._p_rr, dtype=np.int32)
-        rr = rr.reshape(int(self["si"][0]), int(self["si"][1]))  # type: ignore # mixin
-        self.rr = rr * (2 ** self["nc_proc"][1])                 # type: ignore # mixin
-        # TODO: the remainder (ri, ir, ii)
+        # Helper function
+        def _read_one_spec(spec_path = Path) -> np.ndarray:
+            if np.all(self["dtypp"] == 0):                           # type: ignore # mixin
+                dt = "<" if np.all(self["bytordp"]) == 0 else ">"    # type: ignore # mixin
+                dt += "i4"
+            else:
+                raise NotImplementedError("float data not yet accepted")
+            sp = np.fromfile(spec_path, dtype=np.dtype(dt))
+            sp = sp.reshape(self["si"])                              # type: ignore # mixin
+            # Format according to xdim. See TopSpin "data format" manual.
+            # See also http://docs.nmrfx.org/viewer/files/datasets.
+            nrows, ncols = self["si"] / self["xdim"]                 # type: ignore # mixin
+            submatrix_size = np.prod(self["xdim"])                   # type: ignore # mixin
+            nrows = int(nrows); ncols = int(ncols)
+            sp = sp.reshape(self["si"][0] * ncols, self["xdim"][1])  # type: ignore # mixin
+            sp = np.vsplit(sp, nrows * ncols)
+            sp = np.concatenate(sp, axis=1)
+            sp = np.hsplit(sp, nrows)
+            sp = np.concatenate(sp, axis=0)
+            sp = sp.reshape(self["si"])                              # type: ignore # mixin
+            return sp * (2 ** self["nc_proc"][1])                    # type: ignore # mixin
+
+        # Read the spectra
+        self.rr = _read_one_spec(self._p_rr)
+        # Calculate a suitable baselev
+        self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])
+        if hasattr(self, "_p_ri"):
+            self.ri = _read_one_spec(self._p_ri)
+        if hasattr(self, "_p_ir"):
+            self.ir = _read_one_spec(self._p_ir)
+        if hasattr(self, "_p_ii"):
+            self.ii = _read_one_spec(self._p_ii)
 
     def proc_data(self,
                   f1_bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
@@ -344,6 +388,7 @@ class _2D_ProcDataMixin():
         """
         bounds = bounds or (None, None)  # allow None as a synonym for (None, None)
         upper, lower = bounds
+        # print(axis, upper, lower)
         if upper is not None and lower is not None and upper < lower:
             raise ValueError("Bounds should be specified as (upper, lower), not the other way around.")
         return slice(self._ppm_to_index(axis, upper) or 0,                           # type: ignore # mixin
@@ -354,6 +399,9 @@ class _2D_PlotMixin():
 
     def stage(self, *args, **kwargs):
         pgplot.stage2d(self, *args, **kwargs)
+
+    def find_baselev(self, *args, **kwargs):
+        pgplot._make_contour_slider(self, *args, **kwargs)
 
 
 # -- Actual dataset classes -----------------------------
@@ -389,6 +437,7 @@ class Dataset1D(_1D_RawDataMixin,
         return full_scale[self._ppm_to_slice(bounds)]
 
     def hz_scale(self) -> np.ndarray:
+        # These use SFO, not BF
         max_hz = self["o1"] + self["sw"]/(2 * self["sfo1"])
         min_hz = self["o1"] - self["sw"]/(2 * self["sfo1"])
         return np.linspace(max_hz, min_hz, self["si"])
@@ -439,6 +488,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         return full_scale[self._ppm_to_slice(bounds)]
 
     def hz_scale(self) -> np.ndarray:
+        # These use SFO, not BF
         max_hz = self["o1"][self.proj_axis] + self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
         min_hz = self["o1"][self.proj_axis] - self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
         return np.linspace(max_hz, min_hz, self["si"])
@@ -480,6 +530,7 @@ class Dataset2D(_2D_RawDataMixin,
     def hz_scale(self,
                  axis: int
                  ) -> np.ndarray:
+        # These use SFO, not BF
         max_hz = self["o1"][axis] + (self["sw"][axis] / (2 * self["sfo1"][axis]))
         min_hz = self["o1"][axis] - (self["sw"][axis] / (2 * self["sfo1"][axis]))
         return np.linspace(max_hz[axis], min_hz[axis], int(self["si"][axis]))

@@ -1,0 +1,10 @@
+VTC_REG_PID_SET_CH1=\
+<pid_settings type="probehead">
+   <standard_pid proportional="1.279" integral="63.570" differential="10.595" />
+   <temperature selftune="300.447" min="250.447" max="350.447" />
+   <vta type="4" sensor="1" connected_sensors="1" />
+   <gasflow selftune="535.000" min="481.500" max="588.500" />
+   <bcu_chiller type="1" selftune="1" min="0" max="1000" />
+   <pics checksum="" name=" CPP BBO 600S3 BB-H&amp;F-D-05 Z ET" />
+   <checksum value=" B4980FF" />
+</pid_settings>

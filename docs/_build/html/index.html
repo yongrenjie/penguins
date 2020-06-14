@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to penguins! &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-penguins">
+<h1>Welcome to penguins!<a class="headerlink" href="#welcome-to-penguins" title="Permalink to this headline">¶</a></h1>
+<p>🐧 <em>Penguins: an Easy and NullPointerException-free Gateway to Unpacking and Illustrating NMR Spectra</em> 🐧</p>
+<p><strong>Penguins</strong> is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">penguins</span>  <span class="c1"># this doesn&#39;t work yet: see &quot;Installation&quot;</span>
+</pre></div>
+</div>
+<p>At the time of writing, it only supports Bruker data. It has very limited spectral processing capabilities; the idea is that processing should be done in TopSpin or other software before plotting in penguins.</p>
+<p>To get started, head over to the <a class="reference internal" href="quickstart.html"><span class="doc">Quickstart</span></a> page. All code examples in the documentation, such as the following, can be run directly from the <code class="docutils literal notranslate"><span class="pre">penguins/tests</span></code> directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="n">hsqc_dataset</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/pt2&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">hsqc_dataset</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">f1_bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">141</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                   <span class="n">f2_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">8.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                   <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;seagreen&quot;</span><span class="p">,</span> <span class="s2">&quot;hotpink&quot;</span><span class="p">),</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="p">(</span><span class="mf">2e4</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                   <span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span> <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="Example HSQC spectrum" class="no-scaled-link align-center" src="_images/splash_hsqc.png" />
+</div>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#importing-a-spectrum">Importing a spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#reading-parameters">Reading parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#plotting-spectra">Plotting spectra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot1d.html">1D Plotting in Detail</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot1d.html#step-1-staging-spectra">Step 1: Staging spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot1d.html#step-2-constructing-the-plot">Step 2: Constructing the plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot1d.html#step-3-displaying-the-plot">Step 3: Displaying the plot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plot2d.html">2D Plotting in Detail</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot2d.html#step-1-staging-spectra">Step 1: Staging spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot2d.html#choosing-base-levels">Choosing base levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot2d.html#step-2-constructing-the-plot">Step 2: Constructing the plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot2d.html#step-3-displaying-the-plot">Step 3: Displaying the plot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot1d.html">1D Plotting in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot2d.html">2D Plotting in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="install.html" title="next chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

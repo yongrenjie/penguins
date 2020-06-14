@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList modified="2019-05-04T02:07:43">
+  <PeakList1D>
+    <PeakList1DHeader creator="yongrenjie" date="2019-05-04T02:07:43" expNo="4008" name="jy48552803" owner="" procNo="296" source="/Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr">
+      <PeakPickDetails>F1=5.413992ppm, F2=5.380596ppm, MI=10.79cm, MAXI=26.21cm, PC=1.400
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="5.398356" intensity="16.49983" type="0"/>
+    <Peak1D F1="5.381958" intensity="14.19454" type="0"/>
+  </PeakList1D>
+</PeakList>

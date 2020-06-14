@@ -1,0 +1,18 @@
+##TITLE= Parameter file, TopSpin 4.0.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2019-05-04 02:49:17.607 +0100  yongrenjie@Jonathan-Yongs-MacBook-Pro-9986.local
+$$ /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4008/pdata/60/used_from
+$$ process /opt/topspin4.0.1/prog/mod/mvrow
+##$CUREXP= <row>
+##$DATPATH= </Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr>
+##$DETAILS= <sum of rows 58 to 62>
+##$EXPNO= 4008
+##$NAME= <jy48552803>
+##$PROCNO= 1
+##$PROCNO2= 58
+##$PROCNO3= 62
+##END=

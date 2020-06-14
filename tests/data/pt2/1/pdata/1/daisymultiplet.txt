@@ -1,0 +1,19 @@
+# 2018-02-20 10:58:01 +0000 yongrenjie@Jonathan-Yongs-MacBook-Pro-3129.local
+# TOPSPIN Daisy Multiplet Table
+# /Users/yongrenjie/Desktop/Oxford/PtIINMR-final/q34 HCYSB/1/pdata/1
+
+1D TopSPIN Multiplet Table
+
+----------------------------------------------------------------------
+Number    Shift [ppm]    J [Hz]    M         Connection     Identifier
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+
+
+1D TopSPIN Multiplet Lines Table
+
+--------------------------
+Number      Position [ppm]
+--------------------------
+--------------------------

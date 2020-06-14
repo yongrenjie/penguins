@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional, Tuple
+
+import matplotlib.pyplot as plt    # type: ignore
 
 from . import dataset as ds
-from .pgplot import stage1d, stage2d, plot, show, savefig
+from . import pgplot
 
-# sp.read() is the main entry point for users.
+
+# -- READ -----------------------------------------------
+
 def read(path: Union[str, Path],
          expno: int,
          procno: int) -> ds.TDatasetnD:
@@ -35,3 +39,41 @@ def read_abs(path: Union[str, Path]
         return ds.Dataset1D(p)
     else:
         raise ValueError(f"Invalid path to spectrum {p}: data files not found")
+
+
+# -- PLOT ----------------------------------------------
+
+def plot(figsize: Optional[Tuple[float, float]] = None,
+         close=True,
+         empty_pha=True,
+         **kwargs):
+    """
+    Delegates to _plot1d() or _plot2d() as necessary.
+    """
+    if close:
+        plt.close("all")
+    PHA = pgplot.get_pha()
+    if len(PHA.plot_queue) == 0:
+        raise ValueError("No spectra have been staged yet.")
+    else:
+        if figsize is not None:
+            plt.figure(figsize=figsize)
+        if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
+            fig, ax = pgplot._plot1d(PHA, **kwargs)
+        elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
+            fig, ax = pgplot._plot2d(PHA, **kwargs)
+        else:
+            raise TypeError("Plot holding area has invalid entries.")
+    # Reset the PHA to being empty
+    if empty_pha:
+        pgplot.reset_pha()
+    return (fig, ax)
+
+
+def show(*args, **kwargs):
+    plt.show(*args, **kwargs)
+
+
+def savefig(*args, **kwargs):
+    plt.savefig(*args, **kwargs)
+

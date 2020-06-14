@@ -1,0 +1,31 @@
+##TITLE= Audit trail, TopSpin 3.6.1
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ Q:/AV600/2019/data/service/nmr/jy48552803/4002/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2019-04-24 02:06:12.106 +0100>,<CHEM\nmr-user>,<JELLYFISH-CRL>,<go4>,<TopSpin 3.6.1>,
+      <created by zg
+	started at 2019-04-24 01:40:35.499 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       75 5A CB EE 93 47 0A 84 27 21 90 E3 06 1E 5A 95
+       data hash MD5: 64K
+       50 CF 91 FA 4C 90 F8 71 BD B5 25 8C D8 2E E5 2C>)
+(   2,<2019-04-24 10:41:08.116 +0100>,<CHEM\nmr-user>,<JELLYFISH-CRL>,<proc1d>,<TopSpin 3.6.1>,
+      <Start of raw data processing
+       efp LB = 1 FT_mod = 6 PKNL = 1 PHC0 = 0 PHC1 = 0 SI = 32K 
+       data hash MD5: 32K
+       19 ED DB EB 2E A7 E2 59 87 64 63 44 31 C6 A6 F6>)
+(   3,<2019-04-24 10:41:09.442 +0100>,<CHEM\nmr-user>,<JELLYFISH-CRL>,<proc1d>,<TopSpin 3.6.1>,
+      <apk 
+       data hash MD5: 32K
+       46 71 2B 2A 3E 98 C8 F5 09 F2 9B 3F 62 B5 AA DB>)
+(   4,<2019-04-24 12:33:38.660 +0100>,<CHEM\nmr-user>,<JELLYFISH-CRL>,<dirdata>,<TopSpin 3.6.1>,
+      <wrpa from 1 4002 "jy48552803" "C:\NMR\data\service\nmr"
+       data hash MD5: 32K
+       46 71 2B 2A 3E 98 C8 F5 09 F2 9B 3F 62 B5 AA DB>)
+##END=
+
+$$ hash MD5
+$$ D9 D8 DB AD 52 EC 8F 8B E6 75 9D 30 93 EA B2 AB

@@ -1,0 +1,79 @@
+
+Current Data Parameters
+NAME     jy q34 p HCYSB              
+EXPNO                 5              
+PROCNO                1              
+
+F2 - Acquisition Parameters
+Date_          20180217              
+Time               0.24 h            
+INSTRUM          avb400              
+PROBHD   Z116098_0219 (              
+PULPROG    hmbcgpl2ndqf              
+TD                 4096              
+SOLVENT           CDCl3              
+NS                    2              
+DS                   16              
+SWH            4795.396 Hz           
+FIDRES         2.341502 Hz           
+AQ            0.4270763 sec          
+RG               197.74              
+DW              104.267 usec         
+DE                 6.50 usec         
+TE                298.0 K            
+CNST6       125.0000000              
+CNST7       165.0000000              
+CNST13        8.0000000              
+D0           0.00000300 sec          
+D1           1.50000000 sec          
+D6           0.06250000 sec          
+D16          0.00020000 sec          
+IN0          0.00002240 sec          
+TDav                  1              
+SFO1        400.1320007 MHz          
+NUC1                 1H              
+P1                10.00 usec         
+P2                20.00 usec         
+PLW1        14.58800030 W            
+SFO2        100.6228303 MHz          
+NUC2                13C              
+P3                10.00 usec         
+PLW2        65.01300049 W            
+GPNAM[1]     SMSQ10.100              
+GPZ1              50.00 %            
+GPNAM[2]     SMSQ10.100              
+GPZ2              30.00 %            
+GPNAM[3]     SMSQ10.100              
+GPZ3              40.10 %            
+GPNAM[4]     SMSQ10.100              
+GPZ4              15.00 %            
+GPNAM[5]     SMSQ10.100              
+GPZ5             -10.00 %            
+GPNAM[6]     SMSQ10.100              
+GPZ6              -5.00 %            
+P16             1000.00 usec         
+
+F1 - Acquisition parameters
+TD                  128              
+SFO1           100.6228 MHz          
+FIDRES       348.772308 Hz           
+SW              221.833 ppm          
+FnMODE               QF              
+
+F2 - Processing parameters
+SI                 1024              
+SF          400.1300000 MHz          
+WDW                SINE              
+SSB      0              
+LB       0 Hz           
+GB       0              
+PC                 1.40              
+
+F1 - Processing parameters
+SI                 1024              
+MC2                  QF              
+SF          100.6127690 MHz          
+WDW                SINE              
+SSB      0              
+LB       0 Hz           
+GB       0              

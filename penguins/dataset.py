@@ -4,7 +4,6 @@ from collections import UserDict
 from pathlib import Path
 from typing import (Any, Union, Tuple, Optional,
                     TypeVar, Callable, overload)
-from typing_extensions import Protocol   # "from typing" in 3.8+
 
 import numpy as np               # type: ignore
 import matplotlib.pyplot as plt  # type: ignore

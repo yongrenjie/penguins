@@ -29,19 +29,16 @@ Multiple spectra can be plotted by staging each of them individually.
    Uses the information provided to create a :class:`penguins.pgplot.PlotObject2D` object, which is then appended to the plot holding area.
 
    :param dataset: A 2D dataset object.
-   :param f1_bounds: *(optional)* A tuple of floats ``(upper, lower)`` specifying the section of the indirect axis to plot. Both should be chemical shifts. If either ``upper`` or ``lower`` are none, then the upper (lower) bound is the maximum (or minimum) chemical shift. If not provided, defaults to the entire spectrum.
-
-      |br|
-      It is a little unfortunate that an *upper* bound for *f*:subscript:`1` is *lower* in terms of the spectrum layout, but that is an unfortunate quirk of NMR spectroscopy. Swapping the order would make it inconsistent with the *f*:subscript:`2` notation, which is not a particularly appealing option, but if there are strong opinions then please get in touch.
-
-   :param f2_bounds: *(optional)* A tuple of floats ``(upper, lower)`` specifying the section of the direct axis to plot. Both should be chemical shifts. If either ``upper`` or ``lower`` are none, then the upper (lower) bound is the maximum (or minimum) chemical shift. If not provided, defaults to the entire spectrum.
+   :param f1_bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the indirect dimension to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (upper) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum.
 
       |br|
       Note that, as before, the ``bounds`` parameters do not merely affect the *plot limits*. They restrict the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
+
+   :param f2_bounds: *(optional)* Same as above, but for the direct dimension.
    :param levels: *(optional)* A tuple ``(baselev, increment, nlev)`` specifying the levels at which to draw contours. ``baselev`` and ``increment`` are floats; ``nlev`` is an int. This is directly analogous  to the contour levels in TopSpin's ``edlev`` dialog box. Contours are drawn at ``±(baselev * (increment ** N))`` where ``N`` ranges from ``0`` to ``nlev - 1``.
 
       |br|
-      The default ``baselev`` is chosen individually for each spectrum, according to TopSpin's algorithm of ``(35 * stdev(data))`` (see *"Processing Parameters and Commands"* documentation). ``increment`` by default is 1.5 and ``nlev`` is 10. Any of the three parameters can be passed as ``None`` in order to use the defaults.
+      The default ``baselev`` is chosen individually for each spectrum, according to TopSpin's algorithm of ``(35 * stdev(data))`` (see *"Processing Commands and Parameters"* documentation). ``increment`` by default is 1.5 and ``nlev`` is 10. Any of the three parameters can be passed as ``None`` in order to use the defaults.
 
       |br|
       ``baselev`` is, by far, the most likely parameter to be customised. Therefore, instead of passing a tuple of ``(baselev, None, None)``, you can also pass a single float ``baselev``.
@@ -63,17 +60,17 @@ As a slightly contrived example, here we stage the same HMBC dataset four times 
 
    d = pg.read("data/pt2", 5, 1)   # HMBC
    # Split spectrum into four portions
-   bottom_f1, top_f1 = (None, 100), (100, None)
-   left_f2, right_f2 = (None, 4.5), (4.5, None)
+   bottom_f1, top_f1 = "100..", "..100"
+   left_f2, right_f2 = "4.5..", "..4.5"
    # To make this less boring you could use a double listcomp or
-   # itertools.product(), but here we'll do it the repetitive way
+   # itertools.product(), but for now we'll do it the repetitive way.
    # Recall levels=1e2 is the same as levels=(1e2, None, None).
    d.stage(f1_bounds=bottom_f1, f2_bounds=left_f2,  levels=1e2)
    d.stage(f1_bounds=top_f1,    f2_bounds=left_f2,  levels=1e3)
    d.stage(f1_bounds=bottom_f1, f2_bounds=right_f2, levels=1e4)
    d.stage(f1_bounds=top_f1,    f2_bounds=right_f2, levels=1e5)
    # Construct and display
-   pg.plot(); pg.show()
+   pg.mkplot(); pg.show()
 
 .. image:: images/plot2d_baselev.png
    :align: center
@@ -106,7 +103,7 @@ Alternatively, penguins provides a :meth:`~penguins.dataset.Dataset2D.find_basel
 
 The slider is logarithmic and the value displayed on the right is the base-10 logarithm of the real ``baselev``. The initial ``baselev`` is given by TopSpin's algorithm (``10 ** 4.27 ≈ 1.9e4``, as before). After you find a comfortable value, click "OK"; penguins will print the final value of ``baselev`` to standard output. Note that this method does *not* work in Jupyter notebooks.
 
-Under the hood, the :meth:`find_baselev()` method calls :func:`~penguins.pgplot._make_contour_slider` with the dataset object as the first parameter.
+Under the hood, the :meth:`find_baselev()` method calls the :func:`~penguins.pgplot._make_contour_slider` function with the dataset object as the first parameter.
 
 .. function:: _make_contour_slider(dataset, increment=None, nlev=4)
 
@@ -121,14 +118,14 @@ Under the hood, the :meth:`find_baselev()` method calls :func:`~penguins.pgplot.
 Step 2: Constructing the plot
 -----------------------------
 
-Plot construction is done using :func:`~penguins.plot()`. If the holding area consists of 2D spectra, then it delegates to :func:`~penguins.pgplot._plot2d()`.
+Plot construction is done using :func:`~penguins.mkplot()`. If the holding area consists of 2D spectra, then it delegates to :func:`~penguins.pgplot._plot2d()`.
 
 .. currentmodule:: penguins
 
-.. function:: plot(figsize=None, figstyle="default", offset=(0, 0), title=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
+.. function:: mkplot(figsize=None, figstyle="default", offset=(0, 0), title=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
    :noindex:
 
-   Calls :func:`plt.plot() <matplotlib.pyplot.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
+   Calls :func:`plt.contour() <matplotlib.pyplot.contour>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
    
    All keyword arguments below are optional:
 
@@ -157,25 +154,24 @@ Plot construction is done using :func:`~penguins.plot()`. If the holding area co
 
    :returns: Tuple of (:class:`~matplotlib.figure.Figure`, :class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
 
-As before, :func:`~penguins.plot()` returns ``(fig, ax)`` so that various ``matplotlib`` methods can be used.
+As before, :func:`~penguins.mkplot()` returns ``(fig, ax)`` so that various ``matplotlib`` methods can be used.
 
 Here's an example where we plot the same HSQC spectrum four times but give the plot a nonzero offset to make it seem as if the peaks are shifting::
 
    d = pg.read("data/rot1", 3, 1)   # HSQC
-   # Make up some data 
+   # Make some colours 
    temps = [240, 250, 260, 270]  # in K
    blues = [f"#00{cc}ff" for cc in ["00", "55", "a6", "ea"]]
    reds = [f"#ff{cc}00" for cc in ["00", "55", "a6", "ea"]]
-   # Stage each of them with different colours and label
+   # Stage each of them with different colours
    for temp, blue, red in zip(temps, blues, reds):
-      d.stage(colors=(blue, red),
-              f1_bounds=(80, 11),
-              f2_bounds=(4.2, 0.6),
-              levels=2.8e5,
-              label=f"{temp} K"
-              )
+       d.stage(colors=(blue, red),
+               f1_bounds=(11, 80),
+               f2_bounds=(0.6, 4.2),
+               levels=2.8e5,
+               label=f"{temp} K")
    # Separate each plot a little bit
-   pg.plot(offset=(0.2, 0.02), legend_loc="upper left")
+   pg.mkplot(offset=(0.2, 0.02), legend_loc="upper left")
    pg.show()
 
 .. image:: images/plot2d_offset.png

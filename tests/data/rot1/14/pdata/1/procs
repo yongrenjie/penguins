@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TopSpin 4.0.1
+##TITLE= Parameter file, TopSpin 4.0.8
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 3	$$ modification sequence number
+##NPOINTS= 4	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ 2019-04-28 19:47:24.802 +0100  yongrenjie@lincdhcp23635.linc.ox.ac.uk
-$$ /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4014/pdata/1/procs
-$$ process /opt/topspin4.0.1/prog/mod/dataserver
+$$ 2020-06-15 21:27:29.988 +0800  yongrenjie@jymbp.local
+$$ /Users/yongrenjie/penguins/tests/data/rot1/14/pdata/1/procs
+$$ process /opt/topspin4.0.8/prog/mod/proc1d
 ##$ABSF1= 15.01302
 ##$ABSF2= -5.013023
 ##$ABSG= 5
@@ -87,8 +87,8 @@ $$ process /opt/topspin4.0.1/prog/mod/dataserver
 ##$NZP= 0
 ##$OFFSET= 14.99386
 ##$PC= 1
-##$PHC0= 60.27092
-##$PHC1= -76.32754
+##$PHC0= 60.94213
+##$PHC1= -77.99287
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 0
@@ -134,6 +134,6 @@ $$ process /opt/topspin4.0.1/prog/mod/dataserver
 ##$USERP5= <>
 ##$WDW= 1
 ##$XDIM= 0
-##$YMAX_p= 383912460
-##$YMIN_p= -37505146
+##$YMAX_p= 383854437
+##$YMIN_p= -37506775
 ##END=

@@ -50,18 +50,37 @@ class PlotHoldingArea():
                    SEABORN_PALETTES["deep"][(i + 5) % 10])
             i += 1
 
-# Not a good idea to use this directly!
+class PlotProperties():
+    """
+    A collection of properties of spectra that have already been constructed
+    with mkplot().
+    """
+    def __init__(self):
+        self.heights = []
+        self.colors = []
+        self.options = []
+        self.colors_positive = []
+        self.colors_negative = []
+
+# Not a good idea to use these directly!
 _globalPHA = PlotHoldingArea()
+_globalPP = PlotProperties()
 
 # Go through these methods! It doesn't necessarily make it *safer*, because
 # you can still access _globalPHA, but it's easier to keep track of.
 def get_pha():
     return _globalPHA
 
-def reset_pha():
+def _reset_pha():
     global _globalPHA
     _globalPHA = PlotHoldingArea()
 
+def get_properties():
+    return _globalPP
+
+def _reset_properties():
+    global _globalPP
+    _globalPP = PlotProperties()
 
 # -- 1D PLOTTING ----------------------------------------------
 
@@ -75,6 +94,7 @@ class PlotObject1D():
                  dataset: ds.TDataset1D,
                  scale: float = 1,
                  bounds: TBounds = "",
+                 dfilter: Optional[Callable[[float], bool]] = None,
                  label: OS = None,
                  color: OS = None,
                  plot_options: Optional[MutableMapping] = None):
@@ -83,7 +103,15 @@ class PlotObject1D():
         self.bounds = bounds
         self._init_options(plot_options, color, label)
         self.ppm_scale = self.dataset.ppm_scale(bounds=self.bounds)
-        self.proc_data = self.dataset.proc_data(bounds=self.bounds) * self.scale
+        # Handle processed data
+        proc_data = self.dataset.proc_data(bounds=self.bounds)
+        if dfilter is not None:
+            # This is a bit ugly, but if dfilter involves any ands or ors,
+            # then proc_data = proc_data[dfilter(proc_data)] will raise
+            # a ValueError: Truth value is ambiguous.
+            logical_array = np.array([dfilter(i) for i in proc_data])
+            proc_data = np.where(logical_array, proc_data, np.nan)
+        self.proc_data = proc_data * self.scale
 
     def _init_options(self, plot_options, color, label):
         """
@@ -108,6 +136,7 @@ class PlotObject1D():
 def stage1d(dataset: ds.TDataset1D,
             scale: float = 1,
             bounds: TBounds = "",
+            dfilter: Optional[Callable[[float], Bool]] = None,
             label: OS = None,
             color: OS = None,
             plot_options: Optional[MutableMapping] = None,
@@ -117,7 +146,8 @@ def stage1d(dataset: ds.TDataset1D,
     """
     # Create a PlotObject1D first.
     plot_obj = PlotObject1D(dataset=dataset, scale=scale,
-                            bounds=bounds, label=label,
+                            bounds=bounds, dfilter=dfilter,
+                            label=label,
                             color=color, plot_options=plot_options)
 
     # Check that the plot queue doesn't have 2D spectra.
@@ -130,22 +160,22 @@ def stage1d(dataset: ds.TDataset1D,
         PHA.plot_queue.append(plot_obj)
 
 
-def _plot1d(holding_area: PlotHoldingArea,
-            figstyle: str = "default",
-            stacked: bool = False,
-            voffset: float = 0,
-            hoffset: float = 0,
-            title: OS = None,
-            xlabel: str = "Chemical shift (ppm)",
-            ylabel: str = "Intensity (au)",
-            legend_loc: Any = "best",
-            ) -> Tuple[Any, Any]:
+def _mkplot1d(holding_area: PlotHoldingArea,
+              figstyle: str = "default",
+              stacked: bool = False,
+              voffset: float = 0,
+              hoffset: float = 0,
+              title: OS = None,
+              xlabel: str = "Chemical shift (ppm)",
+              ylabel: str = "Intensity (au)",
+              legend_loc: Any = "best",
+              ) -> Tuple[Any, Any]:
     """
     Plots all the 1D objects in the PHA.
     """
     make_legend = False
     # Find the maximum height
-    heights = [np.amax(pobj.proc_data) - np.amin(pobj.proc_data)
+    heights = [np.nanmax(pobj.proc_data) - np.nanmin(pobj.proc_data)
                for pobj in holding_area.plot_queue]
     max_height = max(heights)
 
@@ -166,6 +196,11 @@ def _plot1d(holding_area: PlotHoldingArea,
         plt.plot(pobj.ppm_scale - (n * hoffset),
                  pobj.proc_data + (vert_offset),
                  **pobj.options)
+        # Add heights and colors to plotproperties.
+        pp = get_properties()
+        pp.heights.append(vert_offset)
+        pp.colors.append(pobj.options["color"])
+        pp.options.append(pobj.options)
 
     # Plot formatting
     ax = plt.gca()
@@ -322,14 +357,14 @@ def stage2d(dataset: ds.Dataset2D,
         PHA.plot_queue.append(plot_obj)
 
 
-def _plot2d(holding_area: PlotHoldingArea,
-            figstyle: str = "default",
-            offset: Tuple[float, float] = (0, 0),
-            title: OS = None,
-            xlabel: str = r"$f_2$ (ppm)",
-            ylabel: str = r"$f_1$ (ppm)",
-            legend_loc: Any = "best",
-            ) -> Tuple[Any, Any]:
+def _mkplot2d(holding_area: PlotHoldingArea,
+              figstyle: str = "default",
+              offset: Tuple[float, float] = (0, 0),
+              title: OS = None,
+              xlabel: str = r"$f_2$ (ppm)",
+              ylabel: str = r"$f_1$ (ppm)",
+              legend_loc: Any = "best",
+              ) -> Tuple[Any, Any]:
     """
     Plots all the 2D objects in the PHA.
     """
@@ -462,6 +497,6 @@ def _make_contour_slider(dataset: ds.Dataset2D,
         fval_short = f"{fval:.2e}".replace("e+0", "e")
         print(f"\n[[{dataset!r}]]\nThe final base level was: {fval} (or {fval_short})\n")
     # Clear out the PHA
-    reset_pha()
+    _reset_pha()
     plt.close("all")
 

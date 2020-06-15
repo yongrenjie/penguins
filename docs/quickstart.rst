@@ -41,11 +41,11 @@ Plotting is done in three stages:
 
 1. *Stage* the spectrum (or spectra) to be plotted.
 
-   Options that are specific to each individual spectrum, such as bounds on the plotting window, colours, etc. are specified at this stage.
+   Options that are specific to each individual spectrum, such as the range of chemical shifts to be plotted, legend labels, colours, etc. are specified at this stage. This uses the :meth:`~penguins.dataset.Dataset1D.stage()` methods on 1D and 2D ``Dataset`` objects.
 
 2. *Construct* the plot.
 
-   Options that affect the entire plot, such as horizontal/vertical offset between spectra, plot limits, etc. are specified at this stage.
+   Options that affect the entire plot, such as horizontal/vertical offset between spectra, axis labels, etc. are specified at this stage. This uses the :func:`~penguins.pgplot.mkplot()` function.
 
 3. *Display* the plot.
 
@@ -53,13 +53,13 @@ Plotting is done in three stages:
 
 An example::
 
-   # Staging
+   # Staging, using the 2D dataset we read in earlier
    hsqc_ds.stage(f1_bounds="11..81",        # "lower..upper"
                  f2_bounds=(1, 4.2),        # tuples also acceptable as bounds
                  colors=("blue", "red"),    # (positive, negative)
                  )
    # Construct
-   pg.plot()
+   pg.mkplot()
    # Display
    pg.show()
 
@@ -77,10 +77,8 @@ An example of a 1D plot is as follows::
    prot.stage(bounds="..7",                # or "bounds=(None, 7)": means everything up to 7 ppm
               color="darkviolet",
               label=r"$\mathrm{^{1}H}$")   # using some LaTeX syntax
-   # Construct
-   pg.plot()
-   # Display
-   pg.show()
+   # Construct and display
+   pg.mkplot; pg.show()
 
 .. image:: images/quickstart_plot1d.png
    :align: center

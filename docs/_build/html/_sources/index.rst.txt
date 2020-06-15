@@ -29,7 +29,8 @@ To get started, head over to the :doc:`quickstart` page. All code examples in th
                       f2_bounds="0.5..8.5",
                       colors=("seagreen", "hotpink"),
                       levels=2e4)
-   pg.plot(); pg.show()
+   pg.mkplot()
+   pg.show()
 
 .. image:: images/splash_hsqc.png
    :align: center
@@ -44,9 +45,11 @@ Contents
    
    install
    quickstart
-   topspin
    plot1d
    plot2d
+   cookbook
+   nus
+   topspin
    reference
 
 * :ref:`genindex`

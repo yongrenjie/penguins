@@ -29,7 +29,12 @@ $$ Q:/AV600/2019/data/service/nmr/jy48552803/4014/pdata/1/auditp.txt
       <wrpa from 1 4014 "jy48552803" "C:\NMR\data\service\nmr"
        data hash MD5: 64K
        12 FD 9E 89 67 56 1D 02 61 9B B5 64 47 6D 6D 07>)
+$$ /Users/yongrenjie/penguins/tests/data/rot1/14/pdata/1/auditp.txt
+(   6,<2020-06-15 21:27:29.988 +0800>,<yongrenjie>,<jymbp.local>,<proc1d>,<TopSpin 4.0.8>,
+      <apk 
+       data hash MD5: 64K
+       78 A8 D4 F6 A5 77 AD BC ED EA FF 44 EB CD 0C 04>)
 ##END=
 
 $$ hash MD5
-$$ A3 53 94 91 FF 50 F2 08 94 BA 65 F3 03 15 17 08
+$$ 3E 12 3E AF 6D B1 22 51 3E 29 FE 6D 9B 35 E4 48

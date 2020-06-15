@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt    # type: ignore
 
 from . import dataset as ds
 from . import pgplot
+from .pgplot import get_pha, get_properties
 
 
 # -- READ -----------------------------------------------
@@ -43,30 +44,34 @@ def read_abs(path: Union[str, Path]
 
 # -- PLOT ----------------------------------------------
 
-def plot(figsize: Optional[Tuple[float, float]] = None,
-         close=True,
-         empty_pha=True,
-         **kwargs):
+def mkplot(figsize: Optional[Tuple[float, float]] = None,
+           close: bool = True,
+           empty_pha: bool = True,
+           **kwargs):
     """
-    Delegates to _plot1d() or _plot2d() as necessary.
+    Delegates to _mkplot1d() or _mkplot2d() as necessary.
     """
+    # Close open figures
     if close:
         plt.close("all")
-    PHA = pgplot.get_pha()
+    # Reset plot properties
+    pgplot._reset_properties()
+
+    PHA = get_pha()
     if len(PHA.plot_queue) == 0:
         raise ValueError("No spectra have been staged yet.")
     else:
         if figsize is not None:
             plt.figure(figsize=figsize)
         if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
-            fig, ax = pgplot._plot1d(PHA, **kwargs)
+            fig, ax = pgplot._mkplot1d(PHA, **kwargs)
         elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
-            fig, ax = pgplot._plot2d(PHA, **kwargs)
+            fig, ax = pgplot._mkplot2d(PHA, **kwargs)
         else:
             raise TypeError("Plot holding area has invalid entries.")
     # Reset the PHA to being empty
     if empty_pha:
-        pgplot.reset_pha()
+        pgplot._reset_pha()
     return (fig, ax)
 
 
@@ -77,3 +82,6 @@ def show(*args, **kwargs):
 def savefig(*args, **kwargs):
     plt.savefig(*args, **kwargs)
 
+
+def pause(*args, **kwargs):
+    plt.pause(*args, **kwargs)

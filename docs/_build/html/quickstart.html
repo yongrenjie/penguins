@@ -15,7 +15,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="TopSpin directories" href="topspin.html" />
+    <link rel="next" title="1D Plotting in Detail" href="plot1d.html" />
     <link rel="prev" title="Installation" href="install.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -67,23 +67,23 @@
 <p>Plotting is done in three stages:</p>
 <ol class="arabic">
 <li><p><em>Stage</em> the spectrum (or spectra) to be plotted.</p>
-<p>Options that are specific to each individual spectrum, such as bounds on the plotting window, colours, etc. are specified at this stage.</p>
+<p>Options that are specific to each individual spectrum, such as the range of chemical shifts to be plotted, legend labels, colours, etc. are specified at this stage. This uses the <code class="xref py py-meth docutils literal notranslate"><span class="pre">stage()</span></code> methods on 1D and 2D <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> objects.</p>
 </li>
 <li><p><em>Construct</em> the plot.</p>
-<p>Options that affect the entire plot, such as horizontal/vertical offset between spectra, plot limits, etc. are specified at this stage.</p>
+<p>Options that affect the entire plot, such as horizontal/vertical offset between spectra, axis labels, etc. are specified at this stage. This uses the <code class="xref py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code> function.</p>
 </li>
 <li><p><em>Display</em> the plot.</p>
 <p>You can either display the window using <a class="reference internal" href="plot1d.html#penguins.show" title="penguins.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code></a>, or save a figure using <a class="reference internal" href="plot1d.html#penguins.savefig" title="penguins.savefig"><code class="xref py py-func docutils literal notranslate"><span class="pre">savefig()</span></code></a>. Both act as wrappers around the corresponding <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions.</p>
 </li>
 </ol>
 <p>An example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Staging</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Staging, using the 2D dataset we read in earlier</span>
 <span class="n">hsqc_ds</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">f1_bounds</span><span class="o">=</span><span class="s2">&quot;11..81&quot;</span><span class="p">,</span>        <span class="c1"># &quot;lower..upper&quot;</span>
               <span class="n">f2_bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">),</span>        <span class="c1"># tuples also acceptable as bounds</span>
               <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">),</span>    <span class="c1"># (positive, negative)</span>
               <span class="p">)</span>
 <span class="c1"># Construct</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">()</span>
 <span class="c1"># Display</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -97,10 +97,8 @@
 <span class="n">prot</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;..7&quot;</span><span class="p">,</span>                <span class="c1"># or &quot;bounds=(None, 7)&quot;: means everything up to 7 ppm</span>
            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkviolet&quot;</span><span class="p">,</span>
            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mathrm{^</span><span class="si">{1}</span><span class="s2">H}$&quot;</span><span class="p">)</span>   <span class="c1"># using some LaTeX syntax</span>
-<span class="c1"># Construct</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-<span class="c1"># Display</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># Construct and display</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">;</span> <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="_images/quickstart_plot1d.png" class="align-center" src="_images/quickstart_plot1d.png" />
@@ -133,9 +131,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#plotting-spectra">Plotting spectra</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot1d.html">1D Plotting in Detail</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot2d.html">2D Plotting in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Plotting Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nus.html">Non-Uniform Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
 </ul>
 
@@ -144,7 +144,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="install.html" title="previous chapter">Installation</a></li>
-      <li>Next: <a href="topspin.html" title="next chapter">TopSpin directories</a></li>
+      <li>Next: <a href="plot1d.html" title="next chapter">1D Plotting in Detail</a></li>
   </ul></li>
 </ul>
 </div>

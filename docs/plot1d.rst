@@ -17,7 +17,7 @@ Multiple spectra can be plotted by staging each of them individually.
 
 .. currentmodule:: penguins.pgplot
 
-.. function:: stage1d(dataset, scale=1, bounds='', label=None, color=None, plot_options=None)
+.. function:: stage1d(dataset, scale=1, bounds='', dfilter=None, label=None, color=None, plot_options=None)
 
    Penguins maintains a *"holding area"*, which is a global list of plots which have been registered but not yet plotted. The :func:`~penguins.pgplot.stage1d()` function uses the information provided to create a :class:`penguins.pgplot.PlotObject1D` object, which is then appended to that list.
 
@@ -25,6 +25,7 @@ Multiple spectra can be plotted by staging each of them individually.
    :param scale: *(optional)* Indicates factor to scale spectrum intensity by.
    :type scale: float
    :param bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the spectrum to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (upper) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum. Note that this does not merely affect the *plot limits*. It restricts the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
+   :param dfilter: *(optional)* A function taking a float and returning a bool to which filters *y*-values of the spectrum which should be retained. For example, to remove any parts of the spectrum above an intensity of ``1e5``, use ``dfilter=(lambda f: f < 1e5)``. Note that this filter is applied prior to any scaling.
    :param label: *(optional)* Text to be displayed in the plot legend. Some LaTeX-like syntax is possible using raw strings: see :std:doc:`tutorials/text/mathtext`.
    :type label: str
    :param color: *(optional)* A valid ``matplotlib`` color. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colour palette used is Seaborn's "deep" (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
@@ -50,7 +51,7 @@ Multiple spectra can be plotted by staging each of them individually.
              label="Yes, that is the actual formula",
              color="hotpink")
 
-   pg.plot(); pg.show()
+   pg.mkplot(); pg.show()
 
 .. image:: images/plot1d_stage.png
    :align: center
@@ -59,11 +60,11 @@ Multiple spectra can be plotted by staging each of them individually.
 Step 2: Constructing the plot
 -----------------------------
 
-Plot construction is done using :func:`~penguins.plot()`.
+Plot construction is done using :func:`~penguins.mkplot()`.
 
 .. currentmodule:: penguins
 
-.. function:: plot(figsize=None, figstyle="default", stacked=False, voffset=0, hoffset=0, title=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
+.. function:: mkplot(figsize=None, figstyle="default", stacked=False, voffset=0, hoffset=0, title=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
 
    Calls :func:`plt.plot() <matplotlib.pyplot.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
    
@@ -90,23 +91,23 @@ Plot construction is done using :func:`~penguins.plot()`.
 
    :param str ylabel: Label for *y*-axis. This would never be used unless you use ``figstyle=mpl_natural``, or manually reenable the *y*-axis display.
 
-   :param bool close: Close all previously used figures before constructing a new plot. This shouldn't be changed by the end user.
+   :param bool close: Close all previously used figures before constructing a new plot. This shouldn't be changed by the end user; it's only really there to make :func:`find_baselev() <penguins.pgplot._make_contour_slider>` work.
 
    :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. Setting this to False can be useful if one wants to construct several figures by adding one spectrum at at time, since you don't have to stage the first dataset every time after calling :func:`~penguins.show` or :func:`~penguins.savefig`.
 
    :returns: Tuple of (:py:class:`~matplotlib.figure.Figure`, :py:class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
 
-:func:`~penguins.plot()` conveniently returns ``(fig, ax)``, so that you do not need to call :func:`plt.gcf() <matplotlib.pyplot.gcf>` or :func:`plt.gca() <matplotlib.pyplot.gca>`. Therefore you can carry out any other operations you wish to after this. Of course, you can also import ``matplotlib`` itself and utilise the full library of functions there. For examples of this, see :doc:`cookbook`.
+:func:`~penguins.mkplot()` conveniently returns ``(fig, ax)``, so that you do not need to call :func:`plt.gcf() <matplotlib.pyplot.gcf>` or :func:`plt.gca() <matplotlib.pyplot.gca>`. Therefore you can carry out any other operations you wish to after this. Of course, you can also import ``matplotlib`` itself and utilise the full library of functions there. For some examples of this, see :doc:`cookbook`.
 
 Here is an example of a stacked plot versus one with ``voffset=1.1``. The extra 0.1 is there to ensure that there is some padding between adjacent spectra (when using ``stacked``, penguins also makes sure to add ``0.1 * maxheight`` padding)::
 
-   ds2 = pg.read("data/pt2", 2, 1)          # 13C spectrum
-   ds2.stage(color="black")                 # No bounds => full spectrum
-   ds2.stage(bounds="100..150")             # Three subspectra
+   ds2 = pg.read("data/pt2", 2, 1)            # 13C spectrum
+   ds2.stage(color="black")                   # No bounds => full spectrum
+   ds2.stage(bounds="100..150")               # Three subspectra
    ds2.stage(bounds="50..100")
    ds2.stage(bounds="0..50")
-   pg.plot(stacked=True, title="stacked")   # Either this...
-   pg.plot(voffset=1.1, title="voffset")    # ...or this, but not both!
+   pg.mkplot(stacked=True, title="stacked")   # Either this...
+   pg.mkplot(voffset=1.1, title="voffset")    # ...or this, but not both!
    pg.show()
 
 .. image:: images/plot1d_stacked.png
@@ -127,13 +128,22 @@ The question of which is *better* is left as a personal decision for you to make
 Step 3: Displaying the plot
 ---------------------------
 
-This step is exactly analogous to using :func:`plt.show() <matplotlib.pyplot.show>`. You can also save an image using :func:`plt.savefig() <matplotlib.pyplot.savefig>`. For convenience, penguins provides functions of the same name which are simply wrappers around the corresponding ``matplotlib`` functions::
+For this step there are three major options:
 
-   # These are entirely equivalent to plt.show() and plt.savefig()
+1. Display the plot, and stop the script / interpreter from continuing until you close the figure window. This is done with :func:`plt.show() <matplotlib.pyplot.show>`.
+
+2. Save an image, using :func:`plt.savefig() <matplotlib.pyplot.savefig>`. 
+
+3. Display the plot but allow the script to continue (useful for e.g. real-time updates of a plot, or plotting in a loop). This is done with :func:`plt.pause() <matplotlib.pyplot.pause>`. (Although :func:`plt.show() <matplotlib.pyplot.show>` has a ``block=False`` option, it doesn't seem to work on many systems.)
+
+For convenience, penguins provides functions of the same name which are simply wrappers around the corresponding ``matplotlib`` functions::
+
    # Display the plot:
    pg.show()
    # or save an image:
    pg.savefig("/Users/yongrenjie/Desktop/nice_plot.png", dpi=500)
+   # or pause for 0.01 seconds, during which the figure updates itself:
+   pg.pause(0.01)
 
 .. function:: show(*args, **kwargs)
 
@@ -147,3 +157,8 @@ This step is exactly analogous to using :func:`plt.show() <matplotlib.pyplot.sho
 ..
    * ** * ** This comment stops vim from highlighting everything as italicised.
 
+.. function:: pause(*args, **kwargs)
+
+   Calls :func:`plt.pause(*args, **kwargs) <matplotlib.pyplot.pause>`.
+..
+   * ** * ** This comment stops vim from highlighting everything as italicised.

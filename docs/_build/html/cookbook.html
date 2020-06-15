@@ -15,6 +15,8 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Non-Uniform Sampling" href="nus.html" />
+    <link rel="prev" title="2D Plotting in Detail" href="plot2d.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -33,6 +35,118 @@
             
   <div class="section" id="plotting-cookbook">
 <h1>Plotting Cookbook<a class="headerlink" href="#plotting-cookbook" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="adding-text-to-a-spectrum">
+<h2>Adding text to a spectrum<a class="headerlink" href="#adding-text-to-a-spectrum" title="Permalink to this headline">¶</a></h2>
+<p>Adding text is best done using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.text()</span></code></a>. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/pt2&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;7..8.5&quot;</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">7.27</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mathrm</span><span class="si">{CHCl_3}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis_transform</span><span class="p">())</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/cookbook_text.png" class="align-center" src="_images/cookbook_text.png" />
+<p>The <code class="docutils literal notranslate"><span class="pre">transform</span></code> parameter above ensures that the <em>x</em>-coordinate is specified in terms of <em>data</em> coordinates (i.e. the actual chemical shift on the <em>x</em>-axis), whereas the <em>y</em>-coordinate is specified in terms of <em>axis</em> coordinates (i.e. bottom is 0 and top is 1). For 1D plots, the <em>y</em>-axis is the spectral intensity and spans several orders of magnitude, so without the transformation it is difficult to guess how high to place the text.</p>
+<p>It turns out that for <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.text()</span></code></a>, the default coordinate system is <em>data</em> coordinates along both axes (note that this is somewhat unusual for <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>; it’s far more normal for axis coordinates to be the default). So for 2D plots, you can simply leave out the <code class="docutils literal notranslate"><span class="pre">transform</span></code> parameter altogether and use <code class="docutils literal notranslate"><span class="pre">ax.text(x=f2_ppm,</span> <span class="pre">y=f1_ppm,</span> <span class="pre">s=&quot;text&quot;)</span></code>.</p>
+</div>
+<div class="section" id="insets">
+<h2>Insets<a class="headerlink" href="#insets" title="Permalink to this headline">¶</a></h2>
+<p>To be done.</p>
+</div>
+<div class="section" id="subplots">
+<h2>Subplots<a class="headerlink" href="#subplots" title="Permalink to this headline">¶</a></h2>
+<p>To be done.</p>
+</div>
+<div class="section" id="a-complete-example">
+<h2>A complete example<a class="headerlink" href="#a-complete-example" title="Permalink to this headline">¶</a></h2>
+<p>As a more complicated example, let’s try to plot five 1D NOE spectra with different mixing times. This is what happens when we naively stage all of them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">noe</span> <span class="ow">in</span> <span class="n">noes</span><span class="p">:</span>
+    <span class="n">mixing_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">noe</span><span class="p">[</span><span class="s2">&quot;d8&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>  <span class="c1"># d8 itself is in seconds</span>
+    <span class="n">noe</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mixing_time</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">,</span>
+              <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;0..6&quot;</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">voffset</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">hoffset</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/cookbook_noesy1.png" class="align-center" src="_images/cookbook_noesy1.png" />
+<p>There are a couple of ways of stopping the intense on-resonance peak from dominating the spectrum. One way is to use the <code class="docutils literal notranslate"><span class="pre">dfilter</span></code> parameter of <code class="xref py py-meth docutils literal notranslate"><span class="pre">stage()</span></code>. <code class="docutils literal notranslate"><span class="pre">dfilter</span></code> must be a function that takes the spectrum intensity at each point (a float) and returns <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on whether we want the point or not. Here we use a <code class="docutils literal notranslate"><span class="pre">lambda</span></code> but you can define a proper function if you want. Also, if you prefer having the on-resonance peak negative, you can either reprocess in TopSpin or use <code class="docutils literal notranslate"><span class="pre">scale=-1</span></code>, as below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+<span class="c1"># Calculate the height of the intense peak</span>
+<span class="n">maxheight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">noes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">proc_data</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">noe</span> <span class="ow">in</span> <span class="n">noes</span><span class="p">:</span>
+    <span class="n">mixing_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">noe</span><span class="p">[</span><span class="s2">&quot;d8&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">noe</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mixing_time</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">,</span>
+              <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;0..6&quot;</span><span class="p">,</span>
+              <span class="n">dfilter</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="n">maxheight</span><span class="p">),</span>
+              <span class="n">scale</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Note that the max heights of the staged spectra have changed,</span>
+<span class="c1"># so voffset needs to be adjusted as well.</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">voffset</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">hoffset</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/cookbook_noesy2.png" class="align-center" src="_images/cookbook_noesy2.png" />
+<p>As an alternative to that, you could just manually set the plot limits. When you display a graph, you can hover over the graph and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> will tell you the coordinates of your current cursor position. Jot some good values down and pass them to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_xlim.html#matplotlib.axes.Axes.set_xlim" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.set_xlim</span></code></a> and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_ylim.html#matplotlib.axes.Axes.set_ylim" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.set_ylim</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">noe</span> <span class="ow">in</span> <span class="n">noes</span><span class="p">:</span>
+    <span class="n">mixing_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">noe</span><span class="p">[</span><span class="s2">&quot;d8&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">noe</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mixing_time</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">,</span>
+              <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;0..6&quot;</span><span class="p">,</span>
+              <span class="n">scale</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">voffset</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">hoffset</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">6.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span>   <span class="c1"># must be (larger, smaller) so that it&#39;s inverted</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1e4</span><span class="p">,</span> <span class="mf">1.4e5</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/cookbook_noesy3.png" class="align-center" src="_images/cookbook_noesy3.png" />
+<p>Let’s assume that we like this second option. The following discussion will apply to both, anyway, so you can tailor it to your liking.</p>
+<p>If we wanted to display the mixing time next to each individual spectrum and not in the legend, then we just need to call <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.text()</span></code></a> on an appropriate coordinate.
+The <em>x</em>-coordinate is easy to choose, but the <em>y</em>-coordinate is not so easy, until we find <code class="xref py py-func docutils literal notranslate"><span class="pre">get_properties()</span></code>.
+This returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">PlotProperties</span></code> class, which has an attribute <code class="docutils literal notranslate"><span class="pre">voffsets</span></code> listing the vertical offset of each spectrum in <em>data</em> coordinates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">noe</span> <span class="ow">in</span> <span class="n">noes</span><span class="p">:</span>
+    <span class="n">noe</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;0..6&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">voffset</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">hoffset</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">6.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1e4</span><span class="p">,</span> <span class="mf">1.4e5</span><span class="p">)</span>
+<span class="c1"># Get the vertical offset of each spectrum, in data coordinates</span>
+<span class="n">voffsets</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">pgplot</span><span class="o">.</span><span class="n">get_properties</span><span class="p">()</span><span class="o">.</span><span class="n">voffsets</span>
+<span class="c1"># Now add each bit of text at the appropriate voffset</span>
+<span class="k">for</span> <span class="n">voffset</span><span class="p">,</span> <span class="n">noe</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">voffsets</span><span class="p">,</span> <span class="n">noes</span><span class="p">):</span>
+    <span class="n">mixing_time_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">noe</span><span class="p">[</span><span class="s1">&#39;d8&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2"> ms&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">voffset</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="n">mixing_time_label</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/cookbook_noesy4.png" class="align-center" src="_images/cookbook_noesy4.png" />
+<p>Not bad, but the text needs to be lifted a little.
+Now, <code class="xref py py-class docutils literal notranslate"><span class="pre">PlotProperties</span></code> doesn’t try to be overly clever with the values it stores, since it doesn’t know what you want to use them for; it trusts that you will use them wisely.
+In this case, all we need to do is to add some extra height (this bit pretty much <em>has</em> to be trial-and-error, since we don’t want to hard-code a value).</p>
+<p>We could also horizontally displace the text a little bit, just like the spectra, by subtracting <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">*</span> <span class="pre">0.05)</span></code> from each successive <em>x</em>-coordinate. This would match the <code class="docutils literal notranslate"><span class="pre">hoffset=0.5</span></code> parameter passed to <a class="reference internal" href="plot1d.html#penguins.mkplot" title="penguins.mkplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>. And finally, we can reuse the colours of the original plot via <code class="docutils literal notranslate"><span class="pre">PlotProperties.colors</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">noe</span> <span class="ow">in</span> <span class="n">noes</span><span class="p">:</span>
+    <span class="n">noe</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;0..6&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">voffset</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">hoffset</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">6.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span>   <span class="c1"># must be (larger, smaller)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1e4</span><span class="p">,</span> <span class="mf">1.4e5</span><span class="p">)</span>
+<span class="c1"># Get the properties of each spectrum</span>
+<span class="n">heights</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">pgplot</span><span class="o">.</span><span class="n">get_properties</span><span class="p">()</span><span class="o">.</span><span class="n">heights</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">pgplot</span><span class="o">.</span><span class="n">get_properties</span><span class="p">()</span><span class="o">.</span><span class="n">colors</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">noe</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">noes</span><span class="p">)):</span>
+    <span class="n">mixing_time_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">noe</span><span class="p">[</span><span class="s1">&#39;d8&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2"> ms&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">(</span><span class="mf">0.6</span> <span class="o">-</span> <span class="n">n</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">height</span><span class="o">+</span><span class="mf">2e3</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="n">mixing_time_label</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/cookbook_noesy5.png" class="align-center" src="_images/cookbook_noesy5.png" />
+</div>
 </div>
 
 
@@ -52,12 +166,20 @@
 
 
 <h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot1d.html">1D Plotting in Detail</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot2d.html">2D Plotting in Detail</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting Cookbook</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-text-to-a-spectrum">Adding text to a spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#insets">Insets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subplots">Subplots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-complete-example">A complete example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nus.html">Non-Uniform Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topspin.html">TopSpin directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Full reference</a></li>
 </ul>
 
@@ -65,6 +187,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="plot2d.html" title="previous chapter">2D Plotting in Detail</a></li>
+      <li>Next: <a href="nus.html" title="next chapter">Non-Uniform Sampling</a></li>
   </ul></li>
 </ul>
 </div>

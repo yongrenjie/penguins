@@ -56,7 +56,7 @@ class PlotProperties():
     with mkplot().
     """
     def __init__(self):
-        self.heights = []
+        self.voffsets = []
         self.colors = []
         self.options = []
         self.colors_positive = []
@@ -198,7 +198,7 @@ def _mkplot1d(holding_area: PlotHoldingArea,
                  **pobj.options)
         # Add heights and colors to plotproperties.
         pp = get_properties()
-        pp.heights.append(vert_offset)
+        pp.voffsets.append(vert_offset)
         pp.colors.append(pobj.options["color"])
         pp.options.append(pobj.options)
 
@@ -210,7 +210,8 @@ def _mkplot1d(holding_area: PlotHoldingArea,
     if title:
         plt.title(title)
     plt.xlabel(xlabel)
-    ax.invert_xaxis()
+    if not ax.xaxis_inverted():
+        ax.invert_xaxis()
     if make_legend:
         plt.legend(loc=legend_loc)
     # Apply other styles.
@@ -386,8 +387,10 @@ def _mkplot2d(holding_area: PlotHoldingArea,
             legend_labels.append(pobj.label)
     # Axis formatting
     ax = plt.gca()
-    ax.invert_xaxis()
-    ax.invert_yaxis()
+    if not ax.xaxis_inverted():
+        ax.invert_xaxis()
+    if not ax.yaxis_inverted():
+        ax.invert_yaxis()
     if title is not None:
         plt.title(title)
     plt.xlabel(xlabel)
@@ -422,7 +425,7 @@ def _mkplot2d(holding_area: PlotHoldingArea,
 def _make_contour_slider(dataset: ds.Dataset2D,
                          increment: float = None,
                          nlev: int = 4,
-                         ) -> None:
+                         ) -> float:
     # Choose contour levels. We reduce nlev to 4 by default so that the
     # plotting is faster -- otherwise it's super laggy. We try to cover the
     # same dynamic range as 1.5 ** 10 by default, unless the user specified
@@ -436,9 +439,9 @@ def _make_contour_slider(dataset: ds.Dataset2D,
 
     # Plot the spectrum on the top portion of the figure.
     fig, ax = plt.subplots()
-    _, plot_axes = main.plot(empty_pha=False,
-                             figstyle="mpl_natural",
-                             )
+    _, plot_axes = main.mkplot(empty_pha=False,
+                               figstyle="mpl_natural",
+                               )
     plt.subplots_adjust(left=0.1, bottom=0.25)
 
     # Generate a slider.
@@ -462,7 +465,7 @@ def _make_contour_slider(dataset: ds.Dataset2D,
         # Replot
         plot_axes.cla()
         plt.sca(plot_axes)
-        main.plot(close=False, empty_pha=False, figstyle="mpl_natural")
+        main.mkplot(close=False, empty_pha=False, figstyle="mpl_natural")
 
     # Register the redraw function. The argument to on_changed must be a
     # function taking val as its only parameter.
@@ -500,3 +503,4 @@ def _make_contour_slider(dataset: ds.Dataset2D,
     _reset_pha()
     plt.close("all")
 
+    return fval

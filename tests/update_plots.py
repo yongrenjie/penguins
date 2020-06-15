@@ -158,8 +158,39 @@ if h:
     print("Done plot h.")
 
 
-ia = all or 0
-if ia:
+# inset TODO
+
+
+
+j = all or 1
+if j:
+    _, axs = pg.subplots(2, 2)
+    # Set up the lists.
+    # 15N HSQC; 13C HSQC; COSY; NOESY
+    spectra = [pg.read("data/noah", i, 1) for i in range(1, 5)]
+    levels = [7e3, 2.3e4, 8.5e5, 8.9e4]
+    titles = [r"$^{15}$N HSQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
+    clr = ("blue", "red")
+    for spec, ax, lvl, title, char in zip(spectra, axs.flat, levels, titles, "abcd"):
+        spec.stage(levels=lvl, colors=clr)
+        f1, f2 = spec["nuc1"]   # ('15N', '1H')
+        f1_elem = f1.lstrip("1234567890")  # N
+        f1_mass = f1[:-len(f1_elem)]       # 15
+        f2_elem = f2.lstrip("1234567890")  # H
+        f2_mass = f2[:-len(f2_elem)]       # 1
+        pg.mkplot(axes=ax, title=title,
+                  xlabel=rf"$^{{{f2_mass}}}${f2_elem} / ppm",
+                  ylabel=rf"$^{{{f1_mass}}}${f1_elem} / ppm")
+        # Add a label. We're just showing off at this point.
+        ax.text(x=0.02, y=0.97, s=f"({char})", transform=ax.transAxes,
+                fontweight="semibold", verticalalignment="top")
+    # pg.show()
+    pg.savefig("../docs/images/cookbook_subplots.png", dpi=500)
+    print("Done plot j.")
+
+
+la = all or 0
+if la:
     noes = [pg.read("data/rot1", i, 1) for i in range(10, 15)]
     for noe in noes:
         mixing_time = int(noe["d8"] * 1000)
@@ -168,10 +199,10 @@ if ia:
     pg.mkplot(voffset=0.01, hoffset=0.05)
     # pg.show()
     pg.savefig("../docs/images/cookbook_noesy1.png", dpi=500)
-    print("Done plot ia.")
+    print("Done plot la.")
 
-ib = all or 0
-if ib:
+lb = all or 0
+if lb:
     noes = [pg.read("data/rot1", i, 1) for i in range(10, 15)]
     # Calculate the height of the intense peak
     maxheight = np.amax(noes[0].proc_data())
@@ -186,11 +217,11 @@ if ib:
     pg.mkplot(voffset=0.4, hoffset=0.05)
     # pg.show()
     pg.savefig("../docs/images/cookbook_noesy2.png", dpi=500)
-    print("Done plot ib.")
+    print("Done plot lb.")
 
 
-ic = all or 0
-if ic:
+lc = all or 0
+if lc:
     noes = [pg.read("data/rot1", i, 1) for i in range(10, 15)]
     for noe in noes:
         mixing_time = int(noe["d8"] * 1000)
@@ -202,30 +233,30 @@ if ic:
     ax.set_ylim(-2.1e4, 1.4e5)
     # pg.show()
     pg.savefig("../docs/images/cookbook_noesy3.png", dpi=500)
-    print("Done plot ic.")
+    print("Done plot lc.")
 
 
-id = all or 0
-if id:
+ld = all or 0
+if ld:
     noes = [pg.read("data/rot1", i, 1) for i in range(10, 15)]
     for noe in noes:
         noe.stage(bounds="0..6", scale=-1)
     _, ax = pg.mkplot(voffset=0.01, hoffset=0.05)
     ax.set_xlim(6.2, -0.3)   # must be (larger, smaller)
     ax.set_ylim(-2.1e4, 1.4e5)
-    # Get the heights of each spectrum, in data coordinates
-    heights = pg.pgplot.get_properties().heights
-    for height, noe in zip(heights, noes):
+    # Get the vertical offset of each spectrum, in data coordinates
+    voffsets = pg.get_properties().voffsets
+    for voffset, noe in zip(voffsets, noes):
         mixing_time_label = f"{int(noe['d8'] * 1000)} ms"
-        ax.text(x=0.6, y=height,
+        ax.text(x=0.6, y=voffset,
                 s=mixing_time_label)
     # pg.show()
     pg.savefig("../docs/images/cookbook_noesy4.png", dpi=500)
-    print("Done plot id.")
+    print("Done plot ld.")
 
 
-ie = all or 0
-if ie:
+le = all or 0
+if le:
     noes = [pg.read("data/rot1", i, 1) for i in range(10, 15)]
     for noe in noes:
         noe.stage(bounds="0..6", scale=-1)
@@ -233,20 +264,20 @@ if ie:
     ax.set_xlim(6.2, -0.3)   # must be (larger, smaller)
     ax.set_ylim(-2.1e4, 1.4e5)
     # Get the properties of each spectrum
-    heights = pg.pgplot.get_properties().heights
-    colors = pg.pgplot.get_properties().colors
-    for n, (color, height, noe) in enumerate(zip(colors, heights, noes)):
+    voffsets = pg.get_properties().voffsets
+    colors = pg.get_properties().colors
+    for n, (color, voffset, noe) in enumerate(zip(colors, voffsets, noes)):
         mixing_time_label = f"{int(noe['d8'] * 1000)} ms"
         ax.text(x=(0.6 - n * 0.05), y=height+2e3,
                 s=mixing_time_label,
                 color=color)
     # pg.show()
     pg.savefig("../docs/images/cookbook_noesy5.png", dpi=500)
-    print("Done plot ie.")
+    print("Done plot le.")
 
 
 # -- make the docs ---------------------
-make_docs = all or 0
+make_docs = all or 1
 if make_docs:
     import os
     os.chdir(os.path.abspath("../docs"))

@@ -64,11 +64,13 @@ Plot construction is done using :func:`~penguins.mkplot()`.
 
 .. currentmodule:: penguins
 
-.. function:: mkplot(figsize=None, figstyle="default", stacked=False, voffset=0, hoffset=0, title=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
+.. function:: mkplot(axes=None, figsize=None, figstyle="default", stacked=False, voffset=0, hoffset=0, title=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
 
    Calls :func:`plt.plot() <matplotlib.pyplot.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
    
    All keyword arguments below are optional:
+
+   :param axes: :class:`~matplotlib.axes.Axes` object to plot the graph on. If not given, defaults to the currently active axes. (The most likely scenario is that there *isn't* an active axes, so :func:`plt.plot() <matplotlib.pyplot.plot>` will create one.)
 
    :param tuple(float,float) figsize: (width, height) of plot in inches.
 

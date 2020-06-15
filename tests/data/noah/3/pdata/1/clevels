@@ -1,0 +1,28 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 2	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-06-08 18:58:27.635 +0100  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\tim\nmr/gramicidine/21003/pdata/1/clevels
+$$ process C:\Bruker\TopSpin3.6.2\prog\mod\proc2d.exe
+##$LEVELS= (0..255)
+22260 36602.45 60185.96 98964.68 162729.11 267577.93 439982.42 723469.71
+1189612.13 1956097.12 3216439.9 5288840.5 8696519.96 14299818.54 23513406.64
+38663448.1 63574889.07 104537146.03 171892001.07 282644602 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0
+##$LEVSIGN= 1
+##$MAXLEV= 20
+##$METHOD= 0
+##$NEGBASE= -22260
+##$NEGINCR= 1.8
+##$POSBASE= 22260
+##$POSINCR= 1.8
+##END=

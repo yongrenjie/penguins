@@ -1,0 +1,24 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 8	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-06-08 18:58:28.432 +0100  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\tim\nmr/gramicidine/21004/acqu2s
+$$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\user\fixF1.exe
+##$ACQT0= 0
+##$BF1= 699.99
+##$FnILOOP= 0
+##$FnMODE= 6
+##$NUC1= <1H>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 1024
+##$O1= 3499.95
+##$ProjAngle= 0
+##$SFO1= 699.99349995
+##$SW= 10.004094496518
+##$SW_h= 7002.80112044818
+##$TD= 256
+##END=

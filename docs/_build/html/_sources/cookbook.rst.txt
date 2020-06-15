@@ -33,7 +33,46 @@ To be done.
 Subplots
 --------
 
-To be done.
+Penguins also provides a wrapper around :func:`plt.subplots() <matplotlib.pyplot.subplots>`. Fundamentally, plotting in subplots is not more complicated.
+The only difference is that :func:`subplots()` returns an :class:`np.ndarray <numpy.ndarray>` of :class:`~matplotlib.axes.Axes` objects, and we need to make sure that we plot the correct spectrum on the correct set of axes.
+This can be done by passing the appropriate :class:`~matplotlib.axes.Axes` instance to :func:`~penguins.mkplot()`, which sets it to be the current active axes.
+A common technique is to assign the array of axes to ``axs``, and then iterate over ``axs.flat``::
+
+   # Create subplots
+   _, axs = pg.subplots(2, 2)  # (nrows, ncols)
+   # Set up the lists.
+   # 15N HSQC; 13C HSQC; COSY; NOESY
+   spectra = [pg.read("data/noah", i, 1) for i in range(1, 5)]
+   levels = [7e3, 2.3e4, 8.5e5, 8.9e4]
+   titles = [r"$^{15}$N HSQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
+   clr = ("blue", "red")
+   # Iterate over the lists.
+   for spec, ax, lvl, title, char in zip(spectra, axs.flat, levels, titles, "abcd"):
+       # Staging proceeds as normal
+       spec.stage(levels=lvl, colors=clr)
+       # Some fiddly manipulation of the nucleus strings
+       f1, f2 = spec["nuc1"]              # ('15N', '1H')
+       f1_elem = f1.lstrip("1234567890")  # N
+       f1_mass = f1[:-len(f1_elem)]       # 15
+       f2_elem = f2.lstrip("1234567890")  # H
+       f2_mass = f2[:-len(f2_elem)]       # 1
+       # When constructing the plot, you need to pass the correct axis instance
+       pg.mkplot(axis=ax,
+                 title=title,
+                 xlabel=rf"$^{{{f2_mass}}}${f2_elem} / ppm",
+                 ylabel=rf"$^{{{f1_mass}}}${f1_elem} / ppm")
+       # Add a label. We're just showing off at this point.
+       ax.text(x=0.02, y=0.97, s=f"({char})", transform=ax.transAxes,
+               fontweight="semibold", verticalalignment="top")
+    # Display as usual (outside the loop)
+    pg.show()
+ 
+.. image:: images/cookbook_subplots.png
+
+Incidentally, we needed *three* sets of curly braces inside the ``xlabel`` and ``ylabel`` strings. One is for the f-string variable substitution; the other two get collapsed into one set of *literal* curly braces. The literal curly braces are needed for the LaTeX parser to superscript the entire mass number (or else we would end up with ``$^15$N``: :superscript:`1`\ 5N).
+
+.. note::
+   If you want to do anything using :func:`~penguins.get_properties`, you need to do it inside the loop, *before* :func:`~penguins.mkplot` is called again on the next iteration. Every call to :func:`~penguins.mkplot` resets the :class:`~penguins.PlotProperty` object.
 
 
 A complete example
@@ -100,7 +139,7 @@ This returns a :class:`~penguins.pgplot.PlotProperties` class, which has an attr
    ax.set_xlim(6.2, -0.3)
    ax.set_ylim(-2.1e4, 1.4e5)
    # Get the vertical offset of each spectrum, in data coordinates
-   voffsets = pg.pgplot.get_properties().voffsets
+   voffsets = pg.get_properties().voffsets
    # Now add each bit of text at the appropriate voffset
    for voffset, noe in zip(voffsets, noes):
        mixing_time_label = f"{int(noe['d8'] * 1000)} ms"
@@ -124,8 +163,8 @@ We could also horizontally displace the text a little bit, just like the spectra
    ax.set_xlim(6.2, -0.3)   # must be (larger, smaller)
    ax.set_ylim(-2.1e4, 1.4e5)
    # Get the properties of each spectrum
-   heights = pg.pgplot.get_properties().heights
-   colors = pg.pgplot.get_properties().colors
+   heights = pg.get_properties().heights
+   colors = pg.get_properties().colors
    for n, (color, height, noe) in enumerate(zip(colors, heights, noes)):
        mixing_time_label = f"{int(noe['d8'] * 1000)} ms"
        ax.text(x=(0.6 - n * 0.05), y=height+2e3,

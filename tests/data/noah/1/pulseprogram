@@ -1,0 +1,441 @@
+# 1 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+;noah4_MSCN
+;avance-version (19/02/19)
+;NOAH-4 (MSCN): 15N-HMQC + ed-HSQC + COSY + ps-NOESY
+;with optional multiplicity editing in HSQC
+;WaveMaker supported
+;
+;E. Kupce & T. Claridge, Angew. Chem. Int. Ed. Eng. 56, 11779-11783 (2017)
+;
+;$CLASS=HighRes
+;$DIM=2D
+;$TYPE=
+;$SUBTYPE=
+;$COMMENT=
+
+
+# 1 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Avance.incl" 1
+;Avance3.incl
+;   for AV III
+;
+;avance-version (13/06/17)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+# 169 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Avance.incl"
+;$Id: Avance3.incl,v 1.10.2.2 2013/08/30 09:43:33 ber Exp $
+# 16 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN" 2
+
+# 1 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Grad.incl" 1
+;Grad2.incl  -  include file for Gradient Spectroscopy
+;   for TCU3
+;
+;avance-version (07/01/17)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 27 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Grad.incl"
+define list<gradient> EA=<EA>
+
+
+# 31 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Grad.incl"
+;$Id: Grad2.incl,v 1.14 2012/01/31 17:49:21 ber Exp $
+# 17 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN" 2
+
+# 1 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl" 1
+;Delay.incl  -  include file for commonly used delays
+;
+;version (13/08/07)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 9 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl"
+;general delays
+
+define delay DELTA
+define delay DELTA1
+define delay DELTA2
+define delay DELTA3
+define delay DELTA4
+define delay DELTA5
+define delay DELTA6
+define delay DELTA7
+define delay DELTA8
+define delay DELTA9
+define delay DELTA10
+define delay DELTA11
+define delay DELTA12
+define delay DELTA13
+define delay DELTA14
+define delay DELTA15
+define delay DELTA16
+
+define delay TAU
+define delay TAU1
+define delay TAU2
+define delay TAU3
+define delay TAU4
+define delay TAU5
+define delay TAU6
+define delay TAU7
+define delay TAU8
+define delay TAU9
+# 40 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl"
+define delay INCR1
+define delay INCR2
+define delay INCR3
+define delay INCR4
+define delay INCR5
+define delay INCR6
+
+
+;delays for centering pulses
+# 50 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl"
+define delay CEN_HN1
+define delay CEN_HN2
+define delay CEN_HN3
+define delay CEN_HC1
+define delay CEN_HC2
+define delay CEN_HC3
+define delay CEN_HC4
+define delay CEN_HP1
+define delay CEN_HP2
+define delay CEN_CN1
+define delay CEN_CN2
+define delay CEN_CN3
+define delay CEN_CN4
+define delay CEN_CP1
+define delay CEN_CP2
+
+
+;loop counters
+# 69 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl"
+define loopcounter COUNTER
+define loopcounter SCALEF
+define loopcounter FACTOR1
+define loopcounter FACTOR2
+define loopcounter FACTOR3
+define loopcounter FACTOR4
+define loopcounter FACTOR5
+define loopcounter FACTOR6
+
+
+# 80 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl"
+;$Id: Delay.incl,v 1.14.2.1 2013/08/30 09:43:33 ber Exp $
+# 18 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN" 2
+
+
+# 21 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+"p2=p1*2"
+"p22=p21*2"
+"d2=1s/(cnst2*2)"   ;JCOMP
+"d4=1s/(cnst2*4)"
+"d26=1s/(cnst4*4)"
+
+
+"d0=3u"
+"d10=3u"
+"d20=3u"
+# 32 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+"in0=inf1/2"
+"cnst10=2*dw/inf1"
+"in10=inf1*cnst10"
+"in20=in0*cnst20"
+
+"l3=td1/8"
+
+# 40 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+"DELTA=p16+d16+p2/2+d0-p3*2/PI+4u"
+"DELTA1=d4-p14/2"
+"DELTA2=d4+p14/2"
+"DELTA3=p16+d16+8u"
+"DELTA4=d16+p2/2+d0-4u+p21*2/PI"
+"DELTA5=DELTA2-p16-d16-p3-de+p1*2/PI-12u"
+"DELTA6=d26-p16-d16-de-8u+p1*2/PI" 
+"DELTA7=p16+d16+d10+4u"  
+"DELTA8=d8-de-aq-p3-p16*2-d16*2-62u"
+"DELTA13=d2+p3+p2/2"
+"DELTA14=DELTA+p3-p2/2"
+
+
+"acqt0=0"
+baseopt_echo
+# 1 "mc_line 57 file C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN dc-measurement inserted automatically"
+
+    dccorr
+# 57 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+# 57 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+1 ze
+  30m pl12:f2
+  50u setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+2 30m 
+3 8m do:f2 
+4 1m
+  4u pl3:f3
+  4u pl2:f2
+  (p21 ph1):f3
+  (p3 ph1):f2
+  4u pl1:f1
+  p16:gp0
+  d16
+  (p1 ph1)
+  4u
+  p16:gp0*-1.37
+  d16
+  (p1 ph2)
+  4u
+  p16:gp0*0.77
+  d16
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
+  d1 st0
+
+; 15N HMQC
+
+5 p1 ph7
+  d26 
+  (center (p2 ph1):f1 (p22 ph1):f3)   
+  d26 setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+  (p1 ph7):f1
+  (p21 ph3):f3
+  4u
+  p16:gp1*-1*EA
+  DELTA4 
+  (p22 ph3):f3
+  d20
+  p16:gp1*EA
+  d16
+  (p2 ph4)
+  p16:gp1*EA
+  d16 
+  d20
+  (p22 ph5):f3
+  4u 
+  p16:gp1*-1*EA
+  DELTA4 
+  (p21 ph5):f3
+  d26
+  (center (p2 ph1):f1 (p22 ph1):f3)
+  4u
+  p16:gp5
+  d16
+  DELTA6 pl16:f3   
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
+  goscnp ph31 cpd3:f3
+  4u do:f3
+# 115 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+; 13C HSQC
+
+  4u pl2:f2 pl3:f3
+  (p21 ph1):f3
+  (p3 ph1):f2
+  50u  
+  p16:gp0*1.77
+  2m st
+
+  (p1 ph1)
+  DELTA1 
+  (p14:sp3 ph6):f2 
+  (p2 ph1):f1 
+  DELTA2 pl2:f2 
+  (p1 ph2):f1 
+  (p3 ph3):f2
+  DELTA setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+# 134 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+  (p31:sp18 ph6):f2
+
+
+# 139 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+  4u
+  p16:gp1*EA
+  d16
+  d0 
+  (p2 ph4)
+  d0
+  4u
+  p16:gp1*EA
+  d16
+
+
+  DELTA13
+  (p31:sp18 ph6):f2
+  DELTA14
+  (p2 ph8):f1 
+  d2 pl2:f2
+# 160 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+  (p3 ph5):f2
+  (p1 ph1):f1 
+  DELTA1 
+  (p14:sp3 ph6):f2 
+  (p2 ph8):f1 
+  4u
+  p16:gp2
+  d16
+  DELTA5 pl2:f2
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7 
+  (p3 ph1):f2
+  4u pl12:f2
+  goscnp ph31 cpd2:f2
+
+; H-H COSY
+
+  4u do:f2
+  50u setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+  4u pl2:f2  
+  (p3 ph1):f2
+  4u   
+  p16:gp0*0.77
+  d16
+  2m st           
+# 185 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+  (p1 ph30) 
+  DELTA7
+  (p2 ph5)
+  4u 
+  p16:gp3
+  d16 
+  d10        
+  (p1 ph1)
+  4u
+  p16:gp3*EA
+  d16
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
+  goscnp ph30
+
+;  H-H NOESY
+
+  4u
+  (p3 ph1):f2
+  4u 
+  50u setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+  p16:gp4  
+  d16
+  DELTA8 st
+  p1 ph5
+  DELTA3         
+  de
+  (p2 ph5)  
+  4u
+  p16:gp3*EA
+  d16 
+  4u
+  go=2 ph29
+# 218 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+  30m wr #0 if #0 zd igrad EA
+
+  lo to 3 times 2 
+ 
+  1m id0
+  1m id10
+  1m id20
+  1m ip3*2 
+  1m ip4*2 
+  1m ip29*2
+  1m ip30*2
+  1m ip31*2
+
+  lo to 4 times l3  
+# 233 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+exit
+
+
+ph1=0 
+ph2=1
+ph3=0 2
+ph4=0 2 2 0
+ph5=0 0 2 2
+ph6=0
+ph7=2
+ph8=1
+ph29=0 2 2 0
+ph30=0 2
+ph31=0 2 2 0 
+# 249 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+;pl1 : f1 channel - power level for pulse (default)
+;pl2 : f2 channel - power level for pulse (default)
+;pl3 : f3 channel - power level for pulse (default)
+;pl12: f2 channel - power level for CPD/BB decoupling
+;pl16: f3 channel - power level for CPD/BB decoupling
+;sp3: f2 channel - shaped pulse 180 degree
+;sp18: f2 channel - J-compensated adiabatic pulse 180 degree for inversion
+;p1 : f1 channel -  90 degree high power pulse
+;p2 : f1 channel - 180 degree high power pulse
+;p3 : f2 channel -  90 degree high power pulse
+;p14: f2 channel - 180 degree shaped pulse for inversion
+;p16: homospoil/gradient pulse
+;p21: f3 channel -  90 degree high power pulse
+;p22: f3 channel - 180 degree high power pulse
+;p31: f2 channel - 180 degree shaped pulse for adiabatic matched sweep
+;d0 : incremented delay (2D)                         [3 usec]
+;d1 : relaxation delay
+;d2 : 1/(2J)CH
+;d4 : 1/(4J)CH
+;d8 : mixing time
+;d10: incremented delay (2D)                         [3 usec]
+;d16: delay for homospoil/gradient recovery
+;d20: incremented delay (2D)                         [3 usec]
+;d26: 1/(2J)NH
+;cnst2: = J(CH)
+;cnst4: = J(NH)
+;cnst10: scling factor SW(C)/SW(H)for COSY and NOESY
+;cnst20: scling factor SW(C)/SW(N)for 15N HMBC
+;l3 : loop for 2D experiment = td1/8
+;inf1: 1/SW(C) = 2 * DW(C)
+;in0: 1/(2 * SW(C)) = DW(C)
+;nd0: 2
+;in10: = inf1*cnst10
+;in20: = in0*cnst20
+;nbl: 4
+;ns: 1 * n
+;ds: >= 16
+;td1: number of experiments - multiple of NBL
+;FnMODE: echo-antiecho
+;cpd2: decoupling according to sequence defined by cpdprg2
+;cpd3: decoupling according to sequence defined by cpdprg3
+;pcpd2: f2 channel - 90 degree pulse for decoupling sequence
+;pcpd3: f3 channel - 90 degree pulse for decoupling sequence
+
+
+;for z-only gradients:
+;gpz0: 17%
+;gpz1: 80%
+;gpz2: 40.2% 
+;gpz3: 10%
+;gpz4: 33%
+;gpz5: 32.4%
+# 302 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+;use gradient files:   
+;gpnam0: SMSQ10.100
+;gpnam1: SMSQ10.100
+;gpnam2: SMSQ10.100
+;gpnam3: SMSQ10.100
+;gpnam4: SMSQ10.100
+;gpnam5: SMSQ10.100
+
+
+# 312 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+                                          ;preprocessor-flags-start
+;1: for C-13 multiplicity editing start experiment with
+;         option -DEDIT (eda: ZGOPTNS)
+                                          ;preprocessor-flags-end
+
+
+# 319 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+;WaveMaker shapes (optional)
+;use 'wvm -a' command to create the necessary shape files
+;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
+;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
+;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
+
+
+;Processing:
+;use splitx_au au-program to split the data
+;define user processing au programs (USERP1...P4) for automatic processing
+;   of all data sets 
+;   userP1: noah_hmqc
+;   userP2: noah_hsqc
+;   userP3: noah_cosy
+;   userP4: noah_noesy
+# 337 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/noah4_MSCN"
+;$Id: noah4_MSCN,v 1.8.4.2 2019/05/13 14:53:48 ber Exp $

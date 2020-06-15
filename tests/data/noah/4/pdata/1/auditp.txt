@@ -1,0 +1,41 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:\NMR\data\tim\nmr/gramicidine/21004/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-06-08 18:58:27.729 +0100>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<splitx_au>,<TopSpin 3.6.2>,
+      <created by splitx 4 4. dataset from
+       C:\NMR\data\tim\nmr/gramicidine/21
+       data hash MD5: 1K * 256
+       A8 EB F3 99 C2 5C FF 44 FC 5E 16 60 7D A0 61 45>)
+(   2,<2020-06-08 18:58:29.713 +0100>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc2d>,<TopSpin 3.6.2>,
+      <Start of raw data processing
+       xfb same F2: SI = 4K WDW = 4 SSB = 2 FT_mod = 6 PKNL = 1 PHC0 = 105.7712 PHC1 = 4.9 F1: SI = 1K ME_mod = 2 NCOEF = 32 WDW = 4 SSB = 2 FT_mod = 6 FCOR = 0.5 PHC0 = -19.16602 PHC1 = 31.8
+       data hash MD5: 4K * 1K
+       2C D9 16 F2 1F BE 4D C4 6E 11 FA 73 50 5C 34 25>)
+(   3,<2020-06-08 18:58:30.463 +0100>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc2d>,<TopSpin 3.6.2>,
+      <abs1 F1: ABSG = 5 ABSF1 = 2976931 ABSF2 = 2976931
+       data hash MD5: 4K * 1K
+       2C D9 16 F2 1F BE 4D C4 6E 11 FA 73 50 5C 34 25>)
+(   4,<2020-06-08 18:58:36.275 +0100>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<apkm>,<TopSpin 3.6.2>,
+      <apkm 
+       data hash MD5: 4K * 1K
+       7D DB 58 58 D3 3E 40 7D D1 E2 87 55 B9 25 0A 29>)
+$$ /Users/yongrenjie/penguins/tests/data/noah/4/pdata/1/auditp.txt
+(   5,<2020-06-16 01:08:44.973 +0800>,<yongrenjie>,<jymbp.local>,<proc2d>,<TopSpin 4.0.8>,
+      <pk1 fgphup F1: PHC0 = 19.925 PHC1 = -25.6
+       data hash MD5: 4K * 1K
+       AA 9F CE 72 F9 EC 09 80 E3 0D 3C BD 45 A0 23 06>)
+(   6,<2020-06-16 01:09:35.875 +0800>,<yongrenjie>,<jymbp.local>,<proc2d>,<TopSpin 4.0.8>,
+      <pk2 fgphup F2: PHC0 = 3.654687 PHC1 = -6.4
+       data hash MD5: 4K * 1K
+       4B F5 01 E6 9D A4 94 3A 0C A7 24 90 6F 46 56 E1>)
+(   7,<2020-06-16 01:09:43.971 +0800>,<yongrenjie>,<jymbp.local>,<apkm>,<TopSpin 4.0.8>,
+      <apkm 
+       data hash MD5: 4K * 1K
+       51 99 CB BC A6 48 8E 45 D0 10 55 5A 01 A3 C9 3D>)
+##END=
+
+$$ hash MD5
+$$ FC C7 5B 4F 8F CB D4 A4 D7 F2 2E 5F 76 E9 78 38

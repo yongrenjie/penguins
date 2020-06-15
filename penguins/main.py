@@ -44,18 +44,26 @@ def read_abs(path: Union[str, Path]
 
 # -- PLOT ----------------------------------------------
 
-def mkplot(figsize: Optional[Tuple[float, float]] = None,
+def mkplot(axes: Any = None,
+           figsize: Optional[Tuple[float, float]] = None,
            close: bool = True,
            empty_pha: bool = True,
            **kwargs):
     """
     Delegates to _mkplot1d() or _mkplot2d() as necessary.
     """
-    # Close open figures
-    if close:
+    # Close open figures, *unless* an axes was given, in which case
+    # we assume that the user isn't keen on having that closed!
+    # Useful e.g. when doing subplots.
+    if close and axes is None:
         plt.close("all")
     # Reset plot properties
     pgplot._reset_properties()
+
+    # If axis is provided, set it to the current one
+    # plt.plot() and plt.contour() will just use the current axes
+    if axes is not None:
+        plt.sca(axes)
 
     PHA = get_pha()
     if len(PHA.plot_queue) == 0:
@@ -76,12 +84,16 @@ def mkplot(figsize: Optional[Tuple[float, float]] = None,
 
 
 def show(*args, **kwargs):
-    plt.show(*args, **kwargs)
+    return plt.show(*args, **kwargs)
 
 
 def savefig(*args, **kwargs):
-    plt.savefig(*args, **kwargs)
+    return plt.savefig(*args, **kwargs)
 
 
 def pause(*args, **kwargs):
-    plt.pause(*args, **kwargs)
+    return plt.pause(*args, **kwargs)
+
+
+def subplots(*args, **kwargs):
+    return plt.subplots(*args, **kwargs)

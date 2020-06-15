@@ -113,6 +113,16 @@ Under the hood, the :meth:`find_baselev()` method calls the :func:`~penguins.pgp
    :param float increment: *(optional)* Desired increment. Defaults to ``(1.5 ** 10) ** (1 / nlev)``. This value is chosen so that the ``nlev`` contours can cover a similar dynamic range as with ``increment=1.5`` and ``nlev=10``.
    :param int nlev: *(optional)* Desired number of contour levels. Note that every time the slider value is changed, ``matplotlib`` has to redraw all the contours from scratch. Therefore, it is advisable to keep this number fairly small (the default of 4 seems to work reasonably well). Anecdotally, the quality of the plot does not suffer very much.
 
+   :returns: The chosen ``baselev``.
+   :rtype: float
+
+.. note::
+   :meth:`~penguins.dataset.Dataset2D.find_baselev()` actually does return the chosen value of ``baselev``, so you *could* do something like::
+
+      baselev = ds.find_baselev()
+      ds.stage(levels=baselev); pg.mkplot(); pg.show()
+
+   However, we *don't* recommend doing this unless you really want to, because it means that your plot generation is *not reproducible* (it depends on what value you drag the slider to, and that is highly unlikely to be the same every time). That's why we also print out the nicely formatted value for you: so that you can write it down and pass it as the ``levels`` parameter.
 
 
 Step 2: Constructing the plot
@@ -122,12 +132,14 @@ Plot construction is done using :func:`~penguins.mkplot()`. If the holding area 
 
 .. currentmodule:: penguins
 
-.. function:: mkplot(figsize=None, figstyle="default", offset=(0, 0), title=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
+.. function:: mkplot(axes=None, figsize=None, figstyle="default", offset=(0, 0), title=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
    :noindex:
 
    Calls :func:`plt.contour() <matplotlib.pyplot.contour>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
    
    All keyword arguments below are optional:
+
+   :param axes: :class:`~matplotlib.axes.Axes` object to plot the graph on. If not given, defaults to the currently active axes. (The most likely scenario is that there *isn't* an active axes, so :func:`plt.contour() <matplotlib.pyplot.contour>` will create one.)
 
    :param figsize: Tuple of floats specifying ``(width, height)`` of plot in inches.
 

@@ -1,6 +1,9 @@
 Full reference
 ==============
 
+.. note::
+   It isn't full at all, and possibly won't be for a long time.
+
 
 .. currentmodule:: penguins
 

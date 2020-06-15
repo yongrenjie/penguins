@@ -11,11 +11,11 @@ Many concepts of the interface here are exactly analogous to that for 1D spectra
 Step 1: Staging spectra
 -----------------------
 
-The :meth:`Dataset2D.stage <penguins.dataset.Dataset2d.stage>` method also delegates to :func:`penguins.pgplot.stage2d()`::
+Like its 1D counterpart, the :meth:`Dataset2D.stage <penguins.dataset.Dataset2d.stage>` method also delegates to :func:`penguins.pgplot.stage2d()`::
 
    # These are entirely equivalent
    ds2.stage(*args, **kwargs)    # ds2: a 2D dataset
-   pg.pgplot.stage2d(ds, *args, **kwargs)
+   pg.pgplot.stage2d(ds2, *args, **kwargs)
 
 ..
    * ** * ** This comment stops vim from highlighting everything as italicised.

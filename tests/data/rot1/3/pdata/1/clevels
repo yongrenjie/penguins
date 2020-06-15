@@ -1,29 +1,27 @@
-##TITLE= Parameter file, TopSpin 4.0.1
+##TITLE= Parameter file, TopSpin 4.0.8
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 9	$$ modification sequence number
+##NPOINTS= 12	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ 2019-04-29 12:12:42.536 +0100  yongrenjie@Jonathan-Yongs-MacBook-Pro-9901.local
-$$ /Users/yongrenjie/Desktop/Oxford/DPhil Rotation 1/nmr/jy48552803/4003/pdata/1/clevels
-$$ process /opt/topspin4.0.1/prog/mod/dataserver
+$$ 2020-06-15 15:46:37.643 +0800  yongrenjie@jymbp.local
+$$ /Users/yongrenjie/penguins/tests/data/rot1/3/pdata/1/clevels
+$$ process /opt/topspin4.0.8/prog/mod/proc2d
 ##$LEVELS= (0..255)
--6165462.80837579 -3425257.11576432 -1902920.61986907 -1057178.12214948
--587321.178971936 -326289.543873298 -181271.968818499 -100706.64934361
-100706.64934361 181271.968818499 326289.543873298 587321.178971936 1057178.12214948
-1902920.61986907 3425257.11576432 6165462.80837579 0 0 0 0 0 0 0 0 0 0
+11856.25 -11856.25 44977.59 -44977.59 170625.93 -170625.93 647282.53 -647282.53
+2455515.81 -2455515.81 9315187.09 -9315187.09 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$LEVSIGN= 3
-##$MAXLEV= 8
+##$MAXLEV= 6
 ##$METHOD= 0
-##$NEGBASE= -467.816656
+##$NEGBASE= -11856.25
 ##$NEGINCR= 1.8
-##$POSBASE= 467.816656
+##$POSBASE= 11856.25
 ##$POSINCR= 1.8
 ##END=

@@ -25,11 +25,10 @@ To get started, head over to the :doc:`quickstart` page. All code examples in th
    import penguins as pg
 
    hsqc_dataset = pg.read("data/pt2", 3, 1)
-   hsqc_dataset.stage(f1_bounds=(141, 10),
-                      f2_bounds=(8.5, 0.5),
+   hsqc_dataset.stage(f1_bounds="10..141",
+                      f2_bounds="0.5..8.5",
                       colors=("seagreen", "hotpink"),
-                      levels=(2e4, None, None)
-                      )
+                      levels=2e4)
    pg.plot(); pg.show()
 
 .. image:: images/splash_hsqc.png

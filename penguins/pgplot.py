@@ -73,20 +73,17 @@ class PlotObject1D():
     default_1d_plotoptions = {"linewidth": 1}
     def __init__(self,
                  dataset: ds.TDataset1D,
-                 scale: OF = 1,
-                 bounds: Optional[TBounds1D] = None,
+                 scale: float = 1,
+                 bounds: TBounds = "",
                  label: OS = None,
                  color: OS = None,
                  plot_options: Optional[MutableMapping] = None):
         self.dataset = dataset
         self.scale = scale
-        self._init_bounds(bounds)
+        self.bounds = bounds
         self._init_options(plot_options, color, label)
         self.ppm_scale = self.dataset.ppm_scale(bounds=self.bounds)
         self.proc_data = self.dataset.proc_data(bounds=self.bounds) * self.scale
-
-    def _init_bounds(self, bounds):
-        self.bounds = bounds or (None, None)
 
     def _init_options(self, plot_options, color, label):
         """
@@ -109,8 +106,8 @@ class PlotObject1D():
 
 
 def stage1d(dataset: ds.TDataset1D,
-            scale: OF = 1,
-            bounds: Optional[TBounds1D] = None,
+            scale: float = 1,
+            bounds: TBounds = "",
             label: OS = None,
             color: OS = None,
             plot_options: Optional[MutableMapping] = None,
@@ -147,15 +144,12 @@ def _plot1d(holding_area: PlotHoldingArea,
     Plots all the 1D objects in the PHA.
     """
     make_legend = False
-    # Find the maximum height if stacked is True, or if voffset is nonzero.
-    if stacked or voffset != 0:
-        heights = [np.amax(pobj.proc_data) - np.amin(pobj.proc_data)
-                   for pobj in holding_area.plot_queue]
-        max_height = max(heights)
-    else:
-        max_height = 0
+    # Find the maximum height
+    heights = [np.amax(pobj.proc_data) - np.amin(pobj.proc_data)
+               for pobj in holding_area.plot_queue]
+    max_height = max(heights)
 
-    # Iterate over plot objects. Isn't it easy?
+    # Iterate over plot objects
     for n, pobj in enumerate(holding_area.plot_queue):
         # Decide whether to make the legend
         if "label" in pobj.options and pobj.options["label"] is not None:
@@ -212,15 +206,14 @@ class Contours:
     """2D plot contours."""
     def __init__(self,
                  dataset: ds.Dataset2D,
-                 levels: Optional[TLevels] = None,
-                 colors: Optional[TColors] = None):
+                 levels: TLevels = (None, None, None),
+                 colors: TColors = (None, None),
+                 ):
         self.dataset = dataset
-        if isinstance(levels, Real):
+        if isinstance(levels, float):
             levels = (levels, None, None)
-        self.levels = levels or (None, None, None)
-        self.make_levels(*self.levels)
-        self.colors = colors or (None, None)
-        self.make_colors(*self.colors)
+        self.make_levels(*levels)
+        self.make_colors(*colors)
 
     def make_levels(self, base: OF = None,
                     increment: OF = None,
@@ -260,10 +253,10 @@ class PlotObject2D():
     default_2d_plotoptions = {"linewidths": 0.7}
     def __init__(self,
                  dataset: ds.Dataset2D,
-                 f1_bounds: Optional[TBounds1D] = None,
-                 f2_bounds: Optional[TBounds1D] = None,
-                 levels: Optional[TLevels] = None,
-                 colors: Optional[TColors] = None,
+                 f1_bounds: TBounds = "",
+                 f2_bounds: TBounds = "",
+                 levels: TLevels = (None, None, None),
+                 colors: TColors = (None, None),
                  label: OS = None,
                  plot_options: Optional[MutableMapping] = None):
         self.dataset = dataset
@@ -280,16 +273,6 @@ class PlotObject2D():
         self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
         self.proc_data = self.dataset.proc_data(f1_bounds=self.f1_bounds,
                                                 f2_bounds=self.f2_bounds)
-
-    def _init_bounds(self, bounds):
-        if bounds is None:
-            bounds = ((None, None), (None, None))
-        else:
-            if bounds[0] is None:
-                bounds[0] = (None, None)
-            if bounds[1] is None:
-                bounds[1] = (None, None)
-        self.bounds = bounds
 
     def _init_options(self, plot_options):
         options = dict(self.default_2d_plotoptions)  # make a copy
@@ -313,10 +296,10 @@ class ContourLegendHandler(HandlerBase):
 
 
 def stage2d(dataset: ds.Dataset2D,
-            f1_bounds: Optional[TBounds1D] = None,
-            f2_bounds: Optional[TBounds1D] = None,
-            levels: Optional[TLevels] = None,
-            colors: Optional[TColors] = None,
+            f1_bounds: TBounds = "",
+            f2_bounds: TBounds = "",
+            levels: TLevels = (None, None, None),
+            colors: TColors = (None, None),
             label: OS = None,
             plot_options: Optional[MutableMapping] = None,
             ) -> None:

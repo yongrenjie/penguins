@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections import UserDict
+from collections import UserDict, abc
 from pathlib import Path
 from typing import (Any, Union, Tuple, Optional,
                     TypeVar, Callable, overload)
@@ -178,6 +178,31 @@ class _parDict(UserDict):
         return s
 
 
+def _parse_bounds(b: TBounds = "",
+                  ) -> Tuple[OF, OF]:
+    if isinstance(b, str):
+        if b == "":
+            return None, None
+        elif b.startswith(".."):   # "..5" -> (None, 5)
+            return None, float(b[2:])
+        elif b.endswith(".."):   # "3.." -> (3, None)
+            return float(b[:-2]), None
+        elif ".." in b:
+            x, y = b.split("..")
+            xf, yf = float(x), float(y)  # let TypeError propagate
+            if xf >= yf:
+                raise ValueError(f"Use '{yf}..{xf}', not '{xf}..{yf}'.")
+            return xf, yf
+        else:
+            raise ValueError(f"Invalid value {b} provided for bounds.")
+    else:
+        if len(b) != 2:
+            raise ValueError(f"Invalid value {b} provided for bounds.")
+        elif b[0] is not None and b[1] is not None and b[0] > b[1]:
+            raise ValueError(f"Please use {(b[1], b[0])}, not {b}.")
+        else:
+            return b[0], b[1]
+
 # -- Fundamental Dataset methods ------------------------
 
 class _Dataset():
@@ -266,22 +291,19 @@ class _1D_ProcDataMixin():
             self.imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
 
     def proc_data(self,
-                  bounds: Optional[TBounds1D] = None,
+                  bounds: TBounds = "",
                   ) -> np.ndarray:
         return self.real[self._ppm_to_slice(bounds)]
 
     def _ppm_to_slice(self,
-                      bounds: Optional[TBounds1D] = None,
+                      bounds: TBounds = "",
                       ) -> slice:
         """
         Converts a tuple of chemical shifts (upper, lower) to a slice object.
         Note that upper must be greater than lower. Either upper or lower can
         be None, in which case the spectrum limit is used.
         """
-        bounds = bounds or (None, None)  # allow None as a synonym for (None, None)
-        upper, lower = bounds
-        if upper is not None and lower is not None and upper < lower:
-            raise ValueError("Bounds should be specified as (upper, lower), not the other way around.")
+        lower, upper = _parse_bounds(bounds)
         return slice(self._ppm_to_index(upper) or 0,                      # type: ignore # mixin
                      (self._ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
 
@@ -359,7 +381,7 @@ class _2D_ProcDataMixin():
         # Read the spectra
         self.rr = _read_one_spec(self._p_rr)
         # Calculate a suitable baselev
-        self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])
+        self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
         if hasattr(self, "_p_ri"):
             self.ri = _read_one_spec(self._p_ri)
         if hasattr(self, "_p_ir"):
@@ -368,8 +390,8 @@ class _2D_ProcDataMixin():
             self.ii = _read_one_spec(self._p_ii)
 
     def proc_data(self,
-                  f1_bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
-                  f2_bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
+                  f1_bounds: TBounds = "",
+                  f2_bounds: TBounds = "",
                   ) -> np.ndarray:
         f1_slice = self._ppm_to_slice(axis=0, bounds=f1_bounds)
         f2_slice = self._ppm_to_slice(axis=1, bounds=f2_bounds)
@@ -377,7 +399,7 @@ class _2D_ProcDataMixin():
 
     def _ppm_to_slice(self,
                       axis: int,
-                      bounds: Optional[TBounds1D] = None,
+                      bounds: TBounds = "",
                       ) -> slice:
         """
         Converts a tuple of chemical shifts (upper, lower) to a slice object.
@@ -385,11 +407,7 @@ class _2D_ProcDataMixin():
         be None, in which case the spectrum limit is used.
         Axis = 0 for f1, 1 for f2.
         """
-        bounds = bounds or (None, None)  # allow None as a synonym for (None, None)
-        upper, lower = bounds
-        # print(axis, upper, lower)
-        if upper is not None and lower is not None and upper < lower:
-            raise ValueError("Bounds should be specified as (upper, lower), not the other way around.")
+        lower, upper = _parse_bounds(bounds)
         return slice(self._ppm_to_index(axis, upper) or 0,                           # type: ignore # mixin
                      (self._ppm_to_index(axis, lower) or self["si"][axis] - 1) + 1)  # type: ignore # mixin
 
@@ -428,7 +446,7 @@ class Dataset1D(_1D_RawDataMixin,
         return int(x)
 
     def ppm_scale(self,
-                  bounds: Optional[TBounds1D] = None,
+                  bounds: TBounds = "",
                   ) -> np.ndarray:
         max_ppm = self["o1p"] + self["sw"]/2
         min_ppm = self["o1p"] - self["sw"]/2
@@ -479,7 +497,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         return int(x)
 
     def ppm_scale(self,
-                  bounds: Optional[TBounds1D] = None,
+                  bounds: TBounds = "",
                   ) -> np.ndarray:
         max_ppm = self["o1p"][self.proj_axis] + self["sw"][self.proj_axis]/2
         min_ppm = self["o1p"][self.proj_axis] - self["sw"][self.proj_axis]/2
@@ -519,7 +537,7 @@ class Dataset2D(_2D_RawDataMixin,
 
     def ppm_scale(self,
                   axis: int,
-                  bounds: Optional[Tuple[Optional[float], Optional[float]]] = None,
+                  bounds: TBounds = "",
                   ) -> np.ndarray:
         max_ppm = self["o1p"][axis] + (self["sw"][axis] / 2)
         min_ppm = self["o1p"][axis] - (self["sw"][axis] / 2)
@@ -538,7 +556,7 @@ class Dataset2D(_2D_RawDataMixin,
                 type: str,
                 axis: Union[int, str],
                 sign: str,
-                bounds: Optional[TBounds1D] = None,
+                bounds: TBounds = "",
                 ) -> Dataset1DProjVirtual:
         if type not in ["projection", "sum"]:
             raise ValueError(f"Invalid value for type '{type}'")
@@ -595,7 +613,7 @@ class Dataset1DProjVirtual(Dataset1DProj):
         self.proj_type = kwargs["proj_type"]  # "sum", "projection", or "slice"
         self.proj_axis = kwargs["proj_axis"]  # 0 or 1
         self.sign = kwargs.get("sign", None)  # "positive" or "negative"
-        self.bounds = kwargs.get("bounds", None)  # only for sum or projection
+        self.index_bounds = kwargs.get("index_bounds", None)  # only for sum or projection
         self.index = kwargs.get("index", None) # only for slice
         # Carry out the same initialisation tasks.
         # This calls _initialise_pars.
@@ -627,11 +645,11 @@ class Dataset1DProjVirtual(Dataset1DProj):
                 self.real = rr[self.index, :]
             return
         # Then check if there are bounds
-        if self.bounds is not None:
+        if self.index_bounds is not None:
             if self.proj_axis == 0:  # columns
-                rr = rr[:, self.bounds]
+                rr = rr[:, self.index_bounds]
             elif self.proj_axis == 1:  # rows
-                rr = rr[self.bounds, :]
+                rr = rr[self.index_bounds, :]
         # Zero all entries that are of the wrong sign
         if self.sign == "positive":
             rr[rr < 0] = 0

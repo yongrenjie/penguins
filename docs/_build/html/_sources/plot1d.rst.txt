@@ -17,14 +17,14 @@ Multiple spectra can be plotted by staging each of them individually.
 
 .. currentmodule:: penguins.pgplot
 
-.. function:: stage1d(dataset, scale=None, bounds=None, label=None, color=None, plot_options=None)
+.. function:: stage1d(dataset, scale=1, bounds='', label=None, color=None, plot_options=None)
 
    Penguins maintains a *"holding area"*, which is a global list of plots which have been registered but not yet plotted. The :func:`~penguins.pgplot.stage1d()` function uses the information provided to create a :class:`penguins.pgplot.PlotObject1D` object, which is then appended to that list.
 
    :param dataset: A 1D dataset object.
    :param scale: *(optional)* Indicates factor to scale spectrum intensity by.
    :type scale: float
-   :param bounds: *(optional)* A tuple of floats ``(upper, lower)`` specifying the section of the spectrum to plot. Both should be chemical shifts. If either ``upper`` or ``lower`` are none, then the upper (lower) bound is the leftmost (or rightmost) edge of the spectrum. If not provided, defaults to the entire spectrum. Note that this does not merely affect the *plot limits*. It restricts the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
+   :param bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the spectrum to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (upper) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum. Note that this does not merely affect the *plot limits*. It restricts the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
    :param label: *(optional)* Text to be displayed in the plot legend. Some LaTeX-like syntax is possible using raw strings: see :std:doc:`tutorials/text/mathtext`.
    :type label: str
    :param color: *(optional)* A valid ``matplotlib`` color. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colour palette used is Seaborn's "deep" (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
@@ -40,13 +40,13 @@ Multiple spectra can be plotted by staging each of them individually.
    
    # This label demonstrates some of the LaTeX capabilities.
    # The colour for this one defaults to the first item in Seaborn/deep.
-   ds1.stage(bounds=(8.5, 7.5),
+   ds1.stage(bounds=(7.5, 8.5),
              label=r"$\mathrm{C_{20}H_{28}N_2O_4S}$",
              plot_options={"linestyle": '--'})
 
    # You can stage the same dataset multiple times with different options.
    ds1.stage(scale=0.2,           # 1/5 the height of first spectrum
-             bounds=(8.5, 8),
+             bounds=(8, 8.5),
              label="Yes, that is the actual formula",
              color="hotpink")
 
@@ -96,20 +96,15 @@ Plot construction is done using :func:`~penguins.plot()`.
 
    :returns: Tuple of (:py:class:`~matplotlib.figure.Figure`, :py:class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
 
-:func:`~penguins.plot()` conveniently returns ``(fig, ax)``, so that you do not need to call :func:`plt.gcf() <matplotlib.pyplot.gcf>` or :func:`plt.gca() <matplotlib.pyplot.gca>`. Therefore you can carry out any other operations you wish to after this. For example, to add extra text to the plot::
-
-   _, ax = pg.plot()    # _ denotes a throwaway variable
-   ax.text(0, 0.5, "Aromatic region", transform=ax.transAxes)
-
-(see :meth:`matplotlib.axes.Axes.text` for an explanation of the parameters). For even more customisation you can of course import ``matplotlib`` itself and utilise the full library of functions there. 
+:func:`~penguins.plot()` conveniently returns ``(fig, ax)``, so that you do not need to call :func:`plt.gcf() <matplotlib.pyplot.gcf>` or :func:`plt.gca() <matplotlib.pyplot.gca>`. Therefore you can carry out any other operations you wish to after this. Of course, you can also import ``matplotlib`` itself and utilise the full library of functions there. For examples of this, see :doc:`cookbook`.
 
 Here is an example of a stacked plot versus one with ``voffset=1.1``. The extra 0.1 is there to ensure that there is some padding between adjacent spectra (when using ``stacked``, penguins also makes sure to add ``0.1 * maxheight`` padding)::
 
    ds2 = pg.read("data/pt2", 2, 1)          # 13C spectrum
-   ds2.stage(bounds=None, color="black")    # Full spectrum
-   ds2.stage(bounds=(150, 100))             # Three subspectra
-   ds2.stage(bounds=(100, 50))
-   ds2.stage(bounds=(50, 0))
+   ds2.stage(color="black")                 # No bounds => full spectrum
+   ds2.stage(bounds="100..150")             # Three subspectra
+   ds2.stage(bounds="50..100")
+   ds2.stage(bounds="0..50")
    pg.plot(stacked=True, title="stacked")   # Either this...
    pg.plot(voffset=1.1, title="voffset")    # ...or this, but not both!
    pg.show()

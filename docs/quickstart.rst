@@ -54,10 +54,9 @@ Plotting is done in three stages:
 An example::
 
    # Staging
-   hsqc_ds.stage(f1_bounds=(81, 11),           # (upper, lower) in ppm
-                 f2_bounds=(4.2, 1),
-                 colors=("blue", "red"),       # (positive, negative)
-                 levels=(5e4, None, None)      # (base level, increment, number of levels)
+   hsqc_ds.stage(f1_bounds="11..81",        # "lower..upper"
+                 f2_bounds=(1, 4.2),        # tuples also acceptable as bounds
+                 colors=("blue", "red"),    # (positive, negative)
                  )
    # Construct
    pg.plot()
@@ -69,13 +68,15 @@ will give the following inset of the HSQC:
 .. image:: images/quickstart_plot2d.png
    :align: center
 
+This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. Contour levels can be manually specified using the parameter ``levels`` in :meth:`~penguins.dataset.Dataset2D.stage()`. This is discussed in greater detail at :doc:`plot2d`.
+
 An example of a 1D plot is as follows::
 
    # Staging
    prot = pg.read("data/rot1", 1, 1)
-   prot.stage(bounds=(7, None),          # no right bound: stretches to right edge of spectrum
+   prot.stage(bounds="..7",                # or "bounds=(None, 7)": means everything up to 7 ppm
               color="darkviolet",
-              label=r"$\mathrm{^{1}H}$ spectrum")   # using some LaTeX syntax
+              label=r"$\mathrm{^{1}H}$")   # using some LaTeX syntax
    # Construct
    pg.plot()
    # Display

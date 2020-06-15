@@ -38,10 +38,10 @@
 <p>Many concepts of the interface here are exactly analogous to that for 1D spectra, so will not be detailed here again.</p>
 <div class="section" id="step-1-staging-spectra">
 <h2>Step 1: Staging spectra<a class="headerlink" href="#step-1-staging-spectra" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset2D.stage</span></code> method also delegates to <a class="reference internal" href="#penguins.pgplot.stage2d" title="penguins.pgplot.stage2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.pgplot.stage2d()</span></code></a>:</p>
+<p>Like its 1D counterpart, the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset2D.stage</span></code> method also delegates to <a class="reference internal" href="#penguins.pgplot.stage2d" title="penguins.pgplot.stage2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.pgplot.stage2d()</span></code></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># These are entirely equivalent</span>
 <span class="n">ds2</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>    <span class="c1"># ds2: a 2D dataset</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">pgplot</span><span class="o">.</span><span class="n">stage2d</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">pgplot</span><span class="o">.</span><span class="n">stage2d</span><span class="p">(</span><span class="n">ds2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Multiple spectra can be plotted by staging each of them individually.</p>

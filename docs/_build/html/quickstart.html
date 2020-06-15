@@ -78,10 +78,9 @@
 </ol>
 <p>An example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Staging</span>
-<span class="n">hsqc_ds</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">f1_bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">81</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>           <span class="c1"># (upper, lower) in ppm</span>
-              <span class="n">f2_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-              <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">),</span>       <span class="c1"># (positive, negative)</span>
-              <span class="n">levels</span><span class="o">=</span><span class="p">(</span><span class="mf">5e4</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>      <span class="c1"># (base level, increment, number of levels)</span>
+<span class="n">hsqc_ds</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">f1_bounds</span><span class="o">=</span><span class="s2">&quot;11..81&quot;</span><span class="p">,</span>        <span class="c1"># &quot;lower..upper&quot;</span>
+              <span class="n">f2_bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">),</span>        <span class="c1"># tuples also acceptable as bounds</span>
+              <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">),</span>    <span class="c1"># (positive, negative)</span>
               <span class="p">)</span>
 <span class="c1"># Construct</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
@@ -91,12 +90,13 @@
 </div>
 <p>will give the following inset of the HSQC:</p>
 <img alt="_images/quickstart_plot2d.png" class="align-center" src="_images/quickstart_plot2d.png" />
+<p>This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. Contour levels can be manually specified using the parameter <code class="docutils literal notranslate"><span class="pre">levels</span></code> in <code class="xref py py-meth docutils literal notranslate"><span class="pre">stage()</span></code>. This is discussed in greater detail at <a class="reference internal" href="plot2d.html"><span class="doc">2D Plotting in Detail</span></a>.</p>
 <p>An example of a 1D plot is as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Staging</span>
 <span class="n">prot</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">prot</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>          <span class="c1"># no right bound: stretches to right edge of spectrum</span>
+<span class="n">prot</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;..7&quot;</span><span class="p">,</span>                <span class="c1"># or &quot;bounds=(None, 7)&quot;: means everything up to 7 ppm</span>
            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkviolet&quot;</span><span class="p">,</span>
-           <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mathrm{^</span><span class="si">{1}</span><span class="s2">H}$ spectrum&quot;</span><span class="p">)</span>   <span class="c1"># using some LaTeX syntax</span>
+           <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mathrm{^</span><span class="si">{1}</span><span class="s2">H}$&quot;</span><span class="p">)</span>   <span class="c1"># using some LaTeX syntax</span>
 <span class="c1"># Construct</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 <span class="c1"># Display</span>

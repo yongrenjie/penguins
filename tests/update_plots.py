@@ -158,12 +158,8 @@ if h:
     print("Done plot h.")
 
 
-# inset TODO
-
-
-
-j = all or 1
-if j:
+i = all or 0
+if i:
     _, axs = pg.subplots(2, 2)
     # Set up the lists.
     # 15N HSQC; 13C HSQC; COSY; NOESY
@@ -178,15 +174,51 @@ if j:
         f1_mass = f1[:-len(f1_elem)]       # 15
         f2_elem = f2.lstrip("1234567890")  # H
         f2_mass = f2[:-len(f2_elem)]       # 1
-        pg.mkplot(axes=ax, title=title,
+        pg.mkplot(ax=ax, title=title,
                   xlabel=rf"$^{{{f2_mass}}}${f2_elem} / ppm",
                   ylabel=rf"$^{{{f1_mass}}}${f1_elem} / ppm")
         # Add a label. We're just showing off at this point.
         ax.text(x=0.02, y=0.97, s=f"({char})", transform=ax.transAxes,
                 fontweight="semibold", verticalalignment="top")
+    pg.show()
+    # pg.savefig("../docs/images/cookbook_subplots.png", dpi=500)
+    print("Done plot i.")
+
+
+j = all or 0
+if j:
+    ds = pg.read("data/pt2", 2, 1)  # 13C
+    # Stage and plot it as usual
+    ds.stage(); pg.mkplot()
+    # Then re-stage it with the right bounds, and
+    # use mkinset() instead of mkplot()
+    ds.stage(bounds="120..150")
+    inset_ax = pg.mkinset(pos=(0.1, 0.5), size=(0.4, 0.4),
+                          parent_corners=("sw", "se"),
+                          inset_corners=("sw", "se"))
+    inset_ax.text(x=150, y=0.2, s="quaternary",
+                  color="green",
+                  transform=inset_ax.get_xaxis_transform())
+    # Display
     # pg.show()
-    pg.savefig("../docs/images/cookbook_subplots.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_inset1.png", dpi=500)
     print("Done plot j.")
+
+
+k = all or 1
+if k:
+    ds = pg.read("data/rot1", 3, 1)  # HSQC
+    ds.stage(levels=3e5)
+    pg.mkplot()
+    ds.stage(f1_bounds="12..33", f2_bounds="0.8..1.8",
+             levels=1.5e5)
+    pg.mkinset(pos=(0.1, 0.5), size=(0.4, 0.4),
+               parent_corners=("nw", "se"),
+               inset_corners=("ne", "se"))
+    # Display
+    # pg.show()
+    pg.savefig("../docs/images/cookbook_inset2.png", dpi=500)
+    print("Done plot k.")
 
 
 la = all or 0

@@ -22,24 +22,64 @@ The ``transform`` parameter above ensures that the *x*-coordinate is specified i
 
 It turns out that for :meth:`ax.text() <matplotlib.axes.Axes.text>`, the default coordinate system is *data* coordinates along both axes (note that this is somewhat unusual for ``matplotlib``; it's far more normal for axis coordinates to be the default). So for 2D plots, you can simply leave out the ``transform`` parameter altogether and use ``ax.text(x=f2_ppm, y=f1_ppm, s="text")``.
 
+For more information about transforms please see :std:doc:`tutorials/advanced/transforms_tutorial`.
+
 
 Insets
 ------
 
-To be done.
+Insets can be plotted using ``matplotlib``'s :meth:`ax.inset_axes <matplotlib.axes.Axes.inset_axes>` method.
+As with many other things in ``matplotlib``, the interface is powerful but complicated. Thus, penguins provides a (hopefully slightly easier) :func:`~penguins.mkinset()` function which fulfils the same role as :func:`~penguins.mkplot`, but constructs an inset in the currently active plot.
+An example will help to clarify this::
 
+   ds = pg.read("data/pt2", 2, 1)  # 13C
+   # Stage and plot it as usual. This is the parent plot.
+   ds.stage(); pg.mkplot()
+   # Then re-stage it with the appropriate bounds, and
+   # use mkinset() instead of mkplot()
+   ds.stage(bounds="120..150")
+   inset_ax = pg.mkinset(pos=(0.1, 0.5), size=(0.4, 0.4),
+                         parent_corners=("sw", "se"),  # 'sw' and 'southwest' both accepted
+                         inset_corners=("sw", "se"))
+   # mkinset() returns the inset Axes object, so you can use it
+   # to do further customisation.
+   inset_ax.text(x=150, y=0.2, s="quaternary",  # also it's adjacent to quadrupolar 14N
+                 color="green",
+                 transform=inset_ax.get_xaxis_transform())
+   # Display as usual once you are done plotting.
+   pg.show()
+
+.. image:: images/cookbook_inset1.png
+   :align: center
+
+Full documentation for :func:`~penguins.mkinset()` will be provided in due course.
+
+Here is a minimal example for a 2D spectrum::
+
+   ds = pg.read("data/rot1", 3, 1)  # HSQC
+   ds.stage(levels=3e5)
+   pg.mkplot()
+   ds.stage(f1_bounds="12..33", f2_bounds="0.8..1.8",
+            levels=1.5e5)
+   pg.mkinset(pos=(0.1, 0.5), size=(0.4, 0.4),
+              parent_corners=("nw", "se"),
+              inset_corners=("ne", "se"))
+   pg.show()
+
+.. image:: images/cookbook_inset2.png
+   :align: center
 
 
 Subplots
 --------
 
-Penguins also provides a wrapper around :func:`plt.subplots() <matplotlib.pyplot.subplots>`. Fundamentally, plotting in subplots is not more complicated.
-The only difference is that :func:`subplots()` returns an :class:`np.ndarray <numpy.ndarray>` of :class:`~matplotlib.axes.Axes` objects, and we need to make sure that we plot the correct spectrum on the correct set of axes.
+Penguins also provides a wrapper around :func:`plt.subplots() <matplotlib.pyplot.subplots>`. Fundamentally, plotting in subplots is not significantly more complicated.
+The main difference is that :func:`subplots()` returns an :class:`np.ndarray <numpy.ndarray>` of :class:`~matplotlib.axes.Axes` objects, and we need to make sure that we plot the correct spectrum on the correct set of axes.
 This can be done by passing the appropriate :class:`~matplotlib.axes.Axes` instance to :func:`~penguins.mkplot()`, which sets it to be the current active axes.
 A common technique is to assign the array of axes to ``axs``, and then iterate over ``axs.flat``::
 
    # Create subplots
-   _, axs = pg.subplots(2, 2)  # (nrows, ncols)
+   _, axs = pg.subplots(2, 2)
    # Set up the lists.
    # 15N HSQC; 13C HSQC; COSY; NOESY
    spectra = [pg.read("data/noah", i, 1) for i in range(1, 5)]

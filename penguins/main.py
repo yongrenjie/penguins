@@ -44,7 +44,7 @@ def read_abs(path: Union[str, Path]
 
 # -- PLOT ----------------------------------------------
 
-def mkplot(axes: Any = None,
+def mkplot(ax: Any = None,
            figsize: Optional[Tuple[float, float]] = None,
            close: bool = True,
            empty_pha: bool = True,
@@ -55,32 +55,98 @@ def mkplot(axes: Any = None,
     # Close open figures, *unless* an axes was given, in which case
     # we assume that the user isn't keen on having that closed!
     # Useful e.g. when doing subplots.
-    if close and axes is None:
+    if close and ax is None:
         plt.close("all")
     # Reset plot properties
     pgplot._reset_properties()
-
-    # If axis is provided, set it to the current one
-    # plt.plot() and plt.contour() will just use the current axes
-    if axes is not None:
-        plt.sca(axes)
 
     PHA = get_pha()
     if len(PHA.plot_queue) == 0:
         raise ValueError("No spectra have been staged yet.")
     else:
-        if figsize is not None:
+        if close and figsize is not None:
             plt.figure(figsize=figsize)
+        if ax is None:
+            ax = plt.gca()
         if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
-            fig, ax = pgplot._mkplot1d(PHA, **kwargs)
+            fig, ax = pgplot._mkplot1d(PHA, ax=ax, **kwargs)
         elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
-            fig, ax = pgplot._mkplot2d(PHA, **kwargs)
+            fig, ax = pgplot._mkplot2d(PHA, ax=ax, **kwargs)
         else:
             raise TypeError("Plot holding area has invalid entries.")
     # Reset the PHA to being empty
     if empty_pha:
         pgplot._reset_pha()
     return (fig, ax)
+
+
+def mkinset(pos: Tuple[float, float],
+            size: Tuple[float, float],
+            ax: Any = None,
+            parent_corners: Tuple(str, str) = ("sw", "se"),
+            inset_corners: Tuple(str, str) = ("sw", "se"),
+            transform: Any = None,
+            inset_options: Optional[dict] = None,
+            ) -> Any:
+    """
+    Constructs an inset plot, abstracting away the matplotlib interface,
+    which is especially clunky with inverted axes.
+    """
+    # Find the axes to draw on
+    ax = ax or plt.gca()
+    # Generate inset axes
+    inset_ax = ax.inset_axes([*pos, *size], transform=transform)
+    mkplot(ax=inset_ax, xlabel="", ylabel="")
+
+    # Convert the strings to numbers
+    def convert_corner(ax: Any, cornerstr: str, is_inset: bool):
+        """
+        For non-inverted axes, ne = 1, nw = 2, sw = 3, se = 4
+        If x-axis is inverted, ne = 2, nw = 1, sw = 4, se = 3
+        If y-axis is inverted, ne = 4, nw = 3, sw = 2, se = 1
+        If both are inverted,  ne = 3, nw = 4, sw = 1, se = 2
+        However, inset axes ALWAYS behave as if they are not inverted,
+        regardless of whether they were inverted or not.
+        If there's a more elegant way of writing this, please let me know.
+        """
+        xinv, yinv = ax.xaxis_inverted(), ax.yaxis_inverted()
+        if cornerstr in ["ne", "northeast"]:
+            return 1 if (is_inset or (not xinv and not yinv)) else \
+                2 if (xinv and not yinv) else \
+                4 if (not xinv and yinv) else 3
+        elif cornerstr in ["nw", "northwest"]:
+            return 2 if (is_inset or (not xinv and not yinv)) else \
+                1 if (xinv and not yinv) else \
+                3 if (not xinv and yinv) else 4
+        elif cornerstr in ["sw", "southwest"]:
+            return 3 if (is_inset or (not xinv and not yinv)) else \
+                4 if (xinv and not yinv) else \
+                2 if (not xinv and yinv) else 1
+        elif cornerstr in ["se", "southeast"]:
+            return 4 if (is_inset or (not xinv and not yinv)) else \
+                3 if (xinv and not yinv) else \
+                1 if (not xinv and yinv) else 2
+        else:
+            raise ValueError("Invalid corner provided to mkinset().")
+
+    from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+
+    # The loc1 and loc2 are throwaway values, they'll be replaced later.
+    default_inset_options = {"loc1": 1, "loc2": 2,
+                             "edgecolor": "silver",
+                             }
+    # Construct options
+    options = dict(default_inset_options)
+    if inset_options is not None:
+        options.update(inset_options)
+    # Make the inset
+    _, line1, line2 = mark_inset(ax, inset_ax, **options)
+    # Change the corners from which the lines are drawn.
+    line1.loc1 = convert_corner(inset_ax, inset_corners[0], True)
+    line1.loc2 = convert_corner(ax, parent_corners[0], False)
+    line2.loc1 = convert_corner(inset_ax, inset_corners[1], True)
+    line2.loc2 = convert_corner(ax, parent_corners[1], False)
+    return inset_ax
 
 
 def show(*args, **kwargs):

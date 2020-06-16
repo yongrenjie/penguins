@@ -161,6 +161,7 @@ def stage1d(dataset: ds.TDataset1D,
 
 
 def _mkplot1d(holding_area: PlotHoldingArea,
+              ax: Any = None,
               figstyle: str = "default",
               stacked: bool = False,
               voffset: float = 0,
@@ -179,6 +180,10 @@ def _mkplot1d(holding_area: PlotHoldingArea,
                for pobj in holding_area.plot_queue]
     max_height = max(heights)
 
+    # Get Axes object
+    if ax is None:
+        ax = plt.gca()
+
     # Iterate over plot objects
     for n, pobj in enumerate(holding_area.plot_queue):
         # Decide whether to make the legend
@@ -193,9 +198,9 @@ def _mkplot1d(holding_area: PlotHoldingArea,
             # This covers the case where voffset is 0 as well.
             vert_offset = n * voffset * max_height
         # Plot it!
-        plt.plot(pobj.ppm_scale - (n * hoffset),
-                 pobj.proc_data + (vert_offset),
-                 **pobj.options)
+        ax.plot(pobj.ppm_scale - (n * hoffset),
+                pobj.proc_data + (vert_offset),
+                **pobj.options)
         # Add heights and colors to plotproperties.
         pp = get_properties()
         pp.voffsets.append(vert_offset)
@@ -203,17 +208,16 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         pp.options.append(pobj.options)
 
     # Plot formatting
-    ax = plt.gca()
     # Only if y-axis is enabled.
     # plt.ylabel(ylabel)
     # ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 4), useMathText=True)
     if title:
         plt.title(title)
-    plt.xlabel(xlabel)
+    ax.set_xlabel(xlabel)
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
     if make_legend:
-        plt.legend(loc=legend_loc)
+        ax.legend(loc=legend_loc)
     # Apply other styles.
     if figstyle not in ["default", "mpl_natural"]:
         print(f"No figure style corresponding to {figstyle}. Using default.")
@@ -233,7 +237,7 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         plt.tight_layout()
     elif figstyle == "mpl_natural":
         pass
-    return (plt.gcf(), plt.gca())
+    return (plt.gcf(), ax)
 
 
 # -- 2D PLOTTING ----------------------------------------------
@@ -359,6 +363,7 @@ def stage2d(dataset: ds.Dataset2D,
 
 
 def _mkplot2d(holding_area: PlotHoldingArea,
+              ax: Any = None,
               figstyle: str = "default",
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
@@ -371,13 +376,15 @@ def _mkplot2d(holding_area: PlotHoldingArea,
     """
     make_legend = False
     legend_colors, legend_labels = [], []
+    if ax is None:
+        ax = plt.gca()
     # Iterate over plot objects
     for n, pobj in enumerate(holding_area.plot_queue):
-        plt.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
-                    pobj.f1_scale - (n * offset[0]),   # y-axis
-                    pobj.proc_data,
-                    levels=pobj.clevels,
-                    **pobj.options)
+        ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
+                   pobj.f1_scale - (n * offset[0]),   # y-axis
+                   pobj.proc_data,
+                   levels=pobj.clevels,
+                   **pobj.options)
         # Construct lists for plt.legend
         if pobj.label is not None:
             make_legend = True
@@ -386,15 +393,14 @@ def _mkplot2d(holding_area: PlotHoldingArea,
                                  )
             legend_labels.append(pobj.label)
     # Axis formatting
-    ax = plt.gca()
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
     if not ax.yaxis_inverted():
         ax.invert_yaxis()
     if title is not None:
-        plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
+        ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     # Apply other styles.
     if figstyle not in ["default", "mpl_natural"]:
         print(f"No figure style corresponding to {figstyle}. Using default.")
@@ -419,7 +425,7 @@ def _mkplot2d(holding_area: PlotHoldingArea,
         plt.legend(legend_colors, legend_labels,
                    handler_map={tuple: ContourLegendHandler()},
                    loc=legend_loc)
-    return (plt.gcf(), plt.gca())
+    return (plt.gcf(), ax)
 
 
 def _make_contour_slider(dataset: ds.Dataset2D,

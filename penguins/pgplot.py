@@ -297,6 +297,7 @@ class PlotObject2D():
                  f2_bounds: TBounds = "",
                  levels: TLevels = (None, None, None),
                  colors: TColors = (None, None),
+                 dfilter: Optional[Callable[[float], Bool]] = None,
                  label: OS = None,
                  plot_options: Optional[MutableMapping] = None):
         self.dataset = dataset
@@ -311,8 +312,14 @@ class PlotObject2D():
         # self.options will include the colors key.
         self.f1_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
         self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
-        self.proc_data = self.dataset.proc_data(f1_bounds=self.f1_bounds,
-                                                f2_bounds=self.f2_bounds)
+        # Handle processed data
+        proc_data = self.dataset.proc_data(f1_bounds=self.f1_bounds,
+                                           f2_bounds=self.f2_bounds)
+        if dfilter is not None:
+            logical_array = np.array([dfilter(i) for i in proc_data.flat])
+            logical_array = np.reshape(logical_array, np.shape(proc_data))
+            proc_data = np.where(logical_array, proc_data, np.nan)
+        self.proc_data = proc.data
 
     def _init_options(self, plot_options):
         options = dict(self.default_2d_plotoptions)  # make a copy
@@ -340,6 +347,7 @@ def stage2d(dataset: ds.Dataset2D,
             f2_bounds: TBounds = "",
             levels: TLevels = (None, None, None),
             colors: TColors = (None, None),
+            dfilter: Optional[Callable[[float], Bool]] = None,
             label: OS = None,
             plot_options: Optional[MutableMapping] = None,
             ) -> None:
@@ -349,7 +357,7 @@ def stage2d(dataset: ds.Dataset2D,
     plot_obj = PlotObject2D(dataset=dataset,
                             f1_bounds=f1_bounds, f2_bounds=f2_bounds,
                             levels=levels, colors=colors,
-                            label=label,
+                            dfilter=dfilter, label=label,
                             plot_options=plot_options)
 
     # Check that the plot queue doesn't have 1D spectra.

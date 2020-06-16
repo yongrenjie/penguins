@@ -46,7 +46,9 @@ Multiple spectra can be plotted by staging each of them individually.
    :param colors: *(optional)* A tuple of valid ``matplotlib`` colors ``(positive, negative)``. The colours will be used for positive and negative contours respectively. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colours are drawn from Seaborn's "deep" palette (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
 
       |br|
-      Note that as of now there is no way to disable contours of a particular sign. The easiest way around that is to make the unwanted contour have the same colour as the figure background.
+      Note that as of now there is no explicit way to disable contours of a particular sign. One workaround is to make the unwanted contour have the same colour as the figure background. Another is to use the ``dfilter`` parameter described right after this. Note that neither method works perfectly if you also want to display a label (the former will make the line in the legend slightly off-centred, and the latter will still display the negative colour).
+
+   :param dfilter: *(optional)* A function taking a float and returning a bool to which filters *z*-values of the spectrum which should be retained. For example, to remove all negative parts of the spectrum, use ``dfilter=(lambda f: f > 0)``.
 
    :param str label: *(optional)* A string to display in the legend of the plot. See below for an example of how this looks.
 
@@ -79,6 +81,8 @@ Notice that ``baselev`` in the bottom-left and top-left sectors are certainly to
 
 The next section contains more information about how to choose a base level.
 
+
+.. _baselev:
 
 Choosing base levels
 --------------------

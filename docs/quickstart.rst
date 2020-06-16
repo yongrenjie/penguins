@@ -14,10 +14,6 @@ Importing spectra is done with :func:`~penguins.read`. :func:`~penguins.read` ta
 
 (If you are not familiar with TopSpin's directory layout yet, see :doc:`topspin`.) Note that there is no support for 3D or higher spectra.
 
-
-Reading parameters
-------------------
-
 Spectral parameters (both acquisition and processing) can be accessed via their TopSpin names using dictionary-like syntax::
 
    >>> hsqc_ds["ns"]
@@ -33,11 +29,13 @@ For 2D spectra, parameters which have values in both the indirect and direct dim
 
 The first element is always the value for the indirect (*f*:subscript:`1`) dimension, and the second element the value for the direct (*f*:subscript:`2`) dimension.
 
+There are a number of other functions that can be performed on Dataset objects: please see :doc:`datasets` for more details. However, **penguins does not aspire to be a NMR spectrum processing suite**. Consequently, it does not possess any functionality dealing with raw data.
+
 
 Plotting spectra
 ----------------
 
-Plotting is done in three stages:
+Plotting is done in three stages. These are described in greater detail at :doc:`paradigm`. A brief summary is as follows:
 
 1. *Stage* the spectrum (or spectra) to be plotted.
 
@@ -68,13 +66,13 @@ will give the following inset of the HSQC:
 .. image:: images/quickstart_plot2d.png
    :align: center
 
-This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. Contour levels can be manually specified using the parameter ``levels`` in :meth:`~penguins.dataset.Dataset2D.stage()`. This is discussed in greater detail at :doc:`plot2d`.
+This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. Contour levels can be manually specified using the parameter ``levels`` in :meth:`~penguins.dataset.Dataset2D.stage()` (see also: :ref:`baselev`).
 
 An example of a 1D plot is as follows::
 
    # Staging
    prot = pg.read("data/rot1", 1, 1)
-   prot.stage(bounds="..7",                # or "bounds=(None, 7)": means everything up to 7 ppm
+   prot.stage(bounds="..7",                # or "bounds=(None, 7)": means no lower bounds
               color="darkviolet",
               label=r"$\mathrm{^{1}H}$")   # using some LaTeX syntax
    # Construct and display
@@ -83,4 +81,6 @@ An example of a 1D plot is as follows::
 .. image:: images/quickstart_plot1d.png
    :align: center
 
-For a more complete explanation of the options, please see :doc:`plot1d`.
+From here, you may want to consider reading :doc:`paradigm` to get to know penguins' overall approach to plotting.
+Alternatively, to see the full range of options for 1D and 2D plotting, visit :doc:`plot1d` and :doc:`plot2d`.
+Finally, there are some (relatively) advanced examples of plotting in the :doc:`cookbook`.

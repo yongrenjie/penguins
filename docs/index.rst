@@ -45,6 +45,8 @@ Contents
    
    install
    quickstart
+   datasets
+   paradigm
    plot1d
    plot2d
    cookbook

@@ -32,7 +32,6 @@ master_doc = 'index'
 # ones.
 extensions = [
     "sphinx.ext.intersphinx",
-    "sphinx.ext.autodoc",
 ]
 
 intersphinx_mapping = {

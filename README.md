@@ -1,5 +1,5 @@
-[![Documentation Status](https://readthedocs.org/projects/penguins/badge/?version=latest)](https://penguins.readthedocs.io/en/latest/?badge=latest)
-[![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/penguins/badge/?version=latest)](https://penguins.readthedocs.io/en/latest)
+[![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/github/yongrenjie/penguins)
 
 **Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra**
 

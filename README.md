@@ -4,7 +4,7 @@
 
 ## Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra
 
-<img src="docs/images/cookbook_subplots.png" height="300" >
+<img src="docs/images/cookbook_subplots.png" height="450" >
 
 Fed up of `java.lang.NullPointerException`? I was, too, so I made this.
 

@@ -1,4 +1,5 @@
 [![Documentation Status](https://readthedocs.org/projects/penguins/badge/?version=latest)](https://penguins.readthedocs.io/en/latest/?badge=latest)
+[![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)
 
 **Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra**
 
@@ -11,5 +12,4 @@ To install:
     cd penguins
     pip install .     # or pip3 
 ```
-
 Documentation (whatever I've written of it, at least) can be found at https://penguins.readthedocs.io/en/latest/.

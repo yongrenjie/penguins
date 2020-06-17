@@ -319,7 +319,7 @@ class PlotObject2D():
             logical_array = np.array([dfilter(i) for i in proc_data.flat])
             logical_array = np.reshape(logical_array, np.shape(proc_data))
             proc_data = np.where(logical_array, proc_data, np.nan)
-        self.proc_data = proc.data
+        self.proc_data = proc_data
 
     def _init_options(self, plot_options):
         options = dict(self.default_2d_plotoptions)  # make a copy

@@ -33,8 +33,7 @@ def read_abs(path: Union[str, Path]
         raise ValueError(f"Invalid path to spectrum {p}: procs or acqus not found")
     if (p.parents[1] / "ser").exists() and (p / "2rr").exists():
         return ds.Dataset2D(p)
-    elif (p / "1r").exists() and not (p / "1i").exists() \
-        and (p / "used_from").exists():
+    elif (p / "1r").exists() and (p / "used_from").exists():
         return ds.Dataset1DProj(p)
     elif (p.parents[1] / "fid").exists() and (p / "1r").exists():
         return ds.Dataset1D(p)

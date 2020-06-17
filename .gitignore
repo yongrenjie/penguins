@@ -1,6 +1,6 @@
 **/__pycache__
 nmr_penguins.egg-info/
-venv-plot/
+venv-penguins/
 *.swp
 **/.DS_Store
 .mypy_cache

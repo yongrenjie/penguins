@@ -9,6 +9,9 @@ all = 0
 if all:
     print("'all' turned on.")
 
+import os
+os.chdir(os.path.abspath("../tests"))
+
 # -- index.rst -------------------------
 
 a = all or 0
@@ -217,7 +220,10 @@ if k:
                inset_corners=("ne", "se"))
     # Display
     # pg.show()
+    import time
+    time.sleep(5)
     pg.savefig("../docs/images/cookbook_inset2.png", dpi=500)
+    time.sleep(5)
     print("Done plot k.")
 
 
@@ -311,6 +317,5 @@ if le:
 # -- make the docs ---------------------
 make_docs = all or 1
 if make_docs:
-    import os
     os.chdir(os.path.abspath("../docs"))
     os.system("make clean && make html")

@@ -1,5 +1,6 @@
 [![Documentation Status](https://readthedocs.org/projects/penguins/badge/?version=latest)](https://penguins.readthedocs.io/en/latest)
 [![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/github/yongrenjie/penguins)
+![Code Coverage](tests/coverage.svg)
 
 **Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra**
 
@@ -13,3 +14,5 @@ To install:
     pip install .     # or pip3 
 ```
 Documentation (whatever I've written of it, at least) can be found at https://penguins.readthedocs.io/en/latest/.
+
+No, I've barely written tests, so the fact that they're passing means absolutely nothing.

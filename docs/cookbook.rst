@@ -1,6 +1,8 @@
 Plotting Cookbook
 =================
 
+This is a collection of more advanced topics in plotting.
+
 
 Adding text to a spectrum
 -------------------------
@@ -38,7 +40,7 @@ An example will help to clarify this::
    # Then re-stage it with the appropriate bounds, and
    # use mkinset() instead of mkplot()
    ds.stage(bounds="120..150")
-   inset_ax = pg.mkinset(pos=(0.1, 0.5), size=(0.4, 0.4),
+   inset_ax = pg.mkinset(pos=(0.1, 0.5), size=(0.4, 0.4),   # axis coordinates by default
                          parent_corners=("sw", "se"),  # 'sw' and 'southwest' both accepted
                          inset_corners=("sw", "se"))
    # mkinset() returns the inset Axes object, so you can use it

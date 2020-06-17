@@ -4,6 +4,8 @@ venv-plot/
 *.swp
 **/.DS_Store
 .mypy_cache
+.pytest_cache
+.tox
 docs/_build
 docs/_static
 docs/_template

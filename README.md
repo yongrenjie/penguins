@@ -4,6 +4,8 @@
 
 **Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra**
 
+![Example NOAH spectra](docs/images/cookbook_subplots.png)
+
 Fed up of `java.lang.NullPointerException`? I was, too, so I made this.
 
 To install:
@@ -15,4 +17,4 @@ To install:
 ```
 Documentation (whatever I've written of it, at least) can be found at https://penguins.readthedocs.io/en/latest/.
 
-No, I've barely written tests, so the fact that they're passing means absolutely nothing.
+I've barely written *any* tests, so the fact that they're passing means absolutely nothing.

@@ -2,9 +2,9 @@
 [![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/github/yongrenjie/penguins)
 ![Code Coverage](tests/coverage.svg)
 
-**Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra**
+## Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra
 
-![Example NOAH spectra](docs/images/cookbook_subplots.png)
+<img src="docs/images/cookbook_subplots.png" height="300" >
 
 Fed up of `java.lang.NullPointerException`? I was, too, so I made this.
 

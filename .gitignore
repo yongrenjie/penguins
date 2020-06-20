@@ -6,6 +6,7 @@ venv-penguins/
 .mypy_cache
 .pytest_cache
 .tox
+.coverage
 docs/_build
 docs/_static
 docs/_template

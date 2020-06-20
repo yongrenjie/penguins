@@ -456,6 +456,8 @@ def _make_contour_slider(dataset: ds.Dataset2D,
     _, plot_axes = main.mkplot(empty_pha=False,
                                figstyle="mpl_natural",
                                )
+    orig_xlim = plot_axes.get_xlim()
+    orig_ylim = plot_axes.get_ylim()
     plt.subplots_adjust(left=0.1, bottom=0.25)
 
     # Generate a slider.
@@ -477,9 +479,13 @@ def _make_contour_slider(dataset: ds.Dataset2D,
         # Regenerate the contours
         pobj.clevels = pobj.contours.generate_contour_levels()
         # Replot
+        xlim = plot_axes.get_xlim()
+        ylim = plot_axes.get_ylim()
         plot_axes.cla()
         plt.sca(plot_axes)
         main.mkplot(close=False, empty_pha=False, figstyle="mpl_natural")
+        plot_axes.set_xlim(xlim)
+        plot_axes.set_ylim(ylim)
 
     # Register the redraw function. The argument to on_changed must be a
     # function taking val as its only parameter.
@@ -496,12 +502,13 @@ def _make_contour_slider(dataset: ds.Dataset2D,
         plt.close()
     okay_button.on_clicked(set_okay)
 
-    # Generate the "Reset" button
-    reset_axes = plt.axes([0.72, 0.025, 0.1, 0.04])
-    reset_button = Button(reset_axes, "Reset", color="plum", hovercolor='0.95')
-    # Add the close behaviour
+    # Generate the "Reset zoom" button
+    reset_axes = plt.axes([0.66, 0.025, 0.16, 0.04])
+    reset_button = Button(reset_axes, "Reset zoom", color="plum", hovercolor='0.95')
+    # Add the reset behaviour
     def reset(button):
-        baselev_slider.reset()
+        plot_axes.set_xlim(orig_xlim)
+        plot_axes.set_ylim(orig_ylim)
     reset_button.on_clicked(reset)
 
     # Show it to the user.
@@ -509,12 +516,18 @@ def _make_contour_slider(dataset: ds.Dataset2D,
 
     # Post-OK actions
     if okay:
+        # Print the dataset
+        print(f"\n[[{dataset!r}]]")
+        # Print the initial value
+        ival = initial_baselev
+        ival_short = f"{ival:.2e}".replace("e+0", "e")
+        print(f"The initial base level was: {ival:.2f} (or {ival_short})")
         # Print the final value
         fval = 10 ** baselev_slider.val
         fval_short = f"{fval:.2e}".replace("e+0", "e")
-        print(f"\n[[{dataset!r}]]\nThe final base level was: {fval} (or {fval_short})\n")
+        print(f"The final base level was:   {fval:.2f} (or {fval_short})\n")
     # Clear out the PHA
     _reset_pha()
     plt.close("all")
 
-    return fval
+    return fval if okay else None

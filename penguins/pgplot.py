@@ -31,6 +31,15 @@ SEABORN_PALETTES = dict(
           "#592F0D", "#A23582", "#3C3C3C", "#B8850A", "#006374"],
     colorblind=["#0173B2", "#DE8F05", "#029E73", "#D55E00", "#CC78BC",
                 "#CA9161", "#FBAFE4", "#949494", "#ECE133", "#56B4E9"],
+    # This are the colours from bright, but rearranged into nice tuples.
+    # Honestly three pairs of colours should suffice. If you're plotting
+    # more 2D spectra than that on the same graph, you probably need to
+    # rethink your plot, or at least choose your colours manually to
+    # illustrate whatever point you're making.
+    bright_2d=[("#023EFF", "#E8000B"), # blue, red
+               ("#1AC938", "#FF7C00"), # green, orange
+               ("#8B2BE2", "#F14CC1"), # purple, pink
+               ]
 )
 
 class PlotHoldingArea():
@@ -44,11 +53,7 @@ class PlotHoldingArea():
         yield from cycle(SEABORN_PALETTES["deep"])
 
     def color_generator_2d(self):
-        i = 0
-        while True:
-            yield (SEABORN_PALETTES["deep"][i % 10],
-                   SEABORN_PALETTES["deep"][(i + 5) % 10])
-            i += 1
+        yield from cycle(SEABORN_PALETTES["bright_2d"])
 
 class PlotProperties():
     """
@@ -212,14 +217,14 @@ def _mkplot1d(holding_area: PlotHoldingArea,
     # plt.ylabel(ylabel)
     # ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 4), useMathText=True)
     if title:
-        plt.title(title)
+        ax.set_title(title)
     ax.set_xlabel(xlabel)
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
     if make_legend:
         ax.legend(loc=legend_loc)
     # Apply other styles.
-    if figstyle not in ["default", "mpl_natural"]:
+    if figstyle not in ["default", "default_with_box", "mpl_natural"]:
         print(f"No figure style corresponding to {figstyle}. Using default.")
         figstyle = "default"
     if figstyle == "default":
@@ -229,6 +234,17 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         ax.yaxis.set_visible(False)
         # Make the bottom one thicker
         ax.spines["bottom"].set_linewidth(1.3)
+        # Enable minor ticks and make the ticks more visible
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which="both", width=1.3)
+        ax.tick_params(which="major", length=5)
+        ax.tick_params(which="minor", length=3)
+        plt.tight_layout()
+    elif figstyle == "default_with_box":
+        ax.yaxis.set_visible(False)
+        # Make spines thicker
+        for s in ["top", "left", "right", "bottom"]:
+            ax.spines[s].set_linewidth(1.3)
         # Enable minor ticks and make the ticks more visible
         ax.xaxis.set_minor_locator(AutoMinorLocator())
         ax.tick_params(which="both", width=1.3)

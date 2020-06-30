@@ -1,5 +1,5 @@
 **/__pycache__
-nmr_penguins.egg-info/
+penguins.egg-info/
 venv-penguins/
 *.swp
 **/.DS_Store

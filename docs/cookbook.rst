@@ -76,17 +76,17 @@ Subplots
 --------
 
 Penguins also provides a wrapper around :func:`plt.subplots() <matplotlib.pyplot.subplots>`. Fundamentally, plotting in subplots is not significantly more complicated.
-The main difference is that :func:`subplots()` returns an :class:`np.ndarray <numpy.ndarray>` of :class:`~matplotlib.axes.Axes` objects, and we need to make sure that we plot the correct spectrum on the correct set of axes.
-This can be done by passing the appropriate :class:`~matplotlib.axes.Axes` instance to :func:`~penguins.mkplot()`, which sets it to be the current active axes.
-A common technique is to assign the array of axes to ``axs``, and then iterate over ``axs.flat``::
+The main difference is that :func:`subplots()` returns an :class:`np.ndarray <numpy.ndarray>` of :class:`~matplotlib.axes.Axes` objects, and we need to make sure that we plot the correct spectrum on the correct set of ``Axes``.
+This can be done by passing the appropriate :class:`~matplotlib.axes.Axes` instance to :func:`~penguins.mkplot()`.
+A common technique is to assign the array of ``Axes`` to ``axs``, and then iterate over ``axs.flat``::
 
    # Create subplots
    _, axs = pg.subplots(2, 2)
    # Set up the lists.
-   # 15N HSQC; 13C HSQC; COSY; NOESY
+   # 15N HMQC; 13C HSQC; COSY; NOESY
    spectra = [pg.read("data/noah", i, 1) for i in range(1, 5)]
    levels = [7e3, 2.3e4, 8.5e5, 8.9e4]
-   titles = [r"$^{15}$N HSQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
+   titles = [r"$^{15}$N HMQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
    clr = ("blue", "red")
    # Iterate over the lists.
    for spec, ax, lvl, title, char in zip(spectra, axs.flat, levels, titles, "abcd"):
@@ -196,7 +196,7 @@ Not bad, but the text needs to be lifted a little.
 Now, :class:`~penguins.pgplot.PlotProperties` doesn't try to be overly clever with the values it stores, since it doesn't know what you want to use them for; it trusts that you will use them wisely.
 In this case, all we need to do is to add some extra height (this bit pretty much *has* to be trial-and-error, since we don't want to hard-code a value).
 
-We could also horizontally displace the text a little bit, just like the spectra, by subtracting ``(n * 0.05)`` from each successive *x*-coordinate. This would match the ``hoffset=0.5`` parameter passed to :func:`~penguins.mkplot()`. And finally, we can reuse the colours of the original plot via ``PlotProperties.colors``::
+We could also horizontally displace the text a little bit, just like the spectra, by subtracting the appropriate value of ``hoffset`` from each successive *x*-coordinate. Unsurprisingly, you can get the ``hoffsets`` (in ppm units) from ``PlotProperties.hoffsets``. And finally, we can reuse the colours of the original plot via ``PlotProperties.colors``::
 
    noes = [pg.read("data/rot1", i, 1) for i in range(10, 15)]
    for noe in noes:
@@ -205,11 +205,12 @@ We could also horizontally displace the text a little bit, just like the spectra
    ax.set_xlim(6.2, -0.3)   # must be (larger, smaller)
    ax.set_ylim(-2.1e4, 1.4e5)
    # Get the properties of each spectrum
-   heights = pg.get_properties().heights
+   voffsets = pg.get_properties().voffsets
+   hoffsets = pg.get_properties().hoffsets
    colors = pg.get_properties().colors
-   for n, (color, height, noe) in enumerate(zip(colors, heights, noes)):
+   for color, voffset, hoffset, noe in zip(colors, voffsets, hoffsets, noes):
        mixing_time_label = f"{int(noe['d8'] * 1000)} ms"
-       ax.text(x=(0.6 - n * 0.05), y=height+2e3,
+       ax.text(x=(0.6 - hoffset), y=voffset+2e3,
                s=mixing_time_label,
                color=color)
    pg.show()

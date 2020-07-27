@@ -66,7 +66,7 @@ will give the following inset of the HSQC:
 .. image:: images/quickstart_plot2d.png
    :align: center
 
-This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. Contour levels can be manually specified using the parameter ``levels`` in :meth:`~penguins.dataset.Dataset2D.stage()` (see also: :ref:`baselev`).
+This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. For 2D spectra, contour levels can be manually specified using the parameter ``levels`` in :meth:`~penguins.dataset.Dataset2D.stage()` (see also: :ref:`baselev`).
 
 An example of a 1D plot is as follows::
 

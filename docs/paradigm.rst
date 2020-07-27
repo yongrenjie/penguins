@@ -2,8 +2,7 @@ Penguins' Plot Paradigm
 =======================
 
 It should come as no surprise that penguins is essentially a wrapper around ``matplotlib``.
-For those who have used ``matplotlib`` before, the way in which penguins constructs plots likely seems familiar; however, it also undoubtedly does not feel *quite* the same.
-To other users, it may be a little bit reminiscent of ``git``'s three-stage process (add, commit, push): in fact, the term "stage" was indeed stolen from ``git``.
+For those who have used ``matplotlib`` before, the way in which penguins constructs plots likely seems familiar; however, it also undoubtedly does not feel *quite* the same.  To other users, it may be a little bit reminiscent of ``git``'s three-stage process (add, commit, push): in fact, the term "stage" was indeed stolen from ``git``.
 
 In any case, this document attempts to explain a little bit of how penguins works behind the scenes, utilising ``matplotlib`` in each plotting stage.
 You probably don't *need* to read this before the :doc:`plot1d` and :doc:`plot2d` pages, but we do suggest reading this *before* moving on to the :doc:`cookbook`.
@@ -28,13 +27,16 @@ As of now, the PHA will only accept newly staged spectra if they have the same d
 
    >>> ds1 = pg.read("data/pt2", 1, 1)   # 1H
    >>> ds2 = pg.read("data/pt2", 2, 1)   # 13C
-   >>> ds1.stage(); ds2.stage()     # two 1D spectra, no problem
+   >>> # This creates two PlotObject1D objects and adds them to the plot queue.
+   >>> ds1.stage(); ds2.stage()
    >>> pg.get_pha()
    <penguins.pgplot.PlotHoldingArea object at 0x1150aab50>
+   >>> # The plot queue is a list of the two objects we created earlier.
    >>> pg.get_pha().plot_queue
    [<penguins.pgplot.PlotObject1D object at 0x10f7a1d10>, <penguins.pgplot.PlotObject1D object at 0x115731550>]
+   >>> # This is a 2D spectrum, so we can't stage it!
    >>> ds3 = pg.read("data/pt2", 3, 1)   # COSY
-   >>> ds3.stage()                  # that's a no-no
+   >>> ds3.stage()
    Traceback (most recent call last):
      File "<stdin>", line 1, in <module>
      File "/Users/yongrenjie/penguins/penguins/dataset.py", line 418, in stage
@@ -55,22 +57,25 @@ Constructing a plot
 
 Each instance of the PHA is associated with one plot. :func:`~penguins.mkplot()` performs several jobs when it is called:
 
-1. If the ``ax`` parameter is not provided, then sets it to the currently active :class:`~matplotlib.axes.Axes`.
+1. If the ``ax`` parameter is not provided, then chooses the currently active :class:`~matplotlib.axes.Axes` to plot spectra on.
 
-2. Iterates over the PHA and plots all the spectra in them on the given :class:`~matcontourlib.axes.Axes`. For 1D spectra this is done with :meth:`ax.plot() <matcontourlib.axes.Axes.plot>`, and for 2D spectra :meth:`ax.contour() <matcontourlib.axes.Axes.contour>`. (Note that these are basically equivalent to the more well-known :func:`plt.plot() <matplotlib.pyplot.plot>` and :func:`plt.contour() <matplotlib.pyplot.contour>`; the main difference is that the Axes methods specify which Axes to plot on, whereas the ``pyplot`` functions use the current Axes.)
+2. Iterates over the plot queue and plots all the spectra in them on the given :class:`~matcontourlib.axes.Axes`. For 1D spectra this is done with :meth:`ax.plot() <matcontourlib.axes.Axes.plot>`, and for 2D spectra :meth:`ax.contour() <matcontourlib.axes.Axes.contour>`.
 
-3. Stores some properties from the plots in the PHA so that they can be accessed later via :func:`~penguins.get_properties()`. (These are wiped on the next call to :func:`~penguins.mkplot()`.)
+3. Stores some properties from the plots in the PHA, such as colours and vertical heights of stacked spectra. These can be accessed via :func:`~penguins.get_properties()`, and are wiped on the next call to :func:`~penguins.mkplot()`.
 
-4. Resets the PHA to its initial state: ``plot_queue`` is emptied, and the colour cycle is restarted.
+4. Empties the PHA plot queue and restarts the colour cycle.
 
-This has the further implication that *every spectrum in the same PHA must be plotted on the same set of axes*. This does not matter much if you only have one set of axes, but if you want to do something like subplots, then you need to follow the correct order of operations so that the right spectra are on the right axes. As a trivial example, consider what happens if you stage a spectrum *after* calling :func:`~penguins.mkplot()`::
+This has the further implication that *every spectrum in the same PHA will be plotted on the same set of Axes*.
+This does not matter much if you only have one set of ``Axes``, but if you want to do something like subplots, then you need to follow the correct order of operations so that the right spectra are on the right ``Axes``.
+As a trivial example, consider what happens if you stage a spectrum *after* calling :func:`~penguins.mkplot()`::
 
    >>> ds1.stage()    # adds 1H to the PHA
    >>> pg.mkplot()    # empties the PHA, also calls ax.plot() on the 1H data
    >>> ds2.stage()    # adds 13C to the PHA, but it's never plotted
-   >>> pg.show()      # only has the 1H!
+   >>> pg.show()      # will only have the 1H!
 
-If you want to do anything with the :class:`~matplotlib.figure.Figure` and :class:`~matplotlib.axes.Axes` objects, **the best time to do it is after calling** :func:`~penguins.mkplot()`. :func:`~penguins.mkplot()` returns ``(fig, ax)`` for you to carry out any other methods you may want to.
+If you want to do anything with the :class:`~matplotlib.figure.Figure` and :class:`~matplotlib.axes.Axes` objects, such as setting the ``Axes`` position, **the best time to do it is after calling** :func:`~penguins.mkplot()`.
+:func:`~penguins.mkplot()` returns ``(fig, ax)`` for you to carry out any other methods you may want to.
 
 (Side note: if you are wondering about :func:`~penguins.mkinset()`, it basically creates the inset axes, passes it as a parameter to :func:`~penguins.mkplot()`, then draws the box and lines connecting the inset to the main spectrum.)
 

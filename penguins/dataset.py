@@ -110,6 +110,8 @@ class _parDict(UserDict):
                 for line in file:
                     if line.upper().startswith(f"##${parl}="):
                         break
+                else:   # triggers if didn't break -- i.e. parameter was not found
+                    return None
                 # Grab the values and put them in a list
                 s = ""
                 # Read until next parameter
@@ -307,6 +309,34 @@ class _1D_ProcDataMixin():
         return slice(self._ppm_to_index(upper) or 0,                      # type: ignore # mixin
                      (self._ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
 
+    def integrate(self,
+                  peak: OF = None,
+                  margin: OF = None,
+                  mode: str = "sum",
+                  bounds: TBounds = None,
+                  ) -> float:
+        """
+        Integrates a region of a spectrum.
+        Regions can either be defined via peak and margin, which leads to the region of
+        (peak - margin) to (peak + margin), or manually via the bounds parameter. Note that
+        specifying (peak, margin) overrules the bounds parameter if both are passed.
+
+        Default mode is "sum", which simply adds up all points in the region. Alternatives are
+        "max" which returns the highest peak, and "min" which returns the lowest peak.
+        """
+        integration_functions = {"sum": np.sum, "max": np.amax, "min": np.amin}
+        if mode not in integration_functions:
+            raise ValueError(f"Invalid value '{mode}' specified for integration mode.")
+        # Process (peak, margin)
+        if peak is not None and margin is not None:
+            bounds = f"{peak-margin}..{peak+margin}"
+        # We will run into this if user has not specified enough information
+        if bounds is None:
+            raise ValueError("Please specify integration region.")
+        # Perform the integration
+        finteg = integration_functions[mode]
+        return finteg(self.proc_data(bounds))
+
 
 class _1D_PlotMixin():
 
@@ -359,7 +389,7 @@ class _2D_ProcDataMixin():
         # Helper function
         def _read_one_spec(spec_path = Path) -> np.ndarray:
             if np.all(self["dtypp"] == 0):                           # type: ignore # mixin
-                dt = "<" if np.all(self["bytordp"]) == 0 else ">"    # type: ignore # mixin
+                dt = "<" if np.all(self["bytordp"] == 0) else ">"    # type: ignore # mixin
                 dt += "i4"
             else:
                 raise NotImplementedError("float data not yet accepted")
@@ -410,6 +440,36 @@ class _2D_ProcDataMixin():
         lower, upper = _parse_bounds(bounds)
         return slice(self._ppm_to_index(axis, upper) or 0,                           # type: ignore # mixin
                      (self._ppm_to_index(axis, lower) or self["si"][axis] - 1) + 1)  # type: ignore # mixin
+
+    def integrate(self,
+                  peak: Optional[Tuple[float, float]] = None,
+                  margin: Optional[Tuple[float, float]] = None,
+                  mode: str = "sum",
+                  f1_bounds: TBounds = None,
+                  f2_bounds: TBounds = None,
+                  ) -> float:
+        """
+        Integrates a region of a spectrum.
+        Regions can either be defined via peak and margin, which leads to the region of
+        (peak - margin) to (peak + margin) in both dimensions, or manually via the (f1,f2)_bounds
+        parameter. Note that specifying (peak, margin) overrules the bounds parameter if both are passed.
+
+        Default mode is "sum", which simply adds up all points in the region. Alternatives are
+        "max" which returns the highest peak, and "min" which returns the lowest peak.
+        """
+        integration_functions = {"sum": np.sum, "max": np.amax, "min": np.amin}
+        if mode not in integration_functions:
+            raise ValueError(f"Invalid value '{mode}' specified for integration mode.")
+        # Process (peak, margin)
+        if peak is not None and margin is not None:
+            f1_bounds = f"{peak[0]-margin[0]}..{peak[0]+margin[0]}"
+            f2_bounds = f"{peak[1]-margin[1]}..{peak[1]+margin[1]}"
+        # We will run into this if user has not specified enough information
+        if f1_bounds is None or f2_bounds is None:
+            raise ValueError("Please specify integration region.")
+        # Perform the integration
+        finteg = integration_functions[mode]
+        return finteg(self.proc_data(f1_bounds, f2_bounds))
 
 
 class _2D_PlotMixin():
@@ -578,7 +638,7 @@ class Dataset2D(_2D_RawDataMixin,
         index_bounds = self._ppm_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type=type,
                                     proj_axis=axis, sign=sign,
-                                    bounds=index_bounds)
+                                    index_bounds=index_bounds)
 
     def slice(self,
               axis: Union[int, str],

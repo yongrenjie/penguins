@@ -3,7 +3,7 @@ from __future__ import annotations   # PEP 563
 from itertools import zip_longest, cycle
 from collections import abc
 from typing import (Union, Iterable, MutableMapping,
-                    Optional, Tuple, Any, Deque)
+                    Optional, Tuple, Any, Deque, Callable, Sequence)
 from numbers import Real
 
 import numpy as np  # type: ignore
@@ -61,6 +61,7 @@ class PlotProperties():
     with mkplot().
     """
     def __init__(self):
+        self.hoffsets = []
         self.voffsets = []
         self.colors = []
         self.options = []
@@ -141,7 +142,7 @@ class PlotObject1D():
 def stage1d(dataset: ds.TDataset1D,
             scale: float = 1,
             bounds: TBounds = "",
-            dfilter: Optional[Callable[[float], Bool]] = None,
+            dfilter: Optional[Callable[[float], bool]] = None,
             label: OS = None,
             color: OS = None,
             plot_options: Optional[MutableMapping] = None,
@@ -169,8 +170,8 @@ def _mkplot1d(holding_area: PlotHoldingArea,
               ax: Any = None,
               figstyle: str = "default",
               stacked: bool = False,
-              voffset: float = 0,
-              hoffset: float = 0,
+              voffset: Union[Sequence, float] = 0,
+              hoffset: Union[Sequence, float] = 0,
               title: OS = None,
               xlabel: str = "Chemical shift (ppm)",
               ylabel: str = "Intensity (au)",
@@ -191,24 +192,34 @@ def _mkplot1d(holding_area: PlotHoldingArea,
 
     # Iterate over plot objects
     for n, pobj in enumerate(holding_area.plot_queue):
+        # Calculate the hoffset and voffset for this spectrum. If offset is a
+        # sequence then use offset[n], otherwise if it's a float use n * offset
+        # Also, mypy really doesn't like try/except.
+        try:
+            this_hoffset = hoffset[n]   # type: ignore
+        except TypeError:  # not a sequence
+            this_hoffset = hoffset * n   # type: ignore
+        try:
+            this_voffset = voffset[n] * max_height   # type: ignore
+        except TypeError:  # not a sequence
+            if stacked:
+                # Raise each spectrum by the heights of previous spectra, plus
+                # a little padding per spectrum.
+                this_voffset = sum(heights[0:n]) + (n * 0.1 * max_height)
+            else:
+                # This covers the case where voffset is 0 as well.
+                this_voffset = n * voffset * max_height  # type: ignore
         # Decide whether to make the legend
         if "label" in pobj.options and pobj.options["label"] is not None:
             make_legend = True
-        # Calculate vertical offset
-        if stacked:
-            # Raise each spectrum by the heights of previous spectra,
-            # plus a little padding per spectrum.
-            vert_offset = sum(heights[0:n]) + (n * 0.1 * max_height)
-        else:
-            # This covers the case where voffset is 0 as well.
-            vert_offset = n * voffset * max_height
         # Plot it!
-        ax.plot(pobj.ppm_scale - (n * hoffset),
-                pobj.proc_data + (vert_offset),
+        ax.plot(pobj.ppm_scale - this_hoffset,
+                pobj.proc_data + this_voffset,
                 **pobj.options)
         # Add heights and colors to plotproperties.
         pp = get_properties()
-        pp.voffsets.append(vert_offset)
+        pp.hoffsets.append(this_hoffset)
+        pp.voffsets.append(this_voffset)
         pp.colors.append(pobj.options["color"])
         pp.options.append(pobj.options)
 
@@ -224,7 +235,7 @@ def _mkplot1d(holding_area: PlotHoldingArea,
     if make_legend:
         ax.legend(loc=legend_loc)
     # Apply other styles.
-    if figstyle not in ["default", "default_with_box", "mpl_natural"]:
+    if figstyle not in ["default", "with_box", "mpl_natural"]:
         print(f"No figure style corresponding to {figstyle}. Using default.")
         figstyle = "default"
     if figstyle == "default":
@@ -240,7 +251,7 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         ax.tick_params(which="major", length=5)
         ax.tick_params(which="minor", length=3)
         plt.tight_layout()
-    elif figstyle == "default_with_box":
+    elif figstyle == "with_box":
         ax.yaxis.set_visible(False)
         # Make spines thicker
         for s in ["top", "left", "right", "bottom"]:
@@ -313,7 +324,7 @@ class PlotObject2D():
                  f2_bounds: TBounds = "",
                  levels: TLevels = (None, None, None),
                  colors: TColors = (None, None),
-                 dfilter: Optional[Callable[[float], Bool]] = None,
+                 dfilter: Optional[Callable[[float], bool]] = None,
                  label: OS = None,
                  plot_options: Optional[MutableMapping] = None):
         self.dataset = dataset
@@ -363,7 +374,7 @@ def stage2d(dataset: ds.Dataset2D,
             f2_bounds: TBounds = "",
             levels: TLevels = (None, None, None),
             colors: TColors = (None, None),
-            dfilter: Optional[Callable[[float], Bool]] = None,
+            dfilter: Optional[Callable[[float], bool]] = None,
             label: OS = None,
             plot_options: Optional[MutableMapping] = None,
             ) -> None:

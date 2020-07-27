@@ -161,14 +161,14 @@ if h:
     print("Done plot h.")
 
 
-i = all or 0
+i = all or 1
 if i:
     _, axs = pg.subplots(2, 2)
     # Set up the lists.
-    # 15N HSQC; 13C HSQC; COSY; NOESY
+    # 15N HMQC; 13C HSQC; COSY; NOESY
     spectra = [pg.read("data/noah", i, 1) for i in range(1, 5)]
     levels = [7e3, 2.3e4, 8.5e5, 8.9e4]
-    titles = [r"$^{15}$N HSQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
+    titles = [r"$^{15}$N HMQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
     clr = ("blue", "red")
     for spec, ax, lvl, title, char in zip(spectra, axs.flat, levels, titles, "abcd"):
         spec.stage(levels=lvl, colors=clr)
@@ -183,8 +183,8 @@ if i:
         # Add a label. We're just showing off at this point.
         ax.text(x=0.02, y=0.97, s=f"({char})", transform=ax.transAxes,
                 fontweight="semibold", verticalalignment="top")
-    pg.show()
-    # pg.savefig("../docs/images/cookbook_subplots.png", dpi=500)
+    # pg.show()
+    pg.savefig("../docs/images/cookbook_subplots.png", dpi=500)
     print("Done plot i.")
 
 
@@ -208,7 +208,7 @@ if j:
     print("Done plot j.")
 
 
-k = all or 1
+k = all or 0
 if k:
     ds = pg.read("data/rot1", 3, 1)  # HSQC
     ds.stage(levels=3e5)
@@ -220,10 +220,7 @@ if k:
                inset_corners=("ne", "se"))
     # Display
     # pg.show()
-    import time
-    time.sleep(5)
     pg.savefig("../docs/images/cookbook_inset2.png", dpi=500)
-    time.sleep(5)
     print("Done plot k.")
 
 
@@ -303,19 +300,13 @@ if le:
     ax.set_ylim(-2.1e4, 1.4e5)
     # Get the properties of each spectrum
     voffsets = pg.get_properties().voffsets
+    hoffsets = pg.get_properties().hoffsets
     colors = pg.get_properties().colors
-    for n, (color, voffset, noe) in enumerate(zip(colors, voffsets, noes)):
+    for color, voffset, hoffset, noe in zip(colors, voffsets, hoffsets, noes):
         mixing_time_label = f"{int(noe['d8'] * 1000)} ms"
-        ax.text(x=(0.6 - n * 0.05), y=height+2e3,
+        ax.text(x=(0.6 - hoffset), y=voffset+2e3,
                 s=mixing_time_label,
                 color=color)
     # pg.show()
     pg.savefig("../docs/images/cookbook_noesy5.png", dpi=500)
     print("Done plot le.")
-
-
-# -- make the docs ---------------------
-make_docs = all or 1
-if make_docs:
-    os.chdir(os.path.abspath("../docs"))
-    os.system("make clean && make html")

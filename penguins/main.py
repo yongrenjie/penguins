@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union, Optional, Tuple
+from typing import Union, Optional, Tuple, Any
 
 import matplotlib.pyplot as plt    # type: ignore
 
@@ -82,9 +82,10 @@ def mkplot(ax: Any = None,
 def mkinset(pos: Tuple[float, float],
             size: Tuple[float, float],
             ax: Any = None,
-            parent_corners: Tuple(str, str) = ("sw", "se"),
-            inset_corners: Tuple(str, str) = ("sw", "se"),
+            parent_corners: Tuple[str, str] = ("sw", "se"),
+            inset_corners: Tuple[str, str] = ("sw", "se"),
             transform: Any = None,
+            plot_options: Optional[dict] = None,
             inset_options: Optional[dict] = None,
             ) -> Any:
     """
@@ -95,7 +96,8 @@ def mkinset(pos: Tuple[float, float],
     ax = ax or plt.gca()
     # Generate inset axes
     inset_ax = ax.inset_axes([*pos, *size], transform=transform)
-    mkplot(ax=inset_ax, xlabel="", ylabel="")
+    plot_options = plot_options or {}
+    mkplot(ax=inset_ax, xlabel="", ylabel="", **plot_options)
 
     # Convert the strings to numbers
     def convert_corner(ax: Any, cornerstr: str, is_inset: bool):
@@ -128,7 +130,7 @@ def mkinset(pos: Tuple[float, float],
         else:
             raise ValueError("Invalid corner provided to mkinset().")
 
-    from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+    from mpl_toolkits.axes_grid1.inset_locator import mark_inset  # type: ignore
 
     # The loc1 and loc2 are throwaway values, they'll be replaced later.
     default_inset_options = {"loc1": 1, "loc2": 2,

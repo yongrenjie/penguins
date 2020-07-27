@@ -30,7 +30,7 @@ Multiple spectra can be plotted by staging each of them individually.
    :type label: str
    :param color: *(optional)* A valid ``matplotlib`` color. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colour palette used is Seaborn's "deep" (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
    :type color: str
-   :param plot_options: *(optional)* Key-value options which are passed on directly to :func:`plt.plot() <matplotlib.pyplot.plot>`. Note that the ``color`` and ``label`` parameters will override the corresponding keys in ``plot_options``, if present.
+   :param plot_options: *(optional)* Key-value options which are passed on directly to :meth:`ax.plot() <matplotlib.axes.Axes.plot>`. Note that the ``color`` and ``label`` parameters will override the corresponding keys in ``plot_options``, if present.
    :type plot_options: dict
 
    :returns: None.
@@ -66,11 +66,11 @@ Plot construction is done using :func:`~penguins.mkplot()`.
 
 .. function:: mkplot(axes=None, figsize=None, figstyle="default", stacked=False, voffset=0, hoffset=0, title=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
 
-   Calls :func:`plt.plot() <matplotlib.pyplot.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
+   Calls :meth:`ax.plot() <matplotlib.axes.Axes.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
    
    All keyword arguments below are optional:
 
-   :param axes: :class:`~matplotlib.axes.Axes` object to plot the graph on. If not given, defaults to the currently active axes. (The most likely scenario is that there *isn't* an active axes, so :func:`plt.plot() <matplotlib.pyplot.plot>` will create one.)
+   :param axes: :class:`~matplotlib.axes.Axes` object to plot the graph on. If not given, defaults to the currently active axes. (The most likely scenario is that there *isn't* an active axes, so :meth:`ax.plot() <matplotlib.axes.Axes.plot>` will create one.)
 
    :param tuple(float,float) figsize: (width, height) of plot in inches.
 
@@ -78,14 +78,23 @@ Plot construction is done using :func:`~penguins.mkplot()`.
 
       * ``"default"`` removes all spines except the bottom one, enables minor ticks, and makes the axis slightly thicker.
       * ``"mpl_natural"`` does not change any settings from the original.
+      * ``"with_box"`` is the same as ``default`` except that the bounding box for the Axes object is retained with the same thickness (no *y*-axis ticks are shown). This is useful when plotting multiple types of plots on the same figure, as it ensures that all the subplots will look visually similar.
 
       There are no other styles right now, but this list may be expanded in future. In any case, this can later be customised further (see below).
 
    :param bool stacked: True to make spectra tightly stacked (i.e. not superimposed). Overrides any value given in the ``voffset`` parameter.
 
-   :param float voffset: Fraction of maximum height to vertically offset spectra by. The height of a spectrum refers to the total width it spans in the *y*-axis, and the maximum height refers to the largest such height of all spectra in the holding area. This is useful for offsetting spectra by a *constant amount*. Note that stacked spectra have a *variable* vertical offset between each spectrum, because each spectrum will have a different height. An example of the difference is shown below.
+   :param voffset: If given as a float, indicates the amount of vertical offset between spectra, in units of the maximum height. The height of a spectrum refers to the total width it spans in the *y*-axis, and the maximum height refers to the largest such height of all spectra in the holding area.
 
-   :param float hoffset: Amount of horizontal offset between adjacent spectra in ppm. If this is positive, then later spectra are shifted to the right.
+      Using a float for ``voffset`` is useful for offsetting spectra by a *constant amount*. Note that stacked spectra have a *variable* vertical offset between each spectrum, because each spectrum will have a different height. An example of the difference is shown below.
+
+      If given as a list, each staged spectrum is offset by the corresponding amount (again in units of maximum height).
+
+   :type voffset: list or float
+
+   :param hoffset: If given as a float, indicates the horizontal offset between adjacent spectra in ppm. If this is positive, then successive spectra are shifted to the right (the first spectrum is not shifted). If given as a list, each staged spectrum is offset by the corresponding amount.
+
+   :type hoffset: list or float
 
    :param str title: Plot title.
 

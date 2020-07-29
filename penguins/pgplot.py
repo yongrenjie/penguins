@@ -234,10 +234,20 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         ax.invert_xaxis()
     if make_legend:
         ax.legend(loc=legend_loc)
-    # Apply other styles.
-    if figstyle not in ["default", "with_box", "mpl_natural"]:
+    # Apply axis styles.
+    if figstyle not in ["default", "1d_with_box", "with_box", "mpl_natural"]:
         print(f"No figure style corresponding to {figstyle}. Using default.")
         figstyle = "default"
+    style_axes(ax, figstyle)
+    return plt.gcf(), ax
+
+
+def style_axes(ax: Any,
+               figstyle: str = "default",
+               ) -> None:
+    """
+    Styles the Axes instance according to the given figstyle.
+    """
     if figstyle == "default":
         # Remove the other spines
         for s in ["top", "left", "right"]:
@@ -251,8 +261,19 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         ax.tick_params(which="major", length=5)
         ax.tick_params(which="minor", length=3)
         plt.tight_layout()
-    elif figstyle == "with_box":
+    elif figstyle == "1d_with_box":
+        # With box but remove y-axis
         ax.yaxis.set_visible(False)
+        # Make spines thicker
+        for s in ["top", "left", "right", "bottom"]:
+            ax.spines[s].set_linewidth(1.3)
+        # Enable minor ticks and make the ticks more visible
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which="both", width=1.3)
+        ax.tick_params(which="major", length=5)
+        ax.tick_params(which="minor", length=3)
+        plt.tight_layout()
+    elif figstyle == "with_box":
         # Make spines thicker
         for s in ["top", "left", "right", "bottom"]:
             ax.spines[s].set_linewidth(1.3)
@@ -264,7 +285,8 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         plt.tight_layout()
     elif figstyle == "mpl_natural":
         pass
-    return (plt.gcf(), ax)
+    else:
+        raise ValueError(f"Invalid style '{figstyle}' requested.")
 
 
 # -- 2D PLOTTING ----------------------------------------------

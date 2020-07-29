@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt    # type: ignore
 
 from . import dataset as ds
 from . import pgplot
-from .pgplot import get_pha, get_properties
+from .pgplot import (get_pha, get_properties,
+                     style_axes)
 
 
 # -- READ -----------------------------------------------
@@ -87,6 +88,7 @@ def mkinset(pos: Tuple[float, float],
             transform: Any = None,
             plot_options: Optional[dict] = None,
             inset_options: Optional[dict] = None,
+            show_zoom: bool = True,
             ) -> Any:
     """
     Constructs an inset plot, abstracting away the matplotlib interface,
@@ -140,13 +142,14 @@ def mkinset(pos: Tuple[float, float],
     options = dict(default_inset_options)
     if inset_options is not None:
         options.update(inset_options)
-    # Make the inset
-    _, line1, line2 = mark_inset(ax, inset_ax, **options)
-    # Change the corners from which the lines are drawn.
-    line1.loc1 = convert_corner(inset_ax, inset_corners[0], True)
-    line1.loc2 = convert_corner(ax, parent_corners[0], False)
-    line2.loc1 = convert_corner(inset_ax, inset_corners[1], True)
-    line2.loc2 = convert_corner(ax, parent_corners[1], False)
+    # Make the inset, if requested
+    if show_zoom:
+        _, line1, line2 = mark_inset(ax, inset_ax, **options)
+        # Change the corners from which the lines are drawn.
+        line1.loc1 = convert_corner(inset_ax, inset_corners[0], True)
+        line1.loc2 = convert_corner(ax, parent_corners[0], False)
+        line2.loc1 = convert_corner(inset_ax, inset_corners[1], True)
+        line2.loc2 = convert_corner(ax, parent_corners[1], False)
     return inset_ax
 
 

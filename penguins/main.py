@@ -35,7 +35,14 @@ def read_abs(path: Union[str, Path]
     if (p.parents[1] / "ser").exists() and (p / "2rr").exists():
         return ds.Dataset2D(p)
     elif (p / "1r").exists() and (p / "used_from").exists():
-        return ds.Dataset1DProj(p)
+        try:
+            return ds.Dataset1DProj(p)
+        # For processed pure shift data, Dataset1DProj will raise a ValueError
+        # as it cannot find the projection dimension in the 'used_from' file.
+        # The structure of acqus and procs files are more similar to a standard
+        # 1D spectrum, so we can simply use Dataset1D instead.
+        except ValueError:
+            return ds.Dataset1D(p)
     elif (p.parents[1] / "fid").exists() and (p / "1r").exists():
         return ds.Dataset1D(p)
     else:

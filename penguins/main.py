@@ -172,5 +172,10 @@ def pause(*args, **kwargs):
     return plt.pause(*args, **kwargs)
 
 
-def subplots(*args, **kwargs):
-    return plt.subplots(*args, **kwargs)
+def subplots(nrows=1, ncols=1, *args, **kwargs):
+    # This implementation captures nrows and ncols so that we can set figsize
+    # automatically. We don't care about the rest of the arguments, so those
+    # can just be passed on directly.
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (ncols * 4, nrows * 4)
+    return plt.subplots(nrows=nrows, ncols=ncols, *args, **kwargs)

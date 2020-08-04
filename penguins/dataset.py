@@ -337,6 +337,17 @@ class _1D_ProcDataMixin():
         finteg = integration_functions[mode]
         return finteg(self.proc_data(bounds))
 
+    def nuclei_to_str(self
+                      ) -> str:
+        """
+        Returns a string with the nucleus nicely formatted for use as the
+        xlabel in a plot.
+        """
+        nuc = self["nuc1"]          # type: ignore
+        elem = nuc.lstrip("1234567890")
+        mass = nuc[:-len(elem)]
+        return rf"$^{{{mass}}}${elem}"
+
 
 class _1D_PlotMixin():
 
@@ -470,6 +481,19 @@ class _2D_ProcDataMixin():
         # Perform the integration
         finteg = integration_functions[mode]
         return finteg(self.proc_data(f1_bounds, f2_bounds))
+
+    def nuclei_to_str(self
+                      ) -> Tuple[str, str]:
+        """
+        Returns a tuple of two strings with the nuclei nicely formatted for use
+        as xlabels or ylabels in plots.
+        """
+        f1, f2 = self["nuc1"]              # type: ignore
+        f1_elem = f1.lstrip("1234567890")
+        f1_mass = f1[:-len(f1_elem)]
+        f2_elem = f2.lstrip("1234567890")
+        f2_mass = f2[:-len(f2_elem)]
+        return (rf"$^{{{f1_mass}}}${f1_elem}", rf"$^{{{f2_mass}}}${f2_elem}")
 
 
 class _2D_PlotMixin():

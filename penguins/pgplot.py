@@ -173,8 +173,9 @@ def _mkplot1d(holding_area: PlotHoldingArea,
               voffset: Union[Sequence, float] = 0,
               hoffset: Union[Sequence, float] = 0,
               title: OS = None,
-              xlabel: str = "Chemical shift (ppm)",
-              ylabel: str = "Intensity (au)",
+              autolabel: OS = None,
+              xlabel: OS = None,
+              ylabel: OS = None,
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
     """
@@ -223,13 +224,29 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         pp.colors.append(pobj.options["color"])
         pp.options.append(pobj.options)
 
+    # Figure out the x- and y-labels.
+    # First, we generate the strings accoring to autolabel.
+    f_ylabel = "Intensity (au)"
+    if autolabel is not None:
+        if autolabel == "nucl":
+            f_xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()
+            f_xlabel += " (ppm)"
+        else:
+            raise ValueError(f"Invalid value '{autolabel}' given for "
+                             "parameter autolabel.")
+    else:
+        f_xlabel = "Chemical shift (ppm)"
+    # Then we override them based on the values of mkplot()'s kwargs.
+    f_xlabel = xlabel if xlabel is not None else f_xlabel
+    f_ylabel = ylabel if ylabel is not None else f_ylabel
+
     # Plot formatting
     # Only if y-axis is enabled.
-    # plt.ylabel(ylabel)
+    # plt.ylabel(f_ylabel)
     # ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 4), useMathText=True)
     if title:
         ax.set_title(title)
-    ax.set_xlabel(xlabel)
+    ax.set_xlabel(f_xlabel)
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
     if make_legend:
@@ -424,8 +441,9 @@ def _mkplot2d(holding_area: PlotHoldingArea,
               figstyle: str = "default",
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
-              xlabel: str = r"$f_2$ (ppm)",
-              ylabel: str = r"$f_1$ (ppm)",
+              autolabel: OS = None,
+              xlabel: OS = None,
+              ylabel: OS = None,
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
     """
@@ -449,6 +467,29 @@ def _mkplot2d(holding_area: PlotHoldingArea,
                                   pobj.contours.color_negative)
                                  )
             legend_labels.append(pobj.label)
+
+    # Figure out the x- and y-labels.
+    # First, we generate the strings accoring to autolabel.
+    if autolabel is not None:
+        if autolabel == "nucl":
+            f_xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[1]
+            f_xlabel += " (ppm)"
+            f_ylabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[0]
+            f_ylabel += " (ppm)"
+        else:
+            raise ValueError(f"Invalid value '{autolabel}' given for "
+                             "parameter autolabel.")
+    else:
+        f_xlabel = r"$f_2$ (ppm)"
+        f_ylabel = r"$f_1$ (ppm)"
+    # Then we override them based on the values of mkplot()'s kwargs.
+    f_xlabel = xlabel if xlabel is not None else f_xlabel
+    f_ylabel = ylabel if ylabel is not None else f_ylabel
+
+    # Plot formatting
+    # Only if y-axis is enabled.
+    # plt.ylabel(f_ylabel)
+    # ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 4), useMathText=True)
     # Axis formatting
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
@@ -456,8 +497,8 @@ def _mkplot2d(holding_area: PlotHoldingArea,
         ax.invert_yaxis()
     if title is not None:
         ax.set_title(title)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    ax.set_xlabel(f_xlabel)
+    ax.set_ylabel(f_ylabel)
     # Apply other styles.
     if figstyle not in ["default", "mpl_natural"]:
         print(f"No figure style corresponding to {figstyle}. Using default.")

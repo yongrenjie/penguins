@@ -168,7 +168,7 @@ def stage1d(dataset: ds.TDataset1D,
 
 def _mkplot1d(holding_area: PlotHoldingArea,
               ax: Any = None,
-              figstyle: str = "default",
+              style: str = "1d",
               stacked: bool = False,
               voffset: Union[Sequence, float] = 0,
               hoffset: Union[Sequence, float] = 0,
@@ -252,21 +252,20 @@ def _mkplot1d(holding_area: PlotHoldingArea,
     if make_legend:
         ax.legend(loc=legend_loc)
     # Apply axis styles.
-    if figstyle not in ["default", "1d_with_box", "with_box", "mpl_natural"]:
-        print(f"No figure style corresponding to {figstyle}. Using default.")
-        figstyle = "default"
-    style_axes(ax, figstyle)
+    style_axes(ax, style)
     return plt.gcf(), ax
 
 
 def style_axes(ax: Any,
-               figstyle: str = "default",
+               style: str,
                ) -> None:
     """
-    Styles the Axes instance according to the given figstyle.
+    Styles the Axes instance according to the given style. Useful for ensuring
+    that all subplots have a homogenous look.
     """
-    if figstyle == "default":
-        # Remove the other spines
+    if style == "1d":
+        # Default 1D style. Doesn't draw a bounding box, only has the bottom
+        # spine, which is made thicker. Adds extra x-axis ticks.
         for s in ["top", "left", "right"]:
             ax.spines[s].set_visible(False)
         ax.yaxis.set_visible(False)
@@ -278,8 +277,9 @@ def style_axes(ax: Any,
         ax.tick_params(which="major", length=5)
         ax.tick_params(which="minor", length=3)
         plt.tight_layout()
-    elif figstyle == "1d_with_box":
-        # With box but remove y-axis
+    elif style == "1d_box":
+        # 1D but with thick bounding box. Extra x-axis ticks added. The y-axis
+        # is still disabled.
         ax.yaxis.set_visible(False)
         # Make spines thicker
         for s in ["top", "left", "right", "bottom"]:
@@ -290,20 +290,30 @@ def style_axes(ax: Any,
         ax.tick_params(which="major", length=5)
         ax.tick_params(which="minor", length=3)
         plt.tight_layout()
-    elif figstyle == "with_box":
-        # Make spines thicker
+    elif style == "2d":
+        # Default 2D style. Makes bounding box thicker and adds x- and y-axis
+        # ticks.
         for s in ["top", "left", "right", "bottom"]:
             ax.spines[s].set_linewidth(1.3)
         # Enable minor ticks and make the ticks more visible
         ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
         ax.tick_params(which="both", width=1.3)
         ax.tick_params(which="major", length=5)
         ax.tick_params(which="minor", length=3)
         plt.tight_layout()
-    elif figstyle == "mpl_natural":
+    elif style == "plot":
+        # To be used for other plots, e.g. seaborn / matplotlib visualisations.
+        # Draws a thicker bounding box around the Axes, but otherwise doesn't
+        # try to change axis ticks etc.
+        for s in ["top", "left", "right", "bottom"]:
+            ax.spines[s].set_linewidth(1.3)
+        plt.tight_layout()
+    elif style == "natural":
+        # Literally, do nothing. Not even tight_layout().
         pass
     else:
-        raise ValueError(f"Invalid style '{figstyle}' requested.")
+        raise ValueError(f"Invalid style '{style}' requested.")
 
 
 # -- 2D PLOTTING ----------------------------------------------
@@ -438,7 +448,7 @@ def stage2d(dataset: ds.Dataset2D,
 
 def _mkplot2d(holding_area: PlotHoldingArea,
               ax: Any = None,
-              figstyle: str = "default",
+              style: str = "2d",
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
               autolabel: OS = None,
@@ -500,22 +510,7 @@ def _mkplot2d(holding_area: PlotHoldingArea,
     ax.set_xlabel(f_xlabel)
     ax.set_ylabel(f_ylabel)
     # Apply other styles.
-    if figstyle not in ["default", "mpl_natural"]:
-        print(f"No figure style corresponding to {figstyle}. Using default.")
-        figstyle = "default"
-    if figstyle == "default":
-        # Make spines thicker
-        for s in ["top", "left", "right", "bottom"]:
-            ax.spines[s].set_linewidth(1.3)
-        # Enable minor ticks and make the ticks more visible
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.yaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which="both", width=1.3)
-        ax.tick_params(which="major", length=5)
-        ax.tick_params(which="minor", length=3)
-        plt.tight_layout()
-    elif figstyle == "mpl_natural":
-        pass
+    style_axes(ax, style)
 
     # Make legend. This part is not easy...
     # See https://stackoverflow.com/questions/41752309/ for an example
@@ -544,7 +539,7 @@ def _make_contour_slider(dataset: ds.Dataset2D,
     # Plot the spectrum on the top portion of the figure.
     fig, ax = plt.subplots()
     _, plot_axes = main.mkplot(empty_pha=False,
-                               figstyle="mpl_natural",
+                               style="natural",
                                )
     orig_xlim = plot_axes.get_xlim()
     orig_ylim = plot_axes.get_ylim()
@@ -573,7 +568,7 @@ def _make_contour_slider(dataset: ds.Dataset2D,
         ylim = plot_axes.get_ylim()
         plot_axes.cla()
         plt.sca(plot_axes)
-        main.mkplot(close=False, empty_pha=False, figstyle="mpl_natural")
+        main.mkplot(close=False, empty_pha=False, style="natural")
         plot_axes.set_xlim(xlim)
         plot_axes.set_ylim(ylim)
 

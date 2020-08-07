@@ -17,7 +17,7 @@ Adding text is best done using :meth:`ax.text() <matplotlib.axes.Axes.text>`. Fo
            transform=ax.get_xaxis_transform())
    pg.show()
 
-.. image:: images/cookbook_text.png
+.. image:: images/cookbook_text.svg
    :align: center
 
 The ``transform`` parameter above ensures that the *x*-coordinate is specified in terms of *data* coordinates (i.e. the actual chemical shift on the *x*-axis), whereas the *y*-coordinate is specified in terms of *axis* coordinates (i.e. bottom is 0 and top is 1). For 1D plots, the *y*-axis is the spectral intensity and spans several orders of magnitude, so without the transformation it is difficult to guess how high to place the text.
@@ -51,7 +51,7 @@ An example will help to clarify this::
    # Display as usual once you are done plotting.
    pg.show()
 
-.. image:: images/cookbook_inset1.png
+.. image:: images/cookbook_inset1.svg
    :align: center
 
 Full documentation for :func:`~penguins.mkinset()` will be provided in due course.
@@ -68,7 +68,7 @@ Here is a minimal example for a 2D spectrum::
               inset_corners=("ne", "se"))
    pg.show()
 
-.. image:: images/cookbook_inset2.png
+.. image:: images/cookbook_inset2.svg
    :align: center
 
 
@@ -109,7 +109,7 @@ A common technique is to assign the array of ``Axes`` to ``axs``, and then itera
     # Display as usual (outside the loop)
     pg.show()
  
-.. image:: images/cookbook_subplots.png
+.. image:: images/cookbook_subplots.svg
 
 Incidentally, we needed *three* sets of curly braces inside the ``xlabel`` and ``ylabel`` strings. One is for the f-string variable substitution; the other two get collapsed into one set of *literal* curly braces. The literal curly braces are needed for the LaTeX parser to superscript the entire mass number (or else we would end up with ``$^15$N``: :superscript:`1`\ 5N).
 
@@ -130,7 +130,7 @@ As a more complicated example, let's try to plot five 1D NOE spectra with differ
    pg.mkplot(voffset=0.01, hoffset=0.05)
    pg.show()
 
-.. image:: images/cookbook_noesy1.png
+.. image:: images/cookbook_noesy1.svg
    :align: center
 
 There are a couple of ways of stopping the intense on-resonance peak from dominating the spectrum. One way is to use the ``dfilter`` parameter of :meth:`~penguins.dataset.Dataset1D.stage()`. ``dfilter`` must be a function that takes the spectrum intensity at each point (a float) and returns ``True`` or ``False`` depending on whether we want the point or not. Here we use a ``lambda`` but you can define a proper function if you want. Also, if you prefer having the on-resonance peak negative, you can either reprocess in TopSpin or use ``scale=-1``, as below::
@@ -149,7 +149,7 @@ There are a couple of ways of stopping the intense on-resonance peak from domina
    pg.mkplot(voffset=0.4, hoffset=0.05)
    pg.show()
                 
-.. image:: images/cookbook_noesy2.png
+.. image:: images/cookbook_noesy2.svg
    :align: center
 
 As an alternative to that, you could just manually set the plot limits. When you display a graph, you can hover over the graph and ``matplotlib`` will tell you the coordinates of your current cursor position. Jot some good values down and pass them to :meth:`ax.set_xlim <matplotlib.axes.Axes.set_xlim>` and :meth:`ax.set_ylim <matplotlib.axes.Axes.set_ylim>`::
@@ -165,7 +165,7 @@ As an alternative to that, you could just manually set the plot limits. When you
     ax.set_ylim(-2.1e4, 1.4e5)
     pg.show()
 
-.. image:: images/cookbook_noesy3.png
+.. image:: images/cookbook_noesy3.svg
    :align: center
 
 Let's assume that we like this second option. The following discussion will apply to both, anyway, so you can tailor it to your liking.
@@ -189,7 +189,7 @@ This returns a :class:`~penguins.pgplot.PlotProperties` class, which has an attr
                s=mixing_time_label)
    pg.show()
 
-.. image:: images/cookbook_noesy4.png
+.. image:: images/cookbook_noesy4.svg
    :align: center
 
 Not bad, but the text needs to be lifted a little.
@@ -215,6 +215,6 @@ We could also horizontally displace the text a little bit, just like the spectra
                color=color)
    pg.show()
 
-.. image:: images/cookbook_noesy5.png
+.. image:: images/cookbook_noesy5.svg
    :align: center
 

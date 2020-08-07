@@ -190,7 +190,7 @@ Here's an example where we plot the same HSQC spectrum four times but give the p
    pg.mkplot(offset=(0.2, 0.02), legend_loc="upper left")
    pg.show()
 
-.. image:: images/plot2d_offset.png
+.. image:: images/plot2d_offset.svg
 
 Of course, if your peaks are *truly* shifting, then you should load each separately (e.g. by adding an ``expno`` list as another argument to ``zip()``) and you will not need to put in a fake ``offset``. And you can also get the temperature via the ``TE`` parameter (i.e. ``d.stage(..., label=str(d["te"]))``).
 

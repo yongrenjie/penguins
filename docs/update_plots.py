@@ -5,7 +5,7 @@
 import penguins as pg
 import numpy as np
 
-all = 0
+all = 1
 if all:
     print("'all' turned on.")
 

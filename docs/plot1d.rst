@@ -53,7 +53,7 @@ Multiple spectra can be plotted by staging each of them individually.
 
    pg.mkplot(); pg.show()
 
-.. image:: images/plot1d_stage.png
+.. image:: images/plot1d_stage.svg
    :align: center
 
 
@@ -121,11 +121,11 @@ Here is an example of a stacked plot versus one with ``voffset=1.1``. The extra 
    pg.mkplot(voffset=1.1, title="voffset")    # ...or this, but not both!
    pg.show()
 
-.. image:: images/plot1d_stacked.png
+.. image:: images/plot1d_stacked.svg
    :width: 49%
    :class: no-scaled-link
 
-.. image:: images/plot1d_voffset.png
+.. image:: images/plot1d_voffset.svg
    :width: 49%
    :class: no-scaled-link
 
@@ -152,7 +152,7 @@ For convenience, penguins provides functions of the same name which are simply w
    # Display the plot:
    pg.show()
    # or save an image:
-   pg.savefig("/Users/yongrenjie/Desktop/nice_plot.png", dpi=500)
+   pg.savefig("/Users/yongrenjie/Desktop/nice_plot.svg")
    # or pause for 0.01 seconds, during which the figure updates itself:
    pg.pause(0.01)
 

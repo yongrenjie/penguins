@@ -11,7 +11,7 @@ pip install penguins
 `penguins` is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
 Here's a small example of the output (a similar plot to Figure 2 in [*Angew. Chem. Int. Ed.* **2017**, *56* (39), 11779–11783](https://doi.org/10.1002/anie.201705506)):
 
-<div align="center"><img src="docs/images/cookbook_subplots.png" height="500"></div>
+<div align="center"><img src="docs/images/cookbook_subplots.svg" height="550"></div>
 
 Documentation can be found at https://penguins.readthedocs.io, although there's not much of it yet (I'm working on it!).
 

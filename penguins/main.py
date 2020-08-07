@@ -160,19 +160,19 @@ def mkinset(pos: Tuple[float, float],
     return inset_ax
 
 
-def show(*args, **kwargs):
+def show(*args, **kwargs) -> None:
     return plt.show(*args, **kwargs)
 
 
-def savefig(*args, **kwargs):
+def savefig(*args, **kwargs) -> None:
     return plt.savefig(*args, **kwargs)
 
 
-def pause(*args, **kwargs):
+def pause(*args, **kwargs) -> None:
     return plt.pause(*args, **kwargs)
 
 
-def subplots(nrows=1, ncols=1, *args, **kwargs):
+def subplots(nrows=1, ncols=1, *args, **kwargs) -> Tuple[Any, Any]:
     # This implementation captures nrows and ncols so that we can set figsize
     # automatically. We don't care about the rest of the arguments, so those
     # can just be passed on directly.

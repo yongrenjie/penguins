@@ -172,14 +172,7 @@ if i:
     clr = ("blue", "red")
     for spec, ax, lvl, title, char in zip(spectra, axs.flat, levels, titles, "abcd"):
         spec.stage(levels=lvl, colors=clr)
-        f1, f2 = spec["nuc1"]   # ('15N', '1H')
-        f1_elem = f1.lstrip("1234567890")  # N
-        f1_mass = f1[:-len(f1_elem)]       # 15
-        f2_elem = f2.lstrip("1234567890")  # H
-        f2_mass = f2[:-len(f2_elem)]       # 1
-        pg.mkplot(ax=ax, title=title,
-                  xlabel=rf"$^{{{f2_mass}}}${f2_elem} / ppm",
-                  ylabel=rf"$^{{{f1_mass}}}${f1_elem} / ppm")
+        pg.mkplot(ax=ax, title=title, autolabel="nucl")
         # Add a label. We're just showing off at this point.
         ax.text(x=0.02, y=0.97, s=f"({char})", transform=ax.transAxes,
                 fontweight="semibold", verticalalignment="top")

@@ -230,7 +230,7 @@ class _Dataset():
         self._read_raw_data()           # type: ignore # mixin
         self._read_spec()               # type: ignore # mixin
 
-    def _initialise_pars(self):
+    def _initialise_pars(self) -> None:
         self.pars = _parDict(self.path)
         self["aq"] = (self["td"] / 2) / (self["sw"] * self["sfo1"])  # This is sfo1
         self["dw"] = self["aq"] * 1000000 / self["td"]
@@ -277,10 +277,10 @@ class _1D_RawDataMixin():
 
 class _1D_ProcDataMixin():
 
-    def _find_proc_data_paths(self):
-        self._p_real = self.path / "1r"
-        if (self.path / "1i").exists():
-            self._p_imag = self.path / "1i"
+    def _find_proc_data_paths(self) -> None:
+        self._p_real = self.path / "1r"        # type: ignore # mixin
+        if (self.path / "1i").exists():        # type: ignore # mixin
+            self._p_imag = self.path / "1i"    # type: ignore # mixin
 
     def _read_spec(self) -> np.ndarray:
         if self["dtypp"] == 0:                            # type: ignore # mixin
@@ -351,8 +351,8 @@ class _1D_ProcDataMixin():
 
 class _1D_PlotMixin():
 
-    def stage(self, *args, **kwargs):
-        pgplot.stage1d(self, *args, **kwargs)
+    def stage(self, *args, **kwargs) -> None:
+        pgplot.stage1d(self, *args, **kwargs)  # type: ignore # mixin
 
 
 # -- 2D mixins ------------------------------------------
@@ -482,7 +482,7 @@ class _2D_ProcDataMixin():
         finteg = integration_functions[mode]
         return finteg(self.proc_data(f1_bounds, f2_bounds))
 
-    def nuclei_to_str(self
+    def nuclei_to_str(self,
                       ) -> Tuple[str, str]:
         """
         Returns a tuple of two strings with the nuclei nicely formatted for use
@@ -498,8 +498,8 @@ class _2D_ProcDataMixin():
 
 class _2D_PlotMixin():
 
-    def stage(self, *args, **kwargs):
-        pgplot.stage2d(self, *args, **kwargs)
+    def stage(self, *args, **kwargs) -> None:
+        pgplot.stage2d(self, *args, **kwargs)  # type: ignore # mixin
 
     def find_baselev(self, *args, **kwargs):
         pgplot._make_contour_slider(self, *args, **kwargs)
@@ -750,4 +750,3 @@ class Dataset1DProjVirtual(Dataset1DProj):
 
 TDataset1D = Union[Dataset1D, Dataset1DProj, Dataset1DProjVirtual]
 TDatasetnD = Union[Dataset1D, Dataset1DProj, Dataset2D, Dataset1DProjVirtual]
-

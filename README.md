@@ -6,15 +6,14 @@
 
 <img src="docs/images/cookbook_subplots.png" height="450" >
 
-Fed up of `java.lang.NullPointerException`? I was, too, so I made this.
-
-To install:
-
-```bash
-    git clone https://github.com/yongrenjie/penguins
-    cd penguins
-    pip install .     # or pip3 
 ```
-Documentation (whatever I've written of it, at least) can be found at https://penguins.readthedocs.io/en/latest/.
+pip install penguins
+```
 
-I've barely written *any* tests, so the fact that they're passing means absolutely nothing.
+`penguins` is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
+
+Documentation can be found at https://penguins.readthedocs.io, although there is not much of it yet.
+
+Note that `penguins` is still in development, so the interface should not be assumed to be stable!
+
+[Regarding the name: I made this package after getting fed up of getting `java.lang.NullPointerException` in TopSpin's plot windows. It's especially bad on OS X Catalina. Also, penguins are cute. 🐧]

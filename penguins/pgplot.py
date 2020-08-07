@@ -2,14 +2,15 @@ from __future__ import annotations   # PEP 563
 
 from itertools import zip_longest, cycle
 from collections import abc
-from typing import (Union, Iterable, MutableMapping,
-                    Optional, Tuple, Any, Deque, Callable, Sequence)
+from typing import (Union, Iterable, Dict, Optional, Any,
+                    Tuple, List, Deque, Callable, Sequence, Iterator)
 from numbers import Real
 
 import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.ticker import AutoMinorLocator  # type: ignore
 from matplotlib.legend_handler import HandlerBase  # type: ignore
+import seaborn as sns  # type: ignore
 
 from . import dataset as ds
 from . import main
@@ -18,73 +19,71 @@ from .type_aliases import *
 
 # -- HELPER OBJECTS -------------------------------------------
 
-SEABORN_PALETTES = dict(
-    deep=["#4C72B0", "#DD8452", "#55A868", "#C44E52", "#8172B3",
-          "#937860", "#DA8BC3", "#8C8C8C", "#CCB974", "#64B5CD"],
-    muted=["#4878D0", "#EE854A", "#6ACC64", "#D65F5F", "#956CB4",
-           "#8C613C", "#DC7EC0", "#797979", "#D5BB67", "#82C6E2"],
-    pastel=["#A1C9F4", "#FFB482", "#8DE5A1", "#FF9F9B", "#D0BBFF",
-            "#DEBB9B", "#FAB0E4", "#CFCFCF", "#FFFEA3", "#B9F2F0"],
-    bright=["#023EFF", "#FF7C00", "#1AC938", "#E8000B", "#8B2BE2",
-            "#9F4800", "#F14CC1", "#A3A3A3", "#FFC400", "#00D7FF"],
-    dark=["#001C7F", "#B1400D", "#12711C", "#8C0800", "#591E71",
-          "#592F0D", "#A23582", "#3C3C3C", "#B8850A", "#006374"],
-    colorblind=["#0173B2", "#DE8F05", "#029E73", "#D55E00", "#CC78BC",
-                "#CA9161", "#FBAFE4", "#949494", "#ECE133", "#56B4E9"],
-    # This are the colours from bright, but rearranged into nice tuples.
-    # Honestly three pairs of colours should suffice. If you're plotting
-    # more 2D spectra than that on the same graph, you probably need to
-    # rethink your plot, or at least choose your colours manually to
-    # illustrate whatever point you're making.
-    bright_2d=[("#023EFF", "#E8000B"), # blue, red
-               ("#1AC938", "#FF7C00"), # green, orange
-               ("#8B2BE2", "#F14CC1"), # purple, pink
-               ]
-)
+# 1D colour palette to use (from seaborn). By default "deep".
+_current_palette = "deep"
+# This are the colours from seaborn-bright, but rearranged into nice tuples.
+# Honestly three pairs of colours should suffice. If you're plotting more 2D
+# spectra than that on the same graph, you probably need to rethink your plot,
+# or at least choose your colours manually to illustrate whatever point you're
+# trying to make.
+_bright_2d = [("#023EFF", "#E8000B"), # blue, red
+              ("#1AC938", "#FF7C00"), # green, orange
+              ("#8B2BE2", "#F14CC1"), # purple, pink
+              ]
+
+
+def set_palette(palette: str
+                ) -> None:
+    global _current_palette
+    # Change seaborn palette, in case user wants to draw other plots.
+    sns.set_palette(palette)
+    # Change penguins 1D palette.
+    _current_palette = palette
+
 
 class PlotHoldingArea():
-    def __init__(self):
+    def __init__(self) -> None:
         self.plot_queue: List = []
         # prime the colour generators
         self.colors_1d = self.color_generator_1d()
         self.colors_2d = self.color_generator_2d()
 
-    def color_generator_1d(self):
-        yield from cycle(SEABORN_PALETTES["deep"])
+    def color_generator_1d(self) -> Iterator[str]:
+        yield from cycle(sns.color_palette(_current_palette))
 
-    def color_generator_2d(self):
-        yield from cycle(SEABORN_PALETTES["bright_2d"])
+    def color_generator_2d(self) -> Iterator[Tuple[str, str]]:
+        yield from cycle(_bright_2d)
 
 class PlotProperties():
     """
     A collection of properties of spectra that have already been constructed
     with mkplot().
     """
-    def __init__(self):
-        self.hoffsets = []
-        self.voffsets = []
-        self.colors = []
-        self.options = []
-        self.colors_positive = []
-        self.colors_negative = []
+    def __init__(self) -> None:
+        self.hoffsets: List[float] = []
+        self.voffsets: List[float] = []
+        self.colors: List[str] = []
+        self.options: List[Dict[str, Any]] = []
+        self.colors_positive: List[str] = []
+        self.colors_negative: List[str] = []
 
 # Not a good idea to use these directly!
-_globalPHA = PlotHoldingArea()
-_globalPP = PlotProperties()
+_globalPHA: PlotHoldingArea = PlotHoldingArea()
+_globalPP: PlotProperties = PlotProperties()
 
 # Go through these methods! It doesn't necessarily make it *safer*, because
 # you can still access _globalPHA, but it's easier to keep track of.
-def get_pha():
+def get_pha() -> PlotHoldingArea:
     return _globalPHA
 
-def _reset_pha():
+def _reset_pha() -> None:
     global _globalPHA
     _globalPHA = PlotHoldingArea()
 
-def get_properties():
+def get_properties() -> PlotProperties:
     return _globalPP
 
-def _reset_properties():
+def _reset_properties() -> None:
     global _globalPP
     _globalPP = PlotProperties()
 
@@ -103,7 +102,8 @@ class PlotObject1D():
                  dfilter: Optional[Callable[[float], bool]] = None,
                  label: OS = None,
                  color: OS = None,
-                 plot_options: Optional[MutableMapping] = None):
+                 plot_options: Optional[Dict] = None
+                 ) -> None:
         self.dataset = dataset
         self.scale = scale
         self.bounds = bounds
@@ -119,12 +119,17 @@ class PlotObject1D():
             proc_data = np.where(logical_array, proc_data, np.nan)
         self.proc_data = proc_data * self.scale
 
-    def _init_options(self, plot_options, color, label):
+    def _init_options(self,
+                      plot_options: Optional[Dict],
+                      color: OS,
+                      label: OS):
         """
         Note that the color parameter will override any color key/value pair
         passed in plot_options.
         """
-        options = dict(self.default_1d_plotoptions) # make a copy
+        # Make a copy of the default options.
+        options: Dict[str, Any] = dict(self.default_1d_plotoptions)
+        # Update it using the function arguments
         if plot_options is not None:
             options.update(plot_options)
         if color is not None:
@@ -136,6 +141,7 @@ class PlotObject1D():
         if "color" not in options:
             next_color = next(get_pha().colors_1d)
             options.update(color=next_color)
+        # Finally, set the instance attribute
         self.options = options
 
 
@@ -145,7 +151,7 @@ def stage1d(dataset: ds.TDataset1D,
             dfilter: Optional[Callable[[float], bool]] = None,
             label: OS = None,
             color: OS = None,
-            plot_options: Optional[MutableMapping] = None,
+            plot_options: Optional[Dict] = None,
             ) -> None:
     """
     Stages a 1D spectrum to be plotted, i.e. sticks it into PHA.plot_queue.
@@ -324,7 +330,7 @@ class Contours:
                  dataset: ds.Dataset2D,
                  levels: TLevels = (None, None, None),
                  colors: TColors = (None, None),
-                 ):
+                 ) -> None:
         self.dataset = dataset
         if isinstance(levels, float):
             levels = (levels, None, None)
@@ -333,14 +339,16 @@ class Contours:
 
     def make_levels(self, base: OF = None,
                     increment: OF = None,
-                    number: Optional[int] = None):
+                    number: Optional[int] = None
+                    ) -> None:
         self.base = base or self.dataset._tsbaselev
         self.increment = increment or 1.5
         self.number = number or 10
 
     def make_colors(self,
                     color_positive: OS = None,
-                    color_negative: OS = None):
+                    color_negative: OS = None
+                    ) -> None:
         if color_positive is None or color_negative is None:
             # Means we need to get a color set from the PHA generator.
             next_positive, next_negative = next(get_pha().colors_2d)
@@ -350,12 +358,12 @@ class Contours:
             self.color_positive = color_positive
             self.color_negative = color_negative
 
-    def generate_contour_levels(self):
+    def generate_contour_levels(self) -> List[float]:
         neg = [-self.base * (self.increment ** (self.number - i)) for i in range(self.number)]
         pos = [self.base * (self.increment ** i) for i in range(self.number)]
         return neg + pos
 
-    def generate_contour_colors(self):
+    def generate_contour_colors(self) -> List[str]:
         neg = [self.color_negative] * self.number
         pos = [self.color_positive] * self.number
         return neg + pos
@@ -375,7 +383,8 @@ class PlotObject2D():
                  colors: TColors = (None, None),
                  dfilter: Optional[Callable[[float], bool]] = None,
                  label: OS = None,
-                 plot_options: Optional[MutableMapping] = None):
+                 plot_options: Optional[Dict] = None
+                 ) -> None:
         self.dataset = dataset
         self.f1_bounds = f1_bounds
         self.f2_bounds = f2_bounds
@@ -397,8 +406,11 @@ class PlotObject2D():
             proc_data = np.where(logical_array, proc_data, np.nan)
         self.proc_data = proc_data
 
-    def _init_options(self, plot_options):
-        options = dict(self.default_2d_plotoptions)  # make a copy
+    def _init_options(self,
+                      plot_options: Optional[Dict],
+                      ) -> None:
+        # Make a copy of the default options
+        options: Dict[str, Any] = dict(self.default_2d_plotoptions)
         if plot_options is not None:
             options.update(plot_options)
         # As before, the colors parameter will override the colors key provided
@@ -425,7 +437,7 @@ def stage2d(dataset: ds.Dataset2D,
             colors: TColors = (None, None),
             dfilter: Optional[Callable[[float], bool]] = None,
             label: OS = None,
-            plot_options: Optional[MutableMapping] = None,
+            plot_options: Optional[Dict] = None,
             ) -> None:
     """
     Stages a 2D spectrum.
@@ -557,7 +569,9 @@ def _make_contour_slider(dataset: ds.Dataset2D,
              transform=baselev_axes.transAxes)
 
     # Define the behaviour when redrawn
-    def redraw(plot_axes: Any, val: float) -> None:
+    def redraw(plot_axes: Any,
+               val: float
+               ) -> None:
         # Update the internal Contours object
         pobj = get_pha().plot_queue[0]
         pobj.contours.base = 10 ** val

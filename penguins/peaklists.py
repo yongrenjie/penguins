@@ -1,9 +1,7 @@
-import numpy as np
+import numpy as np  # type: ignore
+import pandas as pd  # type: ignore
 
-try:
-    import pandas as pd
-except ImportError:
-    raise ImportError("penguins.peaklists requires the pandas package.")
+from . import dataset as ds
 
 
 class Andrographolide:
@@ -30,7 +28,10 @@ class Andrographolide:
         margin = (0.5, 0.02)
 
         @classmethod
-        def integrate(cls, dataset, edited=False):
+        def integrate(cls,
+                      dataset: ds.Dataset2D,
+                      edited: bool = False,
+                      ) -> np.ndarray:
             # Get absolute peak intensities for a given dataset.
             if edited:
                 return np.array([dataset.integrate(peak=(peak.f1, peak.f2),
@@ -75,7 +76,9 @@ class Andrographolide:
         margin = (0.02, 0.02)
 
         @classmethod
-        def integrate(cls, dataset):
+        def integrate(cls,
+                      dataset: ds.Dataset2D,
+                      ) -> np.ndarray:
             # Get absolute peak intensities for a given dataset.
             return np.array([dataset.integrate(peak=(peak.f1, peak.f2),
                                                margin=cls.margin,

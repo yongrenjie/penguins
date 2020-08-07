@@ -9,10 +9,11 @@ Penguins hasn't been pushed to pypi yet, so the only way to install it is via my
    cd penguins
    pip install .
 
-Penguins' requirements are:
+**Penguins requires Python 3.7 or later.** Other dependencies are fairly standard packages for data analysis:
 
-* Python 3.6+
 * ``numpy`` v1.17.0+
-* ``matplotlib`` (any version)
+* ``matplotlib``
+* ``pandas``
+* ``seaborn``
 
-Technically there are no features that require recent versions of Python or numpy, but I used `f-strings <https://www.python.org/dev/peps/pep-0498/>`_ in the code, and I also feed :class:`pathlib.Path` objects to :func:`np.fromfile() <numpy.fromfile>` which relies on a relatively recent version of ``numpy``.
+(The only actual feature that requires 3.7 is ``from __future__ import annotations`` (`PEP 563 <https://www.python.org/dev/peps/pep-0563/>`_), but I hope you'll forgive me as I wanted to use this as an opportunity to learn about the static typing options in recent Python versions.)

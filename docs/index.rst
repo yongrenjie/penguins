@@ -14,9 +14,9 @@ Welcome to penguins!
 
 ::
 
-   pip install penguins  # this doesn't work yet: see "Installation"
+   pip install penguins
 
-At the time of writing, it only supports Bruker data. It has very limited spectral processing capabilities; the idea is that processing should be done in TopSpin or other software before plotting in penguins.
+At the time of writing, it only supports Bruker data, and can only work with processed data. It is not intended to be an NMR processing suite, so does not have any functions for dealing with raw data (e.g. Fourier transformation).
 
 To get started, head over to the :doc:`quickstart` page. All code examples in the documentation, such as the following, can be run directly from the ``penguins/tests`` directory.
 
@@ -32,7 +32,7 @@ To get started, head over to the :doc:`quickstart` page. All code examples in th
    pg.mkplot()
    pg.show()
 
-.. image:: images/splash_hsqc.png
+.. image:: images/splash_hsqc.svg
    :align: center
    :alt: Example HSQC spectrum
    :class: no-scaled-link

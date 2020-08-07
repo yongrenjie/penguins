@@ -14,7 +14,7 @@ os.chdir(os.path.abspath("../tests"))
 
 # -- index.rst -------------------------
 
-a = all or 0
+a = all or 1
 if a:
     hsqc_dataset = pg.read("data/pt2", 4, 1)
     hsqc_dataset.stage(f1_bounds="10..141",
@@ -22,8 +22,8 @@ if a:
                        colors=("seagreen", "hotpink"),
                        levels=2e4)
     pg.mkplot()
-    # pg.show()
-    pg.savefig("../docs/images/splash_hsqc.png", dpi=500)
+    pg.show()
+    # pg.savefig("../docs/images/splash_hsqc.svg")
     print("Done plot a.")
 
 
@@ -161,7 +161,7 @@ if h:
     print("Done plot h.")
 
 
-i = all or 1
+i = all or 0
 if i:
     _, axs = pg.subplots(2, 2)
     # Set up the lists.

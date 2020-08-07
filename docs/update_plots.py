@@ -5,7 +5,7 @@
 import penguins as pg
 import numpy as np
 
-all = 1
+all = 0
 if all:
     print("'all' turned on.")
 
@@ -14,7 +14,7 @@ os.chdir(os.path.abspath("../tests"))
 
 # -- index.rst -------------------------
 
-a = all or 1
+a = all or 0
 if a:
     hsqc_dataset = pg.read("data/pt2", 4, 1)
     hsqc_dataset.stage(f1_bounds="10..141",
@@ -46,7 +46,7 @@ if b:
     print("Done plot b.")
 
 
-c = all or 0
+c = all or 1
 if c:
     prot = pg.read("data/rot1", 1, 1)
     prot.stage(bounds="..7",

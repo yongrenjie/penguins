@@ -52,6 +52,7 @@ Contents
    paradigm
    plot1d
    plot2d
+   subplots
    cookbook
    nus
    topspin

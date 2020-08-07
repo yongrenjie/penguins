@@ -1,3 +1,7 @@
+.. |br| raw:: html
+
+    <br />
+
 1D Plotting in Detail
 =====================
 
@@ -22,15 +26,28 @@ Multiple spectra can be plotted by staging each of them individually.
    Penguins maintains a *"holding area"*, which is a global list of plots which have been registered but not yet plotted. The :func:`~penguins.pgplot.stage1d()` function uses the information provided to create a :class:`penguins.pgplot.PlotObject1D` object, which is then appended to that list.
 
    :param dataset: A 1D dataset object.
+
    :param scale: *(optional)* Indicates factor to scale spectrum intensity by.
+
    :type scale: float
-   :param bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the spectrum to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (upper) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum. Note that this does not merely affect the *plot limits*. It restricts the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
-   :param dfilter: *(optional)* A function taking a float and returning a bool to which filters *y*-values of the spectrum which should be retained. For example, to remove any parts of the spectrum above an intensity of ``1e5``, use ``dfilter=(lambda f: f < 1e5)``. Note that this filter is applied prior to any scaling.
+
+   :param bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the spectrum to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (lower) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum.
+
+      |br|
+      Note that this does not merely affect the *plot limits*. It restricts the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
+
+   :param dfilter: *(optional)* A function taking a float and returning a bool to which filters *y*-values of the spectrum which should be retained. For example, to remove any parts of the spectrum above an intensity of ``1e5``, use ``dfilter=(lambda f: f < 1e5)``. This filter is applied prior to any scaling.
+
    :param label: *(optional)* Text to be displayed in the plot legend. Some LaTeX-like syntax is possible using raw strings: see :std:doc:`tutorials/text/mathtext`.
+
    :type label: str
+
    :param color: *(optional)* A valid ``matplotlib`` color. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colour palette used is Seaborn's "deep" (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
+
    :type color: str
+
    :param plot_options: *(optional)* Key-value options which are passed on directly to :meth:`ax.plot() <matplotlib.axes.Axes.plot>`. Note that the ``color`` and ``label`` parameters will override the corresponding keys in ``plot_options``, if present.
+
    :type plot_options: dict
 
    :returns: None.
@@ -64,7 +81,7 @@ Plot construction is done using :func:`~penguins.mkplot()`.
 
 .. currentmodule:: penguins
 
-.. function:: mkplot(axes=None, figsize=None, figstyle="default", stacked=False, voffset=0, hoffset=0, title=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
+.. function:: mkplot(axes=None, figsize=None, figstyle="1d", stacked=False, voffset=0, hoffset=0, title=None, autolabel=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
 
    Calls :meth:`ax.plot() <matplotlib.axes.Axes.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
    
@@ -74,20 +91,16 @@ Plot construction is done using :func:`~penguins.mkplot()`.
 
    :param tuple(float,float) figsize: (width, height) of plot in inches.
 
-   :param str figstyle: Specifies the overall plot style.
-
-      * ``"default"`` removes all spines except the bottom one, enables minor ticks, and makes the axis slightly thicker.
-      * ``"mpl_natural"`` does not change any settings from the original.
-      * ``"with_box"`` is the same as ``default`` except that the bounding box for the Axes object is retained with the same thickness (no *y*-axis ticks are shown). This is useful when plotting multiple types of plots on the same figure, as it ensures that all the subplots will look visually similar.
-
-      There are no other styles right now, but this list may be expanded in future. In any case, this can later be customised further (see below).
+   :param str figstyle: Specifies the overall plot style. See :func:`~penguins.style_axes()` for options and examples.
 
    :param bool stacked: True to make spectra tightly stacked (i.e. not superimposed). Overrides any value given in the ``voffset`` parameter.
 
    :param voffset: If given as a float, indicates the amount of vertical offset between spectra, in units of the maximum height. The height of a spectrum refers to the total width it spans in the *y*-axis, and the maximum height refers to the largest such height of all spectra in the holding area.
 
+      |br|
       Using a float for ``voffset`` is useful for offsetting spectra by a *constant amount*. Note that stacked spectra have a *variable* vertical offset between each spectrum, because each spectrum will have a different height. An example of the difference is shown below.
 
+      |br|
       If given as a list, each staged spectrum is offset by the corresponding amount (again in units of maximum height).
 
    :type voffset: list or float
@@ -98,13 +111,15 @@ Plot construction is done using :func:`~penguins.mkplot()`.
 
    :param str title: Plot title.
 
-   :param str xlabel: Label for *x*-axis.
+   :param str autolabel: Automatic labels to use for the *x*-axis. The only option now is ``nucl``, which generates a LaTeX representation of the detected nucleus (e.g. for a proton spectrum, setting ``autolabel="nucl"`` would give the *x*-axis label ``r"$^{1}$H (ppm)"``).
 
-   :param str ylabel: Label for *y*-axis. This would never be used unless you use ``figstyle=mpl_natural``, or manually reenable the *y*-axis display.
+   :param str xlabel: Label for *x*-axis. This overrides ``autolabel`` if both are specified (but why would you?).
+
+   :param str ylabel: Label for *y*-axis. This would never be used unless you use ``figstyle=natural``, or manually reenable the *y*-axis display.
 
    :param bool close: Close all previously used figures before constructing a new plot. This shouldn't be changed by the end user; it's only really there to make :func:`find_baselev() <penguins.pgplot._make_contour_slider>` work.
 
-   :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. Setting this to False can be useful if one wants to construct several figures by adding one spectrum at at time, since you don't have to stage the first dataset every time after calling :func:`~penguins.show` or :func:`~penguins.savefig`.
+   :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. There are a couple of niche uses for this parameter, but you probably don't need it.
 
    :returns: Tuple of (:py:class:`~matplotlib.figure.Figure`, :py:class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
 

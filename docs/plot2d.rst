@@ -35,13 +35,13 @@ Multiple spectra can be plotted by staging each of them individually.
       Note that, as before, the ``bounds`` parameters do not merely affect the *plot limits*. They restrict the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
 
    :param f2_bounds: *(optional)* Same as above, but for the direct dimension.
-   :param levels: *(optional)* A tuple ``(baselev, increment, nlev)`` specifying the levels at which to draw contours. ``baselev`` and ``increment`` are floats; ``nlev`` is an int. This is directly analogous  to the contour levels in TopSpin's ``edlev`` dialog box. Contours are drawn at ``±(baselev * (increment ** N))`` where ``N`` ranges from ``0`` to ``nlev - 1``.
+   :param levels: *(optional)* A tuple ``(baselev, increment, nlev)`` specifying the levels at which to draw contours, or a single float ``baselev`` (which sets ``increment`` and ``nlev`` to their default values).
+
+      |br|
+      The three parameters are directly analogous to the contour level parameters in TopSpin's ``edlev`` dialog box. Contours are drawn at ``±(baselev * (increment ** N))`` where ``N`` ranges from ``0`` to ``nlev - 1``.
 
       |br|
       The default ``baselev`` is chosen individually for each spectrum, according to TopSpin's algorithm of ``(35 * stdev(data))`` (see *"Processing Commands and Parameters"* documentation). ``increment`` by default is 1.5 and ``nlev`` is 10. Any of the three parameters can be passed as ``None`` in order to use the defaults.
-
-      |br|
-      ``baselev`` is, by far, the most likely parameter to be customised. Therefore, instead of passing a tuple of ``(baselev, None, None)``, you can also pass a single float ``baselev``.
 
    :param colors: *(optional)* A tuple of valid ``matplotlib`` colors ``(positive, negative)``. The colours will be used for positive and negative contours respectively. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colours are drawn from Seaborn's "deep" palette (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
 
@@ -52,7 +52,8 @@ Multiple spectra can be plotted by staging each of them individually.
 
    :param str label: *(optional)* A string to display in the legend of the plot. See below for an example of how this looks.
 
-   :param plot_options: *(optional)* Key-value options which are passed on directly to :func:`plt.contour() <matplotlib.pyplot.contour>`. Note that the ``colors`` parameter will override the corresponding key in ``plot_options``, if present.
+   :param plot_options: *(optional)* Key-value options which are passed on directly to :func:`ax.contour() <matplotlib.Axes.axes.contour>`. Note that the ``colors`` parameter will override the corresponding key in ``plot_options``, if present.
+   
    :type plot_options: dict
 
    :returns: None.
@@ -74,7 +75,7 @@ As a slightly contrived example, here we stage the same HMBC dataset four times 
    # Construct and display
    pg.mkplot(); pg.show()
 
-.. image:: images/plot2d_baselev.png
+.. image:: images/plot2d_baselev.svg
    :align: center
 
 Notice that ``baselev`` in the bottom-left and top-left sectors are certainly too low; we are plotting mostly noise. The top-right sector with ``baselev=1e5`` doesn't pick up any noise, but the peaks are getting a little bit difficult to see. The best value of ``baselev`` is probably close to ``1e4`` as seen in the bottom-right. It turns out that TopSpin's algorithm suggests a value of approximately ``1.9e4``.
@@ -136,7 +137,7 @@ Plot construction is done using :func:`~penguins.mkplot()`. If the holding area 
 
 .. currentmodule:: penguins
 
-.. function:: mkplot(axes=None, figsize=None, figstyle="default", offset=(0, 0), title=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
+.. function:: mkplot(axes=None, figsize=None, figstyle="2d", offset=(0, 0), title=None, autolabel=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
    :noindex:
 
    Calls :func:`plt.contour() <matplotlib.pyplot.contour>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
@@ -147,26 +148,23 @@ Plot construction is done using :func:`~penguins.mkplot()`. If the holding area 
 
    :param figsize: Tuple of floats specifying ``(width, height)`` of plot in inches.
 
-   :param str figstyle: Specifies the overall plot style.
-
-      * ``"default"`` enables minor ticks, makes the axes slightly thicker than usual, and calls :func:`plt.tight_layout() <matplotlib.pyplot.tight_layout>`.
-      * ``"mpl_natural"`` does not change any settings from the original.
-
-      There are no other styles right now, but this list may be expanded in future.
+   :param str figstyle: Specifies the overall plot style. See :func:`~penguins.style_axes()` for options and examples.
 
    :param offset: Tuple of floats ``(f1_offset, f2_offset)`` specifying offset between adjacent spectra. If ``f1_offset`` (or ``f2_offset``) is positive, then later spectra are shifted upwards (or rightwards). Also, the default of this argument is a tuple ``(0, 0)``, but Sphinx doesn't display the parentheses in the function signature correctly.
 
    :param str title: Plot title.
 
-   :param str xlabel: Label for *x*-axis.
+   :param str autolabel: Automatic labels to use for the *x*-axis. The only option now is ``nucl``, which generates a LaTeX representation of the detected nucleus (e.g. for a COSY spectrum, setting ``autolabel="nucl"`` would set both the *x*- and *y*-axis labels to ``r"$^{1}$H (ppm)"``).
 
-   :param str ylabel: Label for *y*-axis.
+   :param str xlabel: Label for *x*-axis. Overrides ``autolabel`` if both are given.
+
+   :param str ylabel: Label for *y*-axis. Overrides ``autolabel`` if both are given.
 
    :param legend_loc: Legend location. Passed directly as the ``loc`` parameter to :func:`plt.legend <matplotlib.pyplot.legend>`, where a full description can be found. Defaults to ``"best"``, which means that ``matplotlib`` will attempt to choose a position that doesn't collide with the existing plots.
 
    :param bool close: Close all previously used figures before constructing a new plot. This shouldn't be changed by the end user.
 
-   :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. Setting this to False can be useful if one wants to construct several figures by adding one spectrum at at time, since you don't have to stage the first dataset every time after calling :func:`~penguins.show` or :func:`~penguins.savefig`.
+   :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. There are a couple of niche uses for this parameter, but you probably don't need it.
 
    :returns: Tuple of (:class:`~matplotlib.figure.Figure`, :class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
 

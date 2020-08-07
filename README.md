@@ -13,7 +13,7 @@ Here's a small example of the output (a similar plot to Figure 2 in [*Angew. Che
 
 <div align="center"><img src="docs/images/cookbook_subplots.svg" height="550"></div>
 
-Documentation can be found at https://penguins.readthedocs.io, although there's not much of it yet (I'm working on it!).
+Documentation can be found at https://penguins.readthedocs.io, although it's not complete yet and arguably not very well-organised (I'm working on it!).
 
 Note that `penguins` is still in development, so the interface should not be assumed to be stable.
 

@@ -21,9 +21,9 @@ if a:
                        f2_bounds="0.5..8.5",
                        colors=("seagreen", "hotpink"),
                        levels=2e4)
-    pg.mkplot()
-    pg.show()
-    # pg.savefig("../docs/images/splash_hsqc.svg")
+    pg.mkplot(title="An example HSQC")
+    # pg.show()
+    pg.savefig("../docs/images/splash_hsqc.svg")
     print("Done plot a.")
 
 
@@ -42,7 +42,7 @@ if b:
                   )
     pg.mkplot()
     # pg.show()                                   # CONSTRUCT
-    pg.savefig("../docs/images/quickstart_plot2d.png", dpi=500)
+    pg.savefig("../docs/images/quickstart_plot2d.svg")
     print("Done plot b.")
 
 
@@ -54,7 +54,7 @@ if c:
                label=r"$\mathrm{^{1}H}$")
     pg.mkplot()
     # pg.show()
-    pg.savefig("../docs/images/quickstart_plot1d.png", dpi=500)
+    pg.savefig("../docs/images/quickstart_plot1d.svg")
     print("Done plot c.")
 
 
@@ -75,7 +75,7 @@ if d:
               color="hotpink")
     pg.mkplot()
     # pg.show()
-    pg.savefig("../docs/images/plot1d_stage.png", dpi=500)
+    pg.savefig("../docs/images/plot1d_stage.svg")
     print("Done plot d.")
 
 
@@ -88,7 +88,7 @@ if e:
     ds2.stage(bounds="0..50")
     pg.mkplot(stacked=True, title="stacked")   # Either this...
     # pg.show()
-    pg.savefig("../docs/images/plot1d_stacked.png", dpi=500)
+    pg.savefig("../docs/images/plot1d_stacked.svg")
 
     ds2.stage(color="black")                 # Full spectrum
     ds2.stage(bounds="100..150")             # Three subspectra
@@ -96,7 +96,7 @@ if e:
     ds2.stage(bounds="0..50")
     pg.mkplot(voffset=1.1, title="voffset")    # ...or this
     # pg.show()
-    pg.savefig("../docs/images/plot1d_voffset.png", dpi=500)
+    pg.savefig("../docs/images/plot1d_voffset.svg")
     print("Done plot e.")
 
 
@@ -119,7 +119,7 @@ if f:
     # Construct and display
     pg.mkplot()
     # pg.show()
-    pg.savefig("../docs/images/plot2d_baselev.png", dpi=500)
+    pg.savefig("../docs/images/plot2d_baselev.svg")
     print("Done plot f.")
 
 
@@ -141,7 +141,7 @@ if g:
     # Separate each plot a little bit
     pg.mkplot(offset=(0.2, 0.02), legend_loc="upper left")
     # pg.show()
-    pg.savefig("../docs/images/plot2d_offset.png", dpi=500)
+    pg.savefig("../docs/images/plot2d_offset.svg")
     print("Done plot g.")
 
 
@@ -157,7 +157,7 @@ if h:
             color="red",
             transform=ax.get_xaxis_transform())
     # pg.show()
-    pg.savefig("../docs/images/cookbook_text.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_text.svg")
     print("Done plot h.")
 
 
@@ -177,7 +177,7 @@ if i:
         ax.text(x=0.02, y=0.97, s=f"({char})", transform=ax.transAxes,
                 fontweight="semibold", verticalalignment="top")
     # pg.show()
-    pg.savefig("../docs/images/cookbook_subplots.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_subplots.svg")
     print("Done plot i.")
 
 
@@ -197,7 +197,7 @@ if j:
                   transform=inset_ax.get_xaxis_transform())
     # Display
     # pg.show()
-    pg.savefig("../docs/images/cookbook_inset1.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_inset1.svg")
     print("Done plot j.")
 
 
@@ -213,7 +213,7 @@ if k:
                inset_corners=("ne", "se"))
     # Display
     # pg.show()
-    pg.savefig("../docs/images/cookbook_inset2.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_inset2.svg")
     print("Done plot k.")
 
 
@@ -226,7 +226,7 @@ if la:
                   bounds="0..6")
     pg.mkplot(voffset=0.01, hoffset=0.05)
     # pg.show()
-    pg.savefig("../docs/images/cookbook_noesy1.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_noesy1.svg")
     print("Done plot la.")
 
 lb = all or 0
@@ -244,7 +244,7 @@ if lb:
                   scale=-1)
     pg.mkplot(voffset=0.4, hoffset=0.05)
     # pg.show()
-    pg.savefig("../docs/images/cookbook_noesy2.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_noesy2.svg")
     print("Done plot lb.")
 
 
@@ -260,7 +260,7 @@ if lc:
     ax.set_xlim(6.2, -0.3)   # must be (larger, smaller)
     ax.set_ylim(-2.1e4, 1.4e5)
     # pg.show()
-    pg.savefig("../docs/images/cookbook_noesy3.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_noesy3.svg")
     print("Done plot lc.")
 
 
@@ -279,7 +279,7 @@ if ld:
         ax.text(x=0.6, y=voffset,
                 s=mixing_time_label)
     # pg.show()
-    pg.savefig("../docs/images/cookbook_noesy4.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_noesy4.svg")
     print("Done plot ld.")
 
 
@@ -301,5 +301,5 @@ if le:
                 s=mixing_time_label,
                 color=color)
     # pg.show()
-    pg.savefig("../docs/images/cookbook_noesy5.png", dpi=500)
+    pg.savefig("../docs/images/cookbook_noesy5.svg")
     print("Done plot le.")

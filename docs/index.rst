@@ -18,7 +18,10 @@ Welcome to penguins!
 
 At the time of writing, it only supports Bruker data, and can only work with processed data. It is not intended to be an NMR processing suite, so does not have any functions for dealing with raw data (e.g. Fourier transformation).
 
-To get started, head over to the :doc:`quickstart` page. All code examples in the documentation, such as the following, can be run directly from the ``penguins/tests`` directory.
+To get started, head over to the :doc:`quickstart` page.
+
+.. note::
+   All code examples in the documentation, such as the following, can be run directly from the ``penguins/tests`` directory.
 
 ::
 
@@ -29,7 +32,7 @@ To get started, head over to the :doc:`quickstart` page. All code examples in th
                       f2_bounds="0.5..8.5",
                       colors=("seagreen", "hotpink"),
                       levels=2e4)
-   pg.mkplot()
+   pg.mkplot(title="An example HSQC")
    pg.show()
 
 .. image:: images/splash_hsqc.svg

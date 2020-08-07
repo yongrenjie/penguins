@@ -63,7 +63,7 @@ An example::
 
 will give the following inset of the HSQC:
 
-.. image:: images/quickstart_plot2d.png
+.. image:: images/quickstart_plot2d.svg
    :align: center
 
 This dataset has somewhat poor signal-to-noise, and the automatically chosen contour levels are slightly suboptimal. For 2D spectra, contour levels can be manually specified using the parameter ``levels`` in :meth:`~penguins.dataset.Dataset2D.stage()` (see also: :ref:`baselev`).
@@ -78,7 +78,7 @@ An example of a 1D plot is as follows::
    # Construct and display
    pg.mkplot; pg.show()
 
-.. image:: images/quickstart_plot1d.png
+.. image:: images/quickstart_plot1d.svg
    :align: center
 
 From here, you may want to consider reading :doc:`paradigm` to get to know penguins' overall approach to plotting.

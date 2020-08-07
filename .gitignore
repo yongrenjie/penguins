@@ -9,5 +9,5 @@ penguins.egg-info/
 docs/_build
 docs/_static
 docs/_template
-build
-dist
+build/*
+dist/*

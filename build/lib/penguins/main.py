@@ -71,7 +71,7 @@ def mkplot(ax: Any = None,
     if len(PHA.plot_queue) == 0:
         raise ValueError("No spectra have been staged yet.")
     else:
-        if close and figsize is not None:
+        if close and figsize is not None and ax is None:
             plt.figure(figsize=figsize)
         if ax is None:
             ax = plt.gca()

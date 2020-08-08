@@ -31,18 +31,58 @@ master_doc = 'index'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "numpydoc",
 ]
+# Disable type hints in function signatures from being displayed, since this
+# information is redundant.
+autodoc_typehints='none'
 
+# Version number
+import penguins as pg
+version = pg.__version__
+
+# Intersphinx setup.
 intersphinx_mapping = {
-    'python3': ('https://docs.python.org/3', None),
+    'python': ('https://docs.python.org/3', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
     'matplotlib': ('https://matplotlib.org', None),
     'seaborn': ('https://seaborn.pydata.org/', None),
 }
 
+# Default role for reST. This saves a lot of typing!
+default_role = "any"
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+# Global reST substitutions
+rst_prolog = """
+.. |tight_layout| replace:: :func:`plt.tight_layout() <matplotlib.pyplot.tight_layout>`
+.. |subplots| replace:: :func:`plt.subplots() <matplotlib.pyplot.subplots>`
+.. |figure| replace:: :func:`plt.figure() <matplotlib.pyplot.figure>`
+.. |pause| replace:: :func:`plt.pause() <matplotlib.pyplot.pause>`
+.. |savefig| replace:: :func:`plt.savefig() <matplotlib.pyplot.savefig>`
+.. |mark_inset| replace:: :func:`mark_inset() <mpl_toolkits.axes_grid1.inset_locator.mark_inset>`
+.. |show| replace:: :func:`plt.show() <matplotlib.pyplot.show>`
+.. |plot| replace:: :meth:`Axes.plot <matplotlib.axes.Axes.plot>`
+.. |contour| replace:: :meth:`Axes.contour <matplotlib.axes.Axes.contour>`
+.. |legend| replace:: :meth:`Axes.legend <matplotlib.axes.Axes.legend>`
+.. |Axes| replace:: :class:`Axes <matplotlib.axes.Axes>`
+.. |Figure| replace:: :class:`Figure <matplotlib.figure.Figure>`
+.. |Transform| replace:: :class:`Transform <matplotlib.transforms.Transform>`
+.. |ndarray| replace:: :class:`ndarray <numpy.ndarray>`
+.. |v| replace:: |br| |vspace|
+.. |br| raw:: html
+
+   <br />
+
+.. |vspace| raw:: latex
+
+   \\vspace{5mm}
+
+"""
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

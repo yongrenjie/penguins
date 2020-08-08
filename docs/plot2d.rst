@@ -1,7 +1,3 @@
-.. |br| raw:: html
-
-    <br />
-
 2D Plotting in Detail
 =====================
 
@@ -20,44 +16,7 @@ Like its 1D counterpart, the :meth:`Dataset2D.stage <penguins.dataset.Dataset2d.
 ..
    * ** * ** This comment stops vim from highlighting everything as italicised.
 
-Multiple spectra can be plotted by staging each of them individually.
-
-.. currentmodule:: penguins.pgplot
-
-.. function:: stage2d(dataset, f1_bounds=None, f2_bounds=None, levels=None, colors=None, label=None, plot_options=None)
-
-   Uses the information provided to create a :class:`penguins.pgplot.PlotObject2D` object, which is then appended to the plot holding area.
-
-   :param dataset: A 2D dataset object.
-   :param f1_bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the indirect dimension to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (upper) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum.
-
-      |br|
-      Note that, as before, the ``bounds`` parameters do not merely affect the *plot limits*. They restrict the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
-
-   :param f2_bounds: *(optional)* Same as above, but for the direct dimension.
-   :param levels: *(optional)* A tuple ``(baselev, increment, nlev)`` specifying the levels at which to draw contours, or a single float ``baselev`` (which sets ``increment`` and ``nlev`` to their default values).
-
-      |br|
-      The three parameters are directly analogous to the contour level parameters in TopSpin's ``edlev`` dialog box. Contours are drawn at ``±(baselev * (increment ** N))`` where ``N`` ranges from ``0`` to ``nlev - 1``.
-
-      |br|
-      The default ``baselev`` is chosen individually for each spectrum, according to TopSpin's algorithm of ``(35 * stdev(data))`` (see *"Processing Commands and Parameters"* documentation). ``increment`` by default is 1.5 and ``nlev`` is 10. Any of the three parameters can be passed as ``None`` in order to use the defaults.
-
-   :param colors: *(optional)* A tuple of valid ``matplotlib`` colors ``(positive, negative)``. The colours will be used for positive and negative contours respectively. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colours are drawn from Seaborn's "deep" palette (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
-
-      |br|
-      Note that as of now there is no explicit way to disable contours of a particular sign. One workaround is to make the unwanted contour have the same colour as the figure background. Another is to use the ``dfilter`` parameter described right after this. Note that neither method works perfectly if you also want to display a label (the former will make the line in the legend slightly off-centred, and the latter will still display the negative colour).
-
-   :param dfilter: *(optional)* A function taking a float and returning a bool to which filters *z*-values of the spectrum which should be retained. For example, to remove all negative parts of the spectrum, use ``dfilter=(lambda f: f > 0)``.
-
-   :param str label: *(optional)* A string to display in the legend of the plot. See below for an example of how this looks.
-
-   :param plot_options: *(optional)* Key-value options which are passed on directly to :func:`ax.contour() <matplotlib.Axes.axes.contour>`. Note that the ``colors`` parameter will override the corresponding key in ``plot_options``, if present.
-   
-   :type plot_options: dict
-
-   :returns: None.
-
+The :func:`~penguins.pgplot._stage2d` full documentation used to be here.
 
 As a slightly contrived example, here we stage the same HMBC dataset four times with different values of ``baselev``::
 
@@ -110,16 +69,7 @@ The slider is logarithmic and the value displayed on the right is the base-10 lo
 
 Under the hood, the :meth:`find_baselev()` method calls the :func:`~penguins.pgplot._make_contour_slider` function with the dataset object as the first parameter.
 
-.. function:: _make_contour_slider(dataset, increment=None, nlev=4)
-
-   Creates an interactive plot window with a slider controlling ``baselev``.
-
-   :param dataset: 2D dataset object.
-   :param float increment: *(optional)* Desired increment. Defaults to ``(1.5 ** 10) ** (1 / nlev)``. This value is chosen so that the ``nlev`` contours can cover a similar dynamic range as with ``increment=1.5`` and ``nlev=10``.
-   :param int nlev: *(optional)* Desired number of contour levels. Note that every time the slider value is changed, ``matplotlib`` has to redraw all the contours from scratch. Therefore, it is advisable to keep this number fairly small (the default of 4 seems to work reasonably well). Anecdotally, the quality of the plot does not suffer very much.
-
-   :returns: The chosen ``baselev``.
-   :rtype: float
+The documentation for :func:`~penguins.pgplot._find_baselev()` used to be here.
 
 .. note::
    :meth:`~penguins.dataset.Dataset2D.find_baselev()` actually does return the chosen value of ``baselev``, so you *could* do something like::

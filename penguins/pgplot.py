@@ -19,12 +19,12 @@ from .type_aliases import *
 
 # -- HELPER OBJECTS -------------------------------------------
 
-# 1D colour palette to use (from seaborn). By default "deep".
+# 1D color palette to use (from seaborn). By default "deep".
 _current_palette = "deep"
-# This are the colours from seaborn-bright, but rearranged into nice tuples.
-# Honestly three pairs of colours should suffice. If you're plotting more 2D
+# This are the colors from seaborn-bright, but rearranged into nice tuples.
+# Honestly three pairs of colors should suffice. If you're plotting more 2D
 # spectra than that on the same graph, you probably need to rethink your plot,
-# or at least choose your colours manually to illustrate whatever point you're
+# or at least choose your colors manually to illustrate whatever point you're
 # trying to make.
 _bright_2d = [("#023EFF", "#E8000B"), # blue, red
               ("#1AC938", "#FF7C00"), # green, orange
@@ -32,8 +32,26 @@ _bright_2d = [("#023EFF", "#E8000B"), # blue, red
               ]
 
 
-def set_palette(palette: str
+def set_palette(palette: Union[str, list(str)],
                 ) -> None:
+    """Sets the currently active color palette. The default palette is
+    seaborn's ``deep``.
+
+    The palette is used both for staging successive 1D spectra, as well as for
+    any plots done with seaborn. For 2D spectra, colors from seaborn's
+    ``bright`` palette have been manually chosen. If you want to override these,
+    you should directly pass the *colors* parameter to the stage() method.
+
+    Parameters
+    ----------
+    palette : str or list of str
+        Color palette to use. See :std:doc:`tutorial/color_palettes` for a
+        full description of the possible options.
+
+    Returns
+    -------
+    None
+    """
     global _current_palette
     # Change seaborn palette, in case user wants to draw other plots.
     sns.set_palette(palette)
@@ -41,59 +59,188 @@ def set_palette(palette: str
     _current_palette = palette
 
 
+# -- Plot holding area ----------------------------------------
+
 class PlotHoldingArea():
+    """Plot holding area which holds staged spectra (as `PlotObject1D` or
+    `PlotObject2D` objects) before the plot is constructed using `mkplot()`.
+
+    This is reset by every call to `mkplot()`, so if desired, should be
+    accessed before calling `mkplot()`. In practice, though, I cannot think of
+    any reason why one would need this. If you find a use case, please let me
+    know.
+
+    Attributes
+    ----------
+    plot_queue : list
+        List of `PlotObject1D` or `PlotObject2D` items which have been staged.
+
+    colors_1d : generator object
+        Yields colors one at a time from the currently active palette.
+
+    colors_2d : generator object
+        Yields selected tuples (positive, negative) of colors, taken from the
+        "bright" palette.
+    """
+
     def __init__(self) -> None:
         self.plot_queue: List = []
-        # prime the colour generators
-        self.colors_1d = self.color_generator_1d()
-        self.colors_2d = self.color_generator_2d()
+        # prime the color generators
+        self.colors_1d = self._color_generator_1d()
+        self.colors_2d = self._color_generator_2d()
 
-    def color_generator_1d(self) -> Iterator[str]:
+    def _color_generator_1d(self) -> Iterator[str]:
+        """Yields colors one at a time from the current palette."""
         yield from cycle(sns.color_palette(_current_palette))
 
-    def color_generator_2d(self) -> Iterator[Tuple[str, str]]:
+    def _color_generator_2d(self) -> Iterator[Tuple[str, str]]:
         yield from cycle(_bright_2d)
 
-class PlotProperties():
-    """
-    A collection of properties of spectra that have already been constructed
-    with mkplot().
-    """
-    def __init__(self) -> None:
-        self.hoffsets: List[float] = []
-        self.voffsets: List[float] = []
-        self.colors: List[str] = []
-        self.options: List[Dict[str, Any]] = []
-        self.colors_positive: List[str] = []
-        self.colors_negative: List[str] = []
-
-# Not a good idea to use these directly!
 _globalPHA: PlotHoldingArea = PlotHoldingArea()
-_globalPP: PlotProperties = PlotProperties()
 
-# Go through these methods! It doesn't necessarily make it *safer*, because
-# you can still access _globalPHA, but it's easier to keep track of.
 def get_pha() -> PlotHoldingArea:
+    """Returns the currently active `PlotHoldingArea` instance.
+
+    Returns
+    -------
+    PlotHoldingArea
+    """
     return _globalPHA
 
 def _reset_pha() -> None:
     global _globalPHA
     _globalPHA = PlotHoldingArea()
 
+
+# -- Plot properties ------------------------------------------
+
+class PlotProperties():
+    """Stores properties of 1D spectra that have already been plotted using
+    `mkplot()`. 2D properties are not stored.
+
+    The PlotProperties object is only populated after `mkplot()` has been
+    called. However, it is reset on the *subsequent* call to `mkplot()`, so
+    any properties of interest should be accessed before constructing the next
+    plot.
+
+    Attributes
+    ----------
+    hoffsets : list of float
+        Horizontal offset of each plotted spectrum in ppm.
+    voffsets : list of float
+        Vertical offset of each plotted spectrum in data coordinates (because
+        the *y*-axis of a 1D spectrum is the intensity, this is typically on
+        the order of 1e5).
+    colors : list of str
+        List of colors used for each spectrum.
+    options : list of dict
+        List of options passed to |plot| for each individual spectrum.
+    """
+    def __init__(self) -> None:
+        self.hoffsets: List[float] = []
+        self.voffsets: List[float] = []
+        self.colors: List[str] = []
+        self.options: List[Dict[str, Any]] = []
+
+_globalPP: PlotProperties = PlotProperties()
+
 def get_properties() -> PlotProperties:
+    """Returns the currently active `PlotProperties` instance.
+
+    Returns
+    -------
+    PlotProperties
+    """
     return _globalPP
 
 def _reset_properties() -> None:
     global _globalPP
     _globalPP = PlotProperties()
 
+
 # -- 1D PLOTTING ----------------------------------------------
 
+def _stage1d(dataset: ds.TDataset1D,
+             scale: float = 1,
+             bounds: TBounds = "",
+             dfilter: Optional[Callable[[float], bool]] = None,
+             label: OS = None,
+             color: OS = None,
+             plot_options: Optional[Dict] = None,
+             ) -> None:
+    """Stages a 1D spectrum.
+
+    This constructs a `PlotObject1D` object from the dataset as well as any
+    options passed via the keyword arguments, and adds it to the plot queue
+    (see `PlotHoldingArea`).
+
+    Note that the preferred way of staging spectra is to call the
+    :meth:`~penguins.dataset._1D_PlotMixin.stage` method on the dataset object.
+
+    Parameters
+    ----------
+    dataset : Dataset1D, Dataset1DProj, or Dataset1DProjVirtual
+        Dataset to be staged.
+    scale : float, optional
+        Value to scale the spectrum intensity by.
+    bounds : str or (float, float), optional
+        Region of the spectrum to plot. If given as a string, should be in the
+        form ``lower..upper``, where ``lower`` and ``upper`` are both chemical
+        shifts. If given as a tuple, should be in the form ``(lower, upper)``.
+        Either ``lower`` or ``upper`` can be omitted (in the string) or passed
+        as ``None`` (in the tuple) to avoid giving a lower or upper bound. If
+        not given, the entire spectrum is plotted.
+    dfilter : function :: float -> bool, optional
+        Function which takes the intensity at each point as its only parameter
+        and returns a boolean. If it returns True, the point is plotted, and
+        if it returns False, the point is not plotted.
+    label : str, optional
+        Label to be used in the plot legend.
+    color : str, optional
+        Color to use for plotting. Overrides any *color* key passed in the
+        *plot_options* dictionary.
+    plot_options : dict, optional
+        Dictionary of keyword arguments to be passed to |plot|.
+
+    Returns
+    -------
+    None
+
+    See Also
+    --------
+    penguins.dataset._1D_PlotMixin.stage : Equivalent method on `Dataset1D`,
+                                           `Dataset1DProj`, and
+                                           `Dataset1DProjVirtual` objects, and
+                                           the preferred way to stage spectra.
+    """
+    # Create the PlotObject1D object.
+    plot_obj = PlotObject1D(dataset=dataset,
+                            scale=scale,
+                            bounds=bounds,
+                            dfilter=dfilter,
+                            label=label,
+                            color=color,
+                            plot_options=plot_options)
+
+    # Check that the plot queue doesn't have 2D spectra.
+    # We can just check against the first element. By induction, it is
+    # equivalent to checking against every element.
+    PHA = get_pha()
+    if len(PHA.plot_queue) != 0 and isinstance(PHA.plot_queue[0], PlotObject2D):
+        raise TypeError("Plot queue already contains 2D spectra.")
+    # All good, so we can append the PlotObject1D to the plot queue.
+    else:
+        PHA.plot_queue.append(plot_obj)
+
+
 class PlotObject1D():
+    """Object that includes a 1D dataset as well as other keyword arguments
+    passed to `_stage1d()`.
+
+    Any processing done on the spectrum, e.g. scaling, bounds selection, or
+    dfilter, is done when this class is initialised.
     """
-    Object that includes a Dataset as well as plotting options, e.g.
-    labels, bounds, colours, & generic options passed to matplotlib.
-    """
+
     default_1d_plotoptions = {"linewidth": 1}
     def __init__(self,
                  dataset: ds.TDataset1D,
@@ -136,7 +283,7 @@ class PlotObject1D():
             options.update(color=color)
         if label is not None:
             options.update(label=label)
-        # If a colour hasn't been chosen by now, get one from the colour
+        # If a color hasn't been chosen by now, get one from the color
         # generator in PHA.
         if "color" not in options:
             next_color = next(get_pha().colors_1d)
@@ -145,48 +292,78 @@ class PlotObject1D():
         self.options = options
 
 
-def stage1d(dataset: ds.TDataset1D,
-            scale: float = 1,
-            bounds: TBounds = "",
-            dfilter: Optional[Callable[[float], bool]] = None,
-            label: OS = None,
-            color: OS = None,
-            plot_options: Optional[Dict] = None,
-            ) -> None:
-    """
-    Stages a 1D spectrum to be plotted, i.e. sticks it into PHA.plot_queue.
-    """
-    # Create a PlotObject1D first.
-    plot_obj = PlotObject1D(dataset=dataset, scale=scale,
-                            bounds=bounds, dfilter=dfilter,
-                            label=label,
-                            color=color, plot_options=plot_options)
-
-    # Check that the plot queue doesn't have 2D spectra.
-    # We can just check against the first element. By induction, it is
-    # equivalent to checking against every element.
-    PHA = get_pha()
-    if len(PHA.plot_queue) != 0 and isinstance(PHA.plot_queue[0], PlotObject2D):
-        raise TypeError("Plot queue already contains 2D spectra.")
-    else:
-        PHA.plot_queue.append(plot_obj)
-
-
-def _mkplot1d(holding_area: PlotHoldingArea,
-              ax: Any = None,
+def _mkplot1d(ax: Any = None,
               style: str = "1d",
               stacked: bool = False,
               voffset: Union[Sequence, float] = 0,
               hoffset: Union[Sequence, float] = 0,
               title: OS = None,
               autolabel: OS = None,
-              xlabel: OS = None,
-              ylabel: OS = None,
+              xlabel: str = "Chemical shift (ppm)",
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
+    """Calls |plot| on all the spectra in the plot queue. All hoffset and
+    voffset calculations are performed here.
+
+    Note that this function should never be called directly.
+
+    Parameters
+    ----------
+    ax : Axes, optional
+        |Axes| instance to plot the spectra on. If not provided, creates a new
+        |Figure| and |Axes|.
+    style : str, optional
+        Plot style to use. By default this is ``1d``. For the list of plot
+        styles, see `style_axes()`.
+    stacked : bool, optional
+        True to make spectra tightly stacked vertically (i.e. not
+        superimposed). If True, overrides any value passed in *voffset*.
+    voffset : float or list of float, optional
+        If given as a float, indicates the amount of vertical offset between
+        spectra, in units of the maximum height. The height of a spectrum
+        refers to the total width it spans in the *y*-axis, and the maximum
+        height refers to the largest such height of all spectra in the plot
+        queue.
+        Using a float for ``voffset`` is useful for offsetting spectra by a
+        constant amount. Note that stacked spectra will have a variable
+        vertical offset between each spectrum, because each spectrum will have
+        a different height.
+        If given as a list, each staged spectrum is offset by the corresponding
+        amount (again, this is given in units of maximum height).
+    hoffset : float or list of float, optional
+        If given as a float, indicates the horizontal offset between adjacent
+        spectra in ppm. If this is positive, then successive spectra are
+        shifted towards the right (the first spectrum is not shifted).
+        If given as a list, each staged spectrum is offset by the corresponding
+        amount (in ppm).
+    title : str, optional
+        Plot title.
+    autolabel : str, optional
+        Automatic label to use for the *x*-axis. The only option available now
+        is ``nucl``, which generates a LaTeX representation of the nucleus of
+        the first staged spectrum (e.g. for a proton spectrum, using this would
+        automatically generate the *x*-axis label ``r"$^{1}$H (ppm)"``).
+        Overrides the *xlabel* parameter.
+    xlabel : str, optional
+        *x*-Axis label.
+    legend_loc : str or (float, float), optional
+        Location to place the legend. This is passed as the *loc* parameter to
+        |legend|; see the documentation there for the available options.
+
+    Returns
+    -------
+    fig : Figure
+        The currently active |Figure| instance.
+    ax : Axes
+        The currently active |Axes| instance, which the spectra were just
+        plotted on.
+
+    See Also
+    --------
+    penguins.mkplot : The appropriate interface for plot construction.
     """
-    Plots all the 1D objects in the PHA.
-    """
+    # Flag that determines whether ax.legend is called. This will be set to
+    # True if we find any PlotObject1D with a non-empty label.
     make_legend = False
     # Find the maximum height
     heights = [np.nanmax(pobj.proc_data) - np.nanmin(pobj.proc_data)
@@ -198,6 +375,7 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         ax = plt.gca()
 
     # Iterate over plot objects
+    holding_area = get_pha()
     for n, pobj in enumerate(holding_area.plot_queue):
         # Calculate the hoffset and voffset for this spectrum. If offset is a
         # sequence then use offset[n], otherwise if it's a float use n * offset
@@ -230,29 +408,21 @@ def _mkplot1d(holding_area: PlotHoldingArea,
         pp.colors.append(pobj.options["color"])
         pp.options.append(pobj.options)
 
-    # Figure out the x- and y-labels.
-    # First, we generate the strings accoring to autolabel.
-    f_ylabel = "Intensity (au)"
-    if autolabel is not None:
-        if autolabel == "nucl":
-            f_xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()
-            f_xlabel += " (ppm)"
-        else:
-            raise ValueError(f"Invalid value '{autolabel}' given for "
-                             "parameter autolabel.")
+    # Figure out the x- and y-labels. autolabel should override xlabel if it is
+    # provided.
+    if autolabel is None:
+        pass
+    elif autolabel == "nucl":
+        xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()
+        xlabel += " (ppm)"
     else:
-        f_xlabel = "Chemical shift (ppm)"
-    # Then we override them based on the values of mkplot()'s kwargs.
-    f_xlabel = xlabel if xlabel is not None else f_xlabel
-    f_ylabel = ylabel if ylabel is not None else f_ylabel
+        raise ValueError(f"Invalid value '{autolabel}' given for "
+                         "parameter autolabel.")
 
-    # Plot formatting
-    # Only if y-axis is enabled.
-    # plt.ylabel(f_ylabel)
-    # ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 4), useMathText=True)
+    # Format the plot.
     if title:
         ax.set_title(title)
-    ax.set_xlabel(f_xlabel)
+    ax.set_xlabel(xlabel)
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
     if make_legend:
@@ -260,66 +430,6 @@ def _mkplot1d(holding_area: PlotHoldingArea,
     # Apply axis styles.
     style_axes(ax, style)
     return plt.gcf(), ax
-
-
-def style_axes(ax: Any,
-               style: str,
-               ) -> None:
-    """
-    Styles the Axes instance according to the given style. Useful for ensuring
-    that all subplots have a homogenous look.
-    """
-    if style == "1d":
-        # Default 1D style. Doesn't draw a bounding box, only has the bottom
-        # spine, which is made thicker. Adds extra x-axis ticks.
-        for s in ["top", "left", "right"]:
-            ax.spines[s].set_visible(False)
-        ax.yaxis.set_visible(False)
-        # Make the bottom one thicker
-        ax.spines["bottom"].set_linewidth(1.3)
-        # Enable minor ticks and make the ticks more visible
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which="both", width=1.3)
-        ax.tick_params(which="major", length=5)
-        ax.tick_params(which="minor", length=3)
-        plt.tight_layout()
-    elif style == "1d_box":
-        # 1D but with thick bounding box. Extra x-axis ticks added. The y-axis
-        # is still disabled.
-        ax.yaxis.set_visible(False)
-        # Make spines thicker
-        for s in ["top", "left", "right", "bottom"]:
-            ax.spines[s].set_linewidth(1.3)
-        # Enable minor ticks and make the ticks more visible
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which="both", width=1.3)
-        ax.tick_params(which="major", length=5)
-        ax.tick_params(which="minor", length=3)
-        plt.tight_layout()
-    elif style == "2d":
-        # Default 2D style. Makes bounding box thicker and adds x- and y-axis
-        # ticks.
-        for s in ["top", "left", "right", "bottom"]:
-            ax.spines[s].set_linewidth(1.3)
-        # Enable minor ticks and make the ticks more visible
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.yaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which="both", width=1.3)
-        ax.tick_params(which="major", length=5)
-        ax.tick_params(which="minor", length=3)
-        plt.tight_layout()
-    elif style == "plot":
-        # To be used for other plots, e.g. seaborn / matplotlib visualisations.
-        # Draws a thicker bounding box around the Axes, but otherwise doesn't
-        # try to change axis ticks etc.
-        for s in ["top", "left", "right", "bottom"]:
-            ax.spines[s].set_linewidth(1.3)
-        plt.tight_layout()
-    elif style == "natural":
-        # Literally, do nothing. Not even tight_layout().
-        pass
-    else:
-        raise ValueError(f"Invalid style '{style}' requested.")
 
 
 # -- 2D PLOTTING ----------------------------------------------
@@ -370,9 +480,12 @@ class Contours:
 
 
 class PlotObject2D():
-    """
-    Object that includes a Dataset as well as plotting options, e.g.
-    contours, bounds, colours, & generic options passed to matplotlib.
+    """Object that includes a 2D dataset as well as other keyword arguments
+    passed to `_stage2d()`.
+
+    Any processing done on the spectrum, e.g. bounds selection, or dfilter, is
+    done when this class is initialised. The contour levels and colors are also
+    generated by this class.
     """
     default_2d_plotoptions = {"linewidths": 0.7}
     def __init__(self,
@@ -430,17 +543,70 @@ class ContourLegendHandler(HandlerBase):
         return [line_cpos, line_cneg]
 
 
-def stage2d(dataset: ds.Dataset2D,
-            f1_bounds: TBounds = "",
-            f2_bounds: TBounds = "",
-            levels: TLevels = (None, None, None),
-            colors: TColors = (None, None),
-            dfilter: Optional[Callable[[float], bool]] = None,
-            label: OS = None,
-            plot_options: Optional[Dict] = None,
-            ) -> None:
-    """
-    Stages a 2D spectrum.
+def _stage2d(dataset: ds.Dataset2D,
+             f1_bounds: TBounds = "",
+             f2_bounds: TBounds = "",
+             levels: TLevels = (None, None, None),
+             colors: TColors = (None, None),
+             dfilter: Optional[Callable[[float], bool]] = None,
+             label: OS = None,
+             plot_options: Optional[Dict] = None,
+             ) -> None:
+    """Stages a 2D spectrum.
+
+    This constructs a `PlotObject2D` object from the dataset as well as any
+    options passed via the keyword arguments, and adds it to the plot queue
+    (see `PlotHoldingArea`).
+
+    Note that the preferred way of staging spectra is to call the
+    :meth:`~penguins.dataset._2D_PlotMixin.stage` method on the dataset object.
+
+    Parameters
+    ----------
+    dataset : Dataset1D, Dataset1DProj, or Dataset1DProjVirtual
+        Dataset to be staged.
+    scale : float, optional
+        Value to scale the spectrum intensity by.
+    f1_bounds : str or (float, float), optional
+        Region of the indirect chemical shifts to plot. If given as a string,
+        should be in the form ``lower..upper``, where ``lower`` and ``upper``
+        are both chemical shifts. If given as a tuple, should be in the form
+        ``(lower, upper)``.  Either ``lower`` or ``upper`` can be omitted (in
+        the string) or passed as ``None`` (in the tuple) to avoid giving a
+        lower or upper bound. If not given, the entire range of indirect
+        chemical shifts is plotted.
+    f2_bounds : str or (float, float), optional
+        Same as *f1_bounds*, but for the direct dimension.
+    levels : float or (float, float, float), optional
+        A tuple *(baselev, increment, nlev)* specifying the levels at which to
+        draw contours. These represent, respectively, the lowest contour level,
+        the multiplicative increment between adjacent contours, and the number
+        of contour levels to draw. Contours are always drawn for both positive
+        and negative levels.
+
+        If any of these are None, then the default values are used: for
+        *baselev* this is TopSpin's default contour level, for *increment* this
+        is 1.5, and for *nlev* this is 10.  Alternatively, can be provided as a
+        single float *baselev* as shorthand for *(baselev, None, None)*.
+    dfilter : function :: float -> bool, optional
+        Function which takes the intensity at each point as its only parameter
+        and returns a boolean. If it returns True, the point is plotted, and if
+        it returns False, the point is not plotted.
+    label : str, optional
+        Label to be used in the plot legend.
+    color : (str, str), optional
+        Colors to use for positive and negative contours respectively.
+    plot_options : dict, optional
+        Dictionary of keyword arguments to be passed to |contour|.
+
+    Returns
+    -------
+    None
+
+    See Also
+    --------
+    _2D_PlotMixin.stage : Equivalent method on Dataset2D objects, and the
+                          preferred way of staging spectra.
     """
     plot_obj = PlotObject2D(dataset=dataset,
                             f1_bounds=f1_bounds, f2_bounds=f2_bounds,
@@ -458,24 +624,66 @@ def stage2d(dataset: ds.Dataset2D,
         PHA.plot_queue.append(plot_obj)
 
 
-def _mkplot2d(holding_area: PlotHoldingArea,
-              ax: Any = None,
+def _mkplot2d(ax: Any = None,
               style: str = "2d",
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
               autolabel: OS = None,
-              xlabel: OS = None,
-              ylabel: OS = None,
+              xlabel: str = r"$f_1$ (ppm)",
+              ylabel: str = r"$f_2$ (ppm)",
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
-    """
-    Plots all the 2D objects in the PHA.
+    """Calls |contour| on all the spectra in the plot queue. All offset
+    calculations are performed here.
+
+    Note that this function should never be called directly.
+
+    Parameters
+    ----------
+    ax : Axes, optional
+        |Axes| instance to plot the spectra on. If not provided, creates a new
+        |Figure| and |Axes|.
+    style : str, optional
+        Plot style to use. By default this is ``2d``. For the list of plot
+        styles, see `style_axes()`.
+    offset : (float, float), optional
+        Amount to offset successive spectra by in units of ppm, provided as
+        *(f1_offset, f2_offset)*.
+    title : str, optional
+        Plot title.
+    autolabel : str, optional
+        Automatic label to use for the *x*-axis. The only option available now
+        is ``nucl``, which generates a LaTeX representation of the nuclei of
+        the first spectrum (e.g. for a C–H HSQC, using this would automatically
+        generate the *x*- and *y*-axis labels ``r"$^{1}$H (ppm)"`` and
+        ``r"$^{13}$C (ppm)"`` respectively).  Overrides the *xlabel* and
+        *ylabel* parameters.
+    xlabel : str, optional
+        *x*-Axis label.
+    ylabel : str, optional
+        *y*-Axis label.
+    legend_loc : str or (float, float), optional
+        Location to place the legend. This is passed as the *loc* parameter to
+        |legend|; see the documentation there for the available options.
+
+    Returns
+    -------
+    fig : Figure
+        The currently active |Figure| instance.
+    ax : Axes
+        The currently active |Axes| instance, which the spectra were just
+        plotted on.
+
+    See Also
+    --------
+    penguins.mkplot : The appropriate interface for plot construction.
     """
     make_legend = False
     legend_colors, legend_labels = [], []
     if ax is None:
         ax = plt.gca()
     # Iterate over plot objects
+    holding_area = get_pha()
     for n, pobj in enumerate(holding_area.plot_queue):
         ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
                    pobj.f1_scale - (n * offset[0]),   # y-axis
@@ -486,27 +694,21 @@ def _mkplot2d(holding_area: PlotHoldingArea,
         if pobj.label is not None:
             make_legend = True
             legend_colors.append((pobj.contours.color_positive,
-                                  pobj.contours.color_negative)
-                                 )
+                                  pobj.contours.color_negative))
             legend_labels.append(pobj.label)
 
-    # Figure out the x- and y-labels.
-    # First, we generate the strings accoring to autolabel.
-    if autolabel is not None:
-        if autolabel == "nucl":
-            f_xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[1]
-            f_xlabel += " (ppm)"
-            f_ylabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[0]
-            f_ylabel += " (ppm)"
-        else:
-            raise ValueError(f"Invalid value '{autolabel}' given for "
-                             "parameter autolabel.")
+    # Figure out the x- and y-labels. If autolabel is passed, it should
+    # overrule xlabel and ylabel.
+    if autolabel is None:
+        pass
+    elif autolabel == "nucl":
+        xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[1]
+        xlabel += " (ppm)"
+        ylabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[0]
+        ylabel += " (ppm)"
     else:
-        f_xlabel = r"$f_2$ (ppm)"
-        f_ylabel = r"$f_1$ (ppm)"
-    # Then we override them based on the values of mkplot()'s kwargs.
-    f_xlabel = xlabel if xlabel is not None else f_xlabel
-    f_ylabel = ylabel if ylabel is not None else f_ylabel
+        raise ValueError(f"Invalid value '{autolabel}' given for "
+                         "parameter autolabel.")
 
     # Plot formatting
     # Only if y-axis is enabled.
@@ -533,10 +735,40 @@ def _mkplot2d(holding_area: PlotHoldingArea,
     return (plt.gcf(), ax)
 
 
-def _make_contour_slider(dataset: ds.Dataset2D,
-                         increment: float = None,
-                         nlev: int = 4,
-                         ) -> float:
+def _find_baselev(dataset: ds.Dataset2D,
+                  increment: float = None,
+                  nlev: int = 4,
+                  ) -> float:
+    """Create an interactive slider window to see the effect of changing
+    *baselev* on the displayed spectrum.
+
+    Note that this should not be called directly; use the
+    :meth:`~penguins._2D_PlotMixin.find_baselev` method on `Dataset2D` objects
+    instead.
+
+    Parameters
+    ----------
+    dataset : Dataset2D
+        Dataset to stage.
+    increment : float, optional
+        Multiplicative increment between adjacent contour levels. This is
+        typically not worth changing.
+    nlev : int, optional
+        Number of contour levels to use. This is not typically worth changing.
+        If you really want to, don't go too high, as this causes the plot to be
+        very laggy. (It has to call |contour| every time the slider is moved.)
+
+    Returns
+    -------
+    chosen_baselev : float
+        Final value of the baselev before the 'OK' button was pressed.
+
+    See Also
+    --------
+    penguins.dataset._2D_PlotMixin.find_baselev : Equivalent method on
+                                                  `Dataset2D` objects. Usage
+                                                  of this is preferred.
+    """
     # Choose contour levels. We reduce nlev to 4 by default so that the
     # plotting is faster -- otherwise it's super laggy. We try to cover the
     # same dynamic range as 1.5 ** 10 by default, unless the user specified
@@ -545,24 +777,28 @@ def _make_contour_slider(dataset: ds.Dataset2D,
     increment = increment or (1.5 ** 10) ** (1 / nlev)
     initial_clev = (initial_baselev, increment, nlev)
     dataset.stage(levels=initial_clev)
-    # Maximum level should be the highest intensity of the spectrum.
+    # Maximum level of the slider should be the greatest intensity of the
+    # spectrum. There's no point going above that.
     max_baselev = np.max(np.abs(dataset.rr))
+    # Minimum level is ~100.
+    min_baselev = 100
 
     # Plot the spectrum on the top portion of the figure.
     fig, ax = plt.subplots()
-    _, plot_axes = main.mkplot(empty_pha=False,
-                               style="natural",
-                               )
+    _, plot_axes = main.mkplot(empty_pha=False)
     orig_xlim = plot_axes.get_xlim()
     orig_ylim = plot_axes.get_ylim()
     plt.subplots_adjust(left=0.1, bottom=0.25)
 
-    # Generate a slider.
+    # Generate a logarithmic slider.
     from matplotlib.widgets import Slider, Button     # type: ignore
     baselev_axes = plt.axes([0.1, 0.1, 0.8, 0.03], facecolor="lavender")
-    baselev_slider = Slider(baselev_axes, "",
-                            2, np.log10(max_baselev),
-                            valinit=np.log10(initial_baselev), color="purple")
+    baselev_slider = Slider(baselev_axes,
+                            "",
+                            np.log10(min_baselev),
+                            np.log10(max_baselev),
+                            valinit=np.log10(initial_baselev),
+                            color="purple")
     # Add some text
     plt.text(0.5, -1.2, r"log$_{10}$(base contour level)",
              horizontalalignment="center",

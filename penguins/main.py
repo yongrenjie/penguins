@@ -7,17 +7,34 @@ import matplotlib.pyplot as plt    # type: ignore
 
 from . import dataset as ds
 from . import pgplot
-from .pgplot import (get_pha, get_properties,
-                     style_axes)
+from .pgplot import get_pha, get_properties, set_palette
 
 
-# -- READ -----------------------------------------------
+# -- READING --------------------------------------------
 
 def read(path: Union[str, Path],
          expno: int,
          procno: int) -> ds.TDatasetnD:
-    """
-    Creates a Dataset object from the spectrum name folder, expno, and procno.
+    """Create a Dataset object from a spectrum folder, expno, and procno.
+
+    The subclass of Dataset returned is determined by what files are available
+    in the spectrum folder. It can be either `Dataset1D`, `Dataset1DProj`, or
+    `Dataset2D`.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the spectrum name folder.
+    expno : int
+        Expno of experiment of interest.
+    procno : int
+        Procno of processed data.
+
+    Returns
+    -------
+    Dataset
+        A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
+        detected spectrum dimensionality.
     """
     p = Path(path) / str(expno) / "pdata" / str(procno)
     return read_abs(p)
@@ -25,13 +42,32 @@ def read(path: Union[str, Path],
 
 def read_abs(path: Union[str, Path]
              ) -> ds.TDatasetnD:
-    """
-    Creates a Dataset object from the spectrum procno folder.
+    """Create a Dataset object directly from a procno folder.
+
+    There is likely no reason to ever use this because `read()` is far easier
+    to use, especially if you are plotting multiple spectra with different
+    expnos from the same folder.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the procno folder.
+
+    Returns
+    -------
+    Dataset
+        A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
+        detected spectrum dimensionality.
+
+    See Also
+    --------
+    read : The preferred interface for importing datasets.
     """
     p = Path(path)
     # Figure out which type of spectrum it is.
     if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
-        raise ValueError(f"Invalid path to spectrum {p}: procs or acqus not found")
+        raise ValueError(f"Invalid path to spectrum {p}:"
+                         " procs or acqus not found")
     if (p.parents[1] / "ser").exists() and (p / "2rr").exists():
         return ds.Dataset2D(p)
     elif (p / "1r").exists() and (p / "used_from").exists():
@@ -49,15 +85,95 @@ def read_abs(path: Union[str, Path]
         raise ValueError(f"Invalid path to spectrum {p}: data files not found")
 
 
-# -- PLOT ----------------------------------------------
+# -- PLOTTING ------------------------------------------
+
+def subplots(nrows: int = 1,
+             ncols: int = 1,
+             **kwargs
+             ) -> Tuple[Any, Any]:
+    """Wrapper around matplotlib's |subplots| function.
+
+    If *figsize* is not passed as a keyword argument, then this by default
+    sets the figure size to be ``(4 * ncols)`` by ``(4 * nrows)``. This means
+    that every subplot will have an area of 4 inches by 4 inches.
+
+    Parameters
+    ----------
+    nrows : int, optional
+        Number of rows.
+    ncols : int, optional
+        Number of columns.
+    kwargs : dict, optional
+        Other keyword arguments passed to |subplots|.
+
+    Returns
+    -------
+    fig : Figure
+        |Figure| instance corresponding to the current plot.
+    axs : Axes, or ndarray of Axes
+        If only one subplot was requested, this is the |Axes| instance.
+        Otherwise this is an |ndarray| of |Axes|, one for each subplot. See
+        the documentation of |subplots| for further explanation.
+    """
+    # This implementation captures nrows and ncols so that we can set figsize
+    # automatically. We don't care about the rest of the arguments, so those
+    # can just be passed on directly.
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (ncols * 4, nrows * 4)
+    return plt.subplots(nrows=nrows, ncols=ncols, *args, **kwargs)
+
 
 def mkplot(ax: Any = None,
            figsize: Optional[Tuple[float, float]] = None,
            close: bool = True,
            empty_pha: bool = True,
-           **kwargs):
-    """
-    Delegates to _mkplot1d() or _mkplot2d() as necessary.
+           **kwargs
+           ) -> Tuple[Any, Any]:
+    """Construct a plot from one or more staged spectra.
+
+    Parameters
+    ----------
+    ax : Axes, optional
+        |Axes| instance to plot the spectra on. If not provided, creates new
+        |Figure| and |Axes| instances.
+    figsize : (float, float), optional
+        Specifies the size of the |Figure| as (width, height), in units of
+        inches. This is passed to |figure|.
+    kwargs : dict, optional
+        Keyword arguments that are passed on to `_mkplot1d()` or `_mkplot2d()`
+        respectively, depending on the dimensionality of the spectrum being
+        plotted. In turn, these are passed on to |plot| or |contour|.
+
+    Returns
+    -------
+    fig : Figure
+        |Figure| instance for the active plot.
+    ax : Axes
+        |Axes| instance for the active plot.
+
+    Other parameters
+    ----------------
+    close : bool
+        Whether to close other existing figures before plotting. This
+        parameter should not be used.
+    empty_pha : bool
+        Whether to empty the plot holding area after constructing the plot.
+        There are a couple of niche uses for this, but generally you should
+        not have to use this.
+
+    Notes
+    -----
+    This function itself does not do very much. It mainly performs setup
+    and teardown actions, whereas the actual plotting itself is delegated
+    to `_mkplot1d()` and `_mkplot2d()`. (Those functions should not be used
+    directly.)
+
+    See Also
+    --------
+    penguins.pgplot._mkplot1d : Keyword arguments for 1D plots are described
+                                here.
+    penguins.pgplot._mkplot2d : Keyword arguments for 2D plots are described
+                                here.
     """
     # Close open figures, *unless* an axes was given, in which case
     # we assume that the user isn't keen on having that closed!
@@ -76,30 +192,60 @@ def mkplot(ax: Any = None,
         if ax is None:
             ax = plt.gca()
         if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
-            fig, ax = pgplot._mkplot1d(PHA, ax=ax, **kwargs)
+            fig, ax = pgplot._mkplot1d(ax=ax, **kwargs)
         elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
-            fig, ax = pgplot._mkplot2d(PHA, ax=ax, **kwargs)
+            fig, ax = pgplot._mkplot2d(ax=ax, **kwargs)
         else:
             raise TypeError("Plot holding area has invalid entries.")
     # Reset the PHA to being empty
     if empty_pha:
         pgplot._reset_pha()
-    return (fig, ax)
+    return fig, ax
 
 
-def mkinset(pos: Tuple[float, float],
+def mkinset(ax: Any,
+            pos: Tuple[float, float],
             size: Tuple[float, float],
-            ax: Any = None,
+            transform: Any = None,
+            show_zoom: bool = True,
             parent_corners: Tuple[str, str] = ("sw", "se"),
             inset_corners: Tuple[str, str] = ("sw", "se"),
-            transform: Any = None,
             plot_options: Optional[dict] = None,
             inset_options: Optional[dict] = None,
-            show_zoom: bool = True,
             ) -> Any:
-    """
-    Constructs an inset plot, abstracting away the matplotlib interface,
-    which is especially clunky with inverted axes.
+    """Constructs an inset on a given Axes instance and plots any staged
+    spectra on the inset Axes.
+
+    Parameters
+    ----------
+    ax : Axes
+        |Axes| instance to construct the inset inside.
+    pos : (float, float)
+        Position of lower-left corner of inset axes given as (x, y).
+    size : (float, float)
+        Size of inset axes, given as (width, height).
+    transform : Transform
+        |Transform| to use for specifying the coordinates of
+        *pos* and *size*. By default, axes coordinates are used for both.
+    show_zoom : bool, optional
+        Whether to draw lines between the parent and inset axes (to indicate
+        the section of the spectrum zoomed into).
+    parent_corners : (str, str), optional
+        Corners of the parent axes to draw the zoom lines from. Each element of
+        the tuple can be chosen from {"southwest", "southeast", "northeast",
+        "northwest", "sw", "se", "ne", "nw"}.
+    inset_corners : (str, str), optional
+        Corners of the inset axes to draw the zoom lines to.
+    plot_options : dict, optional
+        Dictionary of options passed to `mkplot()`, which is in turn passed to
+        either |plot| or |contour|.
+    inset_options : dict, optional
+        Dictionary of options passed to |mark_inset|.
+
+    Returns
+    -------
+    inset_ax : Axes
+        The |Axes| instance corresponding to the inset.
     """
     # Find the axes to draw on
     ax = ax or plt.gca()
@@ -160,22 +306,89 @@ def mkinset(pos: Tuple[float, float],
     return inset_ax
 
 
+def style_axes(ax: Any,
+               style: str,
+               ) -> None:
+    """Styles the given |Axes| instance according to the requested style.
+
+    This is useful for making sure that all subplots in a series have a uniform
+    appearance.
+
+    All the styles except ``natural`` call |tight_layout| after they are done.
+
+    Parameters
+    ----------
+    ax : Axes
+        |Axes| instance to style.
+    style : str
+        Style to be applied. The available options are ``1d``, ``1d_box``,
+        ``2d``, ``plot``, and ``natural``.
+
+    Returns
+    -------
+    None
+    """
+    def disable_y_axis(ax):
+        ax.yaxis.set_visible(False)
+
+    def remove_top_left_right_spines(ax):
+        for s in ["top", "left", "right"]:
+            ax.spines[s].set_visible(False)
+
+    def set_xaxis_ticks(ax):
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which="both", width=1.3)
+        ax.tick_params(which="major", length=5)
+        ax.tick_params(which="minor", length=3)
+
+    def set_xyaxis_ticks(ax):
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which="both", width=1.3)
+        ax.tick_params(which="major", length=5)
+        ax.tick_params(which="minor", length=3)
+
+    def thicken_spines(ax):
+        for s in ["top", "left", "right", "bottom"]:
+            ax.spines[s].set_linewidth(1.3)
+
+    if style == "1d":
+        disable_y_axis(ax)
+        remove_top_left_right_spines(ax)
+        set_xaxis_ticks(ax)
+        thicken_spines(ax)
+        plt.tight_layout()
+    elif style == "1d_box":
+        disable_y_axis(ax)
+        set_xaxis_ticks(ax)
+        thicken_spines(ax)
+        plt.tight_layout()
+    elif style == "2d":
+        thicken_spines(ax)
+        set_xyaxis_ticks(ax)
+        plt.tight_layout()
+    elif style == "plot":
+        thicken_spines(ax)
+        plt.tight_layout()
+    elif style == "natural":
+        pass
+    else:
+        raise ValueError(f"Invalid style '{style}' requested.")
+
+
 def show(*args, **kwargs) -> None:
+    """Direct wrapper around |show|.
+    """
     return plt.show(*args, **kwargs)
 
 
 def savefig(*args, **kwargs) -> None:
+    """Direct wrapper around |savefig|.
+    """
     return plt.savefig(*args, **kwargs)
 
 
 def pause(*args, **kwargs) -> None:
+    """Direct wrapper around |pause|.
+    """
     return plt.pause(*args, **kwargs)
-
-
-def subplots(nrows=1, ncols=1, *args, **kwargs) -> Tuple[Any, Any]:
-    # This implementation captures nrows and ncols so that we can set figsize
-    # automatically. We don't care about the rest of the arguments, so those
-    # can just be passed on directly.
-    if "figsize" not in kwargs:
-        kwargs["figsize"] = (ncols * 4, nrows * 4)
-    return plt.subplots(nrows=nrows, ncols=ncols, *args, **kwargs)

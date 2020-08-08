@@ -12,6 +12,8 @@ Welcome to penguins!
 
 **Penguins** is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
 
+The current version is |version|.
+
 ::
 
    pip install penguins

@@ -35,18 +35,30 @@ def _try_convert(x: Any, type: Any):
 
 
 class _parDict(UserDict):
-    """Dictionary for storing acquisition & processing parameters.
-
-    Initialise within a Dataset class as self.pars = _parDict(self.path).
+    """Modified dictionary for storing acquisition & processing parameters.
 
     Parameter names are stored as lower-case strings. When looking up a
-    parameter, if its value is not already stored, the dictionary will look
-    it up in the associated TopSpin parameter files. Subsequently, the value
-    is cached.
+    parameter, if its value is not already stored, the dictionary will look it
+    up in the associated TopSpin parameter files. Subsequently, the value is
+    cached.
 
     Therefore, the dictionary can be treated *as if* it were already fully
-    populated when initialised; but this avoids the time spent parsing the
-    entire file for parameters, the vast majority of which are useless."""
+    populated when initialised. However, because values are only read and
+    stored on demand, we avoid also cluttering it with a whole range of useless
+    parameters upon initialisation.
+
+    The lookup function attempts to be clever and convert the parameters to
+    floats if possible; otherwise, the parameters are stored as strings. There
+    are currently several exceptions to this rule, such as ``TD`` and ``SI``,
+    which are stored as ints. However, this list is not complete, and if there
+    is a parameter that should be an int but isn't, it would be great if you
+    could report it.
+
+    For 2D spectra, string parameters are stored as a tuple of *(f1_value,
+    f2_value)*. Float parameters are stored as a |ndarray| to facilitate
+    elementwise manipulations (e.g. calculating ``O1P`` in both dimensions at
+    one go).
+    """
 
     def _editkey(self, key: object):
         """Method for converting keys before lookup."""
@@ -182,6 +194,10 @@ class _parDict(UserDict):
 
 def _parse_bounds(b: TBounds = "",
                   ) -> Tuple[OF, OF]:
+    """
+    Parses a bounds string or tuple, checking that it is valid. Returns (lower,
+    upper).
+    """
     if isinstance(b, str):
         if b == "":
             return None, None
@@ -205,11 +221,23 @@ def _parse_bounds(b: TBounds = "",
         else:
             return b[0], b[1]
 
+
 # -- Fundamental Dataset methods ------------------------
 
 class _Dataset():
-    """
-    Defines behaviour that is common to all datasets.
+    """Defines behaviour that is common to all datasets. Specifically, this
+    class defines the dictionary-style lookup of NMR parameters.
+
+    This should **never** be instantiated directly! Use :func:`~penguins.read`
+    for that instead.
+
+    Attributes
+    ----------
+    pars : _parDict
+        Case-insensitive dictionary in which the parameters are stored. See the
+        `_parDict` documentation for more details. This should never be
+        accessed directly as the _Dataset special methods (``__getitem__``,
+        etc.) are routed to the underlying `_parDict`.
     """
 
     def __init__(self,
@@ -248,13 +276,32 @@ class _Dataset():
     def __setitem__(self, par: str, val: Any):
         self.pars.__setitem__(par, val)
 
-    def __delitem__(self, par:str):
+    def __delitem__(self, par: str):
         self.pars.__delitem__(par)
 
 
 # -- 1D mixins ------------------------------------------
 
 class _1D_RawDataMixin():
+    """Defines behaviour that is applicable for 1D raw data, i.e. ``fid``
+    files. Also contains a few private methods which initialise (for example)
+    the paths to the parameter files.
+
+    Attributes
+    ----------
+    fid : ndarray
+        Complex |ndarray| of the FID. No preprocessing (e.g. removal of the
+        group delay) is carried out.
+
+        Note also that for Bruker data, real and imaginary components are
+        sampled sequentially instead of simultaneously. Therefore, the
+        imaginary component of ``fid[0]`` is actually acquired *after* the real
+        component of ``fid[0]`` (the exact time difference is the dwell width,
+        ``DW).`` In principle this does not cause any issues as it can be
+        corrected for post-Fourier transformation using the
+        :func:`~numpy.fft.fftshift()` function.
+    """
+
     def _find_raw_data_paths(self) -> None:
         self.path: Path
         self._p_fid = self.path.parents[1] / "fid"
@@ -272,10 +319,30 @@ class _1D_RawDataMixin():
         self.fid = fid[0] + (1j * fid[1])
 
     def raw_data(self) -> np.ndarray:
+        """
+        Returns the FID as a complex |ndarray|.
+        """
         return self.fid
 
 
 class _1D_ProcDataMixin():
+    """Defines behaviour that is applicable for 1D processed data.
+
+    Attributes
+    ----------
+    real : ndarray
+        Real-valued |ndarray| containing the real spectrum. ``real[0]``
+        contains the left-most point of the spectrum, i.e. the greatest
+        chemical shift.
+
+    imag : ndarray
+        This attribute only applies to `Dataset1D` instances. The projection
+        classes do not have this attribute.
+
+        Real-valued |ndarray| containing the imaginary spectrum. ``imag[0]``
+        contains the left-most point of the spectrum, i.e. the greatest
+        chemical shift.
+    """
 
     def _find_proc_data_paths(self) -> None:
         self._p_real = self.path / "1r"        # type: ignore # mixin
@@ -295,34 +362,54 @@ class _1D_ProcDataMixin():
     def proc_data(self,
                   bounds: TBounds = "",
                   ) -> np.ndarray:
-        return self.real[self._ppm_to_slice(bounds)]
+        """Returns the real part of the spectrum as a real-valued |ndarray|.
 
-    def _ppm_to_slice(self,
-                      bounds: TBounds = "",
-                      ) -> slice:
+        Parameters
+        ----------
+        bounds : str or (float, float), optional
+            Bounds can be specified as a string ``lower..upper`` or a tuple of
+            floats ``(lower, upper)``, upon which the appropriate slice of the
+            spectrum will be taken.
+
+        Returns
+        -------
+        ndarray
+            The real spectrum or the slice of interest.
         """
-        Converts a tuple of chemical shifts (upper, lower) to a slice object.
-        Note that upper must be greater than lower. Either upper or lower can
-        be None, in which case the spectrum limit is used.
-        """
-        lower, upper = _parse_bounds(bounds)
-        return slice(self._ppm_to_index(upper) or 0,                      # type: ignore # mixin
-                     (self._ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
+        return self.real[self.bounds_to_slice(bounds)]
 
     def integrate(self,
                   peak: OF = None,
                   margin: OF = None,
-                  mode: str = "sum",
                   bounds: TBounds = None,
+                  mode: str = "sum",
                   ) -> float:
-        """
-        Integrates a region of a spectrum.
-        Regions can either be defined via peak and margin, which leads to the region of
-        (peak - margin) to (peak + margin), or manually via the bounds parameter. Note that
-        specifying (peak, margin) overrules the bounds parameter if both are passed.
+        """Integrates a region of a spectrum.
 
-        Default mode is "sum", which simply adds up all points in the region. Alternatives are
-        "max" which returns the highest peak, and "min" which returns the lowest peak.
+        Regions can either be defined via *peak* and *margin*, which leads to
+        the region of *(peak - margin)* to *(peak + margin)*, or manually via
+        the *bounds* parameter. Note that specifying *(peak, margin)* overrules
+        the *bounds* parameter if both are passed.
+
+        Parameters
+        ----------
+        peak : float, optional
+            The chemical shift of the peak of interest.
+        margin : float, optional
+            The integration margin which extends on either side of the peak.
+        bounds : str or (float, float), optional
+            Integration bounds which can be directly specified in the usual
+            format. Note that passing *(peak, margin)* will overrule this
+            parameter.
+        mode : {"sum", "max", "min"}, optional
+            Mode of integration. ``sum`` (the default) directly adds up all
+            points in the region, ``max`` finds the greatest intensity, and
+            ``min`` finds the lowest intensity.
+
+        Returns
+        -------
+        float
+            The value of the integral.
         """
         integration_functions = {"sum": np.sum, "max": np.amax, "min": np.amin}
         if mode not in integration_functions:
@@ -337,11 +424,22 @@ class _1D_ProcDataMixin():
         finteg = integration_functions[mode]
         return finteg(self.proc_data(bounds))
 
+    def bounds_to_slice(self,
+                        bounds: TBounds = "",
+                        ) -> slice:
+        """Converts a string ``lower..upper`` or a tuple of chemical shifts
+        ``(upper, lower)`` to a slice object, which can be used to slice a
+        spectrum |ndarray|. Note that ``upper`` must be greater than
+        ``lower``.
+        """
+        lower, upper = _parse_bounds(bounds)
+        return slice(self.ppm_to_index(upper) or 0,                      # type: ignore # mixin
+                     (self.ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
+
     def nuclei_to_str(self
                       ) -> str:
-        """
-        Returns a string with the nucleus nicely formatted for use as the
-        xlabel in a plot.
+        """Returns a string with the nucleus nicely formatted in LaTeX syntax.
+        Can be directly used with e.g. matplotlib.
         """
         nuc = self["nuc1"]          # type: ignore
         elem = nuc.lstrip("1234567890")
@@ -350,14 +448,24 @@ class _1D_ProcDataMixin():
 
 
 class _1D_PlotMixin():
+    """Defines 1D plotting methods."""
 
     def stage(self, *args, **kwargs) -> None:
-        pgplot.stage1d(self, *args, **kwargs)  # type: ignore # mixin
+        """Calls :func:`penguins.pgplot._stage1d` on the dataset."""
+        pgplot._stage1d(self, *args, **kwargs)  # type: ignore # mixin
 
 
 # -- 2D mixins ------------------------------------------
 
 class _2D_RawDataMixin():
+    """Defines behaviour that is applicable for 2D raw data, i.e. ``ser``
+    files.
+
+    There are no functions which actually read the ``ser`` file (I haven't
+    implemented those yet, as I've never needed it), but this mixin defines a
+    few private methods which initialise (for example) the paths to the
+    parameter files, so it's not useless at all.
+    """
 
     def _find_raw_data_paths(self) -> None:
         self.path: Path
@@ -434,39 +542,63 @@ class _2D_ProcDataMixin():
                   f1_bounds: TBounds = "",
                   f2_bounds: TBounds = "",
                   ) -> np.ndarray:
-        f1_slice = self._ppm_to_slice(axis=0, bounds=f1_bounds)
-        f2_slice = self._ppm_to_slice(axis=1, bounds=f2_bounds)
-        return self.rr[f1_slice, f2_slice]
+        """Returns the doubly real part of the spectrum as a real-valued,
+        two-dimensional |ndarray|.
 
-    def _ppm_to_slice(self,
-                      axis: int,
-                      bounds: TBounds = "",
-                      ) -> slice:
+        Parameters
+        ----------
+        f1_bounds : str or (float, float), optional
+            Bounds for the indirect dimension.
+        f2_bounds : str or (float, float), optional
+            Bounds for the direct dimension.
+
+        Returns
+        -------
+        ndarray
+            The doubly real spectrum, or the section of interest.
         """
-        Converts a tuple of chemical shifts (upper, lower) to a slice object.
-        Note that upper must be greater than lower. Either upper or lower can
-        be None, in which case the spectrum limit is used.
-        Axis = 0 for f1, 1 for f2.
-        """
-        lower, upper = _parse_bounds(bounds)
-        return slice(self._ppm_to_index(axis, upper) or 0,                           # type: ignore # mixin
-                     (self._ppm_to_index(axis, lower) or self["si"][axis] - 1) + 1)  # type: ignore # mixin
+        f1_slice = self.bounds_to_slice(axis=0, bounds=f1_bounds)
+        f2_slice = self.bounds_to_slice(axis=1, bounds=f2_bounds)
+        return self.rr[f1_slice, f2_slice]
 
     def integrate(self,
                   peak: Optional[Tuple[float, float]] = None,
                   margin: Optional[Tuple[float, float]] = None,
-                  mode: str = "sum",
                   f1_bounds: TBounds = None,
                   f2_bounds: TBounds = None,
+                  mode: str = "sum",
                   ) -> float:
-        """
-        Integrates a region of a spectrum.
-        Regions can either be defined via peak and margin, which leads to the region of
-        (peak - margin) to (peak + margin) in both dimensions, or manually via the (f1,f2)_bounds
-        parameter. Note that specifying (peak, margin) overrules the bounds parameter if both are passed.
+        """Integrates a region of a spectrum.
 
-        Default mode is "sum", which simply adds up all points in the region. Alternatives are
-        "max" which returns the highest peak, and "min" which returns the lowest peak.
+        The interface is exactly analogous to the 1D version
+        (:meth:`~_1D_ProcDataMixin.integrate`), except that *peak* and *margin*
+        now need to be specified as tuples of *(f1_shift, f2_shift)*, or
+        *bounds* must be specified as *f1_bounds* and *f2_bounds* separately.
+
+        Parameters
+        ----------
+        peak : (float, float), optional
+            The chemical shifts of the peak of interest.
+        margin : (float, float), optional
+            The integration margins which extends on all sides of the peak.
+            The first number refers to the margin in the indirect dimension,
+            the second the margin in the direct dimension.
+        f1_bounds : str or (float, float), optional
+            Integration bounds for the indirect dimension which can be directly
+            specified in the usual format. Note that passing *(peak, margin)*
+            will overrule the *f1_bounds* and *f2_bounds* parameters.
+        f2_bounds : str or (float, float), optional
+            Integration bounds for the direct dimension which can be directly
+            specified in the usual format.
+        mode : {"sum", "max", "min"}, optional
+            Mode of integration. ``sum`` (the default) directly adds up all
+            points in the region, ``max`` finds the greatest intensity, and
+            ``min`` finds the lowest intensity.
+
+        Returns
+        -------
+        float
+            The value of the integral.
         """
         integration_functions = {"sum": np.sum, "max": np.amax, "min": np.amin}
         if mode not in integration_functions:
@@ -482,11 +614,35 @@ class _2D_ProcDataMixin():
         finteg = integration_functions[mode]
         return finteg(self.proc_data(f1_bounds, f2_bounds))
 
+    def bounds_to_slice(self,
+                        axis: int,
+                        bounds: TBounds = "",
+                        ) -> slice:
+        """Converts a string ``lower..upper`` or a tuple of chemical shifts
+        ``(upper, lower)`` to a slice object, which can be used to slice a
+        spectrum |ndarray|.
+
+        Parameters
+        ----------
+        axis : int
+            0 for indirect dimension, 1 for direct dimension.
+
+        bounds : str or (float, float), optional
+            Bounds given in the usual format.
+
+        Returns
+        -------
+        slice
+            Slice object for the requested axis.
+        """
+        lower, upper = _parse_bounds(bounds)
+        return slice(self.ppm_to_index(axis, upper) or 0,                           # type: ignore # mixin
+                     (self.ppm_to_index(axis, lower) or self["si"][axis] - 1) + 1)  # type: ignore # mixin
+
     def nuclei_to_str(self,
                       ) -> Tuple[str, str]:
-        """
-        Returns a tuple of two strings with the nuclei nicely formatted for use
-        as xlabels or ylabels in plots.
+        """Returns a tuple of strings with the nuclei nicely formatted in LaTeX
+        syntax.  Can be directly used with e.g. matplotlib.
         """
         f1, f2 = self["nuc1"]              # type: ignore
         f1_elem = f1.lstrip("1234567890")
@@ -497,12 +653,15 @@ class _2D_ProcDataMixin():
 
 
 class _2D_PlotMixin():
+    """Defines 2D plotting methods."""
 
     def stage(self, *args, **kwargs) -> None:
-        pgplot.stage2d(self, *args, **kwargs)  # type: ignore # mixin
+        """Calls :func:`penguins.pgplot._stage2d` on the dataset."""
+        pgplot._stage2d(self, *args, **kwargs)  # type: ignore # mixin
 
     def find_baselev(self, *args, **kwargs):
-        pgplot._make_contour_slider(self, *args, **kwargs)
+        """Calls :func:`penguins.pgplot._find_baselev` on the dataset."""
+        pgplot._find_baselev(self, *args, **kwargs)
 
 
 # -- Actual dataset classes -----------------------------
@@ -512,7 +671,7 @@ class Dataset1D(_1D_RawDataMixin,
                 _1D_PlotMixin,
                 _Dataset):
 
-    def _ppm_to_index(self,
+    def ppm_to_index(self,
                       ppm: Optional[float]
                       ) -> Optional[int]:
         """
@@ -535,7 +694,7 @@ class Dataset1D(_1D_RawDataMixin,
         max_ppm = self["o1p"] + self["sw"]/2
         min_ppm = self["o1p"] - self["sw"]/2
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
-        return full_scale[self._ppm_to_slice(bounds)]
+        return full_scale[self.bounds_to_slice(bounds)]
 
     def hz_scale(self) -> np.ndarray:
         # These use SFO, not BF
@@ -563,9 +722,9 @@ class Dataset1DProj(_2D_RawDataMixin,
             raise ValueError("Projection dimension was not found in "
                              "'used_from' file.")
 
-    def _ppm_to_index(self,
-                      ppm: Optional[float]
-                      ) -> Optional[int]:
+    def ppm_to_index(self,
+                     ppm: Optional[float]
+                     ) -> Optional[int]:
         """
         Finds the index of the spectrum which is closest to the given
         chemical shift. Returns None if ppm is None.
@@ -586,7 +745,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         max_ppm = self["o1p"][self.proj_axis] + self["sw"][self.proj_axis]/2
         min_ppm = self["o1p"][self.proj_axis] - self["sw"][self.proj_axis]/2
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
-        return full_scale[self._ppm_to_slice(bounds)]
+        return full_scale[self.bounds_to_slice(bounds)]
 
     def hz_scale(self) -> np.ndarray:
         # These use SFO, not BF
@@ -600,7 +759,7 @@ class Dataset2D(_2D_RawDataMixin,
                 _2D_PlotMixin,
                 _Dataset):
 
-    def _ppm_to_index(self,
+    def ppm_to_index(self,
                       axis: int,
                       ppm: Optional[float]
                       ) -> Optional[int]:
@@ -626,7 +785,7 @@ class Dataset2D(_2D_RawDataMixin,
         max_ppm = self["o1p"][axis] + (self["sw"][axis] / 2)
         min_ppm = self["o1p"][axis] - (self["sw"][axis] / 2)
         full_scale = np.linspace(max_ppm, min_ppm, int(self["si"][axis]))
-        return full_scale[self._ppm_to_slice(axis, bounds)]
+        return full_scale[self.bounds_to_slice(axis, bounds)]
 
     def hz_scale(self,
                  axis: int
@@ -659,7 +818,7 @@ class Dataset2D(_2D_RawDataMixin,
         elif sign == "neg":
             sign = "negative"
         # For some reason mypy doesn't realise that axis must be an int by here.
-        index_bounds = self._ppm_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
+        index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type=type,
                                     proj_axis=axis, sign=sign,
                                     index_bounds=index_bounds)
@@ -676,17 +835,12 @@ class Dataset2D(_2D_RawDataMixin,
         if axis not in [0, 1]:
             raise ValueError(f"Invalid value for axis '{axis}'")
         # For some reason mypy doesn't realise that axis must be an int by here.
-        index = self._ppm_to_index(axis=(1 - axis), ppm=ppm)   # type: ignore
+        index = self.ppm_to_index(axis=(1 - axis), ppm=ppm)   # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="slice",
                                     proj_axis=axis, sign=None, index=index)
 
 
 class Dataset1DProjVirtual(Dataset1DProj):
-    """
-    Class for a 1D projection generated from a 2D dataset.
-    Note that the projection won't have any baseline correction, therefore
-    integrals may not be entirely accurate.
-    """
 
     def __init__(self,
                  path: Union[str, Path],

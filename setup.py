@@ -3,12 +3,16 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+# Grab the version number without importing penguins.
+exec(open('penguins/_version.py').read())
+
 setup(
     name="penguins",
-    version="0.1",
+    version=__version__,
     author="Jonathan Yong",
     author_email="yongrenjie@gmail.com",
-    description="Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra",
+    description=("Penguins: an Easy, NPE-free Gateway to Unpacking and"
+                 " Illustrating NMR Spectra"),
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yongrenjie/penguins",

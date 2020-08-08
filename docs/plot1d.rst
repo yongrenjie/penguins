@@ -1,7 +1,3 @@
-.. |br| raw:: html
-
-    <br />
-
 1D Plotting in Detail
 =====================
 
@@ -12,45 +8,14 @@ The options here are applicable to all 1D datasets (:class:`~penguins.dataset.Da
 Step 1: Staging spectra
 -----------------------
 
-Firstly, it should be noted that the :meth:`stage()` methods on 1D dataset classes simply call :func:`penguins.pgplot.stage1d()` on the Dataset object itself, with all the arguments passed along. Therefore, if ``ds`` is a 1D dataset object, the following invocations are entirely equivalent (although the former is easier to type)::
+Firstly, it should be noted that the :meth:`stage()` methods on 1D dataset classes simply call :func:`penguins.pgplot._stage1d` on the Dataset object itself, with all the arguments passed along. Therefore, if ``ds`` is a 1D dataset object, the following invocations are entirely equivalent (although the former is easier to type)::
 
    ds.stage(*args, **kwargs)
    pg.pgplot.stage1d(ds, *args, **kwargs)
 
 Multiple spectra can be plotted by staging each of them individually.
 
-.. currentmodule:: penguins.pgplot
-
-.. function:: stage1d(dataset, scale=1, bounds='', dfilter=None, label=None, color=None, plot_options=None)
-
-   Penguins maintains a *"holding area"*, which is a global list of plots which have been registered but not yet plotted. The :func:`~penguins.pgplot.stage1d()` function uses the information provided to create a :class:`penguins.pgplot.PlotObject1D` object, which is then appended to that list.
-
-   :param dataset: A 1D dataset object.
-
-   :param scale: *(optional)* Indicates factor to scale spectrum intensity by.
-
-   :type scale: float
-
-   :param bounds: *(optional)* A tuple of floats ``(lower, upper)``, or a string ``"lower..upper"``, specifying the section of the spectrum to plot. Both should be chemical shifts. If either ``lower`` or ``upper`` are omitted, then the upper (lower) bound is the rightmost (or leftmost) edge of the spectrum. If not provided, defaults to the entire spectrum.
-
-      |br|
-      Note that this does not merely affect the *plot limits*. It restricts the portion of the spectrum which is actually plotted (and ``matplotlib`` chooses sensible plot limits to reflect that).
-
-   :param dfilter: *(optional)* A function taking a float and returning a bool to which filters *y*-values of the spectrum which should be retained. For example, to remove any parts of the spectrum above an intensity of ``1e5``, use ``dfilter=(lambda f: f < 1e5)``. This filter is applied prior to any scaling.
-
-   :param label: *(optional)* Text to be displayed in the plot legend. Some LaTeX-like syntax is possible using raw strings: see :std:doc:`tutorials/text/mathtext`.
-
-   :type label: str
-
-   :param color: *(optional)* A valid ``matplotlib`` color. See :std:doc:`matplotlib:tutorials/colors/colors` for more information. The default colour palette used is Seaborn's "deep" (see Seaborn's :std:doc:`seaborn:tutorial/color_palettes`).
-
-   :type color: str
-
-   :param plot_options: *(optional)* Key-value options which are passed on directly to :meth:`ax.plot() <matplotlib.axes.Axes.plot>`. Note that the ``color`` and ``label`` parameters will override the corresponding keys in ``plot_options``, if present.
-
-   :type plot_options: dict
-
-   :returns: None.
+The documentation for :func:`~penguins.pgplot._stage1d` used to be here.
 
 ::
 
@@ -77,53 +42,7 @@ Multiple spectra can be plotted by staging each of them individually.
 Step 2: Constructing the plot
 -----------------------------
 
-Plot construction is done using :func:`~penguins.mkplot()`.
-
-.. currentmodule:: penguins
-
-.. function:: mkplot(axes=None, figsize=None, figstyle="1d", stacked=False, voffset=0, hoffset=0, title=None, autolabel=None, xlabel="Chemical shift (ppm)", ylabel="Intensity(au)", close=True, empty_pha=True)
-
-   Calls :meth:`ax.plot() <matplotlib.axes.Axes.plot>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
-   
-   All keyword arguments below are optional:
-
-   :param axes: :class:`~matplotlib.axes.Axes` object to plot the graph on. If not given, defaults to the currently active axes. (The most likely scenario is that there *isn't* an active axes, so :meth:`ax.plot() <matplotlib.axes.Axes.plot>` will create one.)
-
-   :param tuple(float,float) figsize: (width, height) of plot in inches.
-
-   :param str figstyle: Specifies the overall plot style. See :func:`~penguins.style_axes()` for options and examples.
-
-   :param bool stacked: True to make spectra tightly stacked (i.e. not superimposed). Overrides any value given in the ``voffset`` parameter.
-
-   :param voffset: If given as a float, indicates the amount of vertical offset between spectra, in units of the maximum height. The height of a spectrum refers to the total width it spans in the *y*-axis, and the maximum height refers to the largest such height of all spectra in the holding area.
-
-      |br|
-      Using a float for ``voffset`` is useful for offsetting spectra by a *constant amount*. Note that stacked spectra have a *variable* vertical offset between each spectrum, because each spectrum will have a different height. An example of the difference is shown below.
-
-      |br|
-      If given as a list, each staged spectrum is offset by the corresponding amount (again in units of maximum height).
-
-   :type voffset: list or float
-
-   :param hoffset: If given as a float, indicates the horizontal offset between adjacent spectra in ppm. If this is positive, then successive spectra are shifted to the right (the first spectrum is not shifted). If given as a list, each staged spectrum is offset by the corresponding amount.
-
-   :type hoffset: list or float
-
-   :param str title: Plot title.
-
-   :param str autolabel: Automatic labels to use for the *x*-axis. The only option now is ``nucl``, which generates a LaTeX representation of the detected nucleus (e.g. for a proton spectrum, setting ``autolabel="nucl"`` would give the *x*-axis label ``r"$^{1}$H (ppm)"``).
-
-   :param str xlabel: Label for *x*-axis. This overrides ``autolabel`` if both are specified (but why would you?).
-
-   :param str ylabel: Label for *y*-axis. This would never be used unless you use ``figstyle=natural``, or manually reenable the *y*-axis display.
-
-   :param bool close: Close all previously used figures before constructing a new plot. This shouldn't be changed by the end user; it's only really there to make :func:`find_baselev() <penguins.pgplot._make_contour_slider>` work.
-
-   :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. There are a couple of niche uses for this parameter, but you probably don't need it.
-
-   :returns: Tuple of (:py:class:`~matplotlib.figure.Figure`, :py:class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
-
-:func:`~penguins.mkplot()` conveniently returns ``(fig, ax)``, so that you do not need to call :func:`plt.gcf() <matplotlib.pyplot.gcf>` or :func:`plt.gca() <matplotlib.pyplot.gca>`. Therefore you can carry out any other operations you wish to after this. Of course, you can also import ``matplotlib`` itself and utilise the full library of functions there. For some examples of this, see :doc:`cookbook`.
+The documentation for :func:`~penguins.pgplot._mkplot1d` used to be here.
 
 Here is an example of a stacked plot versus one with ``voffset=1.1``. The extra 0.1 is there to ensure that there is some padding between adjacent spectra (when using ``stacked``, penguins also makes sure to add ``0.1 * maxheight`` padding)::
 
@@ -156,35 +75,10 @@ Step 3: Displaying the plot
 
 For this step there are three major options:
 
-1. Display the plot, and stop the script / interpreter from continuing until you close the figure window. This is done with :func:`plt.show() <matplotlib.pyplot.show>`.
+1. Display the plot, and stop the script / interpreter from continuing until you close the figure window. This is done with |show|.
 
-2. Save an image, using :func:`plt.savefig() <matplotlib.pyplot.savefig>`. 
+2. Save an image, using |savefig|. 
 
-3. Display the plot but allow the script to continue (useful for e.g. real-time updates of a plot, or plotting in a loop). This is done with :func:`plt.pause() <matplotlib.pyplot.pause>`. (Although :func:`plt.show() <matplotlib.pyplot.show>` has a ``block=False`` option, it doesn't seem to work on many systems.)
+3. Display the plot but allow the script to continue (useful for e.g. real-time updates of a plot, or plotting in a loop). This is done with |pause|. (Although |show| has a ``block=False`` option, it doesn't seem to work on many systems.)
 
-For convenience, penguins provides functions of the same name which are simply wrappers around the corresponding ``matplotlib`` functions::
-
-   # Display the plot:
-   pg.show()
-   # or save an image:
-   pg.savefig("/Users/yongrenjie/Desktop/nice_plot.svg")
-   # or pause for 0.01 seconds, during which the figure updates itself:
-   pg.pause(0.01)
-
-.. function:: show(*args, **kwargs)
-
-   Calls :func:`plt.show(*args, **kwargs) <matplotlib.pyplot.show>`.
-..
-   * ** * ** This comment stops vim from highlighting everything as italicised.
-
-.. function:: savefig(*args, **kwargs)
-
-   Calls :func:`plt.savefig(*args, **kwargs) <matplotlib.pyplot.savefig>`.
-..
-   * ** * ** This comment stops vim from highlighting everything as italicised.
-
-.. function:: pause(*args, **kwargs)
-
-   Calls :func:`plt.pause(*args, **kwargs) <matplotlib.pyplot.pause>`.
-..
-   * ** * ** This comment stops vim from highlighting everything as italicised.
+The :func:`show`, :func:`savefig`, and :func:`pause` wrappers used to be documented here.

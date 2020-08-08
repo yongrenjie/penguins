@@ -40,8 +40,8 @@ extensions = [
 autodoc_typehints='none'
 
 # Version number
-import penguins as pg
-version = pg.__version__
+exec(open('../penguins/_version.py').read())
+version = __version__
 
 # Intersphinx setup.
 intersphinx_mapping = {

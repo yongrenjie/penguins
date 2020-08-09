@@ -71,6 +71,10 @@ Auxiliary plotting utilities
 
 |v|
 
+.. autofunction:: color_palette
+
+|v|
+
 .. autofunction:: get_pha()
 
 |v|

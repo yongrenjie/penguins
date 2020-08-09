@@ -8,7 +8,8 @@ from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
 from . import dataset as ds
 from . import pgplot
-from .pgplot import get_pha, get_properties, set_palette
+from .pgplot import (get_pha, get_properties,
+                     set_palette, color_palette)
 
 
 # -- READING --------------------------------------------

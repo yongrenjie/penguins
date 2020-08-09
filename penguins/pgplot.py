@@ -20,6 +20,8 @@ from .type_aliases import *
 
 # 1D color palette to use (from seaborn). By default "deep".
 _current_palette: Union[str, List[str]] = "deep"
+# Enable it for seaborn as well.
+sns.set_palette(_current_palette)
 # This are the colors from seaborn-bright, but rearranged into nice tuples.
 # Honestly three pairs of colors should suffice. If you're plotting more 2D
 # spectra than that on the same graph, you probably need to rethink your plot,
@@ -56,6 +58,31 @@ def set_palette(palette: Union[str, List[str]],
     sns.set_palette(palette)
     # Change penguins 1D palette.
     _current_palette = palette
+
+
+def color_palette(palette: Optional[Union[str, List[str]]] = None,
+                  ) -> List[str]:
+    """Returns a list of colors corresponding to a color palette. If *palette*
+    is not provided, returns the colors in the current color palette.
+
+    This is essentially a wrapper around :func:`sns.color_palette
+    <seaborn.color_palette>`, but it only offers one argument, and it can't be
+    used as a context manager. Use `set_palette` if you want to change the
+    active palette.
+
+    Parameters
+    ----------
+    palette : str or list of str, optional
+        The palette to look up. Defaults to the currently active color palette.
+
+    Returns
+    -------
+    colors : list of str
+        The colors in the current color palette.
+    """
+    if palette is None:
+        palette = _current_palette
+    return sns.color_palette(palette)
 
 
 # -- Plot holding area ----------------------------------------

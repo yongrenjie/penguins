@@ -88,22 +88,38 @@ Datasets
 Actual Dataset classes
 **********************
 
-To be done.
+These are the classes that the user will see.
+Even then, much of the interface is abstracted away: for example, the staging and plotting functions have a unified interface that delegate to different methods behind the scenes depending on the object that is being staged / plotted.
 
 .. autoclass:: Dataset1D
    :members: ..
+
+   .. automethod:: ppm_to_index
+   .. automethod:: ppm_scale
+   .. automethod:: hz_scale
 
 |v|
 
 .. autoclass:: Dataset1DProj
    :members: ..
 
-|v|
-
-.. autoclass:: Dataset1DProjVirtual
-   :members: ..
+   .. automethod:: ppm_to_index
+   .. automethod:: ppm_scale
+   .. automethod:: hz_scale
 
 |v|
 
 .. autoclass:: Dataset2D
+   :members: ..
+
+   .. automethod:: ppm_to_index
+   .. automethod:: ppm_scale
+   .. automethod:: hz_scale
+   .. automethod:: project
+   .. automethod:: sum
+   .. automethod:: slice
+
+|v|
+
+.. autoclass:: Dataset1DProjVirtual
    :members: ..

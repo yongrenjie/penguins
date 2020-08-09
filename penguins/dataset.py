@@ -364,6 +364,8 @@ class _1D_ProcDataMixin():
                   ) -> np.ndarray:
         """Returns the real part of the spectrum as a real-valued |ndarray|.
 
+        This is used in constructing the *y*-values to be plotted.
+
         Parameters
         ----------
         bounds : str or (float, float), optional
@@ -542,8 +544,10 @@ class _2D_ProcDataMixin():
                   f1_bounds: TBounds = "",
                   f2_bounds: TBounds = "",
                   ) -> np.ndarray:
-        """Returns the doubly real part of the spectrum as a real-valued,
-        two-dimensional |ndarray|.
+        """Returns the real part of the spectrum as a two-dimensional,
+        real-valued |ndarray|.
+
+        This is used in constructing the *z*-values to be plotted.
 
         Parameters
         ----------
@@ -670,13 +674,27 @@ class Dataset1D(_1D_RawDataMixin,
                 _1D_ProcDataMixin,
                 _1D_PlotMixin,
                 _Dataset):
+    """Dataset object representing 1D spectra.
+
+    Inherits from: `_1D_RawDataMixin`, `_1D_ProcDataMixin`, `_1D_PlotMixin`,
+    and `_Dataset`.
+    """
 
     def ppm_to_index(self,
-                      ppm: Optional[float]
-                      ) -> Optional[int]:
-        """
-        Finds the index of the spectrum which is closest to the given
-        chemical shift. Returns None if ppm is None.
+                     ppm: Optional[float]
+                     ) -> Optional[int]:
+        """Converts a chemical shift into the index which is closest to the
+        chemical shift.
+
+        Parameters
+        ----------
+        ppm : float (optional)
+            The chemical shift of interest.
+
+        Returns
+        -------
+        index : int
+            The index, or None if ppm is None.
         """
         if ppm is None:
             return None
@@ -691,12 +709,40 @@ class Dataset1D(_1D_RawDataMixin,
     def ppm_scale(self,
                   bounds: TBounds = "",
                   ) -> np.ndarray:
+        """Constructs an |ndarray| of the chemical shifts at each point of the
+        spectrum, in descending order of chemical shift.
+
+        This is used in generating the *x*-values for plotting.
+
+        Parameters
+        ----------
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner.
+
+        Returns
+        -------
+        scale : ndarray
+            The appropriate slice of chemical shifts.
+        """
         max_ppm = self["o1p"] + self["sw"]/2
         min_ppm = self["o1p"] - self["sw"]/2
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self.bounds_to_slice(bounds)]
 
     def hz_scale(self) -> np.ndarray:
+        """Constructs an |ndarray| of the frequencies (in units of Hz) at each
+        point of the spectrum, in descending order of frequency.
+
+        Parameters
+        ----------
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner.
+
+        Returns
+        -------
+        scale : ndarray
+            The appropriate slice of frequencies.
+        """
         # These use SFO, not BF
         max_hz = self["o1"] + self["sw"]/(2 * self["sfo1"])
         min_hz = self["o1"] - self["sw"]/(2 * self["sfo1"])
@@ -707,6 +753,19 @@ class Dataset1DProj(_2D_RawDataMixin,
                     _1D_ProcDataMixin,
                     _1D_PlotMixin,
                     _Dataset):
+    """Dataset object representing 1D projections or slices of 2D spectra,
+    which have been generated inside TopSpin.
+
+    Inherits from: `_2D_RawDataMixin`, `_1D_ProcDataMixin`, `_1D_PlotMixin`,
+    and `_Dataset`.
+
+    Notes
+    -----
+    The implementation of these methods has to be different from the equivalent
+    methods on `Dataset1D`, because the parameters (e.g. O1, SW) are read as
+    2-element arrays (for both dimensions) but the returned value must select
+    the correct projection axis.
+    """
 
     def _initialise_pars(self):
         # Initialise _parDict and common pars as before.
@@ -725,9 +784,18 @@ class Dataset1DProj(_2D_RawDataMixin,
     def ppm_to_index(self,
                      ppm: Optional[float]
                      ) -> Optional[int]:
-        """
-        Finds the index of the spectrum which is closest to the given
-        chemical shift. Returns None if ppm is None.
+        """Converts a chemical shift into the index which is closest to the
+        chemical shift.
+
+        Parameters
+        ----------
+        ppm : float (optional)
+            The chemical shift of interest.
+
+        Returns
+        -------
+        index : int
+            The index, or None if ppm is None.
         """
         if ppm is None:
             return None
@@ -742,31 +810,77 @@ class Dataset1DProj(_2D_RawDataMixin,
     def ppm_scale(self,
                   bounds: TBounds = "",
                   ) -> np.ndarray:
+        """Constructs an |ndarray| of the chemical shifts at each point of the
+        spectrum, in descending order of chemical shift.
+
+        This is used in generating the *x*-values for plotting.
+
+        Parameters
+        ----------
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner.
+
+        Returns
+        -------
+        scale : ndarray
+            The appropriate slice of chemical shifts.
+        """
         max_ppm = self["o1p"][self.proj_axis] + self["sw"][self.proj_axis]/2
         min_ppm = self["o1p"][self.proj_axis] - self["sw"][self.proj_axis]/2
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self.bounds_to_slice(bounds)]
 
-    def hz_scale(self) -> np.ndarray:
+    def hz_scale(self,
+                 bounds: TBounds = "",
+                 ) -> np.ndarray:
+        """Constructs an |ndarray| of the frequencies (in units of Hz) at each
+        point of the spectrum, in descending order of frequency.
+
+        Parameters
+        ----------
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner.
+
+        Returns
+        -------
+        scale : ndarray
+            The appropriate slice of frequencies.
+        """
         # These use SFO, not BF
         max_hz = self["o1"][self.proj_axis] + self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
         min_hz = self["o1"][self.proj_axis] - self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
-        return np.linspace(max_hz, min_hz, self["si"])
+        full_hz_scale = np.linspace(max_hz, min_hz, self["si"])
+        return full_hz_scale[self.bounds_to_slice(bounds)]
 
 
 class Dataset2D(_2D_RawDataMixin,
                 _2D_ProcDataMixin,
                 _2D_PlotMixin,
                 _Dataset):
+    """Dataset object representing 2D spectra.
+
+    Inherits from: `_2D_RawDataMixin`, `_2D_ProcDataMixin`, `_2D_PlotMixin`,
+    and `_Dataset`.
+    """
 
     def ppm_to_index(self,
-                      axis: int,
-                      ppm: Optional[float]
-                      ) -> Optional[int]:
-        """
-        Finds the index of the spectrum which is closest to the given
-        chemical shift. Returns None if ppm is None.
-        Axis = 0 for f1, 1 for f2.
+                     axis: int,
+                     ppm: Optional[float]
+                     ) -> Optional[int]:
+        """Converts a chemical shift into the index which is closest to the
+        chemical shift.
+
+        Parameters
+        ----------
+        axis : int
+            0 for f1 (indirect dimension), 1 for f2 (direct dimension).
+        ppm : float (optional)
+            The chemical shift of interest.
+
+        Returns
+        -------
+        index : int
+            The index, or None if ppm is None.
         """
         if ppm is None:
             return None
@@ -782,6 +896,23 @@ class Dataset2D(_2D_RawDataMixin,
                   axis: int,
                   bounds: TBounds = "",
                   ) -> np.ndarray:
+        """Constructs an |ndarray| of the chemical shifts at each point of the
+        spectrum, in descending order of chemical shift.
+
+        This is used in generating the *x*- and *y*-values for plotting.
+
+        Parameters
+        ----------
+        axis : int
+            0 for f1 (indirect dimension), 1 for f2 (direct dimension).
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner.
+
+        Returns
+        -------
+        scale : ndarray
+            The appropriate slice of chemical shifts.
+        """
         max_ppm = self["o1p"][axis] + (self["sw"][axis] / 2)
         min_ppm = self["o1p"][axis] - (self["sw"][axis] / 2)
         full_scale = np.linspace(max_ppm, min_ppm, int(self["si"][axis]))
@@ -790,27 +921,69 @@ class Dataset2D(_2D_RawDataMixin,
     def hz_scale(self,
                  axis: int
                  ) -> np.ndarray:
+        """Constructs an |ndarray| of the frequencies (in units of Hz) at each
+        point of the spectrum, in descending order of frequency.
+
+        Parameters
+        ----------
+        axis : int
+            0 for f1 (indirect dimension), 1 for f2 (direct dimension).
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner.
+
+        Returns
+        -------
+        scale : ndarray
+            The appropriate slice of frequencies.
+        """
         # These use SFO, not BF
         max_hz = self["o1"][axis] + (self["sw"][axis] / (2 * self["sfo1"][axis]))
         min_hz = self["o1"][axis] - (self["sw"][axis] / (2 * self["sfo1"][axis]))
         return np.linspace(max_hz[axis], min_hz[axis], int(self["si"][axis]))
 
     def project(self,
-                type: str,
                 axis: Union[int, str],
                 sign: str,
                 bounds: TBounds = "",
                 ) -> Dataset1DProjVirtual:
-        if type not in ["projection", "sum"]:
-            raise ValueError(f"Invalid value for type '{type}'")
-        # Convenience for people who can't remember (like me)
-        if axis == "column":  # sum / projection of columns
+        """Make a 1D projection from a 2D spectrum.
+
+        Parameters
+        ----------
+        axis : int or str from {0, "column", 1, "row"}
+            The axis to project *onto*, 0 / "column" being f1 and 1 / "row"
+            being f2. This can be very confusing, so an example will help.
+
+            Projections *onto* f1 will collapse multiple columns into one
+            column. This should be done by passing ``0`` or ``column`` as the
+            *axis* argument. For example, if you used this on a C–H HSQC, you
+            would get a projection with <sup>13</sup>C chemical shifts.
+        sign : str from {"positive", "pos", "negative", "neg"}
+            The sign desired. Using ``positive`` (or the short form ``pos``)
+            means that the greatest point along the collapsed axis will be
+            taken, and vice versa for ``negative``/``neg``.
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner, representing the segment of
+            chemical shifts that should be collapsed. That is to say, if you
+            are projecting *onto* f2, then *bounds* would represent the section
+            of f1 chemical shifts to collapse.
+
+        Returns
+        -------
+        proj : Dataset1DProjVirtual
+            A `Dataset1DProjVirtual` object that is similar in every way to a
+            typical `Dataset1DProj` and can be plotted, integrated, etc. in the
+            same manner. The actual projection can be accessed using
+            `_1D_ProcDataMixin.proc_data`, which `Dataset1DProj` inherits.
+        """
+        # Determine the axis
+        if axis == "column":  # sum / projection of columns, or onto f1
             axis = 0
-        elif axis == "row":   # sum / projection of rows
+        elif axis == "row":   # sum / projection of rows, or onto f2
             axis = 1
         if axis not in [0, 1]:
             raise ValueError(f"Invalid value for axis '{axis}'")
-        # Allow some short forms...
+        # Allow some short forms for sign
         if sign not in ["positive", "negative", "pos", "neg"]:
             raise ValueError(f"Invalid value for sign '{sign}'")
         if sign == "pos":
@@ -819,15 +992,74 @@ class Dataset2D(_2D_RawDataMixin,
             sign = "negative"
         # For some reason mypy doesn't realise that axis must be an int by here.
         index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
-        return Dataset1DProjVirtual(self.path, proj_type=type,
+        return Dataset1DProjVirtual(self.path, proj_type="projection",
                                     proj_axis=axis, sign=sign,
                                     index_bounds=index_bounds)
+
+    def sum(self,
+            axis: Union[int, str],
+            bounds: TBounds = "",
+            ) -> Dataset1DProjVirtual:
+        """Make a 1D sum from a 2D spectrum.
+
+        Parameters
+        ----------
+        axis : int or str from {0, "column", 1, "row"}
+            The axis to sum onto. ``0`` / ``column`` is f1 (i.e. adding up
+            multiple columns) and ``1`` / ``row`` is f2 (i.e. adding up
+            multiple rows).
+        bounds : str or (float, float), optional
+            Bounds specified in the usual manner, representing the segment of
+            chemical shifts that should be collapsed. That is to say, if you
+            are projecting *onto* f2, then *bounds* would represent the section
+            of f1 chemical shifts to collapse.
+
+        Returns
+        -------
+        proj : Dataset1DProjVirtual
+            A `Dataset1DProjVirtual` object that is similar in every way to a
+            typical `Dataset1DProj` and can be plotted, integrated, etc. in the
+            same manner. The actual sum can be accessed using
+            `_1D_ProcDataMixin.proc_data`, which `Dataset1DProj` inherits.
+        """
+        # Determine the axis
+        if axis == "column":  # sum / projection of columns, or onto f1
+            axis = 0
+        elif axis == "row":   # sum / projection of rows, or onto f2
+            axis = 1
+        if axis not in [0, 1]:
+            raise ValueError(f"Invalid value for axis '{axis}'")
+        # For some reason mypy doesn't realise that axis must be an int by here.
+        index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
+        return Dataset1DProjVirtual(self.path, proj_type="sum",
+                                    proj_axis=axis, index_bounds=index_bounds)
 
     def slice(self,
               axis: Union[int, str],
               ppm: float,
               ) -> Dataset1DProjVirtual:
-        # convenience for people who can't remember (like me)
+        """Extract a 1D slice from a 2D spectrum.
+
+        Parameters
+        ----------
+        axis : int or str from {0, "column", 1, "row"}
+            Axis to slice along. To extract a column (which corresponds to a
+            slice along f1, at one specific value of f2), use ``0`` or
+            ``column``, and vice versa for ``row``.
+        ppm : float, optional
+            The chemical shift of the other axis to slice at. For example, if
+            you are extracting a column, then this would be the f2 chemical
+            shift of interest.
+
+        Returns
+        -------
+        proj : Dataset1DProjVirtual
+            A `Dataset1DProjVirtual` object that is similar in every way to a
+            typical `Dataset1DProj` and can be plotted, integrated, etc. in the
+            same manner. The actual projection or sum can be accessed using
+            `_1D_ProcDataMixin.proc_data`, which `Dataset1DProj` inherits.
+        """
+        # Find axis
         if axis == "column":  # extract a column
             axis = 0
         elif axis == "row":   # extract a row
@@ -837,10 +1069,17 @@ class Dataset2D(_2D_RawDataMixin,
         # For some reason mypy doesn't realise that axis must be an int by here.
         index = self.ppm_to_index(axis=(1 - axis), ppm=ppm)   # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="slice",
-                                    proj_axis=axis, sign=None, index=index)
+                                    proj_axis=axis, index=index)
 
 
 class Dataset1DProjVirtual(Dataset1DProj):
+    """Dataset representing 1D projections which have been constructed by
+    calling the `project`, `slice`, or `sum` methods (or their short forms) on
+    `Dataset2D` objects.
+
+    This is a subclass of `Dataset1DProj`, so the available methods are exactly
+    the same.
+    """
 
     def __init__(self,
                  path: Union[str, Path],
@@ -850,7 +1089,8 @@ class Dataset1DProjVirtual(Dataset1DProj):
         # calculate the projection
         self.proj_type = kwargs["proj_type"]  # "sum", "projection", or "slice"
         self.proj_axis = kwargs["proj_axis"]  # 0 or 1
-        self.sign = kwargs.get("sign", None)  # "positive" or "negative"
+        self.sign = kwargs.get("sign", None)  # "positive" or "negative", or
+                                              # None for sums/slices
         self.index_bounds = kwargs.get("index_bounds", None)  # only for sum or projection
         self.index = kwargs.get("index", None) # only for slice
         # Carry out the same initialisation tasks.
@@ -888,16 +1128,17 @@ class Dataset1DProjVirtual(Dataset1DProj):
                 rr = rr[:, self.index_bounds]
             elif self.proj_axis == 1:  # rows
                 rr = rr[self.index_bounds, :]
-        # Zero all entries that are of the wrong sign
-        if self.sign == "positive":
-            rr[rr < 0] = 0
-            projection_fn = np.amax
-        elif self.sign == "negative":
-            rr[rr > 0] = 0
-            projection_fn = np.amin
         # Then make the projection / sum
         if self.proj_type == "projection":
+            if self.sign == "positive":
+                rr[rr < 0] = 0
+                projection_fn = np.amax
+            elif self.sign == "negative":
+                rr[rr > 0] = 0
+                projection_fn = np.amin
             self.real = projection_fn(rr, axis=(1 - self.proj_axis))
+        # Note that 'sum' doesn't care about the sign, in line with TopSpin's
+        # behaviour.
         elif self.proj_type == "sum":
             self.real = np.sum(rr, axis=(1 - self.proj_axis))
 

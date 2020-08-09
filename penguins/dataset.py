@@ -966,7 +966,8 @@ class Dataset2D(_2D_RawDataMixin,
             Bounds specified in the usual manner, representing the segment of
             chemical shifts that should be collapsed. That is to say, if you
             are projecting *onto* f2, then *bounds* would represent the section
-            of f1 chemical shifts to collapse.
+            of f1 chemical shifts to collapse. If not provided, then defaults
+            to the entire range of chemical shifts along the collapsed axis.
 
         Returns
         -------
@@ -1012,7 +1013,8 @@ class Dataset2D(_2D_RawDataMixin,
             Bounds specified in the usual manner, representing the segment of
             chemical shifts that should be collapsed. That is to say, if you
             are projecting *onto* f2, then *bounds* would represent the section
-            of f1 chemical shifts to collapse.
+            of f1 chemical shifts to collapse. If not provided, then defaults
+            to the entire range of chemical shifts along the collapsed axis.
 
         Returns
         -------
@@ -1046,7 +1048,7 @@ class Dataset2D(_2D_RawDataMixin,
             Axis to slice along. To extract a column (which corresponds to a
             slice along f1, at one specific value of f2), use ``0`` or
             ``column``, and vice versa for ``row``.
-        ppm : float, optional
+        ppm : float
             The chemical shift of the other axis to slice at. For example, if
             you are extracting a column, then this would be the f2 chemical
             shift of interest.

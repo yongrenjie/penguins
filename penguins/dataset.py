@@ -997,6 +997,30 @@ class Dataset2D(_2D_RawDataMixin,
                                     proj_axis=axis, sign=sign,
                                     index_bounds=index_bounds)
 
+    def f1projp(self,
+                bounds : TBounds = ""
+                ) -> Dataset1DProjVirtual:
+        """Alias for ``project(axis="column", sign="pos")``. See `project`."""
+        return self.project(axis="column", sign="pos", bounds=bounds)
+
+    def f1projn(self,
+                bounds : TBounds = ""
+                ) -> Dataset1DProjVirtual:
+        """Alias for ``project(axis="column", sign="neg")``. See `project`."""
+        return self.project(axis="column", sign="neg", bounds=bounds)
+
+    def f2projp(self,
+                bounds : TBounds = ""
+                ) -> Dataset1DProjVirtual:
+        """Alias for ``project(axis="row", sign="pos")``. See `project`."""
+        return self.project(axis="row", sign="pos", bounds=bounds)
+
+    def f2projn(self,
+                bounds : TBounds = ""
+                ) -> Dataset1DProjVirtual:
+        """Alias for ``project(axis="row", sign="neg")``. See `project`."""
+        return self.project(axis="row", sign="neg", bounds=bounds)
+
     def sum(self,
             axis: Union[int, str],
             bounds: TBounds = "",
@@ -1035,6 +1059,18 @@ class Dataset2D(_2D_RawDataMixin,
         index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="sum",
                                     proj_axis=axis, index_bounds=index_bounds)
+
+    def f1sum(self,
+              bounds: TBounds = ""
+              ) -> Dataset1DProjVirtual:
+        """Alias for ``sum(axis="column")``. See `sum`."""
+        return self.sum(axis="column", bounds=bounds)
+
+    def f2sum(self,
+              bounds: TBounds = ""
+              ) -> Dataset1DProjVirtual:
+        """Alias for ``sum(axis="row")``. See `sum`."""
+        return self.sum(axis="row", bounds=bounds)
 
     def slice(self,
               axis: Union[int, str],

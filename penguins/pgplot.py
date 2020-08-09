@@ -20,7 +20,7 @@ from .type_aliases import *
 # -- HELPER OBJECTS -------------------------------------------
 
 # 1D color palette to use (from seaborn). By default "deep".
-_current_palette = "deep"
+_current_palette: Union[str, List[str]] = "deep"
 # This are the colors from seaborn-bright, but rearranged into nice tuples.
 # Honestly three pairs of colors should suffice. If you're plotting more 2D
 # spectra than that on the same graph, you probably need to rethink your plot,
@@ -32,7 +32,7 @@ _bright_2d = [("#023EFF", "#E8000B"), # blue, red
               ]
 
 
-def set_palette(palette: Union[str, list(str)],
+def set_palette(palette: Union[str, List[str]],
                 ) -> None:
     """Sets the currently active color palette. The default palette is
     seaborn's ``deep``.
@@ -366,6 +366,7 @@ def _mkplot1d(ax: Any = None,
     # True if we find any PlotObject1D with a non-empty label.
     make_legend = False
     # Find the maximum height
+    holding_area = get_pha()
     heights = [np.nanmax(pobj.proc_data) - np.nanmin(pobj.proc_data)
                for pobj in holding_area.plot_queue]
     max_height = max(heights)
@@ -375,7 +376,6 @@ def _mkplot1d(ax: Any = None,
         ax = plt.gca()
 
     # Iterate over plot objects
-    holding_area = get_pha()
     for n, pobj in enumerate(holding_area.plot_queue):
         # Calculate the hoffset and voffset for this spectrum. If offset is a
         # sequence then use offset[n], otherwise if it's a float use n * offset
@@ -428,7 +428,7 @@ def _mkplot1d(ax: Any = None,
     if make_legend:
         ax.legend(loc=legend_loc)
     # Apply axis styles.
-    style_axes(ax, style)
+    main.style_axes(ax, style)
     return plt.gcf(), ax
 
 
@@ -721,10 +721,10 @@ def _mkplot2d(ax: Any = None,
         ax.invert_yaxis()
     if title is not None:
         ax.set_title(title)
-    ax.set_xlabel(f_xlabel)
-    ax.set_ylabel(f_ylabel)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     # Apply other styles.
-    style_axes(ax, style)
+    main.style_axes(ax, style)
 
     # Make legend. This part is not easy...
     # See https://stackoverflow.com/questions/41752309/ for an example

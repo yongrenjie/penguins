@@ -116,7 +116,13 @@ Even then, much of the interface is abstracted away: for example, the staging an
    .. automethod:: ppm_scale
    .. automethod:: hz_scale
    .. automethod:: project
+   .. automethod:: f1projp
+   .. automethod:: f1projn
+   .. automethod:: f2projp
+   .. automethod:: f2projn
    .. automethod:: sum
+   .. automethod:: f1sum
+   .. automethod:: f2sum
    .. automethod:: slice
 
 |v|

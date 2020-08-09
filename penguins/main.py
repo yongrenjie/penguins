@@ -120,7 +120,7 @@ def subplots(nrows: int = 1,
     # can just be passed on directly.
     if "figsize" not in kwargs:
         kwargs["figsize"] = (ncols * 4, nrows * 4)
-    return plt.subplots(nrows=nrows, ncols=ncols, *args, **kwargs)
+    return plt.subplots(nrows=nrows, ncols=ncols, **kwargs)
 
 
 def mkplot(ax: Any = None,

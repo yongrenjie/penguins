@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Union, Optional, Tuple, Any
 
 import matplotlib.pyplot as plt    # type: ignore
+from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
 from . import dataset as ds
 from . import pgplot

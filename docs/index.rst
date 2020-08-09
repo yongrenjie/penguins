@@ -23,24 +23,18 @@ At the time of writing, it only supports Bruker data, and can only work with pro
 To get started, head over to the :doc:`quickstart` page.
 
 .. note::
-   All code examples in the documentation, such as the following, can be run directly from the ``penguins/tests`` directory.
+   All code examples in the documentation, such as the following, can be run directly from the top-level penguins directory.
 
-::
+.. plot::
 
    import penguins as pg
-
-   hsqc_dataset = pg.read("data/pt2", 3, 1)
+   hsqc_dataset = pg.read("tests/data/pt2", 4, 1)
    hsqc_dataset.stage(f1_bounds="10..141",
                       f2_bounds="0.5..8.5",
                       colors=("seagreen", "hotpink"),
                       levels=2e4)
    pg.mkplot(title="An example HSQC")
    pg.show()
-
-.. image:: images/splash_hsqc.svg
-   :align: center
-   :alt: Example HSQC spectrum
-   :class: no-scaled-link
 
 Contents
 ========

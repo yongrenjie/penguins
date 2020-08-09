@@ -8,7 +8,6 @@ from numbers import Real
 
 import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
-from matplotlib.ticker import AutoMinorLocator  # type: ignore
 from matplotlib.legend_handler import HandlerBase  # type: ignore
 import seaborn as sns  # type: ignore
 

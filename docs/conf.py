@@ -10,7 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('../penguins'))
 
@@ -34,16 +34,33 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "numpydoc",
+    "matplotlib.sphinxext.plot_directive"
 ]
-# Disable type hints in function signatures from being displayed, since this
-# information is redundant.
-autodoc_typehints='none'
 
 # Version number
 exec(open('../penguins/_version.py').read())
 version = __version__
 
-# Intersphinx setup.
+### Matplotlib plot_directive options
+# Show source code along with plot
+plot_include_source = True
+# But don't show a link to the source code
+plot_html_show_source_link = False
+# Code to run before each plot
+plot_pre_code = """import penguins as pg"""
+# Path to run in when generating plots
+plot_working_directory = os.path.abspath("..")
+# Make high-quality images...! The low-res PNGs are horrible advertising
+plot_formats = ["svg"]
+# Don't display links to the source code / images.
+plot_html_show_formats = False
+
+### Autodoc options
+# Disable type hints in function signatures from being displayed, since this
+# information is redundant.
+autodoc_typehints='none'
+
+### Intersphinx options
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'numpy': ('https://numpy.org/doc/stable/', None),

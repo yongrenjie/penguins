@@ -359,23 +359,29 @@ def style_axes(ax: Any,
         remove_top_left_right_spines(ax)
         set_xaxis_ticks(ax)
         thicken_spines(ax)
-        plt.tight_layout()
+        tight_layout()
     elif style == "1d_box":
         disable_y_axis(ax)
         set_xaxis_ticks(ax)
         thicken_spines(ax)
-        plt.tight_layout()
+        tight_layout()
     elif style == "2d":
         thicken_spines(ax)
         set_xyaxis_ticks(ax)
-        plt.tight_layout()
+        tight_layout()
     elif style == "plot":
         thicken_spines(ax)
-        plt.tight_layout()
+        tight_layout()
     elif style == "natural":
         pass
     else:
         raise ValueError(f"Invalid style '{style}' requested.")
+
+
+def tight_layout(*args, **kwargs) -> None:
+    """Direct wrapper around |tight_layout|.
+    """
+    return plt.tight_layout(*args, **kwargs)
 
 
 def show(*args, **kwargs) -> None:

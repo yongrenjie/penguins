@@ -18,6 +18,10 @@ General plotting
 
 |v|
 
+.. autofunction:: tight_layout
+
+|v|
+
 .. autofunction:: show
 
 |v|

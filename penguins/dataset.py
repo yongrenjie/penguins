@@ -544,8 +544,8 @@ class _2D_ProcDataMixin():
                   f1_bounds: TBounds = "",
                   f2_bounds: TBounds = "",
                   ) -> np.ndarray:
-        """Returns the real part of the spectrum as a two-dimensional,
-        real-valued |ndarray|.
+        """Returns the real part of the spectrum (the 'RR quadrant') as a
+        two-dimensional, real-valued |ndarray|.
 
         This is used in constructing the *z*-values to be plotted.
 

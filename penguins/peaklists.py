@@ -1,3 +1,9 @@
+"""
+This is only really meant for my personal use. It contains peak lists for
+compounds that I use in my DPhil on a day-to-day basis, and quick methods for
+integrating spectra of these compounds.
+"""
+
 import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
 

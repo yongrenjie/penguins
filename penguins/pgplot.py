@@ -85,7 +85,7 @@ def color_palette(palette: Optional[Union[str, List[str]]] = None,
     return sns.color_palette(palette)
 
 
-# -- Plot holding area ----------------------------------------
+# -- Plot holding area and plot properties --------------------
 
 class PlotHoldingArea():
     """Plot holding area which holds staged spectra (as `PlotObject1D` or
@@ -123,8 +123,6 @@ class PlotHoldingArea():
         yield from cycle(_bright_2d)
 
 
-# -- Plot properties ------------------------------------------
-
 class PlotProperties():
     """Stores properties of 1D spectra that have already been plotted using
     `mkplot()`. 2D properties are not stored.
@@ -152,21 +150,6 @@ class PlotProperties():
         self.voffsets: List[float] = []
         self.colors: List[str] = []
         self.options: List[Dict[str, Any]] = []
-
-_globalPP: PlotProperties = PlotProperties()
-
-def get_properties() -> PlotProperties:
-    """Returns the currently active `PlotProperties` instance.
-
-    Returns
-    -------
-    PlotProperties
-    """
-    return _globalPP
-
-def _reset_properties() -> None:
-    global _globalPP
-    _globalPP = PlotProperties()
 
 
 # -- 1D PLOTTING ----------------------------------------------
@@ -406,6 +389,8 @@ def _mkplot1d(ax: Any = None,
     # Get Axes object
     if ax is None:
         ax = plt.gca()
+    # Create a PlotProperties instance tied to this Axes
+    ax.prop = PlotProperties()
 
     # Iterate over plot objects
     for n, pobj in enumerate(ax.pha.plot_objs):
@@ -434,11 +419,10 @@ def _mkplot1d(ax: Any = None,
                 pobj.proc_data + this_voffset,
                 **pobj.options)
         # Add heights and colors to plotproperties.
-        pp = get_properties()
-        pp.hoffsets.append(this_hoffset)
-        pp.voffsets.append(this_voffset)
-        pp.colors.append(pobj.options["color"])
-        pp.options.append(pobj.options)
+        ax.prop.hoffsets.append(this_hoffset)
+        ax.prop.voffsets.append(this_voffset)
+        ax.prop.colors.append(pobj.options["color"])
+        ax.prop.options.append(pobj.options)
 
     # Figure out the x- and y-labels. autolabel should override xlabel if it is
     # provided.
@@ -736,6 +720,9 @@ def _mkplot2d(ax: Any = None,
     legend_colors, legend_labels = [], []
     if ax is None:
         ax = plt.gca()
+    # Create a PlotProperties instance for this Axes.
+    ax.pprop = PlotProperties()
+
     # Iterate over plot objects
     for n, pobj in enumerate(ax.pha.plot_objs):
         ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis

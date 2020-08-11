@@ -8,7 +8,7 @@ from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
 from . import dataset as ds
 from . import pgplot
-from .pgplot import (get_properties, set_palette, color_palette)
+from .pgplot import (set_palette, color_palette)
 
 
 # -- READING --------------------------------------------
@@ -190,9 +190,6 @@ def mkplot(ax: Any = None,
                                 here.
     """
     try:
-        # Reset plot properties
-        pgplot._reset_properties()
-
         # Make sure that there is an active figure...
         if not plt.get_fignums():
             raise ValueError("No active figure found.")
@@ -200,10 +197,13 @@ def mkplot(ax: Any = None,
         # Note that gca() creates one if there isn't already one...
         if ax is None:
             ax = plt.gca()
+
         # Check if the PHA exists and isn't empty.
         if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
             raise ValueError("No spectra have been staged yet.")
         else:
+            # Reset (or create) plot properties
+            ax.pprop = pgplot.PlotProperties()
             if isinstance(ax.pha.plot_objs[0], pgplot.PlotObject1D):
                 fig, ax = pgplot._mkplot1d(ax=ax, **kwargs)
             elif isinstance(ax.pha.plot_objs[0], pgplot.PlotObject2D):

@@ -241,7 +241,6 @@ def _stage1d(dataset: ds.TDataset1D,
                                 color=color,
                                 plot_options=plot_options)
         ax.pha.plot_objs.append(plot_obj)
-    return ax.figure, ax
 
 
 class PlotObject1D():
@@ -380,7 +379,7 @@ def _mkplot1d(ax: Any = None,
     make_legend = False
     # Find the maximum height
     heights = [np.nanmax(pobj.proc_data) - np.nanmin(pobj.proc_data)
-               for pobj in ax.pha.plot_objs]
+               for pobj in ax.pha.plot_objs]     # type: ignore
     max_height = max(heights)
 
     # Get Axes object
@@ -656,7 +655,6 @@ def _stage2d(dataset: ds.Dataset2D,
                                 dfilter=dfilter, label=label,
                                 plot_options=plot_options)
         ax.pha.plot_objs.append(plot_obj)
-    return ax.figure, ax
 
 
 def _mkplot2d(ax: Any = None,

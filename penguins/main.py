@@ -421,7 +421,7 @@ def style_axes(ax: Any,
         raise ValueError(f"Invalid style '{style}' requested.")
 
 
-def cleanup_axes():
+def cleanup_axes() -> None:
     # Need to draw the figure to get the renderer, whatever that means.
     fig = plt.gcf()
     fig.canvas.draw()

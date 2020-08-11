@@ -1,18 +1,16 @@
 Penguins' Plot Paradigm
 =======================
 
-It should come as no surprise that penguins is essentially a wrapper around ``matplotlib``.
-For those who have used ``matplotlib`` before, the way in which penguins constructs plots likely seems familiar; however, it also undoubtedly does not feel *quite* the same.  To other users, it may be a little bit reminiscent of ``git``'s three-stage process (add, commit, push): in fact, the term "stage" was indeed stolen from ``git``.
+It should come as no surprise that penguins is essentially a wrapper around matplotlib.
+The aim of this page is to (try to) explain a little bit of how penguins works behind the scenes, utilising matplotlib in each plotting stage.
 
-In any case, this document attempts to explain a little bit of how penguins works behind the scenes, utilising ``matplotlib`` in each plotting stage.
-You probably don't *need* to read this before the :doc:`plot1d` and :doc:`plot2d` pages, but we do suggest reading this *before* moving on to the :doc:`cookbook`.
+One of the general principles that I have tried to adhere to is to minimise, or even completely obviate, the need for the user to explicitly import matplotlib.
+Consequently, none of the examples in the documentation require a matplotlib import.
 
-.. note::
-   Penguins tries its best to prevent you, the user, from needing to import ``matplotlib`` explicitly. Therefore, at each stage, it tries to provide enough tools for users to do most sensible things. Consequently, none of the examples in the documentation require a ``matplotlib`` import.
-
-   Note that this doesn't extend to *methods* on ``matplotlib`` classes such as :class:`~matplotlib.axes.Axes`: those are fair game, since you don't need to actually import ``matplotlib`` to use them.
-   
-   If you find that you *do* need to import ``matplotlib``, that's of course fine; but please do get in touch so that we can see whether it is worth implementing a penguins interface.
+However, at the same time, I have also tried to retain as much compatibility with matplotlib as possible.
+That means that should you want to customise the plot using the raw power of matplotlib, you should be able to do it, as far as possible.
+Indeed, in many of the more advanced examples, we will call methods on |Axes| to customise the plots further.
+(Note that using |Axes| methods doesn't require you, the user, to import matplotlib, so that's fair game!)
 
 
 Staging and the PHA
@@ -87,3 +85,15 @@ At this stage all the necessary ``matplotlib`` functions have been called, so al
 After reading about the previous two stages, you will be glad to know that penguins does not try to overcomplicate this.
 The only suggestion we make is to use :func:`~penguins.show()` instead: it saves you from having to import ``matplotlib``, keeping in line with our ethos. 😄
 
+
+Addendum
+--------
+
+Depending on your familiarity with matplotlib, you may find that the three-stage model is somewhat similar to, or rather dissimilar from, matplotlib itself.
+It is rather different from typical matplotlib usage, where you don't need to "construct" a plot; you just call ``plt.plot()`` or something similar, then go straight to the "display" stage.
+However, behind the scenes each call to ``plt.plot()`` actually creates an :class:`~matplotlib.artist.Artist` object which is not *actually* drawn on the figure until you call ``fig.draw()`` or something similar.
+This is automatically done behind-the-scenes by matplotlib, so the "construction" stage is invisible to the ordinary user.
+
+A different parallel can be drawn with the version control software git.
+The most basic git workflow involves a three-step process of adding, committing, then pushing.
+In a way, penguins' staging is similar to running ``git add``, and indeed the word "stage" was stolen from git terminology.

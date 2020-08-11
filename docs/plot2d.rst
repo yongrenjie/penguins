@@ -14,7 +14,6 @@ Like its 1D counterpart, the :meth:`Dataset2D.stage <penguins.dataset.Dataset2d.
    pg.pgplot.stage2d(ds2, *args, **kwargs)
 
 ..
-   * ** * ** This comment stops vim from highlighting everything as italicised.
 
 The :func:`~penguins.pgplot._stage2d` full documentation used to be here.
 
@@ -85,40 +84,7 @@ Step 2: Constructing the plot
 
 Plot construction is done using :func:`~penguins.mkplot()`. If the holding area consists of 2D spectra, then it delegates to :func:`~penguins.pgplot._plot2d()`.
 
-.. currentmodule:: penguins
-
-.. function:: mkplot(axes=None, figsize=None, figstyle="2d", offset=(0, 0), title=None, autolabel=None, xlabel=r"$f_2$ (ppm)", ylabel=r"$f_1$ (ppm)", legend_loc="best", close=True, empty_pha=True)
-   :noindex:
-
-   Calls :func:`plt.contour() <matplotlib.pyplot.contour>` on each spectrum in the holding area. Also calls several ``matplotlib`` functions in order to make the plot more aesthetically pleasing. Finally, empties the plot holding area if ``empty_pha`` is set to True.
-   
-   All keyword arguments below are optional:
-
-   :param axes: :class:`~matplotlib.axes.Axes` object to plot the graph on. If not given, defaults to the currently active axes. (The most likely scenario is that there *isn't* an active axes, so :func:`plt.contour() <matplotlib.pyplot.contour>` will create one.)
-
-   :param figsize: Tuple of floats specifying ``(width, height)`` of plot in inches.
-
-   :param str figstyle: Specifies the overall plot style. See :func:`~penguins.style_axes()` for options and examples.
-
-   :param offset: Tuple of floats ``(f1_offset, f2_offset)`` specifying offset between adjacent spectra. If ``f1_offset`` (or ``f2_offset``) is positive, then later spectra are shifted upwards (or rightwards). Also, the default of this argument is a tuple ``(0, 0)``, but Sphinx doesn't display the parentheses in the function signature correctly.
-
-   :param str title: Plot title.
-
-   :param str autolabel: Automatic labels to use for the *x*-axis. The only option now is ``nucl``, which generates a LaTeX representation of the detected nucleus (e.g. for a COSY spectrum, setting ``autolabel="nucl"`` would set both the *x*- and *y*-axis labels to ``r"$^{1}$H (ppm)"``).
-
-   :param str xlabel: Label for *x*-axis. Overrides ``autolabel`` if both are given.
-
-   :param str ylabel: Label for *y*-axis. Overrides ``autolabel`` if both are given.
-
-   :param legend_loc: Legend location. Passed directly as the ``loc`` parameter to :func:`plt.legend <matplotlib.pyplot.legend>`, where a full description can be found. Defaults to ``"best"``, which means that ``matplotlib`` will attempt to choose a position that doesn't collide with the existing plots.
-
-   :param bool close: Close all previously used figures before constructing a new plot. This shouldn't be changed by the end user.
-
-   :param bool empty_pha: Empty the holding area after constructing a plot. This also causes the ``seaborn`` colour generator to restart. There are a couple of niche uses for this parameter, but you probably don't need it.
-
-   :returns: Tuple of (:class:`~matplotlib.figure.Figure`, :class:`~matplotlib.axes.Axes`) objects corresponding to the plot.
-
-As before, :func:`~penguins.mkplot()` returns ``(fig, ax)`` so that various ``matplotlib`` methods can be used.
+The :func:`~penguins.pgplot._mkplot2d` full documentation used to be here.
 
 Here's an example where we plot the same HSQC spectrum four times but give the plot a nonzero offset to make it seem as if the peaks are shifting::
 
@@ -139,13 +105,3 @@ Here's an example where we plot the same HSQC spectrum four times but give the p
    pg.show()
 
 .. image:: images/plot2d_offset.svg
-
-Of course, if your peaks are *truly* shifting, then you should load each separately (e.g. by adding an ``expno`` list as another argument to ``zip()``) and you will not need to put in a fake ``offset``. And you can also get the temperature via the ``TE`` parameter (i.e. ``d.stage(..., label=str(d["te"]))``).
-
-PS: If anybody wants to contribute a series of real HSQC spectra for this plot please get in touch.
-
-
-Step 3: Displaying the plot
----------------------------
-
-This step is the same as in the 1D case. For more information, please see the :ref:`corresponding section <plot1d_display>` in the 1D chapter.

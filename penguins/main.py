@@ -320,6 +320,37 @@ def mkinset(ax: Any,
     return inset_ax
 
 
+def tight_layout(*args, **kwargs) -> None:
+    """Direct wrapper around |tight_layout|.
+    """
+    return plt.tight_layout(*args, **kwargs)
+
+
+def show(*args, **kwargs) -> None:
+    """Direct wrapper around |show|.
+    """
+    return plt.show(*args, **kwargs)
+
+
+def savefig(*args, **kwargs) -> None:
+    """Direct wrapper around |savefig|.
+    """
+    return plt.savefig(*args, **kwargs)
+
+
+def pause(*args, **kwargs) -> None:
+    """Direct wrapper around |pause|.
+    """
+    return plt.pause(*args, **kwargs)
+
+
+
+# -- PLOTTING UTILITIES --------------------------------
+
+# Arguably these should be in another file? But whatever it is, I'm pretty
+# sure that we want these in the main penguins namespace.
+
+
 def style_axes(ax: Any,
                style: str,
                ) -> None:
@@ -390,25 +421,56 @@ def style_axes(ax: Any,
         raise ValueError(f"Invalid style '{style}' requested.")
 
 
-def tight_layout(*args, **kwargs) -> None:
-    """Direct wrapper around |tight_layout|.
-    """
-    return plt.tight_layout(*args, **kwargs)
+def cleanup_axes(fig):
+    # Need to draw the figure to get the renderer, whatever that means.
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    # Iterate over axes and check which ticks overlap with axes label.
+    for ax in fig.axes:
+        xlabel_bbox = ax.xaxis.label.get_window_extent(renderer=r)
+        ylabel_bbox = ax.yaxis.label.get_window_extent(renderer=r)
+        # Just check every bbox.
+        for xtick in ax.xaxis.get_major_ticks():
+            xtick_bbox1 = xtick.label1.get_window_extent(renderer=r)
+            xtick_bbox2 = xtick.label2.get_window_extent(renderer=r)
+            if xtick_bbox1.overlaps(xlabel_bbox):
+                xtick.label1.set_visible(False)
+            if xtick_bbox2.overlaps(xlabel_bbox):
+                xtick.label2.set_visible(False)
+        for ytick in ax.yaxis.get_major_ticks():
+            ytick_bbox1 = ytick.label1.get_window_extent(renderer=r)
+            ytick_bbox2 = ytick.label2.get_window_extent(renderer=r)
+            if ytick_bbox1.overlaps(ylabel_bbox):
+                ytick.label1.set_visible(False)
+            if ytick_bbox2.overlaps(ylabel_bbox):
+                ytick.label2.set_visible(False)
 
 
-def show(*args, **kwargs) -> None:
-    """Direct wrapper around |show|.
-    """
-    return plt.show(*args, **kwargs)
+def move_ylabel(ax: Any,
+                pos: str,
+                remove_ticks: int = 0,
+                tight_layout: bool = True,
+                ) -> None:
+    if pos == "topright":
+        # move yticks to right
+        ax.yaxis.tick_right()
+        # remove the first remove_ticks ticks within the ylims
+        max, min = ax.get_ylim()
+        for ytick in ax.yaxis.get_major_ticks():
+            if remove_ticks == 0:
+                break
+            else:
+                ypos = ytick.label2.get_position()[1]
+                if min < ypos and ypos < max:
+                    ytick.label2.set_visible(False)
+                    remove_ticks -= 1
+        # Move the label
+        ax.yaxis.label.set_rotation(0)  # right way up
+        ax.yaxis.label.set_horizontalalignment("left")
+        ax.yaxis.label.set_verticalalignment("top")
+        ax.yaxis.set_label_coords(1.03, 1)
+    else:
+        raise ValueError(f"Invalid position '{pos}' provided.")
 
-
-def savefig(*args, **kwargs) -> None:
-    """Direct wrapper around |savefig|.
-    """
-    return plt.savefig(*args, **kwargs)
-
-
-def pause(*args, **kwargs) -> None:
-    """Direct wrapper around |pause|.
-    """
-    return plt.pause(*args, **kwargs)
+    if tight_layout:
+        plt.tight_layout()

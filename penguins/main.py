@@ -8,8 +8,7 @@ from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
 from . import dataset as ds
 from . import pgplot
-from .pgplot import (get_pha, get_properties,
-                     set_palette, color_palette)
+from .pgplot import (get_properties, set_palette, color_palette)
 
 
 # -- READING --------------------------------------------
@@ -125,10 +124,28 @@ def subplots(nrows: int = 1,
     return plt.subplots(nrows=nrows, ncols=ncols, **kwargs)
 
 
+def figure(*args, **kwargs) -> Any:
+    """Wrapper around matplotlib's |figure| function.
+
+    If *figsize* is not passed as a keyword argument, then it is chosen to be
+    (4, 4) by default.
+
+    Parameters
+    ----------
+    kwargs : dict, optional
+        Other keyword arguments passed to |subplots|.
+
+    Returns
+    -------
+    fig : Figure
+        Newly created |Figure| instance.
+    """
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (4, 4)
+    return plt.figure(**kwargs)
+
+
 def mkplot(ax: Any = None,
-           figsize: Optional[Tuple[float, float]] = None,
-           close: bool = True,
-           empty_pha: bool = True,
            **kwargs
            ) -> Tuple[Any, Any]:
     """Construct a plot from one or more staged spectra.
@@ -138,9 +155,6 @@ def mkplot(ax: Any = None,
     ax : Axes, optional
         |Axes| instance to plot the spectra on. If not provided, creates new
         |Figure| and |Axes| instances.
-    figsize : (float, float), optional
-        Specifies the size of the |Figure| as (width, height), in units of
-        inches. This is passed to |figure|.
     kwargs : dict, optional
         Keyword arguments that are passed on to `_mkplot1d()` or `_mkplot2d()`
         respectively, depending on the dimensionality of the spectrum being
@@ -152,16 +166,6 @@ def mkplot(ax: Any = None,
         |Figure| instance for the active plot.
     ax : Axes
         |Axes| instance for the active plot.
-
-    Other parameters
-    ----------------
-    close : bool
-        Whether to close other existing figures before plotting. This
-        parameter should not be used.
-    empty_pha : bool
-        Whether to empty the plot holding area after constructing the plot.
-        There are a couple of niche uses for this, but generally you should
-        not have to use this.
 
     Notes
     -----
@@ -178,32 +182,30 @@ def mkplot(ax: Any = None,
                                 here.
     """
     try:
-        # Close open figures, *unless* an axes was given, in which case
-        # we assume that the user isn't keen on having that closed!
-        # Useful e.g. when doing subplots.
-        if close and ax is None:
-            plt.close("all")
         # Reset plot properties
         pgplot._reset_properties()
 
-        PHA = get_pha()
-        if len(PHA.plot_queue) == 0:
+        # Make sure that there is an active figure...
+        if not plt.get_fignums():
+            raise ValueError("No active figure found.")
+        # Get currently active Axes if it wasn't specified.
+        # Note that gca() creates one if there isn't already one...
+        if ax is None:
+            ax = plt.gca()
+        # Check if the PHA exists and isn't empty.
+        if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
             raise ValueError("No spectra have been staged yet.")
         else:
-            if close and figsize is not None and ax is None:
-                plt.figure(figsize=figsize)
-            if ax is None:
-                ax = plt.gca()
-            if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
+            if isinstance(ax.pha.plot_objs[0], pgplot.PlotObject1D):
                 fig, ax = pgplot._mkplot1d(ax=ax, **kwargs)
-            elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
+            elif isinstance(ax.pha.plot_objs[0], pgplot.PlotObject2D):
                 fig, ax = pgplot._mkplot2d(ax=ax, **kwargs)
             else:
                 raise TypeError("Plot holding area has invalid elements.")
     finally:
         # Reset the PHA to being empty
-        if empty_pha:
-            pgplot._reset_pha()
+        if ax is not None:
+            ax.pha = pgplot.PlotHoldingArea()
     return fig, ax
 
 

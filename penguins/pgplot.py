@@ -98,7 +98,7 @@ class PlotHoldingArea():
 
     Attributes
     ----------
-    plot_queue : list
+    plot_objs : list
         List of `PlotObject1D` or `PlotObject2D` items which have been staged.
 
     colors_1d : generator object
@@ -110,7 +110,7 @@ class PlotHoldingArea():
     """
 
     def __init__(self) -> None:
-        self.plot_queue: List = []
+        self.plot_objs: List = []
         # prime the color generators
         self.colors_1d = self._color_generator_1d()
         self.colors_2d = self._color_generator_2d()
@@ -121,21 +121,6 @@ class PlotHoldingArea():
 
     def _color_generator_2d(self) -> Iterator[Tuple[str, str]]:
         yield from cycle(_bright_2d)
-
-_globalPHA: PlotHoldingArea = PlotHoldingArea()
-
-def get_pha() -> PlotHoldingArea:
-    """Returns the currently active `PlotHoldingArea` instance.
-
-    Returns
-    -------
-    PlotHoldingArea
-    """
-    return _globalPHA
-
-def _reset_pha() -> None:
-    global _globalPHA
-    _globalPHA = PlotHoldingArea()
 
 
 # -- Plot properties ------------------------------------------
@@ -186,7 +171,13 @@ def _reset_properties() -> None:
 
 # -- 1D PLOTTING ----------------------------------------------
 
+# This is the same as matplotlib's default figure size, but we set it here
+# anyway just in case the user has otherwise changed it using .matplotlibrc or
+# mpl.rcParams.
+_default_1d_figsize = (6, 4)
+
 def _stage1d(dataset: ds.TDataset1D,
+             ax: Any = None,
              scale: float = 1,
              bounds: TBounds = "",
              dfilter: Optional[Callable[[float], bool]] = None,
@@ -198,7 +189,7 @@ def _stage1d(dataset: ds.TDataset1D,
 
     This constructs a `PlotObject1D` object from the dataset as well as any
     options passed via the keyword arguments, and adds it to the plot queue
-    (see `PlotHoldingArea`).
+    of the |Axes|.
 
     Note that the preferred way of staging spectra is to call the
     :meth:`~penguins.dataset._1D_PlotMixin.stage` method on the dataset object.
@@ -207,6 +198,9 @@ def _stage1d(dataset: ds.TDataset1D,
     ----------
     dataset : Dataset1D, Dataset1DProj, or Dataset1DProjVirtual
         Dataset to be staged.
+    ax : Axes, optional
+        |Axes| instance to tie the plot to. Defaults to the currently active
+        Axes.
     scale : float, optional
         Value to scale the spectrum intensity by.
     bounds : str or (float, float), optional
@@ -239,24 +233,35 @@ def _stage1d(dataset: ds.TDataset1D,
                                            `Dataset1DProjVirtual` objects, and
                                            the preferred way to stage spectra.
     """
-    # Create the PlotObject1D object.
-    plot_obj = PlotObject1D(dataset=dataset,
-                            scale=scale,
-                            bounds=bounds,
-                            dfilter=dfilter,
-                            label=label,
-                            color=color,
-                            plot_options=plot_options)
-
-    # Check that the plot queue doesn't have 2D spectra.
-    # We can just check against the first element. By induction, it is
-    # equivalent to checking against every element.
-    PHA = get_pha()
-    if len(PHA.plot_queue) != 0 and isinstance(PHA.plot_queue[0], PlotObject2D):
+    # If an Axes wasn't specified, get the currently active one.
+    if ax is None:
+        # Before calling gca(), we check whether a figure exists yet. If it
+        # doesn't, then we make a figure ourselves with a default figsize.
+        if not plt.get_fignums():  # == empty list if no figures yet.
+            plt.figure(figsize=_default_1d_figsize)
+        ax = plt.gca()
+    # Create the plot holding area if it doesn't exist yet
+    if not hasattr(ax, "pha"):
+        ax.pha = PlotHoldingArea()
+    # Check that it doesn't already have 2D spectra. We can just check against
+    # the first element. By induction, it is equivalent to checking against
+    # every element.
+    if len(ax.pha.plot_objs) != 0 and isinstance(ax.pha.plot_objs[0],
+                                                 PlotObject2D):
         raise TypeError("Plot queue already contains 2D spectra.")
-    # All good, so we can append the PlotObject1D to the plot queue.
+    # If we reached here, then it's all good and we should make the
+    # PlotObject1D then append it to the PHA.
     else:
-        PHA.plot_queue.append(plot_obj)
+        plot_obj = PlotObject1D(dataset=dataset,
+                                ax=ax,
+                                scale=scale,
+                                bounds=bounds,
+                                dfilter=dfilter,
+                                label=label,
+                                color=color,
+                                plot_options=plot_options)
+        ax.pha.plot_objs.append(plot_obj)
+    return ax.figure, ax
 
 
 class PlotObject1D():
@@ -270,6 +275,7 @@ class PlotObject1D():
     default_1d_plotoptions = {"linewidth": 1}
     def __init__(self,
                  dataset: ds.TDataset1D,
+                 ax: Any,
                  scale: float = 1,
                  bounds: TBounds = "",
                  dfilter: Optional[Callable[[float], bool]] = None,
@@ -280,7 +286,7 @@ class PlotObject1D():
         self.dataset = dataset
         self.scale = scale
         self.bounds = bounds
-        self._init_options(plot_options, color, label)
+        self._init_options(ax, plot_options, color, label)
         self.ppm_scale = self.dataset.ppm_scale(bounds=self.bounds)
         # Handle processed data
         proc_data = self.dataset.proc_data(bounds=self.bounds)
@@ -293,6 +299,7 @@ class PlotObject1D():
         self.proc_data = proc_data * self.scale
 
     def _init_options(self,
+                      ax: Any,
                       plot_options: Optional[Dict],
                       color: OS,
                       label: OS):
@@ -312,7 +319,7 @@ class PlotObject1D():
         # If a color hasn't been chosen by now, get one from the color
         # generator in PHA.
         if "color" not in options:
-            next_color = next(get_pha().colors_1d)
+            next_color = next(ax.pha.colors_1d)
             options.update(color=next_color)
         # Finally, set the instance attribute
         self.options = options
@@ -392,9 +399,8 @@ def _mkplot1d(ax: Any = None,
     # True if we find any PlotObject1D with a non-empty label.
     make_legend = False
     # Find the maximum height
-    holding_area = get_pha()
     heights = [np.nanmax(pobj.proc_data) - np.nanmin(pobj.proc_data)
-               for pobj in holding_area.plot_queue]
+               for pobj in ax.pha.plot_objs]
     max_height = max(heights)
 
     # Get Axes object
@@ -402,7 +408,7 @@ def _mkplot1d(ax: Any = None,
         ax = plt.gca()
 
     # Iterate over plot objects
-    for n, pobj in enumerate(holding_area.plot_queue):
+    for n, pobj in enumerate(ax.pha.plot_objs):
         # Calculate the hoffset and voffset for this spectrum. If offset is a
         # sequence then use offset[n], otherwise if it's a float use n * offset
         # Also, mypy really doesn't like try/except.
@@ -439,7 +445,7 @@ def _mkplot1d(ax: Any = None,
     if autolabel is None:
         pass
     elif autolabel == "nucl":
-        xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()
+        xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()
         xlabel += " (ppm)"
     else:
         raise ValueError(f"Invalid value '{autolabel}' given for "
@@ -455,15 +461,18 @@ def _mkplot1d(ax: Any = None,
         ax.legend(loc=legend_loc)
     # Apply axis styles.
     main.style_axes(ax, style)
-    return plt.gcf(), ax
+    return ax.figure, ax
 
 
 # -- 2D PLOTTING ----------------------------------------------
+
+_default_2d_figsize = (5, 5)
 
 class Contours:
     """2D plot contours."""
     def __init__(self,
                  dataset: ds.Dataset2D,
+                 ax: Any,
                  levels: TLevels = (None, None, None),
                  colors: TColors = (None, None),
                  ) -> None:
@@ -471,7 +480,7 @@ class Contours:
         if isinstance(levels, float):
             levels = (levels, None, None)
         self.make_levels(*levels)
-        self.make_colors(*colors)
+        self.make_colors(ax, *colors)
 
     def make_levels(self, base: OF = None,
                     increment: OF = None,
@@ -482,12 +491,13 @@ class Contours:
         self.number = number or 10
 
     def make_colors(self,
+                    ax: Any,
                     color_positive: OS = None,
                     color_negative: OS = None
                     ) -> None:
         if color_positive is None or color_negative is None:
             # Means we need to get a color set from the PHA generator.
-            next_positive, next_negative = next(get_pha().colors_2d)
+            next_positive, next_negative = next(ax.pha.colors_2d)
             self.color_positive = color_positive or next_positive
             self.color_negative = color_negative or next_negative
         else:
@@ -516,6 +526,7 @@ class PlotObject2D():
     default_2d_plotoptions = {"linewidths": 0.7}
     def __init__(self,
                  dataset: ds.Dataset2D,
+                 ax: Any,
                  f1_bounds: TBounds = "",
                  f2_bounds: TBounds = "",
                  levels: TLevels = (None, None, None),
@@ -527,7 +538,7 @@ class PlotObject2D():
         self.dataset = dataset
         self.f1_bounds = f1_bounds
         self.f2_bounds = f2_bounds
-        self.contours = Contours(self.dataset, levels, colors)
+        self.contours = Contours(self.dataset, ax, levels, colors)
         # can access cpos and cneg with self.contours.color_[positive|negative]
         self.clevels = self.contours.generate_contour_levels()
         self.ccolors = self.contours.generate_contour_colors()
@@ -570,6 +581,7 @@ class ContourLegendHandler(HandlerBase):
 
 
 def _stage2d(dataset: ds.Dataset2D,
+             ax: Any = None,
              f1_bounds: TBounds = "",
              f2_bounds: TBounds = "",
              levels: TLevels = (None, None, None),
@@ -582,7 +594,7 @@ def _stage2d(dataset: ds.Dataset2D,
 
     This constructs a `PlotObject2D` object from the dataset as well as any
     options passed via the keyword arguments, and adds it to the plot queue
-    (see `PlotHoldingArea`).
+    of the |Axes|.
 
     Note that the preferred way of staging spectra is to call the
     :meth:`~penguins.dataset._2D_PlotMixin.stage` method on the dataset object.
@@ -591,6 +603,9 @@ def _stage2d(dataset: ds.Dataset2D,
     ----------
     dataset : Dataset1D, Dataset1DProj, or Dataset1DProjVirtual
         Dataset to be staged.
+    ax : Axes, optional
+        |Axes| instance to tie the plot to. Defaults to the currently active
+        Axes.
     scale : float, optional
         Value to scale the spectrum intensity by.
     f1_bounds : str or (float, float), optional
@@ -634,20 +649,33 @@ def _stage2d(dataset: ds.Dataset2D,
     _2D_PlotMixin.stage : Equivalent method on Dataset2D objects, and the
                           preferred way of staging spectra.
     """
-    plot_obj = PlotObject2D(dataset=dataset,
-                            f1_bounds=f1_bounds, f2_bounds=f2_bounds,
-                            levels=levels, colors=colors,
-                            dfilter=dfilter, label=label,
-                            plot_options=plot_options)
+    # If an Axes wasn't specified, get the currently active one.
+    if ax is None:
+        # Before calling gca(), we check whether a figure exists yet. If it
+        # doesn't, then we make a figure ourselves with a default figsize.
+        if not plt.get_fignums():  # == empty list if no figures yet.
+            plt.figure(figsize=_default_2d_figsize)
+        ax = plt.gca()
+    # Create the plot holding area if it doesn't exist yet
+    if not hasattr(ax, "pha"):
+        ax.pha = PlotHoldingArea()
 
-    # Check that the plot queue doesn't have 1D spectra.
-    # We can just check against the first element. By induction, it is
-    # equivalent to checking against every element.
-    PHA = get_pha()
-    if len(PHA.plot_queue) != 0 and isinstance(PHA.plot_queue[0], PlotObject1D):
+    # Check that it doesn't already have 1D spectra. We can just check against
+    # the first element. By induction, it is equivalent to checking against
+    # every element.
+    if len(ax.pha.plot_objs) != 0 and isinstance(ax.pha.plot_objs[0],
+                                                 PlotObject1D):
         raise TypeError("Plot queue already contains 1D spectra.")
+    # If we reached here, then it's all good and we should make the
+    # PlotObject2D then append it to the PHA.
     else:
-        PHA.plot_queue.append(plot_obj)
+        plot_obj = PlotObject2D(dataset=dataset, ax=ax,
+                                f1_bounds=f1_bounds, f2_bounds=f2_bounds,
+                                levels=levels, colors=colors,
+                                dfilter=dfilter, label=label,
+                                plot_options=plot_options)
+        ax.pha.plot_objs.append(plot_obj)
+    return ax.figure, ax
 
 
 def _mkplot2d(ax: Any = None,
@@ -709,8 +737,7 @@ def _mkplot2d(ax: Any = None,
     if ax is None:
         ax = plt.gca()
     # Iterate over plot objects
-    holding_area = get_pha()
-    for n, pobj in enumerate(holding_area.plot_queue):
+    for n, pobj in enumerate(ax.pha.plot_objs):
         ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
                    pobj.f1_scale - (n * offset[0]),   # y-axis
                    pobj.proc_data,
@@ -728,9 +755,9 @@ def _mkplot2d(ax: Any = None,
     if autolabel is None:
         pass
     elif autolabel == "nucl":
-        xlabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[1]
+        xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[1]
         xlabel += " (ppm)"
-        ylabel = holding_area.plot_queue[0].dataset.nuclei_to_str()[0]
+        ylabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[0]
         ylabel += " (ppm)"
     else:
         raise ValueError(f"Invalid value '{autolabel}' given for "
@@ -758,7 +785,7 @@ def _mkplot2d(ax: Any = None,
         plt.legend(legend_colors, legend_labels,
                    handler_map={tuple: ContourLegendHandler()},
                    loc=legend_loc)
-    return (plt.gcf(), ax)
+    return ax.figure, ax
 
 
 def _find_baselev(dataset: ds.Dataset2D,
@@ -835,7 +862,7 @@ def _find_baselev(dataset: ds.Dataset2D,
                val: float
                ) -> None:
         # Update the internal Contours object
-        pobj = get_pha().plot_queue[0]
+        pobj = ax.pha.plot_objs[0]
         pobj.contours.base = 10 ** val
         # Regenerate the contours
         pobj.clevels = pobj.contours.generate_contour_levels()

@@ -19,13 +19,14 @@ Note that `penguins` is still in development, so the interface should not be ass
 
 As an example of the output, here's Figure 2 from [*Angew. Chem. Int. Ed.* **2017**, *56* (39), 11779–11783](https://doi.org/10.1002/anie.201705506)):
 
-<div align="center"><img src="https://raw.githubusercontent.com/yongrenjie/penguins/master/docs/images/angew.png" height="550"></div>
+<div align="center"><img src="https://raw.githubusercontent.com/yongrenjie/penguins/master/docs/images/angew_example.png" height="500"></div>
 
-And here's a similar plot that can be done with under 20 lines of code using penguins:
+And here's a similar plot that can be done in under 20 lines of PEP8-compliant code using penguins:
 
-```
+```python
 import penguins as pg
-hmqc, hsqc, cosy, noesy = (pg.read("tests/data/noah", i, 1) for i in range(1, 5))
+hmqc, hsqc, cosy, noesy = (pg.read("tests/data/noah", i, 1)
+                           for i in range(1, 5))
 
 fig, axs = pg.subplots(2, 2)
 hmqc.stage(axs[0, 0], levels=7e3, f1_bounds="110..130", f2_bounds="7..9.5")
@@ -40,11 +41,11 @@ for ax, title, char in zip(axs.flat, titles, "abcd"):
             fontweight="semibold", verticalalignment="top")
     pg.move_ylabel(ax, pos="topright")
 
-pg.cleanup_axes(fig)
+pg.cleanup_axes()
 pg.show()
 ```
 
-<div align="center"><img src="https://raw.githubusercontent.com/yongrenjie/penguins/master/docs/images/readme_example.png" height="550"></div>
+<div align="center"><img src="https://raw.githubusercontent.com/yongrenjie/penguins/master/docs/images/readme_example.png" height="500"></div>
 
 ----------
 

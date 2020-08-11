@@ -146,6 +146,7 @@ def figure(*args, **kwargs) -> Any:
 
 
 def mkplot(ax: Any = None,
+           empty_pha: bool = True,
            **kwargs
            ) -> Tuple[Any, Any]:
     """Construct a plot from one or more staged spectra.
@@ -166,6 +167,13 @@ def mkplot(ax: Any = None,
         |Figure| instance for the active plot.
     ax : Axes
         |Axes| instance for the active plot.
+
+    Other Parameters
+    ----------------
+    empty_pha : bool, optional
+        Whether to empty the `PlotHoldingArea` of the |Axes| after constructing
+        the plots. The average user should have no use for this; it only exists
+        to make `find_baselev()` work.
 
     Notes
     -----
@@ -204,7 +212,7 @@ def mkplot(ax: Any = None,
                 raise TypeError("Plot holding area has invalid elements.")
     finally:
         # Reset the PHA to being empty
-        if ax is not None:
+        if ax is not None and empty_pha:
             ax.pha = pgplot.PlotHoldingArea()
     return fig, ax
 

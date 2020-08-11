@@ -829,7 +829,6 @@ def _find_baselev(dataset: ds.Dataset2D,
     initial_baselev = dataset._tsbaselev
     increment = increment or (1.5 ** 10) ** (1 / nlev)
     initial_clev = (initial_baselev, increment, nlev)
-    dataset.stage(levels=initial_clev)
     # Maximum level of the slider should be the greatest intensity of the
     # spectrum. There's no point going above that.
     max_baselev = np.max(np.abs(dataset.rr))
@@ -837,8 +836,9 @@ def _find_baselev(dataset: ds.Dataset2D,
     min_baselev = 100
 
     # Plot the spectrum on the top portion of the figure.
-    fig, ax = plt.subplots()
-    _, plot_axes = main.mkplot(empty_pha=False)
+    fig, plot_axes = plt.subplots()
+    dataset.stage(plot_axes, levels=initial_clev)
+    main.mkplot(plot_axes, empty_pha=False)
     orig_xlim = plot_axes.get_xlim()
     orig_ylim = plot_axes.get_ylim()
     plt.subplots_adjust(left=0.1, bottom=0.25)
@@ -853,16 +853,16 @@ def _find_baselev(dataset: ds.Dataset2D,
                             valinit=np.log10(initial_baselev),
                             color="purple")
     # Add some text
-    plt.text(0.5, -1.2, r"log$_{10}$(base contour level)",
-             horizontalalignment="center",
-             transform=baselev_axes.transAxes)
+    baselev_axes.text(0.5, -1.2, r"log$_{10}$(base contour level)",
+                      horizontalalignment="center",
+                      transform=baselev_axes.transAxes)
 
     # Define the behaviour when redrawn
     def redraw(plot_axes: Any,
                val: float
                ) -> None:
         # Update the internal Contours object
-        pobj = ax.pha.plot_objs[0]
+        pobj = plot_axes.pha.plot_objs[0]
         pobj.contours.base = 10 ** val
         # Regenerate the contours
         pobj.clevels = pobj.contours.generate_contour_levels()
@@ -871,7 +871,7 @@ def _find_baselev(dataset: ds.Dataset2D,
         ylim = plot_axes.get_ylim()
         plot_axes.cla()
         plt.sca(plot_axes)
-        main.mkplot(close=False, empty_pha=False, style="natural")
+        main.mkplot(plot_axes, empty_pha=False, style="natural")
         plot_axes.set_xlim(xlim)
         plot_axes.set_ylim(ylim)
 
@@ -914,8 +914,6 @@ def _find_baselev(dataset: ds.Dataset2D,
         fval = 10 ** baselev_slider.val
         fval_short = f"{fval:.2e}".replace("e+0", "e")
         print(f"The final base level was:   {fval:.2f} (or {fval_short})\n")
-    # Clear out the PHA
-    _reset_pha()
     plt.close("all")
 
     return fval if okay else None

@@ -421,8 +421,9 @@ def style_axes(ax: Any,
         raise ValueError(f"Invalid style '{style}' requested.")
 
 
-def cleanup_axes(fig):
+def cleanup_axes():
     # Need to draw the figure to get the renderer, whatever that means.
+    fig = plt.gcf()
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
     # Iterate over axes and check which ticks overlap with axes label.

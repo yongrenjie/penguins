@@ -79,24 +79,18 @@ Auxiliary plotting utilities
 
 |v|
 
-.. autofunction:: get_pha()
+.. currentmodule:: penguins.pgplot
 
-|v|
-
-.. autoclass:: penguins.pgplot.PlotHoldingArea
-
-|v|
-
-.. autofunction:: get_properties()
+.. autoclass:: PlotHoldingArea
    
 |v|
 
-.. autoclass:: penguins.pgplot.PlotProperties
+.. autoclass:: PlotProperties
 
 |v|
 
-.. autoclass:: penguins.pgplot.PlotObject1D
+.. autoclass:: PlotObject1D
 
 |v|
 
-.. autoclass:: penguins.pgplot.PlotObject2D
+.. autoclass:: PlotObject2D

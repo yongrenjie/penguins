@@ -44,10 +44,7 @@ Contents
    quickstart
    datasets
    paradigm
-   plot1d
-   plot2d
    subplots
-   cookbook
    nus
    topspin
    reference

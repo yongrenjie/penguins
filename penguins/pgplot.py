@@ -91,10 +91,8 @@ class PlotHoldingArea():
     """Plot holding area which holds staged spectra (as `PlotObject1D` or
     `PlotObject2D` objects) before the plot is constructed using `mkplot()`.
 
-    This is reset by every call to `mkplot()`, so if desired, should be
-    accessed before calling `mkplot()`. In practice, though, I cannot think of
-    any reason why one would need this. If you find a use case, please let me
-    know.
+    Each |Axes| has its own PlotHoldingArea instance, which can be accessed
+    with ``ax.pha``.
 
     Attributes
     ----------
@@ -127,10 +125,9 @@ class PlotProperties():
     """Stores properties of 1D spectra that have already been plotted using
     `mkplot()`. 2D properties are not stored.
 
-    The PlotProperties object is only populated after `mkplot()` has been
-    called. However, it is reset on the *subsequent* call to `mkplot()`, so
-    any properties of interest should be accessed before constructing the next
-    plot.
+    Each |Axes| has its own PlotProperties instance, which can be accessed
+    with ``ax.pprop`` (but *only* after `mkplot()` has been called on that
+    particular Axes).
 
     Attributes
     ----------

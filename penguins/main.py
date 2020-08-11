@@ -177,31 +177,33 @@ def mkplot(ax: Any = None,
     penguins.pgplot._mkplot2d : Keyword arguments for 2D plots are described
                                 here.
     """
-    # Close open figures, *unless* an axes was given, in which case
-    # we assume that the user isn't keen on having that closed!
-    # Useful e.g. when doing subplots.
-    if close and ax is None:
-        plt.close("all")
-    # Reset plot properties
-    pgplot._reset_properties()
+    try:
+        # Close open figures, *unless* an axes was given, in which case
+        # we assume that the user isn't keen on having that closed!
+        # Useful e.g. when doing subplots.
+        if close and ax is None:
+            plt.close("all")
+        # Reset plot properties
+        pgplot._reset_properties()
 
-    PHA = get_pha()
-    if len(PHA.plot_queue) == 0:
-        raise ValueError("No spectra have been staged yet.")
-    else:
-        if close and figsize is not None and ax is None:
-            plt.figure(figsize=figsize)
-        if ax is None:
-            ax = plt.gca()
-        if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
-            fig, ax = pgplot._mkplot1d(ax=ax, **kwargs)
-        elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
-            fig, ax = pgplot._mkplot2d(ax=ax, **kwargs)
+        PHA = get_pha()
+        if len(PHA.plot_queue) == 0:
+            raise ValueError("No spectra have been staged yet.")
         else:
-            raise TypeError("Plot holding area has invalid entries.")
-    # Reset the PHA to being empty
-    if empty_pha:
-        pgplot._reset_pha()
+            if close and figsize is not None and ax is None:
+                plt.figure(figsize=figsize)
+            if ax is None:
+                ax = plt.gca()
+            if isinstance(PHA.plot_queue[0], pgplot.PlotObject1D):
+                fig, ax = pgplot._mkplot1d(ax=ax, **kwargs)
+            elif isinstance(PHA.plot_queue[0], pgplot.PlotObject2D):
+                fig, ax = pgplot._mkplot2d(ax=ax, **kwargs)
+            else:
+                raise TypeError("Plot holding area has invalid elements.")
+    finally:
+        # Reset the PHA to being empty
+        if empty_pha:
+            pgplot._reset_pha()
     return fig, ax
 
 

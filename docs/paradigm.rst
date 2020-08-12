@@ -38,7 +38,7 @@ Constructing a plot
 
 3. Fixes the plot axes such that they resemble a typical NMR plot (e.g. inverting axes limits, etc.), then sets up the axes labels and title (if appropriate).
 
-3. Stores some plot properties, such as colours and the vertical heights of stacked spectra, in an instance of `PlotProperties`. This object is also tied to the particular |Axes|, and can be accessed with ``ax.pprop``.
+3. Stores some plot properties, such as colours and the vertical heights of stacked spectra, in an instance of `PlotProperties`. This object is also tied to the particular |Axes|, and can be accessed with ``ax.prop``.
 
 4. Resets that |Axes|'s PHA to a brand-new instance of `PlotHoldingArea`.
 

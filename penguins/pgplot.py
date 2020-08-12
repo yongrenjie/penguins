@@ -126,7 +126,7 @@ class PlotProperties():
     `mkplot()`. 2D properties are not stored.
 
     Each |Axes| has its own PlotProperties instance, which can be accessed
-    with ``ax.pprop`` (but *only* after `mkplot()` has been called on that
+    with ``ax.prop`` (but *only* after `mkplot()` has been called on that
     particular Axes).
 
     Attributes
@@ -662,8 +662,8 @@ def _mkplot2d(ax: Any = None,
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
               autolabel: OS = None,
-              xlabel: str = r"$f_1$ (ppm)",
-              ylabel: str = r"$f_2$ (ppm)",
+              xlabel: str = r"$f_2$ (ppm)",
+              ylabel: str = r"$f_1$ (ppm)",
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
     """Calls |contour| on all the spectra in the plot queue. All offset
@@ -716,7 +716,7 @@ def _mkplot2d(ax: Any = None,
     if ax is None:
         ax = plt.gca()
     # Create a PlotProperties instance for this Axes.
-    ax.pprop = PlotProperties()
+    ax.prop = PlotProperties()
 
     # Iterate over plot objects
     for n, pobj in enumerate(ax.pha.plot_objs):

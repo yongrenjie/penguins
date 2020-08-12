@@ -203,7 +203,7 @@ def mkplot(ax: Any = None,
             raise ValueError("No spectra have been staged yet.")
         else:
             # Reset (or create) plot properties
-            ax.pprop = pgplot.PlotProperties()
+            ax.prop = pgplot.PlotProperties()
             if isinstance(ax.pha.plot_objs[0], pgplot.PlotObject1D):
                 fig, ax = pgplot._mkplot1d(ax=ax, **kwargs)
             elif isinstance(ax.pha.plot_objs[0], pgplot.PlotObject2D):

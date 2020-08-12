@@ -73,7 +73,6 @@ Datasets
    .. automethod:: proc_data
    .. automethod:: integrate
    .. automethod:: bounds_to_slice
-   .. automethod:: nuclei_to_str
 
 |v|
 
@@ -97,6 +96,7 @@ Even then, much of the interface is abstracted away: for example, the staging an
    .. automethod:: ppm_to_index
    .. automethod:: ppm_scale
    .. automethod:: hz_scale
+   .. automethod:: nuclei_to_str
 
 |v|
 
@@ -106,6 +106,7 @@ Even then, much of the interface is abstracted away: for example, the staging an
    .. automethod:: ppm_to_index
    .. automethod:: ppm_scale
    .. automethod:: hz_scale
+   .. automethod:: nuclei_to_str
 
 |v|
 

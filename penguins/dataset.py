@@ -438,16 +438,6 @@ class _1D_ProcDataMixin():
         return slice(self.ppm_to_index(upper) or 0,                      # type: ignore # mixin
                      (self.ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
 
-    def nuclei_to_str(self
-                      ) -> str:
-        """Returns a string with the nucleus nicely formatted in LaTeX syntax.
-        Can be directly used with e.g. matplotlib.
-        """
-        nuc = self["nuc1"]          # type: ignore
-        elem = nuc.lstrip("1234567890")
-        mass = nuc[:-len(elem)]
-        return rf"$^{{{mass}}}${elem}"
-
 
 class _1D_PlotMixin():
     """Defines 1D plotting methods."""
@@ -748,6 +738,16 @@ class Dataset1D(_1D_RawDataMixin,
         min_hz = self["o1"] - self["sw"]/(2 * self["sfo1"])
         return np.linspace(max_hz, min_hz, self["si"])
 
+    def nuclei_to_str(self
+                      ) -> str:
+        """Returns a string with the nucleus nicely formatted in LaTeX syntax.
+        Can be directly used with e.g. matplotlib.
+        """
+        nuc = self["nuc1"]          # type: ignore
+        elem = nuc.lstrip("1234567890")
+        mass = nuc[:-len(elem)]
+        return rf"$^{{{mass}}}${elem}"
+
 
 class Dataset1DProj(_2D_RawDataMixin,
                     _1D_ProcDataMixin,
@@ -851,6 +851,16 @@ class Dataset1DProj(_2D_RawDataMixin,
         min_hz = self["o1"][self.proj_axis] - self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
         full_hz_scale = np.linspace(max_hz, min_hz, self["si"])
         return full_hz_scale[self.bounds_to_slice(bounds)]
+
+    def nuclei_to_str(self
+                      ) -> str:
+        """Returns a string with the nucleus nicely formatted in LaTeX syntax.
+        Can be directly used with e.g. matplotlib.
+        """
+        nuc = self["nuc1"][self.proj_axis]   # type: ignore
+        elem = nuc.lstrip("1234567890")
+        mass = nuc[:-len(elem)]
+        return rf"$^{{{mass}}}${elem}"
 
 
 class Dataset2D(_2D_RawDataMixin,

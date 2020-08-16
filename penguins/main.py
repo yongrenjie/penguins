@@ -200,7 +200,7 @@ def mkplot(ax: Any = None,
 
         # Check if the PHA exists and isn't empty.
         if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
-            raise ValueError("No spectra have been staged yet.")
+            return
         else:
             # Reset (or create) plot properties
             ax.prop = pgplot.PlotProperties()

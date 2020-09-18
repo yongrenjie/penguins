@@ -24,6 +24,7 @@ class Andrographolide:
                (36.8961, 1.7138), (37.9512, 2.3380), (24.4115, 1.3705),
                (24.4115, 1.7528), (28.4558, 1.6435)]
         ch3 = [(23.5323, 1.0896), (15.0919, 0.6682)]
+        peaks = ch + ch2 + ch3
         _ch_df, _ch2_df, _ch3_df = (pd.DataFrame.from_records(peaklist,
                                                               columns=("f1", "f2"))
                                     for peaklist in (ch, ch2, ch3))
@@ -72,6 +73,7 @@ class Andrographolide:
         _cross_otherhalf = [(t[1], t[0]) for t in _cross_half]
         # All crosspeaks
         cross = _cross_half + _cross_otherhalf
+        peaks = diagonal + cross
         # Dataframes
         _diagonal_df, _cross_df = (pd.DataFrame.from_records(peaklist,
                                                              columns=("f1", "f2"))

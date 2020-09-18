@@ -395,6 +395,8 @@ def style_axes(ax: Any,
 
     def thicken_spines(ax):
         for s in ["top", "left", "right", "bottom"]:
+            ax.spines[s].set_visible(True)
+        for s in ["top", "left", "right", "bottom"]:
             ax.spines[s].set_linewidth(1.3)
 
     if style == "1d":

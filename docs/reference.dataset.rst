@@ -48,7 +48,6 @@ Datasets
    .. automethod:: proc_data
    .. automethod:: integrate
    .. automethod:: bounds_to_slice
-   .. automethod:: nuclei_to_str
 
 |v|
 

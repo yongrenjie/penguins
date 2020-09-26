@@ -41,4 +41,16 @@ In this case, what we can do is to set up the list of datasets to be plotted, th
    # Display as usual (outside the loop)
    pg.show()
 
-More examples will be added soon.
+If you don't need to do anything complicated with the ``Axes`` instances while plotting, you can use the `mkplots()` convenience function, which takes a list of ``Axes`` and a list of titles, and calls `mkplot()` on all of them.
+That is to say, instead of doing something like::
+
+   for ax, title in zip(axs.flat, titles):
+       pg.mkplot(ax, title=title, **kwargs)
+
+you can directly do
+
+::
+
+   pg.mkplots(axs=axs, titles=titles, **kwargs)
+
+More examples of subplot plotting will be added soon.

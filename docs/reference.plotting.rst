@@ -14,6 +14,10 @@ General plotting
 
 |v|
 
+.. autofunction:: mkplots
+
+|v|
+
 .. autofunction:: mkinset
 
 |v|

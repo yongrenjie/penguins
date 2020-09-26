@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union, Optional, Tuple, Any
+from itertools import zip_longest
+from typing import Union, Optional, Tuple, Sequence, Any
 
 import matplotlib.pyplot as plt    # type: ignore
 from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
+from .type_aliases import *
 from . import dataset as ds
 from . import pgplot
 from .pgplot import (set_palette, color_palette)
@@ -200,7 +202,7 @@ def mkplot(ax: Any = None,
 
         # Check if the PHA exists and isn't empty.
         if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
-            return
+            raise ValueError("No plots have been staged on this Axes yet.")
         else:
             # Reset (or create) plot properties
             ax.prop = pgplot.PlotProperties()
@@ -215,6 +217,58 @@ def mkplot(ax: Any = None,
         if ax is not None and empty_pha:
             ax.pha = pgplot.PlotHoldingArea()
     return fig, ax
+
+
+def mkplots(axs: Any = None,
+            titles: Sequence[OS] = None,
+            **kwargs
+            ) -> Tuple[Any, Any]:
+    """
+    Convenience function which essentially calls mkplot(ax, title=title) for
+    ax, title in zip(axs.flat, titles).
+
+    Parameters
+    ----------
+    axs : ndarray of Axes (optional)
+        An ndarray of Axes, as commonly returned by subplots(). Note that this
+        function will not work with ordinary lists or tuples as it iterates
+        over axs.flat.
+        If not passed, then iterates over all Axes in the current figure.
+
+    titles : list or tuple of str (optional)
+        A series of subplot titles. Use None or an empty string to avoid having
+        a title.
+
+    **kwargs : dict
+        Other keyword arguments which are passed on to `mkplot()` (and
+        consequently the other functions that it calls).
+
+    Returns
+    -------
+    fig : Figure
+        |Figure| instance for the active plot.
+    axs : ndarray of Axes
+        The same ndarray that was provided.
+    """
+    # Make sure that there is an active figure...
+    if not plt.get_fignums():
+        raise ValueError("No active figure found.")
+    # Get all active Axes if none were given
+    fig = plt.gcf()
+    if axs is None:
+        axs_it = fig.get_axes()
+    else:
+        try:
+            axs_it = axs.flat
+        except AttributeError:
+            raise TypeError("'axs' must be a numpy.ndarray of Axes.")
+    # If no titles were given, use an empty list
+    if titles is None:
+        titles = []
+    # Call mkplot() on each Axes.
+    for ax, title in zip_longest(axs_it, titles):
+        mkplot(ax, title=title, **kwargs)
+    return fig, axs
 
 
 def mkinset(ax: Any,

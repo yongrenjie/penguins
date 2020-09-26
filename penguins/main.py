@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 from itertools import zip_longest
 from typing import Union, Optional, Tuple, Sequence, Any
@@ -202,7 +203,8 @@ def mkplot(ax: Any = None,
 
         # Check if the PHA exists and isn't empty.
         if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
-            raise ValueError("No plots have been staged on this Axes yet.")
+            warnings.warn("No plots have been staged on this Axes yet.")
+            return None
         else:
             # Reset (or create) plot properties
             ax.prop = pgplot.PlotProperties()
@@ -474,7 +476,7 @@ def style_axes(ax: Any,
     elif style == "natural":
         pass
     else:
-        raise ValueError(f"Invalid style '{style}' requested.")
+        warnings.warn(f"Invalid style '{style}' requested.")
 
 
 def cleanup_axes() -> None:

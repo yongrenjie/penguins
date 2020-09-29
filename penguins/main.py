@@ -204,7 +204,7 @@ def mkplot(ax: Any = None,
         # Check if the PHA exists and isn't empty.
         if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
             warnings.warn("No plots have been staged on this Axes yet.")
-            return None
+            return None, None
         else:
             # Reset (or create) plot properties
             ax.prop = pgplot.PlotProperties()

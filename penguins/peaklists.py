@@ -53,6 +53,33 @@ class Andrographolide:
                                                    mode=("max"))
                                  for peak in cls.df.itertuples()])
 
+        @classmethod
+        def make_df(cls,
+                    dataset: ds.Dataset2D,
+                    label: str,
+                    ref_dataset: ds.Dataset2D,
+                    edited: bool = False,
+                    ) -> pd.DataFrame:
+            """
+            Construct a dataframe of relative intensities vs a reference
+            dataset (in the correct form for seaborn plotting).
+            """
+            # Reference intensities
+            ref_ints = cls.integrate(ref_dataset, edited=edited)
+            # Actual intensities
+            this_ints = cls.integrate(dataset, edited=edited)
+            # Relative intensities
+            rel_ints = this_ints / ref_ints
+            # Construct dataframe
+            df = pd.DataFrame()
+            df["int"] = rel_ints
+            df["expt"] = label
+            df["mult"] = cls.df["mult"]
+            df["f1"] = cls.df["f1"]
+            df["f2"] = cls.df["f2"]
+            return df
+
+
     class cosy:
         # Diagonal peaks
         diagonal = [(6.6303, 6.6303), (5.7112, 5.7112), (4.9191, 4.9191),
@@ -92,3 +119,111 @@ class Andrographolide:
                                                margin=cls.margin,
                                                mode="max")
                              for peak in cls.df.itertuples()])
+
+        @classmethod
+        def make_df(cls,
+                    dataset: ds.Dataset2D,
+                    label: str,
+                    ref_dataset: ds.Dataset2D,
+                    ) -> pd.DataFrame:
+            """
+            Construct a dataframe of relative intensities vs a reference
+            dataset (in the correct form for seaborn plotting).
+            """
+            # Reference intensities
+            ref_ints = cls.integrate(ref_dataset)
+            # Actual intensities
+            this_ints = cls.integrate(dataset)
+            # Relative intensities
+            rel_ints = this_ints / ref_ints
+            # Construct dataframe
+            df = pd.DataFrame()
+            df["int"] = rel_ints
+            df["expt"] = label
+            df["type"] = cls.df["type"]
+            df["f1"] = cls.df["f1"]
+            df["f2"] = cls.df["f2"]
+            return df
+
+
+class Zolmitriptan:
+    """
+    55 mM zolmitriptan in DMSO.
+    """
+
+    class nhsqc:
+        margin = (0.4, 0.05)
+        # two peaks only! how nice.
+        peaks = [(89.2165, 7.7742), (129.5334, 10.6982)]
+
+        @classmethod
+        def integrate(cls,
+                      dataset: ds.Dataset2D,
+                      ) -> np.ndarray:
+            # Get absolute peak intensities for a given dataset.
+            return np.array([dataset.integrate(peak=peak,
+                                               margin=cls.margin,
+                                               mode="max")
+                             for peak in cls.peaks])
+
+    class chsqc:
+        ch = [(119.3186, 7.3631), (111.7687, 7.2574), (123.1813, 7.1165),
+              (123.0057, 6.9345), (53.6525, 4.0573)]
+        ch2 = [(68.5766, 4.2335), (68.5766, 4.0280),   # diastereotopic
+               (41.1865, 2.8947), (41.0110, 2.7891),   # diastereotopic
+               (60.5001, 2.5131), (23.6288, 2.8008)]   # CH2CH2NMe2
+        ch3 = [(45.5760, 2.2195)]
+        peaks = ch + ch2 + ch3
+        _ch_df, _ch2_df, _ch3_df = (pd.DataFrame.from_records(peaklist,
+                                                              columns=("f1", "f2"))
+                                    for peaklist in (ch, ch2, ch3))
+        _ch_df["mult"] = "ch"
+        _ch2_df["mult"] = "ch2"
+        _ch3_df["mult"] = "ch3"
+        df = pd.concat((_ch_df, _ch2_df, _ch3_df), ignore_index=True)
+        margin = (0.5, 0.02)
+
+        @classmethod
+        def integrate(cls,
+                      dataset: ds.Dataset2D,
+                      edited: bool = False,
+                      ) -> np.ndarray:
+            # Get absolute peak intensities for a given dataset.
+            if edited:
+                return np.array([dataset.integrate(peak=(peak.f1, peak.f2),
+                                                   margin=cls.margin,
+                                                   mode=("max"
+                                                         if peak.mult == "ch2"
+                                                         else "min"))
+                                 for peak in cls.df.itertuples()])
+            else:
+                return np.array([dataset.integrate(peak=(peak.f1, peak.f2),
+                                                   margin=cls.margin,
+                                                   mode=("max"))
+                                 for peak in cls.df.itertuples()])
+
+        @classmethod
+        def make_df(cls,
+                    dataset: ds.Dataset2D,
+                    label: str,
+                    ref_dataset: ds.Dataset2D,
+                    edited: bool = False,
+                    ) -> pd.DataFrame:
+            """
+            Construct a dataframe of relative intensities vs a reference
+            dataset (in the correct form for seaborn plotting).
+            """
+            # Reference intensities
+            ref_ints = cls.integrate(ref_dataset, edited=edited)
+            # Actual intensities
+            this_ints = cls.integrate(dataset, edited=edited)
+            # Relative intensities
+            rel_ints = this_ints / ref_ints
+            # Construct dataframe
+            df = pd.DataFrame()
+            df["int"] = rel_ints
+            df["expt"] = label
+            df["mult"] = cls.df["mult"]
+            df["f1"] = cls.df["f1"]
+            df["f2"] = cls.df["f2"]
+            return df

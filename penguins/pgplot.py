@@ -222,7 +222,19 @@ def _stage1d(dataset: ds.TDataset1D,
         ax = plt.gca()
     # Create the plot holding area if it doesn't exist yet
     if not hasattr(ax, "pha"):
-        ax.pha = PlotHoldingArea()
+        try:
+            ax.pha = PlotHoldingArea()
+        except AttributeError as e:
+            # Check if it's actually an ndarray, as one of the most common
+            # mistakes is to pass an ndarray of Axes by iterating over axs
+            # instead of axs.flat.
+            if isinstance(ax, np.ndarray):
+                raise AttributeError("'numpy.ndarray' object has no attribute"
+                                     " 'pha'. Did you mean to iterate over"
+                                     " axs.flat instead of axs?") from None
+            else:
+                raise e
+
     # Check that it doesn't already have 2D spectra. We can just check against
     # the first element. By induction, it is equivalent to checking against
     # every element.
@@ -639,7 +651,18 @@ def _stage2d(dataset: ds.Dataset2D,
         ax = plt.gca()
     # Create the plot holding area if it doesn't exist yet
     if not hasattr(ax, "pha"):
-        ax.pha = PlotHoldingArea()
+        try:
+            ax.pha = PlotHoldingArea()
+        except AttributeError as e:
+            # Check if it's actually an ndarray, as one of the most common
+            # mistakes is to pass an ndarray of Axes by iterating over axs
+            # instead of axs.flat.
+            if isinstance(ax, np.ndarray):
+                raise AttributeError("'numpy.ndarray' object has no attribute"
+                                     " 'pha'. Did you mean to iterate over"
+                                     " axs.flat instead of axs?") from None
+            else:
+                raise e
 
     # Check that it doesn't already have 1D spectra. We can just check against
     # the first element. By induction, it is equivalent to checking against

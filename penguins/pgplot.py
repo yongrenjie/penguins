@@ -123,7 +123,7 @@ class PlotHoldingArea():
 
 class PlotProperties():
     """Stores properties of 1D spectra that have already been plotted using
-    `mkplot()`. 2D properties are not stored.
+    `mkplot()`. Only artists are stored for 2D spectra.
 
     Each |Axes| has its own PlotProperties instance, which can be accessed
     with ``ax.prop`` (but *only* after `mkplot()` has been called on that
@@ -141,12 +141,17 @@ class PlotProperties():
         List of colors used for each spectrum.
     options : list of dict
         List of options passed to |plot| for each individual spectrum.
+    artists : list of Artists
+        List of :class:`~matplotlib.artist.Artist` objects that have been
+        plotted on the current |Axes|. For 1D spectra, these are Line2D
+        objects; for 2D spectra, they are QuadContourSet objects.
     """
     def __init__(self) -> None:
         self.hoffsets: List[float] = []
         self.voffsets: List[float] = []
         self.colors: List[str] = []
         self.options: List[Dict[str, Any]] = []
+        self.artists: List[Any] = []
 
 
 # -- 1D PLOTTING ----------------------------------------------
@@ -423,14 +428,15 @@ def _mkplot1d(ax: Any = None,
         if "label" in pobj.options and pobj.options["label"] is not None:
             make_legend = True
         # Plot it!
-        ax.plot(pobj.ppm_scale - this_hoffset,
-                pobj.proc_data + this_voffset,
-                **pobj.options)
+        l2d = ax.plot(pobj.ppm_scale - this_hoffset,
+                      pobj.proc_data + this_voffset,
+                      **pobj.options)
         # Add heights and colors to plotproperties.
         ax.prop.hoffsets.append(this_hoffset)
         ax.prop.voffsets.append(this_voffset)
         ax.prop.colors.append(pobj.options["color"])
         ax.prop.options.append(pobj.options)
+        ax.prop.artists.append(*l2d)  # plot() returns a list of Line2D
 
     # Figure out the x- and y-labels. xlabel will override everything if it is
     # manually specified, otherwise, use the value of autolabel.
@@ -746,17 +752,19 @@ def _mkplot2d(ax: Any = None,
 
     # Iterate over plot objects
     for n, pobj in enumerate(ax.pha.plot_objs):
-        ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
-                   pobj.f1_scale - (n * offset[0]),   # y-axis
-                   pobj.proc_data,
-                   levels=pobj.clevels,
-                   **pobj.options)
+        cs = ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
+                        pobj.f1_scale - (n * offset[0]),   # y-axis
+                        pobj.proc_data,
+                        levels=pobj.clevels,
+                        **pobj.options)
         # Construct lists for plt.legend
         if pobj.label is not None:
             make_legend = True
             legend_colors.append((pobj.contours.color_positive,
                                   pobj.contours.color_negative))
             legend_labels.append(pobj.label)
+        # Add the QuadContourSet object to ax.prop.artists
+        ax.prop.artists.append(cs)
 
     # Figure out the x- and y-labels. If xlabel or ylabel are manually
     # specified, they should override autolabel. Otherwise, look at the value

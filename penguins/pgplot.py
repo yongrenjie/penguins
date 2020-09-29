@@ -310,8 +310,8 @@ def _mkplot1d(ax: Any = None,
               voffset: Union[Sequence, float] = 0,
               hoffset: Union[Sequence, float] = 0,
               title: OS = None,
-              autolabel: OS = None,
-              xlabel: str = "Chemical shift (ppm)",
+              autolabel: str = "nucl",
+              xlabel: OS = None,
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
     """Calls |plot| on all the spectra in the plot queue. All hoffset and
@@ -350,14 +350,14 @@ def _mkplot1d(ax: Any = None,
         amount (in ppm).
     title : str, optional
         Plot title.
-    autolabel : str, optional
+    autolabel : str, optional (default: "nucl")
         Automatic label to use for the *x*-axis. The only option available now
-        is ``nucl``, which generates a LaTeX representation of the nucleus of
-        the first staged spectrum (e.g. for a proton spectrum, using this would
-        automatically generate the *x*-axis label ``r"$^{1}$H (ppm)"``).
-        Overrides the *xlabel* parameter.
+        is ``nucl`` (the default), which generates a LaTeX representation of
+        the nucleus of the first staged spectrum (e.g. for a proton spectrum,
+        using this would automatically generate the *x*-axis label
+        ``r"$^{1}$H (ppm)"``).
     xlabel : str, optional
-        *x*-Axis label.
+        *x*-Axis label. Overrides the autolabel parameter if given.
     legend_loc : str or (float, float), optional
         Location to place the legend. This is passed as the *loc* parameter to
         |legend|; see the documentation there for the available options.
@@ -420,16 +420,17 @@ def _mkplot1d(ax: Any = None,
         ax.prop.colors.append(pobj.options["color"])
         ax.prop.options.append(pobj.options)
 
-    # Figure out the x- and y-labels. autolabel should override xlabel if it is
-    # provided.
-    if autolabel is None:
-        pass
-    elif autolabel == "nucl":
-        xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()
-        xlabel += " (ppm)"
+    # Figure out the x- and y-labels. xlabel will override everything if it is
+    # manually specified, otherwise, use the value of autolabel.
+    if xlabel is not None:
+        pass  # use the given xlabel
     else:
-        raise ValueError(f"Invalid value '{autolabel}' given for "
-                         "parameter autolabel.")
+        if autolabel == "nucl":
+            xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()
+            xlabel += " (ppm)"
+        else:
+            raise ValueError(f"Invalid value '{autolabel}' given for "
+                             "parameter autolabel.")
 
     # Format the plot.
     if title:
@@ -661,9 +662,9 @@ def _mkplot2d(ax: Any = None,
               style: str = "2d",
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
-              autolabel: OS = None,
-              xlabel: str = r"$f_2$ (ppm)",
-              ylabel: str = r"$f_1$ (ppm)",
+              autolabel: str = "nucl",
+              xlabel: OS = None,
+              ylabel: OS = None,
               legend_loc: Any = "best",
               ) -> Tuple[Any, Any]:
     """Calls |contour| on all the spectra in the plot queue. All offset
@@ -684,15 +685,17 @@ def _mkplot2d(ax: Any = None,
         *(f1_offset, f2_offset)*.
     title : str, optional
         Plot title.
-    autolabel : str, optional
-        Automatic label to use for the *x*-axis. The only option available now
-        is ``nucl``, which generates a LaTeX representation of the nuclei of
-        the first spectrum (e.g. for a C–H HSQC, using this would automatically
-        generate the *x*- and *y*-axis labels ``r"$^{1}$H (ppm)"`` and
-        ``r"$^{13}$C (ppm)"`` respectively).  Overrides the *xlabel* and
-        *ylabel* parameters.
+    autolabel : str, optional (default: "nucl")
+        Automatic label to use for the *x*-axis. The ``nucl`` option generates
+        a LaTeX representation of the nuclei of the first spectrum (e.g. for a
+        C–H HSQC, using this would automatically generate the *x*- and *y*-axis
+        labels ``r"$^{1}$H (ppm)"`` and ``r"$^{13}$C (ppm)"`` respectively).
+        The ``f1f2`` option  generates generic ``f1 (ppm)`` and ``f2 (ppm)``
+        strings. There are no other options for now.
     xlabel : str, optional
-        *x*-Axis label.
+        *x*-Axis label. If either *xlabel* or *ylabel* are set, they will
+        override the *autolabel* parameter (if only one is set then the other
+        axis label will be empty!).
     ylabel : str, optional
         *y*-Axis label.
     legend_loc : str or (float, float), optional
@@ -732,18 +735,25 @@ def _mkplot2d(ax: Any = None,
                                   pobj.contours.color_negative))
             legend_labels.append(pobj.label)
 
-    # Figure out the x- and y-labels. If autolabel is passed, it should
-    # overrule xlabel and ylabel.
-    if autolabel is None:
+    # Figure out the x- and y-labels. If xlabel or ylabel are manually
+    # specified, they should override autolabel. Otherwise, look at the value
+    # of autolabel.
+    if xlabel is not None or ylabel is not None:
         pass
-    elif autolabel == "nucl":
-        xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[1]
-        xlabel += " (ppm)"
-        ylabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[0]
-        ylabel += " (ppm)"
     else:
-        raise ValueError(f"Invalid value '{autolabel}' given for "
-                         "parameter autolabel.")
+        if autolabel == "nucl":
+            # This is the default case, because the default parameters are
+            # xlabel=None, ylabel=None, autolabel="nucl".
+            xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[1]
+            xlabel += " (ppm)"
+            ylabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[0]
+            ylabel += " (ppm)"
+        elif autolabel == "f1f2":
+            xlabel = r"$f_2$ (ppm)"
+            ylabel = r"$f_1$ (ppm)"
+        else:
+            raise ValueError(f"Invalid value '{autolabel}' given for "
+                             "parameter autolabel.")
 
     # Plot formatting
     # Only if y-axis is enabled.

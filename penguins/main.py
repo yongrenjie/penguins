@@ -457,9 +457,9 @@ def style_axes(ax: Any,
 
     if style == "1d":
         disable_y_axis(ax)
-        remove_top_left_right_spines(ax)
         set_xaxis_ticks(ax)
         thicken_spines(ax)
+        remove_top_left_right_spines(ax)
         tight_layout()
     elif style == "1d_box":
         disable_y_axis(ax)

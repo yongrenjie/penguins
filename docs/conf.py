@@ -47,7 +47,7 @@ plot_include_source = True
 # But don't show a link to the source code
 plot_html_show_source_link = False
 # Code to run before each plot
-plot_pre_code = """import penguins as pg"""
+plot_pre_code = ""
 # Path to run in when generating plots
 plot_working_directory = os.path.abspath("..")
 # Make high-quality images...! The low-res PNGs are horrible advertising

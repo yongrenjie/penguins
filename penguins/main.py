@@ -480,7 +480,7 @@ def style_axes(ax: Any,
 
 
 def cleanup_axes() -> None:
-    # Need to draw the figure to get the renderer, whatever that means.
+    # Need to draw the figure to get the renderer.
     fig = plt.gcf()
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
@@ -503,6 +503,36 @@ def cleanup_axes() -> None:
                 ytick.label1.set_visible(False)
             if ytick_bbox2.overlaps(ylabel_bbox):
                 ytick.label2.set_visible(False)
+
+
+def cleanup_figure(padding: float = 0.02
+                   ) -> None:
+    # Resize subplots so that their titles don't clash with the figure legend.
+    tight_layout()
+    fig = plt.gcf()
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    # Get minimum bbox y-extent of figure legend(s).
+    inv = fig.transFigure.inverted()
+    legend_bboxs = [inv.transform(legend.get_window_extent(renderer=r))
+                    for legend in fig.legends]
+    legend_miny = min(bbox[0][1] for bbox in legend_bboxs)
+    # Find maximum bbox y-extent of axes titles.
+    titles = [ax.title for ax in fig.axes]
+    title_bboxs = [inv.transform(title.get_window_extent(renderer=r))
+                   for title in titles]
+    offending_title_bboxs = [title_bbox for title_bbox in title_bboxs
+                             if title_bbox[1][1] > legend_miny]
+    # If there are no offending bboxes, then we can skip ahead.
+    if offending_title_bboxs == []:
+        axes_maxy = legend_miny - padding
+    # Otherwise, we need to find which of them is the largest.
+    else:
+        max_offending_height = max(bbox[1][1] - bbox[0][1]
+                                   for bbox in offending_title_bboxs)
+        axes_maxy = legend_miny - padding - max_offending_height
+    # Resize
+    plt.subplots_adjust(top=axes_maxy)
 
 
 def move_ylabel(ax: Any,

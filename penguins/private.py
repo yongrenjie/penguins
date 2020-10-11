@@ -243,7 +243,7 @@ class Zolmitriptan():
 
 # These are pure convenience routines for my personal use.
 # Default save location for plots
-_dsl = Path("/Users/yongrenjie/Desktop/a_plot.png")
+dsl = Path("/Users/yongrenjie/Desktop/a_plot.png")
 # Path to NMR spectra. The $nmrd environment variable should resolve to
 # .../dphil/expn/nmr. On my Mac this is set to my SSD.
 def __getenv(key):
@@ -252,4 +252,4 @@ def __getenv(key):
         if x.exists():
             return x
     raise FileNotFoundError("$nmrd does not point to a valid location.")
-_nmrd = lambda: __getenv("nmrd")
+nmrd = lambda: __getenv("nmrd")

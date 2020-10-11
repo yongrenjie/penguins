@@ -18,7 +18,7 @@ from .pgplot import (set_palette, color_palette)
 
 def read(path: Union[str, Path],
          expno: int,
-         procno: int) -> ds.TDatasetnD:
+         procno: int = 1) -> ds.TDatasetnD:
     """Create a Dataset object from a spectrum folder, expno, and procno.
 
     The subclass of Dataset returned is determined by what files are available
@@ -31,8 +31,8 @@ def read(path: Union[str, Path],
         Path to the spectrum name folder.
     expno : int
         Expno of experiment of interest.
-    procno : int
-        Procno of processed data.
+    procno : int (optional)
+        Procno of processed data. Defaults to 1.
 
     Returns
     -------

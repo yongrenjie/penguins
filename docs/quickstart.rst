@@ -5,13 +5,15 @@ Quickstart
 Importing a spectrum
 --------------------
 
-Importing spectra is done with :func:`penguins.read`. :func:`~penguins.read` takes three parameters: the path to the *spectrum folder*, the expno, and the procno. This returns one of several possible Dataset objects, depending on the dimensionality of the spectrum selected::
+Importing spectra is done with `read()`.
+`read()` takes three parameters: the path to the *spectrum folder*, the expno, and optionally the procno (if not specified, this defaults to 1).
+This returns one of several possible Dataset objects, depending on the dimensionality of the spectrum selected::
 
    >>> import penguins as pg
-   >>> pg.read("tests/data/rot1", 2, 1)
+   >>> pg.read("tests/data/rot1", 2)
    Dataset1D('/Users/yongrenjie/penguins/tests/data/rot1/2/pdata/1')
 
-(If you are not familiar with TopSpin's directory layout yet, see :doc:`topspin`.)
+(If you are not familiar with TopSpin's directory layout yet, see `topspin`.)
 Note that penguins is only capable of reading Bruker data, and there is no support for 3D or higher spectra.
 
 
@@ -20,12 +22,12 @@ Accessing parameters
 
 Spectral parameters (both acquisition and processing parameters) can be accessed via their TopSpin names using dictionary-like syntax::
 
-   >>> c13 = pg.read("tests/data/rot1", 2, 1)
+   >>> c13 = pg.read("tests/data/rot1", 2)
    >>> c13["pulprog"]
    'zgpg30'
    >>> c13["td"]
    65536
-   >>> hsqc = pg.read("tests/data/rot1", 3, 1)
+   >>> hsqc = pg.read("tests/data/rot1", 3)
    >>> hsqc["si"]
    array([1024, 2048])
    >>> hsqc["nuc1"]
@@ -58,16 +60,7 @@ Plotting is done in three stages. A brief summary is as follows:
 
 An example of a simple 1D plot is as follows.
 
-.. plot::
-
-   prot = pg.read("tests/data/rot1", 1, 1)
-   # Staging
-   prot.stage(bounds="2..7",   # plot between 2 and 7 ppm
-              label=r"My proton spectrum")
-   # Construct
-   pg.mkplot()
-   # Display
-   pg.show()
+.. plot:: examples/quickstart1d.py
 
 The most important keyword argument for staging spectra is *bounds*. This can be specified either as a string ``lower..upper`` or a tuple of floats ``(lower, upper)``:
 
@@ -85,17 +78,7 @@ The most important keyword argument for staging spectra is *bounds*. This can be
 
 An example for a 2D spectrum is as follows:
 
-.. plot::
-
-   hsqc = pg.read("tests/data/pt2", 4, 1)
-   # Staging
-   hsqc.stage(f1_bounds="11..140",
-              f2_bounds=(0.5, 8.5),
-              levels=(2.5e4, None, None))
-   # Construct plot.
-   pg.mkplot(autolabel="nucl")
-   # Display
-   pg.show()
+.. plot:: examples/quickstart2d.py
 
 There are a few details worth mentioning here, since these are likely to be frequently used.
 

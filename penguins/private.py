@@ -86,12 +86,13 @@ class Hsqc:
         Calculates the absolute integral of each peak in the HSQC.
         """
         if edited:
-            return np.array([dataset.integrate(peak=peak,
+            # We need self.df here as it contains multiplicity information.
+            return np.array([dataset.integrate(peak=(peak.f1, peak.f2),
                                                margin=self.margin,
                                                mode=("max"
                                                      if peak.mult == "ch2"
                                                      else "min"))
-                             for peak in self.peaks])
+                             for peak in self.df.itertuples()])
         else:
             return np.array([dataset.integrate(peak=peak,
                                                margin=self.margin,

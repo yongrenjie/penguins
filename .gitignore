@@ -6,7 +6,7 @@ penguins.egg-info/
 .pytest_cache
 .tox
 .coverage
-docs/_build
+docs/dirhtml
 docs/_static
 docs/_template
 build/*

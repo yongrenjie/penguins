@@ -364,6 +364,11 @@ class _1D_ProcDataMixin():
                   ) -> np.ndarray:
         """Returns the real part of the spectrum as a real-valued |ndarray|.
 
+        Note that if (for example) a magnitude mode calculation has been
+        performed, then the "real" part is actually the magnitude mode
+        spectrum. In short, the "real" part is whatever is stored in the ``1r``
+        file.
+
         This is used in constructing the *y*-values to be plotted.
 
         Parameters
@@ -437,6 +442,26 @@ class _1D_ProcDataMixin():
         lower, upper = _parse_bounds(bounds)
         return slice(self.ppm_to_index(upper) or 0,                      # type: ignore # mixin
                      (self.ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
+
+    def to_magnitude(self) -> Dataset1D:
+        """
+        Calculates the magnitude mode spectrum and returns it as a new
+        Dataset1D object.
+        """
+        new_ds = Dataset1D(self.path)   # type: ignore # mixin
+        try:
+            new_ds.real = np.abs(new_ds.real + 1j * new_ds.imag)
+        except AttributeError:   # no imag
+            raise TypeError("The imaginary part of the spectrum was not"
+                            " found.") from None
+        new_ds.imag = np.zeros(new_ds.real.shape)
+        return new_ds
+
+    def mc(self) -> Dataset1D:
+        """
+        Alias for `to_magnitude()`.
+        """
+        return self.to_magnitude()
 
 
 class _1D_PlotMixin():
@@ -539,6 +564,10 @@ class _2D_ProcDataMixin():
 
         This is used in constructing the *z*-values to be plotted.
 
+        Note that if a magnitude mode calculation has been performed, this will
+        return the magnitude mode spectrum (i.e. it returns whatever is in
+        TopSpin's ``2rr`` file).
+
         Parameters
         ----------
         f1_bounds : str or (float, float), optional
@@ -618,7 +647,7 @@ class _2D_ProcDataMixin():
 
         Parameters
         ----------
-        axis : int
+        axis : int from {0, 1}
             0 for indirect dimension, 1 for direct dimension.
 
         bounds : str or (float, float), optional
@@ -644,6 +673,49 @@ class _2D_ProcDataMixin():
         f2_elem = f2.lstrip("1234567890")
         f2_mass = f2[:-len(f2_elem)]
         return (rf"$^{{{f1_mass}}}${f1_elem}", rf"$^{{{f2_mass}}}${f2_elem}")
+
+    def to_magnitude(self, axis: int) -> Dataset2D:
+        """
+        Calculates the magnitude mode spectrum along the specified axis and
+        returns it as a new Dataset2D object.
+
+        Parameters
+        ----------
+        axis : int from {0, 1}
+            The axis along which to perform the magnitude calculation. 0 for
+            f1, or 1 for f2.
+        """
+        new_ds = Dataset2D(self.path)   # type: ignore # mixin
+        try:
+            if axis == 0:
+                new_ds.rr = np.abs(new_ds.rr + 1j * new_ds.ri)
+            elif axis == 1:
+                new_ds.rr = np.abs(new_ds.rr + 1j * new_ds.ir)
+            else:
+                raise ValueError("to_magnitude(): axis must be 0 (for"
+                                 " magnitude mode in f1) or 1 (for f2).")
+        except AttributeError:
+            raise TypeError("The imaginary part of the spectrum was not"
+                            " found.") from None
+        # Zero out all the other components.
+        new_ds.ri = np.zeros(new_ds.rr.shape)
+        new_ds.ir = np.zeros(new_ds.rr.shape)
+        new_ds.ii = np.zeros(new_ds.rr.shape)
+        return new_ds
+
+    def xf1m(self) -> Dataset2D:  # alias
+        """
+        Alias for ``to_magnitude(axis=0)``, i.e. magnitude mode calculation
+        along f1.
+        """
+        return self.to_magnitude(axis=0)
+
+    def xf2m(self) -> Dataset2D:  # alias
+        """
+        Alias for ``to_magnitude(axis=1)``, i.e. magnitude mode calculation
+        along f2.
+        """
+        return self.to_magnitude(axis=1)
 
 
 class _2D_PlotMixin():

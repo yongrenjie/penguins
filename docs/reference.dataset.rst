@@ -48,6 +48,8 @@ Datasets
    .. automethod:: proc_data
    .. automethod:: integrate
    .. automethod:: bounds_to_slice
+   .. automethod:: to_magnitude
+   .. automethod:: mc
 
 |v|
 
@@ -72,6 +74,9 @@ Datasets
    .. automethod:: proc_data
    .. automethod:: integrate
    .. automethod:: bounds_to_slice
+   .. automethod:: to_magnitude
+   .. automethod:: xf1m
+   .. automethod:: xf2m
 
 |v|
 

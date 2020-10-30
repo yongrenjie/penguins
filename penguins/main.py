@@ -5,6 +5,7 @@ from pathlib import Path
 from itertools import zip_longest
 from typing import Union, Optional, Tuple, Sequence, Any
 
+import numpy as np
 import matplotlib.pyplot as plt    # type: ignore
 from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
@@ -231,14 +232,12 @@ def mkplots(axs: Any = None,
 
     Parameters
     ----------
-    axs : ndarray of Axes (optional)
-        An ndarray of Axes, as commonly returned by subplots(). Note that this
-        function will not work with ordinary lists or tuples as it iterates
-        over axs.flat.
-        If not passed, then iterates over all Axes in the current figure.
+    axs : list, tuple, or ndarray of Axes (optional)
+        If not passed, will iterate over all Axes in the currently active
+        figure. >1D arrays (e.g. those returned by `subplots()`) are allowed.
 
     titles : list or tuple of str (optional)
-        A series of subplot titles. Use None or an empty string to avoid having
+        A series of subplot titles. Use None or an empty string to not have a
         a title.
 
     **kwargs : dict
@@ -260,10 +259,10 @@ def mkplots(axs: Any = None,
     if axs is None:
         axs_it = fig.get_axes()
     else:
-        try:
+        if isinstance(axs, np.ndarray):
             axs_it = axs.flat
-        except AttributeError:
-            raise TypeError("'axs' must be a numpy.ndarray of Axes.")
+        else:
+            axs_it = axs  # if not iterable, will raise TypeError later
     # If no titles were given, use an empty list
     if titles is None:
         titles = []

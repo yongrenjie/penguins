@@ -791,7 +791,9 @@ class Dataset1D(_1D_RawDataMixin,
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self.bounds_to_slice(bounds)]
 
-    def hz_scale(self) -> np.ndarray:
+    def hz_scale(self,
+                 bounds: TBounds = "",
+                 ) -> np.ndarray:
         """Constructs an |ndarray| of the frequencies (in units of Hz) at each
         point of the spectrum, in descending order of frequency.
 
@@ -806,9 +808,10 @@ class Dataset1D(_1D_RawDataMixin,
             The appropriate slice of frequencies.
         """
         # These use SFO, not BF
-        max_hz = self["o1"] + self["sw"]/(2 * self["sfo1"])
-        min_hz = self["o1"] - self["sw"]/(2 * self["sfo1"])
-        return np.linspace(max_hz, min_hz, self["si"])
+        max_hz = self["o1"] + (self["sw"] * self["sfo1"] / 2)
+        min_hz = self["o1"] - (self["sw"] * self["sfo1"] / 2)
+        full_hz_scale = np.linspace(max_hz, min_hz, self["si"])
+        return full_hz_scale[self.bounds_to_slice(bounds)]
 
     def nuclei_to_str(self
                       ) -> str:
@@ -919,8 +922,12 @@ class Dataset1DProj(_2D_RawDataMixin,
             The appropriate slice of frequencies.
         """
         # These use SFO, not BF
-        max_hz = self["o1"][self.proj_axis] + self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
-        min_hz = self["o1"][self.proj_axis] - self["sw"][self.proj_axis]/(2 * self["sfo1"][self.proj_axis])
+        max_hz = self["o1"][self.proj_axis] + (self["sw"][self.proj_axis]
+                                               * self["sfo1"][self.proj_axis]
+                                               / 2)
+        min_hz = self["o1"][self.proj_axis] - (self["sw"][self.proj_axis]
+                                               * self["sfo1"][self.proj_axis]
+                                               / 2)
         full_hz_scale = np.linspace(max_hz, min_hz, self["si"])
         return full_hz_scale[self.bounds_to_slice(bounds)]
 
@@ -1001,7 +1008,8 @@ class Dataset2D(_2D_RawDataMixin,
         return full_scale[self.bounds_to_slice(axis, bounds)]
 
     def hz_scale(self,
-                 axis: int
+                 axis: int,
+                 bounds: TBounds = "",
                  ) -> np.ndarray:
         """Constructs an |ndarray| of the frequencies (in units of Hz) at each
         point of the spectrum, in descending order of frequency.
@@ -1019,9 +1027,10 @@ class Dataset2D(_2D_RawDataMixin,
             The appropriate slice of frequencies.
         """
         # These use SFO, not BF
-        max_hz = self["o1"][axis] + (self["sw"][axis] / (2 * self["sfo1"][axis]))
-        min_hz = self["o1"][axis] - (self["sw"][axis] / (2 * self["sfo1"][axis]))
-        return np.linspace(max_hz[axis], min_hz[axis], int(self["si"][axis]))
+        max_hz = self["o1"][axis] + (self["sw"][axis] * self["sfo1"][axis] / 2)
+        min_hz = self["o1"][axis] - (self["sw"][axis] * self["sfo1"][axis] / 2)
+        full_hz_scale = np.linspace(max_hz, min_hz, int(self["si"][axis]))
+        return full_hz_scale[self.bounds_to_slice(axis, bounds)]
 
     def project(self,
                 axis: Union[int, str],

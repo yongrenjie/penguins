@@ -284,6 +284,7 @@ class PlotObject1D():
         self.bounds = bounds
         self._init_options(ax, plot_options, color, label)
         self.ppm_scale = self.dataset.ppm_scale(bounds=self.bounds)
+        self.hz_scale = self.dataset.hz_scale()
         # Handle processed data
         proc_data = self.dataset.proc_data(bounds=self.bounds)
         if dfilter is not None:
@@ -330,6 +331,7 @@ def _mkplot1d(ax: Any = None,
               autolabel: str = "nucl",
               xlabel: OS = None,
               legend_loc: Any = "best",
+              units: str = "ppm",
               ) -> Tuple[Any, Any]:
     """Calls |plot| on all the spectra in the plot queue. All hoffset and
     voffset calculations are performed here.
@@ -361,10 +363,10 @@ def _mkplot1d(ax: Any = None,
         amount (again, this is given in units of maximum height).
     hoffset : float or list of float, optional
         If given as a float, indicates the horizontal offset between adjacent
-        spectra in ppm. If this is positive, then successive spectra are
-        shifted towards the right (the first spectrum is not shifted).
-        If given as a list, each staged spectrum is offset by the corresponding
-        amount (in ppm).
+        spectra. If this is positive, then successive spectra are shifted
+        towards the right (the first spectrum is not shifted).  If given as a
+        list, each staged spectrum is offset by the corresponding amount (in
+        ppm).
     title : str, optional
         Plot title.
     autolabel : str, optional (default: "nucl")
@@ -378,6 +380,10 @@ def _mkplot1d(ax: Any = None,
     legend_loc : str or (float, float), optional
         Location to place the legend. This is passed as the *loc* parameter to
         |legend|; see the documentation there for the available options.
+    units : str from {"ppm", "Hz"}, default "ppm"
+        Units to use for plotting. This also determines the units for the
+        *hoffset* parameter: if *units* is ``ppm`` then hoffset is interpreted
+        as a chemical shift offset, and vice versa.
 
     Returns
     -------
@@ -428,7 +434,13 @@ def _mkplot1d(ax: Any = None,
         if "label" in pobj.options and pobj.options["label"] is not None:
             make_legend = True
         # Plot it!
-        l2d = ax.plot(pobj.ppm_scale - this_hoffset,
+        if units == "ppm":
+            xaxis = pobj.ppm_scale - this_hoffset
+        elif units == "Hz":
+            xaxis = pobj.hz_scale - this_hoffset
+        else:
+            raise ValueError('units must be either "ppm" or "Hz".')
+        l2d = ax.plot(xaxis,
                       pobj.proc_data + this_voffset,
                       **pobj.options)
         # Add heights and colors to plotproperties.
@@ -546,6 +558,8 @@ class PlotObject2D():
         # self.options will include the colors key.
         self.f1_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
         self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
+        self.f1_hz_scale = self.dataset.hz_scale(axis=0)
+        self.f2_hz_scale = self.dataset.hz_scale(axis=1)
         # Handle processed data
         proc_data = self.dataset.proc_data(f1_bounds=self.f1_bounds,
                                            f2_bounds=self.f2_bounds)
@@ -695,6 +709,8 @@ def _mkplot2d(ax: Any = None,
               xlabel: OS = None,
               ylabel: OS = None,
               legend_loc: Any = "best",
+              f1_units: str = "ppm",
+              f2_units: str = "ppm",
               ) -> Tuple[Any, Any]:
     """Calls |contour| on all the spectra in the plot queue. All offset
     calculations are performed here.
@@ -730,6 +746,13 @@ def _mkplot2d(ax: Any = None,
     legend_loc : str or (float, float), optional
         Location to place the legend. This is passed as the *loc* parameter to
         |legend|; see the documentation there for the available options.
+    f1_units : str from {"ppm", "Hz"}, default "ppm"
+        Units to use for the f1 dimension. This also determines the units for
+        the first value of the *offset* parameter: if *units* is ``ppm`` then
+        offset[0] is interpreted as a chemical shift offset, and vice versa.
+    f2_units : str from {"ppm", "Hz"}, default "ppm"
+        Units to use for the f2 dimension. Likewise, this determines the units
+        for the second value of the *offset* parameter.
 
     Returns
     -------
@@ -752,8 +775,21 @@ def _mkplot2d(ax: Any = None,
 
     # Iterate over plot objects
     for n, pobj in enumerate(ax.pha.plot_objs):
-        cs = ax.contour(pobj.f2_scale - (n * offset[1]),   # x-axis
-                        pobj.f1_scale - (n * offset[0]),   # y-axis
+        # Figure out which x- and y-axes to use (ppm or Hz)
+        if f1_units == "ppm":
+            yaxis = pobj.f1_scale - (n * offset[0])
+        elif f1_units == "Hz":
+            yaxis = pobj.f1_hz_scale - (n * offset[0])
+        else:
+            raise ValueError('f1_units must be either "ppm" or "Hz".')
+        if f2_units == "ppm":
+            xaxis = pobj.f2_scale - (n * offset[1])
+        elif f2_units == "Hz":
+            xaxis = pobj.f2_hz_scale - (n * offset[1])
+        else:
+            raise ValueError('f2_units must be either "ppm" or "Hz".')
+        # Plot it.
+        cs = ax.contour(xaxis, yaxis,
                         pobj.proc_data,
                         levels=pobj.clevels,
                         **pobj.options)
@@ -776,12 +812,12 @@ def _mkplot2d(ax: Any = None,
             # This is the default case, because the default parameters are
             # xlabel=None, ylabel=None, autolabel="nucl".
             xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[1]
-            xlabel += " (ppm)"
+            xlabel += f" ({f2_units})"
             ylabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[0]
-            ylabel += " (ppm)"
+            ylabel += f" ({f1_units})"
         elif autolabel == "f1f2":
-            xlabel = r"$f_2$ (ppm)"
-            ylabel = r"$f_1$ (ppm)"
+            xlabel = f"$f_2$ ({f2_units})"
+            ylabel = f"$f_1$ ({f1_units})"
         else:
             raise ValueError(f"Invalid value '{autolabel}' given for "
                              "parameter autolabel.")

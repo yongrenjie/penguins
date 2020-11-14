@@ -5,10 +5,22 @@ python:
   - 3.8
 
 install:
-  - pip install tox-travis
+  - pip install -r requirements.txt
+  - pip install pytest pytest-cov           # tests
+  - pip install sphinx numpydoc matplotlib  # docs
 
 script:
-  - tox
+  - pytest -v --cov=penguins tests
+  - sphinx-build -b dirhtml docs docs/dirhtml
+  - touch docs/dirhtml/.nojekyll
 
 git:
   depth: 2
+
+deploy:
+  edge: true
+  provider: pages
+  github_token: $GITHUB_TOKEN
+  local_dir: docs/dirhtml
+  on:
+    python: '3.8'

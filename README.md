@@ -1,4 +1,3 @@
-[![Documentation Status](https://readthedocs.org/projects/penguins/badge/?version=latest)](https://penguins.readthedocs.io/en/latest)
 [![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/github/yongrenjie/penguins)
 ![Code Coverage](https://raw.githubusercontent.com/yongrenjie/penguins/master/tests/coverage.svg)
 [![PyPI version](https://badge.fury.io/py/penguins.svg)](https://badge.fury.io/py/penguins)
@@ -11,7 +10,7 @@ pip install penguins
 
 `penguins` is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
 
-Documentation can be found at https://penguins.readthedocs.io.
+Documentation can be found at https://yongrenjie.github.io/penguins.
 Everything is documented in one form or another, although I'm still working on tutorial-type pages which are easier to read than the docstrings.
 
 Note that `penguins` is still in development, so the interface should not be assumed to be (too) stable. For now, I am working directly on the master branch, and rebasing/force pushing may occur without warning.

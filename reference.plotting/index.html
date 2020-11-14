@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plotting spectra &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Datasets" href="../reference.dataset/" />
+    <link rel="prev" title="Reading spectra" href="../reference.reading/" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="plotting-spectra">
+<h1>Plotting spectra<a class="headerlink" href="#plotting-spectra" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general-plotting">
+<h2>General plotting<a class="headerlink" href="#general-plotting" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="penguins.subplots">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">subplots</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nrows</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">ncols</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.subplots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around matplotlib’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots()</span></code></a> function.</p>
+<p>If <em>figsize</em> is not passed as a keyword argument, then this by default
+sets the figure size to be <code class="docutils literal notranslate"><span class="pre">(4</span> <span class="pre">*</span> <span class="pre">ncols)</span></code> by <code class="docutils literal notranslate"><span class="pre">(4</span> <span class="pre">*</span> <span class="pre">nrows)</span></code>. This means
+that every subplot will have an area of 4 inches by 4 inches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>nrows</strong><span class="classifier">int, optional</span></dt><dd><p>Number of rows.</p>
+</dd>
+<dt><strong>ncols</strong><span class="classifier">int, optional</span></dt><dd><p>Number of columns.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Other keyword arguments passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots()</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fig</strong><span class="classifier">Figure</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance corresponding to the current plot.</p>
+</dd>
+<dt><strong>axs</strong><span class="classifier">Axes, or ndarray of Axes</span></dt><dd><p>If only one subplot was requested, this is the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance.
+Otherwise this is an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>, one for each subplot. See
+the documentation of <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots()</span></code></a> for further explanation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.mkplot">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">mkplot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">empty_pha</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.mkplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a plot from one or more staged spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">Axes, optional</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to plot the spectra on. If not provided, creates new
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instances.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Keyword arguments that are passed on to <a class="reference internal" href="#penguins.pgplot._mkplot1d" title="penguins.pgplot._mkplot1d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">_mkplot1d()</span></code></a> or <a class="reference internal" href="#penguins.pgplot._mkplot2d" title="penguins.pgplot._mkplot2d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">_mkplot2d()</span></code></a>
+respectively, depending on the dimensionality of the spectrum being
+plotted. In turn, these are passed on to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fig</strong><span class="classifier">Figure</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance for the active plot.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">Axes</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance for the active plot.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Other Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>empty_pha</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to empty the <a class="reference internal" href="#penguins.pgplot.PlotHoldingArea" title="penguins.pgplot.PlotHoldingArea"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotHoldingArea</span></code></a> of the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> after constructing
+the plots. The average user should have no use for this; it only exists
+to make <a class="reference internal" href="../reference.dataset/#penguins.dataset._2D_PlotMixin.find_baselev" title="penguins.dataset._2D_PlotMixin.find_baselev"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">find_baselev()</span></code></a> work.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#penguins.pgplot._mkplot1d" title="penguins.pgplot._mkplot1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penguins.pgplot._mkplot1d</span></code></a></dt><dd><p>Keyword arguments for 1D plots are described here.</p>
+</dd>
+<dt><a class="reference internal" href="#penguins.pgplot._mkplot2d" title="penguins.pgplot._mkplot2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penguins.pgplot._mkplot2d</span></code></a></dt><dd><p>Keyword arguments for 2D plots are described here.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>This function itself does not do very much. It mainly performs setup
+and teardown actions, whereas the actual plotting itself is delegated
+to <a class="reference internal" href="#penguins.pgplot._mkplot1d" title="penguins.pgplot._mkplot1d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">_mkplot1d()</span></code></a> and <a class="reference internal" href="#penguins.pgplot._mkplot2d" title="penguins.pgplot._mkplot2d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">_mkplot2d()</span></code></a>. (Those functions should not be used
+directly.)</p>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.mkplots">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">mkplots</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">titles</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.mkplots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function which essentially calls mkplot(ax, title=title) for
+ax, title in zip(axs.flat, titles).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>axs</strong><span class="classifier">list, tuple, or ndarray of Axes (optional)</span></dt><dd><p>If not passed, will iterate over all Axes in the currently active
+figure. &gt;1D arrays (e.g. those returned by <a class="reference internal" href="#penguins.subplots" title="penguins.subplots"><code class="xref any py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a>) are allowed.</p>
+</dd>
+<dt><strong>titles</strong><span class="classifier">list or tuple of str (optional)</span></dt><dd><p>A series of subplot titles. Use None or an empty string to not have a
+a title.</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">dict</span></dt><dd><p>Other keyword arguments which are passed on to <a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> (and
+consequently the other functions that it calls).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fig</strong><span class="classifier">Figure</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance for the active plot.</p>
+</dd>
+<dt><strong>axs</strong><span class="classifier">ndarray of Axes</span></dt><dd><p>The same ndarray that was provided.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.mkinset">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">mkinset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">pos</span></em>, <em class="sig-param"><span class="n">size</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_zoom</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">parent_corners</span><span class="o">=</span><span class="default_value">('sw', 'se')</span></em>, <em class="sig-param"><span class="n">inset_corners</span><span class="o">=</span><span class="default_value">('sw', 'se')</span></em>, <em class="sig-param"><span class="n">plot_options</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inset_options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.mkinset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an inset on a given Axes instance and plots any staged
+spectra on the inset Axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">Axes</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to construct the inset inside.</p>
+</dd>
+<dt><strong>pos</strong><span class="classifier">(float, float)</span></dt><dd><p>Position of lower-left corner of inset axes given as (x, y).</p>
+</dd>
+<dt><strong>size</strong><span class="classifier">(float, float)</span></dt><dd><p>Size of inset axes, given as (width, height).</p>
+</dd>
+<dt><strong>transform</strong><span class="classifier">Transform</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/transformations.html#matplotlib.transforms.Transform" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a> to use for specifying the coordinates of
+<em>pos</em> and <em>size</em>. By default, axes coordinates are used for both.</p>
+</dd>
+<dt><strong>show_zoom</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to draw lines between the parent and inset axes (to indicate
+the section of the spectrum zoomed into).</p>
+</dd>
+<dt><strong>parent_corners</strong><span class="classifier">(str, str), optional</span></dt><dd><p>Corners of the parent axes to draw the zoom lines from. Each element of
+the tuple can be chosen from {“southwest”, “southeast”, “northeast”,
+“northwest”, “sw”, “se”, “ne”, “nw”}.</p>
+</dd>
+<dt><strong>inset_corners</strong><span class="classifier">(str, str), optional</span></dt><dd><p>Corners of the inset axes to draw the zoom lines to.</p>
+</dd>
+<dt><strong>plot_options</strong><span class="classifier">dict, optional</span></dt><dd><p>Dictionary of options passed to <a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>, which is in turn passed to
+either <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a>.</p>
+</dd>
+<dt><strong>inset_options</strong><span class="classifier">dict, optional</span></dt><dd><p>Dictionary of options passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/mpl_toolkits.axes_grid1.inset_locator.mark_inset.html#mpl_toolkits.axes_grid1.inset_locator.mark_inset" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mark_inset()</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>inset_ax</strong><span class="classifier">Axes</span></dt><dd><p>The <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance corresponding to the inset.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.tight_layout">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">tight_layout</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.tight_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct wrapper around <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.tight_layout()</span></code></a>.</p>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.show">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">show</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct wrapper around <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.show()</span></code></a>.</p>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.savefig">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">savefig</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.savefig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct wrapper around <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.savefig()</span></code></a>.</p>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.pause">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">pause</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct wrapper around <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.pause.html#matplotlib.pyplot.pause" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.pause()</span></code></a>.</p>
+</dd></dl>
+
+<p><br /> </p>
+</div>
+<div class="section" id="d-plotting-interfaces">
+<h2>1D plotting interfaces<a class="headerlink" href="#d-plotting-interfaces" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="penguins.pgplot._stage1d">
+<code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">_stage1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">dfilter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot._stage1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stages a 1D spectrum.</p>
+<p>This constructs a <a class="reference internal" href="#penguins.pgplot.PlotObject1D" title="penguins.pgplot.PlotObject1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject1D</span></code></a> object from the dataset as well as any
+options passed via the keyword arguments, and adds it to the plot queue
+of the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>.</p>
+<p>Note that the preferred way of staging spectra is to call the
+<a class="reference internal" href="../reference.dataset/#penguins.dataset._1D_PlotMixin.stage" title="penguins.dataset._1D_PlotMixin.stage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stage()</span></code></a> method on the dataset object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dataset</strong><span class="classifier">Dataset1D, Dataset1DProj, or Dataset1DProjVirtual</span></dt><dd><p>Dataset to be staged.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">Axes, optional</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to tie the plot to. Defaults to the currently active
+Axes.</p>
+</dd>
+<dt><strong>scale</strong><span class="classifier">float, optional</span></dt><dd><p>Value to scale the spectrum intensity by.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Region of the spectrum to plot. If given as a string, should be in the
+form <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code>, where <code class="docutils literal notranslate"><span class="pre">lower</span></code> and <code class="docutils literal notranslate"><span class="pre">upper</span></code> are both chemical
+shifts. If given as a tuple, should be in the form <code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code>.
+Either <code class="docutils literal notranslate"><span class="pre">lower</span></code> or <code class="docutils literal notranslate"><span class="pre">upper</span></code> can be omitted (in the string) or passed
+as <code class="docutils literal notranslate"><span class="pre">None</span></code> (in the tuple) to avoid giving a lower or upper bound. If
+not given, the entire spectrum is plotted.</p>
+</dd>
+<dt><strong>dfilter</strong><span class="classifier">function :: float -&gt; bool, optional</span></dt><dd><p>Function which takes the intensity at each point as its only parameter
+and returns a boolean. If it returns True, the point is plotted, and
+if it returns False, the point is not plotted.</p>
+</dd>
+<dt><strong>label</strong><span class="classifier">str, optional</span></dt><dd><p>Label to be used in the plot legend.</p>
+</dd>
+<dt><strong>color</strong><span class="classifier">str, optional</span></dt><dd><p>Color to use for plotting. Overrides any <em>color</em> key passed in the
+<em>plot_options</em> dictionary.</p>
+</dd>
+<dt><strong>plot_options</strong><span class="classifier">dict, optional</span></dt><dd><p>Dictionary of keyword arguments to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../reference.dataset/#penguins.dataset._1D_PlotMixin.stage" title="penguins.dataset._1D_PlotMixin.stage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penguins.dataset._1D_PlotMixin.stage</span></code></a></dt><dd><p>Equivalent method on <a class="reference internal" href="../reference.dataset/#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="../reference.dataset/#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, and <a class="reference internal" href="../reference.dataset/#penguins.dataset.Dataset1DProjVirtual" title="penguins.dataset.Dataset1DProjVirtual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProjVirtual</span></code></a> objects, and the preferred way to stage spectra.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.pgplot._mkplot1d">
+<code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">_mkplot1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'1d'</span></em>, <em class="sig-param"><span class="n">stacked</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">voffset</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">hoffset</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">autolabel</span><span class="o">=</span><span class="default_value">'nucl'</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">legend_loc</span><span class="o">=</span><span class="default_value">'best'</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">'ppm'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot._mkplot1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> on all the spectra in the plot queue. All hoffset and
+voffset calculations are performed here.</p>
+<p>Note that this function should never be called directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">Axes, optional</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to plot the spectra on. If not provided, creates a new
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>.</p>
+</dd>
+<dt><strong>style</strong><span class="classifier">str, optional</span></dt><dd><p>Plot style to use. By default this is <code class="docutils literal notranslate"><span class="pre">1d</span></code>. For the list of plot
+styles, see <a class="reference internal" href="#penguins.style_axes" title="penguins.style_axes"><code class="xref any py py-func docutils literal notranslate"><span class="pre">style_axes()</span></code></a>.</p>
+</dd>
+<dt><strong>stacked</strong><span class="classifier">bool, optional</span></dt><dd><p>True to make spectra tightly stacked vertically (i.e. not
+superimposed). If True, overrides any value passed in <em>voffset</em>.</p>
+</dd>
+<dt><strong>voffset</strong><span class="classifier">float or list of float, optional</span></dt><dd><p>If given as a float, indicates the amount of vertical offset between
+spectra, in units of the maximum height. The height of a spectrum
+refers to the total width it spans in the <em>y</em>-axis, and the maximum
+height refers to the largest such height of all spectra in the plot
+queue.
+Using a float for <code class="docutils literal notranslate"><span class="pre">voffset</span></code> is useful for offsetting spectra by a
+constant amount. Note that stacked spectra will have a variable
+vertical offset between each spectrum, because each spectrum will have
+a different height.
+If given as a list, each staged spectrum is offset by the corresponding
+amount (again, this is given in units of maximum height).</p>
+</dd>
+<dt><strong>hoffset</strong><span class="classifier">float or list of float, optional</span></dt><dd><p>If given as a float, indicates the horizontal offset between adjacent
+spectra. If this is positive, then successive spectra are shifted
+towards the right (the first spectrum is not shifted).  If given as a
+list, each staged spectrum is offset by the corresponding amount (in
+ppm).</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">str, optional</span></dt><dd><p>Plot title.</p>
+</dd>
+<dt><strong>autolabel</strong><span class="classifier">str, optional (default: “nucl”)</span></dt><dd><p>Automatic label to use for the <em>x</em>-axis. The only option available now
+is <code class="docutils literal notranslate"><span class="pre">nucl</span></code> (the default), which generates a LaTeX representation of
+the nucleus of the first staged spectrum (e.g. for a proton spectrum,
+using this would automatically generate the <em>x</em>-axis label
+<code class="docutils literal notranslate"><span class="pre">r&quot;$^{1}$H</span> <span class="pre">(ppm)&quot;</span></code>).</p>
+</dd>
+<dt><strong>xlabel</strong><span class="classifier">str, optional</span></dt><dd><p><em>x</em>-Axis label. Overrides the autolabel parameter if given.</p>
+</dd>
+<dt><strong>legend_loc</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Location to place the legend. This is passed as the <em>loc</em> parameter to
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.legend</span></code></a>; see the documentation there for the available options.</p>
+</dd>
+<dt><strong>units</strong><span class="classifier">str from {“ppm”, “Hz”}, default “ppm”</span></dt><dd><p>Units to use for plotting. This also determines the units for the
+<em>hoffset</em> parameter: if <em>units</em> is <code class="docutils literal notranslate"><span class="pre">ppm</span></code> then hoffset is interpreted
+as a chemical shift offset, and vice versa.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fig</strong><span class="classifier">Figure</span></dt><dd><p>The currently active <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">Axes</span></dt><dd><p>The currently active <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance, which the spectra were just
+plotted on.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penguins.mkplot</span></code></a></dt><dd><p>The appropriate interface for plot construction.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<p><br /> </p>
+</div>
+<div class="section" id="id1">
+<h2>2D plotting interfaces<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="penguins.pgplot._stage2d">
+<code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">_stage2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">f1_bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">f2_bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">levels</span><span class="o">=</span><span class="default_value">(None, None, None)</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">(None, None)</span></em>, <em class="sig-param"><span class="n">dfilter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot._stage2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stages a 2D spectrum.</p>
+<p>This constructs a <a class="reference internal" href="#penguins.pgplot.PlotObject2D" title="penguins.pgplot.PlotObject2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject2D</span></code></a> object from the dataset as well as any
+options passed via the keyword arguments, and adds it to the plot queue
+of the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>.</p>
+<p>Note that the preferred way of staging spectra is to call the
+<a class="reference internal" href="../reference.dataset/#penguins.dataset._2D_PlotMixin.stage" title="penguins.dataset._2D_PlotMixin.stage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stage()</span></code></a> method on the dataset object.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>dataset</strong><span class="classifier">Dataset1D, Dataset1DProj, or Dataset1DProjVirtual</span></dt><dd><p>Dataset to be staged.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">Axes, optional</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to tie the plot to. Defaults to the currently active
+Axes.</p>
+</dd>
+<dt><strong>scale</strong><span class="classifier">float, optional</span></dt><dd><p>Value to scale the spectrum intensity by.</p>
+</dd>
+<dt><strong>f1_bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Region of the indirect chemical shifts to plot. If given as a string,
+should be in the form <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code>, where <code class="docutils literal notranslate"><span class="pre">lower</span></code> and <code class="docutils literal notranslate"><span class="pre">upper</span></code>
+are both chemical shifts. If given as a tuple, should be in the form
+<code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code>.  Either <code class="docutils literal notranslate"><span class="pre">lower</span></code> or <code class="docutils literal notranslate"><span class="pre">upper</span></code> can be omitted (in
+the string) or passed as <code class="docutils literal notranslate"><span class="pre">None</span></code> (in the tuple) to avoid giving a
+lower or upper bound. If not given, the entire range of indirect
+chemical shifts is plotted.</p>
+</dd>
+<dt><strong>f2_bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Same as <em>f1_bounds</em>, but for the direct dimension.</p>
+</dd>
+<dt><strong>levels</strong><span class="classifier">float or (float, float, float), optional</span></dt><dd><p>A tuple <em>(baselev, increment, nlev)</em> specifying the levels at which to
+draw contours. These represent, respectively, the lowest contour level,
+the multiplicative increment between adjacent contours, and the number
+of contour levels to draw. Contours are always drawn for both positive
+and negative levels.</p>
+<p>If any of these are None, then the default values are used: for
+<em>baselev</em> this is TopSpin’s default contour level, for <em>increment</em> this
+is 1.5, and for <em>nlev</em> this is 10.  Alternatively, can be provided as a
+single float <em>baselev</em> as shorthand for <em>(baselev, None, None)</em>.</p>
+</dd>
+<dt><strong>dfilter</strong><span class="classifier">function :: float -&gt; bool, optional</span></dt><dd><p>Function which takes the intensity at each point as its only parameter
+and returns a boolean. If it returns True, the point is plotted, and if
+it returns False, the point is not plotted.</p>
+</dd>
+<dt><strong>label</strong><span class="classifier">str, optional</span></dt><dd><p>Label to be used in the plot legend.</p>
+</dd>
+<dt><strong>color</strong><span class="classifier">(str, str), optional</span></dt><dd><p>Colors to use for positive and negative contours respectively.</p>
+</dd>
+<dt><strong>plot_options</strong><span class="classifier">dict, optional</span></dt><dd><p>Dictionary of keyword arguments to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">_2D_PlotMixin.stage</span></code></dt><dd><p>Equivalent method on Dataset2D objects, and the preferred way of staging spectra.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.pgplot._mkplot2d">
+<code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">_mkplot2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'2d'</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">(0, 0)</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">autolabel</span><span class="o">=</span><span class="default_value">'nucl'</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">legend_loc</span><span class="o">=</span><span class="default_value">'best'</span></em>, <em class="sig-param"><span class="n">f1_units</span><span class="o">=</span><span class="default_value">'ppm'</span></em>, <em class="sig-param"><span class="n">f2_units</span><span class="o">=</span><span class="default_value">'ppm'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot._mkplot2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a> on all the spectra in the plot queue. All offset
+calculations are performed here.</p>
+<p>Note that this function should never be called directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">Axes, optional</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to plot the spectra on. If not provided, creates a new
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>.</p>
+</dd>
+<dt><strong>style</strong><span class="classifier">str, optional</span></dt><dd><p>Plot style to use. By default this is <code class="docutils literal notranslate"><span class="pre">2d</span></code>. For the list of plot
+styles, see <a class="reference internal" href="#penguins.style_axes" title="penguins.style_axes"><code class="xref any py py-func docutils literal notranslate"><span class="pre">style_axes()</span></code></a>.</p>
+</dd>
+<dt><strong>offset</strong><span class="classifier">(float, float), optional</span></dt><dd><p>Amount to offset successive spectra by in units of ppm, provided as
+<em>(f1_offset, f2_offset)</em>.</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">str, optional</span></dt><dd><p>Plot title.</p>
+</dd>
+<dt><strong>autolabel</strong><span class="classifier">str, optional (default: “nucl”)</span></dt><dd><p>Automatic label to use for the <em>x</em>-axis. The <code class="docutils literal notranslate"><span class="pre">nucl</span></code> option generates
+a LaTeX representation of the nuclei of the first spectrum (e.g. for a
+C–H HSQC, using this would automatically generate the <em>x</em>- and <em>y</em>-axis
+labels <code class="docutils literal notranslate"><span class="pre">r&quot;$^{1}$H</span> <span class="pre">(ppm)&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">r&quot;$^{13}$C</span> <span class="pre">(ppm)&quot;</span></code> respectively).
+The <code class="docutils literal notranslate"><span class="pre">f1f2</span></code> option  generates generic <code class="docutils literal notranslate"><span class="pre">f1</span> <span class="pre">(ppm)</span></code> and <code class="docutils literal notranslate"><span class="pre">f2</span> <span class="pre">(ppm)</span></code>
+strings. There are no other options for now.</p>
+</dd>
+<dt><strong>xlabel</strong><span class="classifier">str, optional</span></dt><dd><p><em>x</em>-Axis label. If either <em>xlabel</em> or <em>ylabel</em> are set, they will
+override the <em>autolabel</em> parameter (if only one is set then the other
+axis label will be empty!).</p>
+</dd>
+<dt><strong>ylabel</strong><span class="classifier">str, optional</span></dt><dd><p><em>y</em>-Axis label.</p>
+</dd>
+<dt><strong>legend_loc</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Location to place the legend. This is passed as the <em>loc</em> parameter to
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.legend</span></code></a>; see the documentation there for the available options.</p>
+</dd>
+<dt><strong>f1_units</strong><span class="classifier">str from {“ppm”, “Hz”}, default “ppm”</span></dt><dd><p>Units to use for the f1 dimension. This also determines the units for
+the first value of the <em>offset</em> parameter: if <em>units</em> is <code class="docutils literal notranslate"><span class="pre">ppm</span></code> then
+offset[0] is interpreted as a chemical shift offset, and vice versa.</p>
+</dd>
+<dt><strong>f2_units</strong><span class="classifier">str from {“ppm”, “Hz”}, default “ppm”</span></dt><dd><p>Units to use for the f2 dimension. Likewise, this determines the units
+for the second value of the <em>offset</em> parameter.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fig</strong><span class="classifier">Figure</span></dt><dd><p>The currently active <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">Axes</span></dt><dd><p>The currently active <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance, which the spectra were just
+plotted on.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penguins.mkplot</span></code></a></dt><dd><p>The appropriate interface for plot construction.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.pgplot._find_baselev">
+<code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">_find_baselev</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">increment</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nlev</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot._find_baselev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an interactive slider window to see the effect of changing
+<em>baselev</em> on the displayed spectrum.</p>
+<p>Note that this should not be called directly; use the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">find_baselev()</span></code> method on <a class="reference internal" href="../reference.dataset/#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a> objects
+instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dataset</strong><span class="classifier">Dataset2D</span></dt><dd><p>Dataset to stage.</p>
+</dd>
+<dt><strong>increment</strong><span class="classifier">float, optional</span></dt><dd><p>Multiplicative increment between adjacent contour levels. This is
+typically not worth changing.</p>
+</dd>
+<dt><strong>nlev</strong><span class="classifier">int, optional</span></dt><dd><p>Number of contour levels to use. This is not typically worth changing.
+If you really want to, don’t go too high, as this causes the plot to be
+very laggy. (It has to call <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a> every time the slider is moved.)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>chosen_baselev</strong><span class="classifier">float</span></dt><dd><p>Final value of the baselev before the ‘OK’ button was pressed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../reference.dataset/#penguins.dataset._2D_PlotMixin.find_baselev" title="penguins.dataset._2D_PlotMixin.find_baselev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penguins.dataset._2D_PlotMixin.find_baselev</span></code></a></dt><dd><p>Equivalent method on <a class="reference internal" href="../reference.dataset/#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a> objects. Usage of this is preferred.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<p><br /> </p>
+</div>
+<div class="section" id="auxiliary-plotting-utilities">
+<h2>Auxiliary plotting utilities<a class="headerlink" href="#auxiliary-plotting-utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="penguins.style_axes">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">style_axes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">style</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.style_axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Styles the given <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance according to the requested style.</p>
+<p>This is useful for making sure that all subplots in a series have a uniform
+appearance.</p>
+<p>All the styles except <code class="docutils literal notranslate"><span class="pre">natural</span></code> call <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.tight_layout()</span></code></a> after they are done.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">Axes</span></dt><dd><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instance to style.</p>
+</dd>
+<dt><strong>style</strong><span class="classifier">str</span></dt><dd><p>Style to be applied. The available options are <code class="docutils literal notranslate"><span class="pre">1d</span></code>, <code class="docutils literal notranslate"><span class="pre">1d_box</span></code>,
+<code class="docutils literal notranslate"><span class="pre">2d</span></code>, <code class="docutils literal notranslate"><span class="pre">plot</span></code>, and <code class="docutils literal notranslate"><span class="pre">natural</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.set_palette">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">set_palette</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">palette</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.set_palette" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the currently active color palette. The default palette is
+seaborn’s <code class="docutils literal notranslate"><span class="pre">deep</span></code>.</p>
+<p>The palette is used both for staging successive 1D spectra, as well as for
+any plots done with seaborn. For 2D spectra, colors from seaborn’s
+<code class="docutils literal notranslate"><span class="pre">bright</span></code> palette have been manually chosen. If you want to override these,
+you should directly pass the <em>colors</em> parameter to the stage() method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>palette</strong><span class="classifier">str or list of str</span></dt><dd><p>Color palette to use. See <a class="reference external" href="https://seaborn.pydata.org/tutorial/color_palettes.html" title="(in seaborn v0.11.0)"><span>Choosing color palettes</span></a> for a
+full description of the possible options.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py function">
+<dt id="penguins.color_palette">
+<code class="sig-prename descclassname">penguins.</code><code class="sig-name descname">color_palette</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">palette</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.color_palette" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of colors corresponding to a color palette. If <em>palette</em>
+is not provided, returns the colors in the current color palette.</p>
+<p>This is essentially a wrapper around <a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.color_palette.html#seaborn.color_palette" title="(in seaborn v0.11.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sns.color_palette</span></code></a>, but it only offers one argument, and it can’t be
+used as a context manager. Use <a class="reference internal" href="#penguins.set_palette" title="penguins.set_palette"><code class="xref any py py-func docutils literal notranslate"><span class="pre">set_palette</span></code></a> if you want to change the
+active palette.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>palette</strong><span class="classifier">str or list of str, optional</span></dt><dd><p>The palette to look up. Defaults to the currently active color palette.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>colors</strong><span class="classifier">list of str</span></dt><dd><p>The colors in the current color palette.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py class">
+<dt id="penguins.pgplot.PlotHoldingArea">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">PlotHoldingArea</code><a class="headerlink" href="#penguins.pgplot.PlotHoldingArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot holding area which holds staged spectra (as <a class="reference internal" href="#penguins.pgplot.PlotObject1D" title="penguins.pgplot.PlotObject1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject1D</span></code></a> or
+<a class="reference internal" href="#penguins.pgplot.PlotObject2D" title="penguins.pgplot.PlotObject2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject2D</span></code></a> objects) before the plot is constructed using <a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>.</p>
+<p>Each <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> has its own PlotHoldingArea instance, which can be accessed
+with <code class="docutils literal notranslate"><span class="pre">ax.pha</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>plot_objs</strong><span class="classifier">list</span></dt><dd><p>List of <a class="reference internal" href="#penguins.pgplot.PlotObject1D" title="penguins.pgplot.PlotObject1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject1D</span></code></a> or <a class="reference internal" href="#penguins.pgplot.PlotObject2D" title="penguins.pgplot.PlotObject2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject2D</span></code></a> items which have been staged.</p>
+</dd>
+<dt><strong>colors_1d</strong><span class="classifier">generator object</span></dt><dd><p>Yields colors one at a time from the currently active palette.</p>
+</dd>
+<dt><strong>colors_2d</strong><span class="classifier">generator object</span></dt><dd><p>Yields selected tuples (positive, negative) of colors, taken from the
+“bright” palette.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py class">
+<dt id="penguins.pgplot.PlotProperties">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">PlotProperties</code><a class="headerlink" href="#penguins.pgplot.PlotProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores properties of 1D spectra that have already been plotted using
+<a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>. Only artists are stored for 2D spectra.</p>
+<p>Each <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> has its own PlotProperties instance, which can be accessed
+with <code class="docutils literal notranslate"><span class="pre">ax.prop</span></code> (but <em>only</em> after <a class="reference internal" href="#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> has been called on that
+particular Axes).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>hoffsets</strong><span class="classifier">list of float</span></dt><dd><p>Horizontal offset of each plotted spectrum in ppm.</p>
+</dd>
+<dt><strong>voffsets</strong><span class="classifier">list of float</span></dt><dd><p>Vertical offset of each plotted spectrum in data coordinates (because
+the <em>y</em>-axis of a 1D spectrum is the intensity, this is typically on
+the order of 1e5).</p>
+</dd>
+<dt><strong>colors</strong><span class="classifier">list of str</span></dt><dd><p>List of colors used for each spectrum.</p>
+</dd>
+<dt><strong>options</strong><span class="classifier">list of dict</span></dt><dd><p>List of options passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> for each individual spectrum.</p>
+</dd>
+<dt><strong>artists</strong><span class="classifier">list of Artists</span></dt><dd><p>List of <a class="reference external" href="https://matplotlib.org/api/artist_api.html#matplotlib.artist.Artist" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Artist</span></code></a> objects that have been
+plotted on the current <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>. For 1D spectra, these are Line2D
+objects; for 2D spectra, they are QuadContourSet objects.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py class">
+<dt id="penguins.pgplot.PlotObject1D">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">PlotObject1D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">dfilter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot.PlotObject1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object that includes a 1D dataset as well as other keyword arguments
+passed to <a class="reference internal" href="#penguins.pgplot._stage1d" title="penguins.pgplot._stage1d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">_stage1d()</span></code></a>.</p>
+<p>Any processing done on the spectrum, e.g. scaling, bounds selection, or
+dfilter, is done when this class is initialised.</p>
+</dd></dl>
+
+<p><br /> </p>
+<dl class="py class">
+<dt id="penguins.pgplot.PlotObject2D">
+<em class="property">class </em><code class="sig-prename descclassname">penguins.pgplot.</code><code class="sig-name descname">PlotObject2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">f1_bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">f2_bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">levels</span><span class="o">=</span><span class="default_value">(None, None, None)</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">(None, None)</span></em>, <em class="sig-param"><span class="n">dfilter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.pgplot.PlotObject2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object that includes a 2D dataset as well as other keyword arguments
+passed to <a class="reference internal" href="#penguins.pgplot._stage2d" title="penguins.pgplot._stage2d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">_stage2d()</span></code></a>.</p>
+<p>Any processing done on the spectrum, e.g. bounds selection, or dfilter, is
+done when this class is initialised. The contour levels and colors are also
+generated by this class.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/">All About Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paradigm/">Penguins’ Plot Paradigm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subplots/">Subplots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nus/">Non-Uniform Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topspin/">TopSpin directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference/">Full reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reference.reading/">Reading spectra</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Plotting spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.dataset/">Datasets</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../">Documentation overview</a><ul>
+  <li><a href="../reference/">Full reference</a><ul>
+      <li>Previous: <a href="../reference.reading/" title="previous chapter">Reading spectra</a></li>
+      <li>Next: <a href="../reference.dataset/" title="next chapter">Datasets</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/reference.plotting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

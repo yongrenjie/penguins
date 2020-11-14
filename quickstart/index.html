@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quickstart &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="All About Datasets" href="../datasets/" />
+    <link rel="prev" title="Installation" href="../install/" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="importing-a-spectrum">
+<h2>Importing a spectrum<a class="headerlink" href="#importing-a-spectrum" title="Permalink to this headline">¶</a></h2>
+<p>Importing spectra is done with <a class="reference internal" href="../reference.reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>.
+<a class="reference internal" href="../reference.reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> takes three parameters: the path to the <em>spectrum folder</em>, the expno, and optionally the procno (if not specified, this defaults to 1).
+This returns one of several possible Dataset objects, depending on the dimensionality of the spectrum selected:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tests/data/rot1&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">Dataset1D(&#39;/Users/yongrenjie/penguins/tests/data/rot1/2/pdata/1&#39;)</span>
+</pre></div>
+</div>
+<p>(If you are not familiar with TopSpin’s directory layout yet, see <a class="reference internal" href="../topspin/"><span class="doc">TopSpin directories</span></a>.)
+Note that penguins is only capable of reading Bruker data, and there is no support for 3D or higher spectra.</p>
+</div>
+<div class="section" id="accessing-parameters">
+<h2>Accessing parameters<a class="headerlink" href="#accessing-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Spectral parameters (both acquisition and processing parameters) can be accessed via their TopSpin names using dictionary-like syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c13</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tests/data/rot1&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c13</span><span class="p">[</span><span class="s2">&quot;pulprog&quot;</span><span class="p">]</span>
+<span class="go">&#39;zgpg30&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c13</span><span class="p">[</span><span class="s2">&quot;td&quot;</span><span class="p">]</span>
+<span class="go">65536</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hsqc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tests/data/rot1&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;si&quot;</span><span class="p">]</span>
+<span class="go">array([1024, 2048])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hsqc</span><span class="p">[</span><span class="s2">&quot;nuc1&quot;</span><span class="p">]</span>
+<span class="go">(&#39;13C&#39;, &#39;1H&#39;)</span>
+</pre></div>
+</div>
+<p>For 2D spectra, parameters which have values in both the indirect and direct dimensions are stored as either a tuple or a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, depending on whether the underlying values are numeric.
+The first element is always the value for the indirect dimension (f1), and the second element the value for the direct dimension (f2).</p>
+<p>Penguins does not aspire to be a full processing package; it mainly focuses on plotting.
+However, there are some functions for processing datasets, including integration and generation of projections/slices.
+See <a class="reference internal" href="../datasets/"><span class="doc">All About Datasets</span></a> for more information.</p>
+</div>
+<div class="section" id="plotting-spectra">
+<h2>Plotting spectra<a class="headerlink" href="#plotting-spectra" title="Permalink to this headline">¶</a></h2>
+<p>Plotting is done in three stages. A brief summary is as follows:</p>
+<ol class="arabic">
+<li><p><em>Stage</em> the spectrum (or spectra) to be plotted.</p>
+<p>Options that are specific to each individual spectrum, such as the range of chemical shifts to be plotted, legend labels, colours, etc. are specified at this stage. This uses the <code class="docutils literal notranslate"><span class="pre">stage()</span></code> methods on 1D and 2D Dataset objects.</p>
+</li>
+<li><p><em>Construct</em> the plot.</p>
+<p>Options that affect the layout of the entire plot, such as horizontal/vertical offset between spectra, axis labels, etc. are specified at this stage. This uses the <a class="reference internal" href="../reference.plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.mkplot()</span></code></a> function.</p>
+</li>
+<li><p><em>Display</em> the plot.</p>
+<p>The two main choices here are to display the window using <a class="reference internal" href="../reference.plotting/#penguins.show" title="penguins.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.show()</span></code></a>, or save a figure using <a class="reference internal" href="../reference.plotting/#penguins.savefig" title="penguins.savefig"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.savefig()</span></code></a>. Both are simple wrappers around the corresponding <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> functions.</p>
+</li>
+</ol>
+<p>An example of a simple 1D plot is as follows.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="n">prot</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tests/data/rot1&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Staging</span>
+<span class="n">prot</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;2..7&quot;</span><span class="p">,</span>   <span class="c1"># plot between 2 and 7 ppm</span>
+           <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;My proton spectrum&quot;</span><span class="p">)</span>
+<span class="c1"># Construct</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">()</span>
+<span class="c1"># Display</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="../_images/quickstart1d.svg" src="../_images/quickstart1d.svg" /></div>
+<p>The most important keyword argument for staging spectra is <em>bounds</em>. This can be specified either as a string <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code> or a tuple of floats <code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 25%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Region of interest</p></th>
+<th class="head"><p>String form</p></th>
+<th class="head"><p>Tuple form</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Entire spectrum</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">None)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Below 5 ppm only</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;..5&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">5)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Above 5 ppm only</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;5..&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">None)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Between 4 and 5 ppm</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;4..5&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(4,</span> <span class="pre">5)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>An example for a 2D spectrum is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="n">hsqc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tests/data/pt2&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1"># Staging</span>
+<span class="n">hsqc</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">f1_bounds</span><span class="o">=</span><span class="s2">&quot;11..140&quot;</span><span class="p">,</span>
+           <span class="n">f2_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">),</span>
+           <span class="n">levels</span><span class="o">=</span><span class="p">(</span><span class="mf">2.5e4</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="c1"># Construct plot.</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">autolabel</span><span class="o">=</span><span class="s2">&quot;nucl&quot;</span><span class="p">)</span>
+<span class="c1"># Display</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="../_images/quickstart2d.svg" src="../_images/quickstart2d.svg" /></div>
+<p>There are a few details worth mentioning here, since these are likely to be frequently used.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>During staging, the <em>f1_bounds</em> and <em>f2_bounds</em> parameters are specified using exactly the same formats as before.</p></li>
+<li><p>Contour levels are specified using the <em>levels</em> parameter as a tuple of <code class="docutils literal notranslate"><span class="pre">(baselev,</span> <span class="pre">increment,</span> <span class="pre">nlev)</span></code>. In total, <code class="docutils literal notranslate"><span class="pre">nlev</span></code> positive contours will be drawn at heights of <code class="docutils literal notranslate"><span class="pre">baselev</span></code>, <code class="docutils literal notranslate"><span class="pre">baselev</span> <span class="pre">*</span> <span class="pre">increment</span></code>, <code class="docutils literal notranslate"><span class="pre">baselev</span> <span class="pre">*</span> <span class="pre">(increment</span> <span class="pre">**</span> <span class="pre">2)</span></code>, …, and <code class="docutils literal notranslate"><span class="pre">nlev</span></code> negative contours will be drawn at the corresponding negative values.</p></li>
+<li><p>In the second stage of plot construction, the <em>autolabel</em> parameter generates nice axes labels that show the nucleus being measured.</p></li>
+</ul>
+</div></blockquote>
+<p>From here, you may want to consider reading <a class="reference internal" href="../paradigm/"><span class="doc">Penguins’ Plot Paradigm</span></a> to get to know penguins’ overall approach to plotting.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#importing-a-spectrum">Importing a spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accessing-parameters">Accessing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-spectra">Plotting spectra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/">All About Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paradigm/">Penguins’ Plot Paradigm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subplots/">Subplots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nus/">Non-Uniform Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topspin/">TopSpin directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/">Full reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../">Documentation overview</a><ul>
+      <li>Previous: <a href="../install/" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="../datasets/" title="next chapter">All About Datasets</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/quickstart.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subplots &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Non-Uniform Sampling" href="../nus/" />
+    <link rel="prev" title="Penguins’ Plot Paradigm" href="../paradigm/" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="subplots">
+<h1>Subplots<a class="headerlink" href="#subplots" title="Permalink to this headline">¶</a></h1>
+<p>Many of the most useful plots involve having multiple plots on one figure, so it arguably deserves a page of its own.</p>
+<p>Penguins also provides a wrapper around <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots()</span></code></a>. The first thing to do, therefore, is to call <a class="reference internal" href="../reference.plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create subplots</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>At this point, I should mention that it is not a <em>pure</em> wrapper.
+If you do not specify the <code class="docutils literal notranslate"><span class="pre">figsize</span></code> parameter, then <a class="reference internal" href="../reference.plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> will automatically choose <code class="docutils literal notranslate"><span class="pre">(4</span> <span class="pre">*</span> <span class="pre">ncols,</span> <span class="pre">4</span> <span class="pre">*</span> <span class="pre">nrows)</span></code> as the size.
+In other words, every subplot will be 4 inches by 4 inches.
+Of course, you can manually specify <code class="docutils literal notranslate"><span class="pre">figsize=(width,</span> <span class="pre">height)</span></code> if you don’t like this.</p>
+<p>Now, <a class="reference internal" href="../reference.plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> returns a tuple containing the <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance and a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> instances.
+In order to plot the correct spectrum on the correct <code class="docutils literal notranslate"><span class="pre">Axes</span></code>, we need to pass the appropriate <code class="docutils literal notranslate"><span class="pre">Axes</span></code> instance to <a class="reference internal" href="../reference.plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>.
+A common technique is to iterate over <code class="docutils literal notranslate"><span class="pre">axs.flat</span></code>.
+In this case, what we can do is to set up the list of datasets to be plotted, their <code class="docutils literal notranslate"><span class="pre">baselev</span></code> values, and their titles, then use <a class="reference external" href="https://docs.python.org/3/library/functions.html#zip" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">zip()</span></code></a> to iterate over all the lists one at a time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Set up the lists.</span>
+<span class="c1"># 15N HMQC; 13C HSQC; COSY; NOESY</span>
+<span class="n">spectra</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tests/data/noah&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span>
+<span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">7e3</span><span class="p">,</span> <span class="mf">2.3e4</span><span class="p">,</span> <span class="mf">8.5e5</span><span class="p">,</span> <span class="mf">8.9e4</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$^</span><span class="si">{15}</span><span class="s2">$N HMQC&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$^</span><span class="si">{13}</span><span class="s2">$C HSQC&quot;</span><span class="p">,</span> <span class="s2">&quot;COSY&quot;</span><span class="p">,</span> <span class="s2">&quot;NOESY&quot;</span><span class="p">]</span>
+<span class="n">clr</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>  <span class="c1"># we use the same colours for all spectra</span>
+<span class="c1"># Iterate over the lists.</span>
+<span class="k">for</span> <span class="n">spec</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lvl</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">spectra</span><span class="p">,</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">titles</span><span class="p">,</span> <span class="s2">&quot;abcd&quot;</span><span class="p">):</span>
+    <span class="c1"># Staging proceeds as normal</span>
+    <span class="n">spec</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">lvl</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">clr</span><span class="p">)</span>
+    <span class="c1"># When constructing the plot, you need to pass the correct axis instance</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+              <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+              <span class="n">autolabel</span><span class="o">=</span><span class="s2">&quot;nucl&quot;</span><span class="p">)</span>
+    <span class="c1"># Add a label in the top left corner of each spectrum.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+            <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;semibold&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+    <span class="c1"># Display as usual (outside the loop)</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="../_images/subplots.svg" src="../_images/subplots.svg" /></div>
+<p>If you don’t need to do anything complicated with the <code class="docutils literal notranslate"><span class="pre">Axes</span></code> instances while plotting, you can use the <a class="reference internal" href="../reference.plotting/#penguins.mkplots" title="penguins.mkplots"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplots()</span></code></a> convenience function, which takes a list of <code class="docutils literal notranslate"><span class="pre">Axes</span></code> and a list of titles, and calls <a class="reference internal" href="../reference.plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> on all of them.
+That is to say, instead of doing something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>you can directly do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">mkplots</span><span class="p">(</span><span class="n">axs</span><span class="o">=</span><span class="n">axs</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="n">titles</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>More examples of subplot plotting will be added soon.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/">All About Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paradigm/">Penguins’ Plot Paradigm</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Subplots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nus/">Non-Uniform Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topspin/">TopSpin directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/">Full reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../">Documentation overview</a><ul>
+      <li>Previous: <a href="../paradigm/" title="previous chapter">Penguins’ Plot Paradigm</a></li>
+      <li>Next: <a href="../nus/" title="next chapter">Non-Uniform Sampling</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/subplots.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

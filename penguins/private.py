@@ -425,3 +425,86 @@ def cosy_stripplot(molecule: Any,
                     transform=ax.get_xaxis_transform())
     style_axes(ax, "plot")
     return plt.gcf(), ax
+
+
+def hsqc_cosy_stripplot(molecule: Any,
+                        datasets: Sequence[ds.Dataset2D],
+                        ref_datasets: Sequence[ds.Dataset2D],
+                        xlabel: str = "Experiment",
+                        ylabel: str = "Intensity",
+                        title: str = "",
+                        edited: bool = False,
+                        ax: Optional[Any] = None,
+                        ) -> Tuple[Any, Any]:
+    """
+    Parameters
+    ----------
+    molecule : pg.private.Andrographolide or pg.private.Zolmitriptan
+        The class from which the hsqc and cosy attributes will be taken from
+    datasets : (pg.Dataset2D, pg.Dataset2D)
+        HSQC and COSY dataset(s) to analyse intensities of
+    ref_datasets : (pg.Dataset2D, pg.Dataset2D)
+        Reference HSQC and COSY datasets
+    xlabel : str, optional
+        Axes x-label, defaults to "Experiment"
+    ylabel : str, optional
+        Axes y-label, defaults to "Intensity"
+    title : str, optional
+        Axes title, defaults to empty string
+    edited : bool, default False
+        Whether editing in the HSQC is enabled or not.
+    ax : matplotlib.axes.Axes, optional
+        Axes instance to plot on. If not provided, uses plt.gca().
+
+    Returns
+    -------
+    (fig, ax).
+    """
+    # Calculate dataframes of relative intensities.
+    hsqc_rel_ints_df = molecule.hsqc.rel_ints_df(dataset=datasets[0],
+                                                 label="",
+                                                 ref_dataset=ref_datasets[0],
+                                                 edited=edited)
+    # Rename mult -> type to match COSY
+    hsqc_rel_ints_df = hsqc_rel_ints_df.rename(columns={"mult": "type"})
+    cosy_rel_ints_df = molecule.cosy.rel_ints_df(dataset=datasets[1],
+                                                 label="",
+                                                 ref_dataset=ref_datasets[1])
+    cosy_rel_ints_df = cosy_rel_ints_df.replace(["diagonal", "cross"], "cosy")
+    rel_ints_df = pd.concat((hsqc_rel_ints_df, cosy_rel_ints_df))
+
+    # Calculate the average integrals by multiplicity
+    avgd_ints = rel_ints_df.groupby("type").mean()
+    avgd_ints.drop(columns=["f1", "f2"], inplace=True)
+
+    # Get currently active axis if none provided
+    if ax is None:
+        ax = plt.gca()
+
+    # Plot the intensities.
+    sns.stripplot(x="expt", y="int", hue="type",
+                  dodge=True, data=rel_ints_df, ax=ax)
+    # Customise the plot
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title, xticks=[])
+    l = ax.legend(ncol=4, loc="upper center",
+                  labels=["HSQC CH", r"HSQC CH$_2$", r"HSQC CH$_3$", "COSY"])
+    l.set(title=None)
+    ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
+    # Set y-limits. We need to expand it by ~20% to make space for the legend,
+    # as well as the averaged values.
+    EXPANSION_FACTOR = 1.2
+    ymin, ymax = ax.get_ylim()
+    ymean = (ymin + ymax)/2
+    ylength = (ymax - ymin)/2
+    new_ymin = ymean - (EXPANSION_FACTOR * ylength)
+    new_ymax = ymean + (EXPANSION_FACTOR * ylength)
+    ax.set_ylim((new_ymin, new_ymax))
+    # add the text
+    for x, (_, expt_avgs) in enumerate(avgd_ints.items()):
+        for i, ((_, avg), color) in enumerate(zip(expt_avgs.items(),
+                                                  sns.color_palette("deep"))):
+            ax.text(x=x-0.3+i*0.2, y=0.02, s=f"({avg:.2f})",
+                    color=color, horizontalalignment="center",
+                    transform=ax.get_xaxis_transform())
+    style_axes(ax, "plot")
+    return plt.gcf(), ax

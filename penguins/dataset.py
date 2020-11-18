@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from collections import UserDict, abc
 from pathlib import Path
 from typing import (Any, Union, Tuple, Optional,
@@ -254,9 +255,8 @@ class _Dataset():
         self._find_raw_data_paths()     # type: ignore # mixin
         self._find_proc_data_paths()    # type: ignore # mixin
         self._find_param_file_paths()   # type: ignore # mixin
-        # Read in the spectral data
-        self._read_raw_data()           # type: ignore # mixin
-        self._read_spec()               # type: ignore # mixin
+        # Don't read in the actual 2D data, *until* the user asks for it. In
+        # other words, data reading is lazy. Haskell is really growing on me.
 
     def _initialise_pars(self) -> None:
         self.pars = _parDict(self.path)
@@ -302,6 +302,19 @@ class _1D_RawDataMixin():
         :func:`~numpy.fft.fftshift()` function.
     """
 
+    @property
+    def fid(self):
+        """
+        Complex-valued FID. This function exists only to make the FID lazily
+        read, i.e. don't read it in unless the user asks for it explicitly
+        either with ds.fid or ds.raw_data().
+        """
+        try:
+            return self._fid
+        except AttributeError:
+            self._read_raw_data()
+            return self._fid
+
     def _find_raw_data_paths(self) -> None:
         self.path: Path
         self._p_fid = self.path.parents[1] / "fid"
@@ -316,7 +329,7 @@ class _1D_RawDataMixin():
         fid = np.fromfile(self._p_fid, dtype=datatype)
         fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
         fid = np.transpose(fid) * (2 ** self["nc"])      # type: ignore # mixin
-        self.fid = fid[0] + (1j * fid[1])
+        self._fid = fid[0] + (1j * fid[1])
 
     def raw_data(self) -> np.ndarray:
         """
@@ -484,6 +497,19 @@ class _2D_RawDataMixin():
     parameter files, so it's not useless at all.
     """
 
+    @property
+    def ser(self):
+        """
+        Complex-valued 2D raw data matrix (ser file). This function exists only
+        to make the ser lazily read, i.e. don't read it in unless the user asks
+        for it explicitly either with ds.ser or ds.raw_data().
+        """
+        try:
+            return self._ser
+        except:
+            self._read_raw_data()
+            return self._ser
+
     def _find_raw_data_paths(self) -> None:
         self.path: Path
         self._p_ser = self.path.parents[1] / "ser"
@@ -500,13 +526,27 @@ class _2D_RawDataMixin():
             dtype += "i4"
         else:
             raise NotImplementedError("float data not yet accepted")
-        # TODO
-        # ser = np.fromfile(self._p_ser, dtype=??)
-        pass
+        # Read in the data from the ser file.
+        ser = np.fromfile(self._p_ser, dtype=dtype)
+        # Reshape the matrix according to TD. Note that in the ser file, each
+        # new FID always begins at a new block of 256 data points. Effectively,
+        # this means that TD2 is rounded up to the nearest multiple of 256.
+        td1, td2 = self["td"]   # type: ignore # mixin
+        if td2 % 256 != 0:
+            td2_eff = math.ceil(td2 / 256) * 256
+            ser = ser.reshape((td1, td2_eff))
+            ser = ser[:, :td2]
+        else:
+            ser = ser.reshape((td1, td2))
+        # Combine real and imaginary parts. The -1 allows numpy to
+        # automatically calculate the value that should go there.
+        ser = ser.astype(np.complex128)  # otherwise the imaginary part is lost
+        ser = ser.reshape((td1, -1, 2))
+        ser[:,:,1] = ser[:,:,1] * 1j
+        self._ser = ser.sum(axis=2)
 
     def raw_data(self):
-        # TODO
-        raise NotImplementedError
+        return self.ser
 
 
 class _2D_ProcDataMixin():

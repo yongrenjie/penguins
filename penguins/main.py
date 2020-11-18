@@ -5,7 +5,7 @@ from pathlib import Path
 from itertools import zip_longest
 from typing import Union, Optional, Tuple, Sequence, Any
 
-import numpy as np
+import numpy as np   # type: ignore
 import matplotlib.pyplot as plt    # type: ignore
 from matplotlib.ticker import AutoMinorLocator  # type: ignore
 

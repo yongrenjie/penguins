@@ -72,6 +72,8 @@ In this case, what we can do is to set up the list of datasets to be plotted, th
     <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure align-default">
+<img alt="../_images/subplots.svg" src="../_images/subplots.svg" /></div>
 <p>If you don’t need to do anything complicated with the <code class="docutils literal notranslate"><span class="pre">Axes</span></code> instances while plotting, you can use the <a class="reference internal" href="../reference.plotting/#penguins.mkplots" title="penguins.mkplots"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplots()</span></code></a> convenience function, which takes a list of <code class="docutils literal notranslate"><span class="pre">Axes</span></code> and a list of titles, and calls <a class="reference internal" href="../reference.plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> on all of them.
 That is to say, instead of doing something like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>

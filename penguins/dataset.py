@@ -357,20 +357,39 @@ class _1D_ProcDataMixin():
         chemical shift.
     """
 
+    @property
+    def real(self):
+        try:
+            return self._real
+        except AttributeError:
+            self._read_spec(spectype="real")
+            return self._real
+
+    @property
+    def imag(self):
+        try:
+            return self._imag
+        except AttributeError:
+            self._read_spec(spectype="imag")
+            return self._imag
+
     def _find_proc_data_paths(self) -> None:
         self._p_real = self.path / "1r"        # type: ignore # mixin
         if (self.path / "1i").exists():        # type: ignore # mixin
             self._p_imag = self.path / "1i"    # type: ignore # mixin
 
-    def _read_spec(self) -> np.ndarray:
+    def _read_spec(self, spectype: str) -> np.ndarray:
         if self["dtypp"] == 0:                            # type: ignore # mixin
             dt = "<" if self["bytordp"] == 0 else ">"     # type: ignore # mixin
             dt += "i4"
         else:
             raise NotImplementedError("float data not yet accepted")
-        self.real = np.fromfile(self._p_real, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
-        if hasattr(self, "_p_imag"):
-            self.imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
+        if spectype == "real":
+            self._real = np.fromfile(self._p_real, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
+        elif spectype == "imag":
+            self._imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
+        else:
+            raise ValueError("_read_spec(): invalid spectype")
 
     def proc_data(self,
                   bounds: TBounds = "",
@@ -463,11 +482,11 @@ class _1D_ProcDataMixin():
         """
         new_ds = Dataset1D(self.path)   # type: ignore # mixin
         try:
-            new_ds.real = np.abs(new_ds.real + 1j * new_ds.imag)
+            new_ds._real = np.abs(new_ds.real + 1j * new_ds.imag)
         except AttributeError:   # no imag
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None
-        new_ds.imag = np.zeros(new_ds.real.shape)
+        new_ds._imag = np.zeros(new_ds.real.shape)
         return new_ds
 
     def mc(self) -> Dataset1D:
@@ -551,19 +570,50 @@ class _2D_RawDataMixin():
 
 class _2D_ProcDataMixin():
 
+    @property
+    def rr(self):
+        try:
+            return self._rr
+        except AttributeError:
+            self._read_spec(spectype="rr")
+            return self._rr
+
+    @property
+    def ri(self):
+        try:
+            return self._ri
+        except AttributeError:
+            self._read_spec(spectype="ri")
+            return self._ri
+
+    @property
+    def ir(self):
+        try:
+            return self._ir
+        except AttributeError:
+            self._read_spec(spectype="ir")
+            return self._ir
+
+    @property
+    def ii(self):
+        try:
+            return self._ii
+        except AttributeError:
+            self._read_spec(spectype="ii")
+            return self._ii
+
     def _find_proc_data_paths(self) -> None:
         self.path: Path
         self._p_rr = self.path / "2rr"
-        if (self.path / "2ri").exists():
-            self._p_ri = self.path / "2ri"
-        if (self.path / "2ir").exists():
-            self._p_ir = self.path / "2ir"
-        if (self.path / "2ii").exists():
-            self._p_ii = self.path / "2ii"
+        self._p_ri = self.path / "2ri"
+        self._p_ir = self.path / "2ir"
+        self._p_ii = self.path / "2ii"
 
-    def _read_spec(self) -> np.ndarray:
+    def _read_spec(self, spectype: str) -> np.ndarray:
         # Helper function
         def _read_one_spec(spec_path = Path) -> np.ndarray:
+            if not spec_path.exists():
+                raise ValueError(f"processed data file {spec_path} not found.")
             if np.all(self["dtypp"] == 0):                           # type: ignore # mixin
                 dt = "<" if np.all(self["bytordp"] == 0) else ">"    # type: ignore # mixin
                 dt += "i4"
@@ -585,15 +635,16 @@ class _2D_ProcDataMixin():
             return sp * (2 ** self["nc_proc"][1])                    # type: ignore # mixin
 
         # Read the spectra
-        self.rr = _read_one_spec(self._p_rr)
-        # Calculate a suitable baselev
-        self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
-        if hasattr(self, "_p_ri"):
-            self.ri = _read_one_spec(self._p_ri)
-        if hasattr(self, "_p_ir"):
-            self.ir = _read_one_spec(self._p_ir)
-        if hasattr(self, "_p_ii"):
-            self.ii = _read_one_spec(self._p_ii)
+        if spectype == "rr":
+            self._rr = _read_one_spec(self._p_rr)
+            # Calculate a suitable baselev
+            self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
+        elif spectype == "ri":
+            self._ri = _read_one_spec(self._p_ri)
+        elif spectype == "ir":
+            self._ir = _read_one_spec(self._p_ir)
+        elif spectype == "ii":
+            self._ii = _read_one_spec(self._p_ii)
 
     def proc_data(self,
                   f1_bounds: TBounds = "",
@@ -728,9 +779,9 @@ class _2D_ProcDataMixin():
         new_ds = Dataset2D(self.path)   # type: ignore # mixin
         try:
             if axis == 0:
-                new_ds.rr = np.abs(new_ds.rr + 1j * new_ds.ri)
+                new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ri)
             elif axis == 1:
-                new_ds.rr = np.abs(new_ds.rr + 1j * new_ds.ir)
+                new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ir)
             else:
                 raise ValueError("to_magnitude(): axis must be 0 (for"
                                  " magnitude mode in f1) or 1 (for f2).")
@@ -738,9 +789,9 @@ class _2D_ProcDataMixin():
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None
         # Zero out all the other components.
-        new_ds.ri = np.zeros(new_ds.rr.shape)
-        new_ds.ir = np.zeros(new_ds.rr.shape)
-        new_ds.ii = np.zeros(new_ds.rr.shape)
+        new_ds._ri = np.zeros(new_ds.rr.shape)
+        new_ds._ir = np.zeros(new_ds.rr.shape)
+        new_ds._ii = np.zeros(new_ds.rr.shape)
         return new_ds
 
     def xf1m(self) -> Dataset2D:  # alias
@@ -1126,7 +1177,8 @@ class Dataset2D(_2D_RawDataMixin,
         index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="projection",
                                     proj_axis=axis, sign=sign,
-                                    index_bounds=index_bounds)
+                                    index_bounds=index_bounds,
+                                    rr=self.rr)
 
     def f1projp(self,
                 bounds: TBounds = ""
@@ -1189,7 +1241,8 @@ class Dataset2D(_2D_RawDataMixin,
         # For some reason mypy doesn't realise that axis must be an int by here.
         index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="sum",
-                                    proj_axis=axis, index_bounds=index_bounds)
+                                    proj_axis=axis, index_bounds=index_bounds,
+                                    rr=self.rr)
 
     def f1sum(self,
               bounds: TBounds = ""
@@ -1238,7 +1291,8 @@ class Dataset2D(_2D_RawDataMixin,
         # For some reason mypy doesn't realise that axis must be an int by here.
         index = self.ppm_to_index(axis=(1 - axis), ppm=ppm)   # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="slice",
-                                    proj_axis=axis, index=index)
+                                    proj_axis=axis, index=index,
+                                    rr=self.rr)
 
 
 class Dataset1DProjVirtual(Dataset1DProj):
@@ -1250,8 +1304,18 @@ class Dataset1DProjVirtual(Dataset1DProj):
     the same.
     """
 
+    @property
+    def real(self):
+        try:
+            return self._real
+        except AttributeError:
+            self._read_spec(spectype="real")
+            return self._real
+
+
     def __init__(self,
                  path: Union[str, Path],
+                 rr: np.ndarray,
                  **kwargs
                  ) -> None:
         # Set some flags so that our overriding _read_spec() method can
@@ -1265,9 +1329,9 @@ class Dataset1DProjVirtual(Dataset1DProj):
         # Carry out the same initialisation tasks.
         # This calls _initialise_pars.
         Dataset1DProj.__init__(self, path)
-        # Pars have been initialised at this point, so we can overwrite SI.
-        # For 2D spectra SI is an array, for a standard projection it's a
-        # single number. Not sure what other parameters need to be overwritten.
+        # Copy the rr file over from the original 2D dataset.
+        self._rr = rr
+        # Overwrite SI.
         self["si"] = self["si"][self.proj_axis]
 
     def _initialise_pars(self):
@@ -1275,41 +1339,36 @@ class Dataset1DProjVirtual(Dataset1DProj):
         # tries to look for the used_from file, and we don't have that.
         _Dataset._initialise_pars(self)
 
-    def _read_spec(self) -> np.ndarray:
-        # There's no 1r or 1i to read here, since the data isn't
-        # from TopSpin.
-        del self._p_real
-        # First get the real, real part.
-        _p_rr = self.path / "2rr"
-        rr = np.fromfile(_p_rr, dtype=np.int32)
-        rr = rr.reshape(int(self["si"][0]), int(self["si"][1]))
-        rr = rr * (2 ** self["nc_proc"][1])
-        # First check if it's a slice; that's the easiest case
-        if self.proj_type == "slice":
-            if self.proj_axis == 0:  # a column
-                self.real = rr[:, self.index]
-            elif self.proj_axis == 1:  # a row
-                self.real = rr[self.index, :]
-            return
-        # Then check if there are bounds
-        if self.index_bounds is not None:
-            if self.proj_axis == 0:  # columns
-                rr = rr[:, self.index_bounds]
-            elif self.proj_axis == 1:  # rows
-                rr = rr[self.index_bounds, :]
-        # Then make the projection / sum
-        if self.proj_type == "projection":
-            if self.sign == "positive":
-                rr[rr < 0] = 0
-                projection_fn = np.amax
-            elif self.sign == "negative":
-                rr[rr > 0] = 0
-                projection_fn = np.amin
-            self.real = projection_fn(rr, axis=(1 - self.proj_axis))
-        # Note that 'sum' doesn't care about the sign, in line with TopSpin's
-        # behaviour.
-        elif self.proj_type == "sum":
-            self.real = np.sum(rr, axis=(1 - self.proj_axis))
+    def _read_spec(self, spectype: str) -> np.ndarray:
+        if spectype == "real":
+            # First check if it's a slice; that's the easiest case
+            if self.proj_type == "slice":
+                if self.proj_axis == 0:  # a column
+                    self._real = self._rr[:, self.index]
+                elif self.proj_axis == 1:  # a row
+                    self._real = self._rr[self.index, :]
+                return
+            # Then check if there are bounds
+            if self.index_bounds is not None:
+                if self.proj_axis == 0:  # columns
+                    self._rr = self._rr[:, self.index_bounds]
+                elif self.proj_axis == 1:  # rows
+                    self._rr = self._rr[self.index_bounds, :]
+            # Then make the projection / sum
+            if self.proj_type == "projection":
+                if self.sign == "positive":
+                    self._rr[self._rr < 0] = 0
+                    projection_fn = np.amax
+                elif self.sign == "negative":
+                    self._rr[self._rr > 0] = 0
+                    projection_fn = np.amin
+                self._real = projection_fn(self._rr, axis=(1 - self.proj_axis))
+            # Note that 'sum' doesn't care about the sign, in line with TopSpin's
+            # behaviour.
+            elif self.proj_type == "sum":
+                self._real = np.sum(self._rr, axis=(1 - self.proj_axis))
+        else:
+            raise ValueError("_read_spec(): projections only have real parts")
 
 
 TDataset1D = Union[Dataset1D, Dataset1DProj, Dataset1DProjVirtual]

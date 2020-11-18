@@ -106,18 +106,10 @@ one go).</p>
 <dd><p>Defines behaviour that is applicable for 1D raw data, i.e. <code class="docutils literal notranslate"><span class="pre">fid</span></code>
 files. Also contains a few private methods which initialise (for example)
 the paths to the parameter files.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl>
-<dt><strong>fid</strong><span class="classifier">ndarray</span></dt><dd><p>Complex <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the FID. No preprocessing (e.g. removal of the
-group delay) is carried out.</p>
-<p>Note also that for Bruker data, real and imaginary components are
-sampled sequentially instead of simultaneously. Therefore, the
-imaginary component of <code class="docutils literal notranslate"><span class="pre">fid[0]</span></code> is actually acquired <em>after</em> the real
-component of <code class="docutils literal notranslate"><span class="pre">fid[0]</span></code> (the exact time difference is the dwell width,
-<code class="docutils literal notranslate"><span class="pre">DW).</span></code> In principle this does not cause any issues as it can be
-corrected for post-Fourier transformation using the
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.fft.fftshift.html#numpy.fft.fftshift" title="(in NumPy v1.19)"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftshift()</span></code></a> function.</p>
+<dd class="field-odd"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">fid</span></code><span class="classifier">ndarray</span></dt><dd><p>Complex-valued FID.</p>
 </dd>
 </dl>
 </dd>

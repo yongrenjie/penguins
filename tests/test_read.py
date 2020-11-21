@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+import pytest
 import penguins as pg
 
 datadir = Path(__file__).parent.resolve() / "nmrdata"
@@ -54,6 +55,11 @@ def test_read_instance():
     cosy = pg.read(datadir, 2, 1)
     assert isinstance(cosy, pg.dataset.Dataset2D)
     assert cosy.path == datadir / "2" / "pdata" / "1"
+    # Processed PSYCHE data. This was an edge case that was previously
+    # identified.
+    proc_psyche = pg.read(datadir, 4, 1)
+    assert isinstance(proc_psyche, pg.dataset.Dataset1D)
+    assert proc_psyche.path == datadir / "4" / "pdata" / "1"
 
 
 def test_read_lazy_1d():
@@ -104,3 +110,22 @@ def test_read_lazy_2d():
     assert "_ii" in vars(cosy)
     sz4 = get_size(cosy)
     assert sz4 > sz3 + 1.5e7
+
+
+def test_read_unprocessed_data():
+    """Test that reading in unprocessed data works (and that appropriate errors
+    are thrown when attempting to read the processed data)."""
+    # This is a PSYCHE dataset that hasn't been processed. The raw data exists.
+    noproc_psyche = pg.read(datadir, 3)
+    assert isinstance(noproc_psyche, pg.dataset.Dataset2D)
+    assert noproc_psyche.path == datadir / "3" / "pdata" / "1"
+    # Check that reading raw data works
+    sz0 = get_size(noproc_psyche)
+    noproc_psyche.ser
+    assert "_ser" in vars(noproc_psyche)
+    assert get_size(noproc_psyche) > sz0 + 2e5
+    # Check that trying to get the processed data raises an error
+    with pytest.raises(FileNotFoundError) as exc_info:
+        noproc_psyche.rr
+        assert "processed data file" in str(exc_info.value)
+        assert "not found" in str(exc_info.value)

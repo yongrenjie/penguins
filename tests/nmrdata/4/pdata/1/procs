@@ -1,11 +1,11 @@
 ##TITLE= Parameter file, TopSpin 3.6.2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 7	$$ modification sequence number
+##NPOINTS= 4	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ 2020-10-29 17:59:28.476 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
-$$ C:\NMR\data\mfgroup\nmr/201028-7g-noah-psyche/1004/pdata/1/procs
+$$ 2020-11-01 17:37:17.570 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1004/pdata/1/procs
 $$ process C:\Bruker\TopSpin3.6.2\prog\mod\proc1d.exe
 ##$ABSF1= 11.01259
 ##$ABSF2= -1.012593
@@ -78,7 +78,7 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\mod\proc1d.exe
 ##$Mdd_LrZF= 0
 ##$Mdd_mod= 0
 ##$NCOEF= 0
-##$NC_proc= -13
+##$NC_proc= -10
 ##$NLEV= 6
 ##$NOISF1= 0
 ##$NOISF2= 0
@@ -87,8 +87,8 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\mod\proc1d.exe
 ##$NZP= 0
 ##$OFFSET= 11.01259
 ##$PC= 1
-##$PHC0= 78.3034
-##$PHC1= -33.37721
+##$PHC0= 96.22166
+##$PHC1= -72.2365
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 0
@@ -134,6 +134,6 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\mod\proc1d.exe
 ##$USERP5= <user>
 ##$WDW= 1
 ##$XDIM= 0
-##$YMAX_p= 511954471
-##$YMIN_p= -153407754
+##$YMAX_p= 413631193
+##$YMIN_p= -51050496
 ##END=

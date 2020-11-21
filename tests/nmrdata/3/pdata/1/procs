@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TopSpin 4.0.7
+##TITLE= Parameter file, TopSpin 4.0.9
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 3	$$ modification sequence number
+##NPOINTS= 2	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ 2020-10-30 09:42:55.728 -0000  CHEM\tim.claridge@TUNA
-$$ //cuttlefish-crl/nmr/data/mfgroup/nmr/201028-7g-noah-psyche/1003/pdata/1/procs
-$$ process C:\Bruker\TopSpin4.0.7\prog\mod\dataserver.exe
+$$ 2020-11-04 02:25:02.783 +0000  yongrenjie@Empoleon.local
+$$ /Volumes/JonY/dphil/expn/nmr/201101-7g-noah-psyche/1003/pdata/1/procs
+$$ process /opt/topspin4.0.9/prog/mod/dataserver
 ##$ABSF1= 0
 ##$ABSF2= 0
 ##$ABSG= 0

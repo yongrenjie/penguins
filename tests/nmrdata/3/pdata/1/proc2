@@ -1,12 +1,12 @@
 ##TITLE= Parameter file, TopSpin 3.6.2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 2	$$ modification sequence number
+##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ 2020-10-29 17:50:37.412 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
-$$ C:\NMR\data\mfgroup\nmr/201028-7g-noah-psyche/1003/pdata/1/proc2
-$$ process C:\Bruker\TopSpin3.6.2\prog\mod\siparproc.exe
+$$ 2020-11-01 17:37:02.399 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1003/pdata/1/proc2
+$$ process C:\Bruker\TopSpin3.6.2\prog\mod\dirdata.exe
 ##$ABSF1= 1000
 ##$ABSF2= -1000
 ##$ABSG= 5
@@ -106,11 +106,11 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\mod\siparproc.exe
 ##$RDPOS= 0
 ##$REVERSE= no
 ##$SF= 176.012625498
-##$SI= 16384
+##$SI= 1024
 ##$SIGF1= 0
 ##$SIGF2= 0
 ##$SINO= 0
-##$SIOLD= 16384
+##$SIOLD= 1024
 ##$SPECTYP= <>
 ##$SREF_mod= 1
 ##$SREGLST= <>

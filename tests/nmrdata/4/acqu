@@ -1,11 +1,11 @@
 ##TITLE= Parameter file, TopSpin 3.6.2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 14	$$ modification sequence number
+##NPOINTS= 4	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ 2020-10-29 17:50:54.348 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
-$$ C:\NMR\data\mfgroup\nmr/201028-7g-noah-psyche/1004/acqu
+$$ 2020-11-01 17:37:16.789 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1004/acqu
 $$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\220F1F44F6750630BB2F4EFAD1F49DE1\noah_pshift.exe
 ##$ACQT0= 0
 ##$AMP= (0..31)
@@ -35,7 +35,7 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\220F1F44F6750630BB2F4EFAD1F49DE1\n
 ##$CHEMSTR= <none>
 ##$CNST= (0..63)
 151.5317 1 145 7 90 1 1 1 1 1 10000 1 30 1 1 1 2.5 -0.5 1 1 10 1 90 1 1
-1 1 1 1 1 1 1 1 1 1 1 1 4 50 4 40 1 1 1 1 1 1 1 1 1 4 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 8 50 4 40 1 1 1 1 1 1 1 1 1 4 1 1 1 1 1 1 1 1 1
 1 1 1 1
 ##$CPDPRG= (0..8)
 <> <> <garp> <garp> <> <> <> <> <>
@@ -145,7 +145,7 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\220F1F44F6750630BB2F4EFAD1F49DE1\n
 ##$NC= 0
 ##$NLOGCH= 4
 ##$NOVFLW= 0
-##$NS= 8
+##$NS= 16
 ##$NUC1= <1H>
 ##$NUC2= <13C>
 ##$NUC3= <15N>
@@ -173,10 +173,10 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\220F1F44F6750630BB2F4EFAD1F49DE1\n
 ##$O8= 3289.95
 ##$OVERFLW= 0
 ##$P= (0..63)
-11 11 22 15 30 16.5 25 50 20000 25 50 80000 80000 1000 500 0 1000 2500
-100000 600 2000 27 54 0 2000 154 100000 11 0 1000 0 1325 20000 0 0 0 40000
-0 0 137 30000 0 0 2709 171 1000 80000 46600 10000 0 80000 0 0 0 0 0 500
-0 0 0 0 0 500 1500
+11 11.83622 22 15 30 16.5 25 50 20000 25 50 80000 80000 1000 500 0 1000
+2500 100000 600 2000 27 54 0 2000 154 100000 11 0 1000 0 1325 20000 0 0
+0 40000 0 0 137 30000 0 0 2709 171 1000 80000 46600 10000 0 80000 0 0 0
+0 0 500 0 0 0 0 0 500 1500
 ##$PACOIL= (0..15)
 1 4 2 3 0 0 0 0 0 0 0 0 0 0 0 0
 ##$PAPS= 0
@@ -213,7 +213,7 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\220F1F44F6750630BB2F4EFAD1F49DE1\n
 ##$PROBHD= <>
 ##$PROBINPUTS= (0..15)
 <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
-##$PULPROG= <ngn_noah3-Spv2Spv2P>
+##$PULPROG= <ngn_noah3-MSP.e2>
 ##$PW= 0
 ##$PYNM= <>
 ##$ProjAngle= 0
@@ -290,7 +290,7 @@ $$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\220F1F44F6750630BB2F4EFAD1F49DE1\n
 ##$TD= 10888
 ##$TD0= 1
 ##$TD_INDIRECT= (0..7)
-0 384 2 2 2 2 2 2
+0 768 2 2 2 2 2 2
 ##$TDav= 0
 ##$TE= 300
 ##$TE1= 300

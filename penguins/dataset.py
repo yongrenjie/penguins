@@ -164,6 +164,12 @@ def _parse_bounds(b: TBounds = "",
 
 # -- Fundamental Dataset methods ------------------------
 
+# Parameters that should be integers, not floats.
+# TODO: there are MANY more of these. Every dropdown list (e.g. FnTYPE) should
+# be an int parameter.
+_int_pars = "TD SI NS XDIM NUSTD BYTORDA BYTORDP DTYPA DTYPP".split()
+
+
 class _parDict(UserDict):
     """Modified dictionary for storing acquisition & processing parameters.
 
@@ -226,10 +232,7 @@ class _parDict(UserDict):
                     val = np.array([val_indirect, val])
                 else:
                     val = (val_indirect, val)
-        # Some parameters must be ints, this will save the user (and me) headaches
-        int_pars = ["td", "si", "ns", "xdim", "nustd", "bytorda", "bytordp",
-                    "dtypa", "dtypp"]
-        if par.lower() in int_pars:
+        if par.upper() in _int_pars:
             val = _try_convert(val, int)
         return val
 
@@ -669,7 +672,7 @@ class _2D_RawDataMixin():
         ser = ser.astype(np.complex128)  # otherwise the imaginary part is lost
         ser = ser.reshape((td1, -1, 2))
         ser[:,:,1] = ser[:,:,1] * 1j
-        self._ser = ser.sum(axis=2)
+        self._ser = ser.sum(axis=2) * (2 ** self["nc"])
 
     def raw_data(self):
         return self.ser

@@ -1,16 +1,18 @@
-# 1 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-; ngn_noah3-Spv2Spv2P
+# 1 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
+; ngn_noah3-MSP
 
-; 15N sensitivity-enhanced HSQC
-; 13C sensitivity-enhanced HSQC
+; .e2 - choose PSYCHE sw1 for user so that each chunk is an integral number of points
+
+; 15N HMQC
+; 13C HSQC
 ;     [use -DEDIT for multiplicity editing]
 ; 1H 1D PSYCHE pure shift spectrum
-
+# 10 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
 ;use -DNUS for non-uniform sampling
 ; . specify NUS sampling percentage as NusAMOUNT or NusPOINTS
 ; . generate 'noah' VCLIST and set it
 ; . leave FnTYPE as 'traditional (planes)' - do not change to 'non-uniform_sampling'!
-# 13 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+
 ;$CLASS=HighRes
 ;$DIM=2D
 ;$TYPE=
@@ -25,10 +27,9 @@
 ;
 ;$CLASS=HighRes Incl
 ;$COMMENT=
-
 # 169 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Avance.incl"
 ;$Id: Avance3.incl,v 1.10.2.2 2013/08/30 09:43:33 ber Exp $
-# 19 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P" 2
+# 21 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2" 2
 
 # 1 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Grad.incl" 1
 ;Grad2.incl  -  include file for Gradient Spectroscopy
@@ -45,7 +46,7 @@ define list<gradient> EA=<EA>
 
 # 31 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Grad.incl"
 ;$Id: Grad2.incl,v 1.14 2012/01/31 17:49:21 ber Exp $
-# 20 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P" 2
+# 22 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2" 2
 
 # 1 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl" 1
 ;Delay.incl  -  include file for commonly used delays
@@ -128,29 +129,20 @@ define loopcounter FACTOR6
 
 # 80 "C:/Bruker/TopSpin3.6.2/exp/stan/nmr/lists/pp/Delay.incl"
 ;$Id: Delay.incl,v 1.14.2.1 2013/08/30 09:43:33 ber Exp $
-# 21 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P" 2
+# 23 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2" 2
 
 
-# 27 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-define delay DC_SEHSQC1
-define delay DC_SEHSQC2
-define delay DC_SEHSQC3
-define delay DC_SEHSQC4
-define delay DC_SEHSQC5
-define delay DC_SEHSQC6
-define delay DC_SEHSQC7
-define delay DC_SEHSQC8
-define delay DC_SEHSQC9
-define delay DC_SEHSQC10
+# 29 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
+define delay DC_HSQC1
+define delay DC_HSQC2
+define delay DC_HSQC3
+define delay DC_HSQC4
+define delay DC_HSQC5
+define delay DC_HSQC6
 define delay DH_PSYCHE_1
 define delay DH_PSYCHE_2
-define delay DN_SEHSQC1
-define delay DN_SEHSQC2
-define delay DN_SEHSQC3
-define delay DN_SEHSQC4
-define delay DN_SEHSQC5
-define delay DN_SEHSQC6
-define delay DN_SEHSQC7
+define delay DN_HMQC1
+define delay DN_HMQC2
 "cnst21  = 10000"                      ; PSYCHE bandwidth
 "cnst22  = (cnst20/360)*sqrt((2*cnst21)/(p40/2000000))"       ; PSYCHE RF amplitude
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
@@ -159,52 +151,43 @@ define delay DN_SEHSQC7
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d11     = 3u"                         ; PSYCHE t1
-"d20     = 3u"                         ; 15N HSQC t1/2
+"d20     = 3u"                         ; 15N HMQC t1/2
 "d24     = 0.25s/cnst4"                ; 15N INEPT
 "in0     = inf1/2"                     ; 13C HSQC increment
-"in11    = (1/cnst38)/2"               ; PSYCHE increment
-"in20    = 1000000/(2*cnst40*sfo3)"    ; 15N HSQC increment: cnst40 = SW(15N)
+"in11    = trunc(1000000/(cnst38*dw*2))*dw/1000000"  ; PSYCHE increment
+"in20    = 1000000/(2*cnst40*sfo3)"    ; 15N HMQC increment: cnst40 = SW(15N)
 "p2      = p1*2"                       ; 1H hard 180
-"p17     = p16*cnst16"                 ; Longer gradients for 15N seHSQC v2
+"p17     = p16*cnst16"                 ; Longer gradients for 15N HMQC
 "p22     = p21*2"                      ; 15N hard 180
 "spw40   = plw1*(cnst22/(250000/p1))*(cnst22/(250000/p1))"    ; PSYCHE power level
-"DC_SEHSQC1 = d4-p14/2"                     ; zz-filter
-"DC_SEHSQC2 = d4+p14/2"                     ; zz-filter
-"DC_SEHSQC3 = d4-larger(p2,p14)/2"          ; INEPT
-"DC_SEHSQC4 = p16+d16+p2+d0*2-4u-p3*2/PI"   ; 13C pre-t1 if editing
-"DC_SEHSQC5 = d2-p16-d16+p3*2/PI"           ; 13C editing period
-"DC_SEHSQC6 = d2-p2-p3*2/PI"                ; 13C editing period
-"DC_SEHSQC7 = p16+d16+p2/2+d0-4u-p3*2/PI"   ; 13C pre-/post-t1 if no editing
-"DC_SEHSQC8 = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
-"DC_SEHSQC9 = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
-"DC_SEHSQC10= p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+"DC_HSQC1   = d4-p14/2"
+"DC_HSQC2   = d4+p14/2"
+"DC_HSQC3   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQC4   = d2+p3+p2/2"
+"DC_HSQC5   = DC_HSQC3+p3-p2/2"
+"DC_HSQC6   = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
 "DH_PSYCHE_1  = in11/2-p16-d16-50u"
 "DH_PSYCHE_2  = (dw*2*cnst50)+d16+50u"
-"DN_SEHSQC1 = d24-p22/2"                    ; zz-filter
-"DN_SEHSQC2 = d24+p22/2"                    ; zz-filter
-"DN_SEHSQC3 = d24-larger(p2,p22)/2"         ; INEPT
-"DN_SEHSQC4 = p17+d16+p2/2+d20-4u"          ; 15N pre- and post-t1, if no editing
-"DN_SEHSQC5 = d26-larger(p2,p22)/2-p19-d16" ; first spin echo after t1
-"DN_SEHSQC6 = d24-larger(p2,p22)/2-p16-d16" ; second spin echo after t1
-"DN_SEHSQC7 = p17+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
-define list<gradient> GC_SEHSQC={cnst41}
-define list<gradient> GN_SEHSQC={cnst44}
+"DN_HMQC1   = p2/2+d20-4u+p21*2/PI+p17+d16"
+"DN_HMQC2   = d24-p17-d16-de-8u+p1*2/PI"
+define list<gradient> GC_HSQC={cnst41}
+define list<gradient> GN_HMQC={cnst44}
 "l0      = td1/6"             ; Total number of 13C t1 increments
 "l1      = 0"                 ; Running counter of 13C t1 increments
 "l2      = 0"                 ; Counter, even for echo, odd for antiecho
 "acqt0   = 0"
 baseopt_echo
 
-# 1 "mc_line 90 file C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P dc-measurement inserted automatically"
+# 1 "mc_line 74 file C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2 dc-measurement inserted automatically"
 
     dccorr
-# 90 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 74 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
 1 ze
 2 30m
 3 5m
 4 50u setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
 
-# 101 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 85 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   ; Cleanup
   4u pl2:f2
   (p3 ph0):f2
@@ -227,77 +210,45 @@ baseopt_echo
 
 
   ; MODULE 1
-  ; 15N-1H seHSQC
-# 125 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-  ; reverse zz-filter
-  (p1 ph0):f1
-  DN_SEHSQC1
-  (p22 ph0):f3
-  (p2 ph0):f1
-  DN_SEHSQC2
-  (p1 ph0):f1
-  DN_SEHSQC1
-  (p22 ph0):f3
-  (p2 ph0):f1
-  DN_SEHSQC2            ; 15N-1H: y,  X-1H: z
-
-  ; forward INEPT
-  (p1 ph3):f1
-  DN_SEHSQC3
-  4u
-  (center (p2 ph0):f1 (p22 ph0):f3 )
-  4u
-  DN_SEHSQC3
-  4u
-  (p1 ph1):f1
+  ; 15N-1H HMQC
+# 109 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
+  (p1 ph2):f1
+  d24
+  (center (p2 ph0):f1 (p22 ph0):f3)
+  d24
+  (p1 ph2):f1
   (p21 ph4):f3
 
-  ; t1 evolution
   4u
-  DN_SEHSQC4
-  (p22 ph0):f3
-  p17:gp2
-  d16
-  d20
-  (p2 ph7):f1
+  ; p16:gp2*-1*EA
+  ; d16
+  DN_HMQC1
+  (p22 ph4):f3
   d20
   p17:gp2
   d16
-  (p22 ph0):f3
+  (p2 ph11)
+  p17:gp2
+  d16
+  d20
+  (p22 ph7):f3
   4u
-  DN_SEHSQC4
-# 163 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-  ; reverse INEPT for first component
-  (center (p1 ph0):f1 (p21 ph7):f3 )
-  p19:gp8
+  ; p16:gp2*-1*EA
+  ; d16
+  DN_HMQC1
+  (p21 ph7):f3
+  d24
+  (center (p2 ph0):f1 (p22 ph0):f3)
+  4u
+  p17:gp2*EA*GN_HMQC
   d16
-  DN_SEHSQC5
-  (center (p2 ph0):f1 (p22 ph0):f3 )
-  DN_SEHSQC5
-  p19:gp8
-  d16
-  (center (p1 ph1):f1 (p21 ph9):f3 )
+  DN_HMQC2
+  4u pl16:f3
+  4u
 
-  ; reverse INEPT for second component
-  p16:gp9
-  d16
-  DN_SEHSQC6
-  (center (p2 ph0):f1 (p22 ph0):f3 )
-  DN_SEHSQC6
-  p16:gp9
-  d16
-  (p1 ph0):f1
-
-  ; spin echo for refocusing gradient
-  DN_SEHSQC7
-  (p2 ph0):f1
-  4u
-  p17:gp2*EA*GN_SEHSQC
-  d16 pl16:f3
-  4u
   goscnp ph29 cpd3:f3
   50u do:f3
-# 194 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 146 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   ; Cleanup
   4u pl1:f1
   4u pl3:f3
@@ -308,86 +259,55 @@ baseopt_echo
 
 
   ; MODULE 2
-  ; 13C-1H seHSQC version 2
-# 206 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-  ; reverse zz-filter
+  ; 13C-1H HSQC
+# 158 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
+  ; INEPT
   (p1 ph0):f1
-  DC_SEHSQC1
+  DC_HSQC1
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQC2
-  (p1 ph0):f1
-  DC_SEHSQC1
-  (p14:sp3 ph0):f2
-  (p2 ph0):f1
-  DC_SEHSQC2            ; 13C-1H: y,  12C-1H: z
-
-  ; forward INEPT
-  ; with editing there's an extra 180 on 1H, so we need to start
-  ; with the opposite sign to make sure that bulk magnetisation is preserved
-
+  DC_HSQC2 pl2:f2
   (p1 ph1):f1
-# 226 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-  DC_SEHSQC3
-  4u
-  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
-  4u
-  DC_SEHSQC3 pl2:f2
-  4u
-  (p1 ph1):f1 (p3 ph5):f2
+  (p3 ph5):f2
+  DC_HSQC3
 
-  ; t1 evolution with optional multiplicity editing
+  ; t1 period
 
-  4u
-  DC_SEHSQC4
   (p31:sp18 ph0):f2
-  p16:gp4
-  d16 pl2:f2
-# 242 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-  d0
-  (p2 ph7):f1
-  d0
-
+# 174 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
+  4u
   p16:gp4
   d16
-  DC_SEHSQC5
+  d0
+  (p2 ph11):f1
+  d0
+  4u
+  p16:gp4
+  d16
+
+  ; multiplicity editing
+
+  DC_HSQC4
   (p31:sp18 ph0):f2
-  (p2 ph0):f1
-  DC_SEHSQC6 pl2:f2
-# 268 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-
-# 270 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
-  ; reverse INEPT for first component
-  (center (p1 ph0):f1 (p3 ph7):f2 )
-  p19:gp6
-  d16
-  DC_SEHSQC8
-  (center (p2 ph0):f1 (p24:sp7 ph0):f2 )
-  DC_SEHSQC8
-  p19:gp6
-  d16 pl2:f2
-  (center (p1 ph1):f1 (p3 ph9):f2 )  ; seHSQC pulse, incremented with EA
-
-  ; reverse INEPT for second component
-  p16:gp7
-  d16
-  DC_SEHSQC9
-  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
-  DC_SEHSQC9
-  p16:gp7
-  d16
+  DC_HSQC5
+  (p2 ph1):f1
+  d2 pl2:f2
+# 196 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
+  ; reverse INEPT
+  (p3 ph7):f2
   (p1 ph0):f1
-
-  ; spin echo for refocusing gradient
-  DC_SEHSQC10
-  (p2 ph0):f1
+  DC_HSQC1
+  (p14:sp3 ph0):f2
+  (p2 ph1):f1
   4u
-  p16:gp4*EA*GC_SEHSQC
-  d16 pl12:f2
-  4u
-  goscnp ph30 cpd2:f2   ; acquire 13C HSQC
+  p16:gp4*EA*GC_HSQC
+  d16 pl2:f2
+  DC_HSQC6
+  (p3 ph0):f2
+  4u pl12:f2
+  goscnp ph30 cpd2:f2
   50u do:f2
-# 301 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+
   ; Cleanup
   4u pl1:f1
   4u pl2:f2
@@ -396,10 +316,10 @@ baseopt_echo
   p16:gp0*2.32
   2m st
 
-
+# 220 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   ; MODULE 3
   ; 1H 1D PSYCHE pure shift spectrum
-# 313 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+
   (p1 ph0):f1
   d11
   DH_PSYCHE_1
@@ -431,19 +351,20 @@ if "cnst37 == 1"
 {
   1m id11
 }
-  1m ip9*2
   30m wr #0 if #0 zd
   lo to 3 times 2
-
+# 257 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   ; t1 incrementation
   "l1 = l1 + 1"
-# 353 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+
+
+# 262 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   1m ip5*2
   1m ip30*2
 
   ; 13C t1 incrementation
 
-# 359 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 268 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   1m id0
 
 
@@ -455,11 +376,11 @@ if "cnst37 > 1"
   1m id11
   }
 }
-# 371 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 280 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
   ; 15N t1 incrementation
 
 
-# 376 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 285 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
 if "l1 % cnst39 == 0"
 {
   1m id20
@@ -469,17 +390,17 @@ if "l1 % cnst39 == 0"
 
 
   lo to 4 times l0
-# 386 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 295 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
 50u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
 exit
 
 ph0=0
 ph1=1
-ph3=3
+ph2=2
 ph4=0 2
 ph5=0 2
 ph7=0 0 2 2
-ph9=1 1 3 3
+ph11=0 0 0 0 2 2 2 2
 ph14=0 1 2 3
 ph26=0 2
 ph29=0 2 2 0
@@ -488,24 +409,16 @@ ph30=0 2 2 0
 ;gpnam0: SMSQ10.100
 ;gpnam2: SMSQ10.100
 ;gpnam4: SMSQ10.100
-;gpnam6: SMSQ10.100
-;gpnam7: SMSQ10.100
-;gpnam8: SMSQ10.100
-;gpnam9: SMSQ10.100
 ;gpnam14: RECT.1
 ;gpnam17: SMSQ10.100
 ;gpnam18: SMSQ10.100
 ;gpz0: 14% (for purging)
 ;gpz2: 80% (15N CTP)
 ;gpz4: 70% (13C CTP)
-;gpz6: 11% (13C HSQC spin echo CTP)
-;gpz7: -5% (13C HSQC spin echo CTP)
-;gpz8: 13% (15N HSQC spin echo CTP)
-;gpz9: -6% (15N HSQC spin echo CTP)
 ;gpz14: 1% (1H PSYCHE weak gradient)
 ;gpz17: 49% (1H PSYCHE CTP gradient 2)
 ;gpz18: 77% (1H PSYCHE CTP gradient 3)
-# 422 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-Spv2Spv2P"
+# 323 "C:/NMR/data/mfgroup/nmr/_JonY/pp/ngn_noah3-MSP.e2"
 ;WaveMaker shaped pulses (use 'wvm -a' to generate)
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
@@ -514,7 +427,6 @@ ph30=0 2 2 0
 ;cnst2: = 1J(CH)
 ;cnst4: = 1J(NH)
 ;cnst16: 15N CTP gradient lengthening factor
-;cnst17: = -0.5 for Crp60comp.4
 ;cnst20: PSYCHE saltire flip angle (degrees)
 ;cnst21: PSYCHE saltire / chirp bandwidth (Hz) [10000]
 ;cnst22: PSYCHE saltire RF amplitude (Hz)
@@ -531,12 +443,10 @@ ph30=0 2 2 0
 ;d1: relaxation delay
 ;d2: 1/2J(CH)
 ;d4: 1/4J(CH)
-;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
 ;d11: 1H t1 (magnitude-mode)
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d20: 15N t1
 ;d24: 1/4J(NH)
-;d26: 1/8J(NH) for all multiplicities, 1/4J(NH) for NH only
 ;l0: total number of t1 increments
 ;l1: running counter of t1 increments
 ;l2: even for echo, odd for antiecho
@@ -547,11 +457,8 @@ ph30=0 2 2 0
 ;     = 500usec for Crp60,0.5,20.1
 ;p16: gradient pulse   [1 ms]
 ;p17: extended gradient pulse for 15N HSQC
-;p19: gradient pulse 2 [600 us]
 ;p21: f3 channel -  90 degree high power pulse
 ;p22: f3 channel - 180 degree high power pulse
-;p24: f2 channel - 180 degree shaped pulse for refocusing
-;      = 2msec for Crp60comp.4
 ;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
 ;p40: f1 channel - PSYCHE double saltire pulse [30 ms]
 ;pl1: f1 channel - power level for pulse (default)
@@ -560,11 +467,9 @@ ph30=0 2 2 0
 ;pl12: f2 channel - power level for CPD/BB decoupling
 ;pl16: f3 channel - power level for CPD/BB decoupling
 ;sp3: f2 channel - shaped pulse (180 degree inversion)
-;sp7: f2 channel - shaped pulse (180 degree refocusing)
 ;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
 ;sp40: f1 channel - PSYCHE double saltire
 ;spnam3: Crp60,0.5,20.1 or WaveMaker
-;spnam7: Crp60comp.4
 ;spnam18: Crp60_xfilt.2 or WaveMaker
 ;spnam40: PSYCHE_Saltire_30ms
 ;aq: acquisition time
@@ -573,6 +478,6 @@ ph30=0 2 2 0
 ;NBL: number of blocks (NOAH modules)
 ;ns: 1 * n
 
-; ngn: constructed from N_SEHSQC, C_SEHSQC, H_PSYCHE
+; ngn: constructed from N_HMQC, C_HSQC, H_PSYCHE
 ; auprog: noah_nhsqc:noah_hsqc:noah_psyche
-; pulse programme generated on Thu Oct 29 2020 17:12:41 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Sat Oct 31 2020 01:31:35 GMT+0000 (Greenwich Mean Time)

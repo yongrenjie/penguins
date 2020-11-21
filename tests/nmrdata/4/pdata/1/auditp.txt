@@ -2,28 +2,28 @@
 ##JCAMPDX= 5.01
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr-user
-$$ C:\NMR\data\mfgroup\nmr/201028-7g-noah-psyche/1004/pdata/1/auditp.txt
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1004/pdata/1/auditp.txt
 ##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
-(   1,<2020-10-29 17:50:52.833 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<mvrow>,<TopSpin 3.6.2>,
+(   1,<2020-11-01 17:37:16.711 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<mvrow>,<TopSpin 3.6.2>,
       <rser 1 from
-       1003 "201028-7g-noah-psyche" "C:\NMR\data\mfgroup\nmr"
+       1003 "201101-7g-noah-psyche" "C:\NMR\data\mfgroup\nmr"
        data hash MD5: 1K
-       D9 87 AC 1F EC B7 01 51 2E 12 75 CF 96 B6 91 C5>)
-(   2,<2020-10-29 17:59:25.742 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+       59 28 64 A8 98 72 A7 AB 04 A2 C0 3D 50 9A BD 38>)
+(   2,<2020-11-01 17:37:16.960 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
       <Unknown data manipulation detected
        Start of raw data processing
        efp LB = 0 FT_mod = 6 PKNL = 1 PHC0 = 105.7712 PHC1 = 4.9 SI = 64K 
        data hash MD5: 64K
-       49 60 67 D7 34 84 3A 85 C0 BA DA E8 99 14 AC 19>)
-(   3,<2020-10-29 17:59:27.741 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+       32 94 AC DA 52 DB A9 91 25 2D 9B 33 4E 84 7A E7>)
+(   3,<2020-11-01 17:37:17.398 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
       <apk 
        data hash MD5: 64K
-       FB 21 56 CB 78 7B 75 57 D7 59 22 05 DB C1 09 DE>)
-(   4,<2020-10-29 17:59:28.476 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
-      <abs ABSG = 5 
+       CF 58 07 53 F9 12 79 E5 62 C2 8C C5 AE 41 50 3B>)
+(   4,<2020-11-01 17:37:17.570 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <abs n ABSG = 5 
        data hash MD5: 64K
-       0D 32 25 51 29 3E 21 A0 5B 48 F8 0B A5 CF 1A 6C>)
+       10 0C 43 E9 37 47 7A 63 C5 F4 EC A2 EB 0E DA 67>)
 ##END=
 
 $$ hash MD5
-$$ 1E 16 59 3F E7 AC 76 34 08 F7 57 82 7E 75 9B 2E
+$$ DF D1 56 91 88 57 EC B8 98 C9 89 36 0A D0 05 E5

@@ -1,1 +1,3 @@
-Spv2/Spv2/1D PSYCHE
+HMQC/HSQC/PSYCHE
+try to implement checks to make sure that PSYCHE sw2/sw1 is an integer (or as close as possible)
+OK, results are great -- merged into master.

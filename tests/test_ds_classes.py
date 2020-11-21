@@ -46,3 +46,56 @@ def test_dataset_initialisation():
     assert np.allclose(cosy["o1"], np.array([2799.96, 2799.96]))
     assert np.array_equal(cosy["si"], np.array([1024, 2048]))
     assert cosy["nuc1"] == ("1H", "1H")
+
+
+def test_dataset_parameters():
+    """Tests that other parameters are being lazily read, and accurately read.
+    """
+    # Check 1D
+    proton = pg.read(datadir, 1)
+    assert "ns" not in proton.pars
+    assert proton["ns"] == 16
+    assert "pulprog" not in proton.pars
+    assert proton["pulprog"] == "zg60"
+    assert "rg" not in proton.pars
+    assert proton["rg"] == pytest.approx(7.12)
+    assert "lb" not in proton.pars
+    assert proton["lb"] == pytest.approx(0.3)
+    assert "nc_proc" not in proton.pars
+    assert proton["nc_proc"] == pytest.approx(-6)
+
+    # Check 2D
+    cosy = pg.read(datadir, 2)
+    assert "ns" not in cosy.pars
+    assert cosy["ns"] == 2
+    assert "pulprog" not in cosy.pars
+    assert cosy["pulprog"] == "jy-clipcosy"
+    assert "rg" not in cosy.pars
+    assert cosy["rg"] == pytest.approx(36)
+    assert "lb" not in cosy.pars
+    assert np.allclose(cosy["lb"], np.array([0, 0]))
+    assert "phc0" not in cosy.pars
+    assert np.allclose(cosy["phc0"], np.array([25.363, 90.363]))
+    assert "nc_proc" not in cosy.pars
+    assert cosy["nc_proc"] == pytest.approx(-3)
+
+
+# -- Tests on _1D_RawDataMixin ----------------------
+
+def test_1d_raw_fid():
+    proton = pg.read(datadir, 1)
+    fid = proton.fid
+    # /2 because fid is complex points and TD is both real + imag
+    assert fid.shape == (proton["td"] / 2,)
+
+    proc_psyche = pg.read(datadir, 4)
+    fid = proc_psyche.fid
+    assert fid.shape == (proc_psyche["td"] / 2,)
+
+    # check that the first chunk of the processed PSYCHE data is the same as
+    # the original 2D data
+    unproc_psyche = pg.read(datadir, 3)
+    ser = unproc_psyche.ser
+    dp = int(unproc_psyche["cnst50"])  # drop points in NOAH PSYCHE is cnst50
+    assert np.allclose(fid[:32], ser[0, :32])  # group delay
+    assert np.allclose(fid[70:110], ser[0, 70+dp:110+dp])  # first chunk, ish

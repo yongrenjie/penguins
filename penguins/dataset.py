@@ -72,8 +72,8 @@ def read_abs(path: Union[str, Path]
     p = Path(path)
     # Figure out which type of spectrum it is.
     if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
-        raise ValueError(f"Invalid path to spectrum {p}:"
-                         " procs or acqus not found")
+        raise FileNotFoundError(f"Invalid path to spectrum {p}:"
+                                " procs or acqus not found")
     if (p.parents[1] / "ser").exists():
         if (p / "used_from").exists():
             return Dataset1DProj(p)
@@ -82,11 +82,11 @@ def read_abs(path: Union[str, Path]
     elif (p.parents[1] / "fid").exists():
         return Dataset1D(p)
     else:
-        raise ValueError(f"Invalid path to spectrum {p}: data files not found")
+        raise FileNotFoundError(f"Invalid path to spectrum {p}:"
+                                " data files not found")
 
 
 # -- Utility objects ------------------------------------
-
 
 def _try_convert(x: Any, type: Any):
     # Tries to convert an input to a specific type.
@@ -108,6 +108,15 @@ def _try_convert(x: Any, type: Any):
             return x.astype(dtype=type)
         else:
             return x
+
+
+# Parameters that are lists, i.e. can be followed by a number.
+_list_params = ("AMP AMPCOIL BWFAC CAGPARS CNST CPDPRG D FCUCHAN FN_INDIRECT"
+                " FS GPNAM GPX GPY GPZ HGAIN HPMOD IN INF INP INTEGFAC L"
+                " MULEXPNO P PACOIL PCPD PEXSEL PHCOR PL PLW PLWMAX PRECHAN"
+                " PROBINPUTS RECCHAN RECPRE RECPRFX RECSEL RSEL S SELREC SP"
+                " SPNAM SPOAL SPOFFS SPPEX SPW SUBNAM SWIBOX TD_INDIRECT"
+                " TE_STAB TL TOTROT XGAIN").split()
 
 
 class _parDict(UserDict):
@@ -188,11 +197,8 @@ class _parDict(UserDict):
         # Split par into number-less bit and number bit
         parl = par.rstrip("1234567890")
         parr = par[len(parl):]
-        params_with_space = ["CNST", "D", "P", "PLW", "PCPD", "GPX", "GPY",
-                             "GPZ", "SPW", "SPOAL", "SPOFFS", "L", "IN",
-                             "INP", "PHCOR"]
         # Get the parameter
-        if (parr != "") and (parl in params_with_space):  # e.g. cnst2
+        if (parr != "") and (parl in _list_params):  # e.g. cnst2
             with open(fp, "r") as file:
                 # Read up to the line declaring the parameters
                 for line in file:
@@ -322,21 +328,25 @@ class _Dataset():
                  ) -> None:
         # Set up file path information
         self.path = Path(path).resolve().expanduser()
-        self.expno = self.path.parents[1].name
-        self.procno = self.path.name
+        self.expno = int(self.path.parents[1].name)
+        self.procno = int(self.path.name)
         # Initialise _parDict and some key parameters
         self._initialise_pars()
         # Get paths to data and parameter files
         self._find_raw_data_paths()     # type: ignore # mixin
         self._find_proc_data_paths()    # type: ignore # mixin
         self._find_param_file_paths()   # type: ignore # mixin
-        # Don't read in the actual 2D data, *until* the user asks for it. In
-        # other words, data reading is lazy. Haskell is really growing on me.
+        # Don't read in the actual data, *until* the user asks for it. In other
+        # words, data reading is lazy. Haskell is really growing on me...
 
     def _initialise_pars(self) -> None:
         self.pars = _parDict(self.path)
         self["aq"] = (self["td"] / 2) / (self["sw"] * self["sfo1"])  # This is sfo1
-        self["dw"] = self["aq"] * 1000000 / self["td"]
+        if isinstance(self["aq"], np.ndarray):  # 2D
+            self["dw"] = self["aq"][1] * 1000000 / self["td"][1]
+            self["inf1"]
+        else:  # 1D
+            self["dw"] = self["aq"] * 1000000 / self["td"]
         self["o1p"] = self["o1"] / self["bf1"]   # This is BF1
         self["si"]
         self["nuc1"]
@@ -453,16 +463,25 @@ class _1D_ProcDataMixin():
         if (self.path / "1i").exists():        # type: ignore # mixin
             self._p_imag = self.path / "1i"    # type: ignore # mixin
 
-    def _read_spec(self, spectype: str) -> np.ndarray:
-        if self["dtypp"] == 0:                            # type: ignore # mixin
-            dt = "<" if self["bytordp"] == 0 else ">"     # type: ignore # mixin
-            dt += "i4"
-        else:
-            raise NotImplementedError("float data not yet accepted")
+    def _read_spec(self, spectype: str) -> None:
+        def _read_one_spec(spec_path: Path) -> np.ndarray:
+            """Helper function."""
+            # Determine datatype
+            if self["dtypp"] == 0:                            # type: ignore # mixin
+                dt = "<" if self["bytordp"] == 0 else ">"     # type: ignore # mixin
+                dt += "i4"
+            else:
+                raise NotImplementedError("float data not yet accepted")
+            # Return the spectrum as an ndarray
+            if not spec_path.exists():
+                raise FileNotFoundError(f"processed data file {spec_path}"
+                                        " not found.")
+            return np.fromfile(spec_path, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
+
         if spectype == "real":
-            self._real = np.fromfile(self._p_real, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
+            self._real = _read_one_spec(self._p_real)
         elif spectype == "imag":
-            self._imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
+            self._imag = _read_one_spec(self._p_imag)
         else:
             raise ValueError("_read_spec(): invalid spectype")
 
@@ -684,11 +703,12 @@ class _2D_ProcDataMixin():
         self._p_ir = self.path / "2ir"
         self._p_ii = self.path / "2ii"
 
-    def _read_spec(self, spectype: str) -> np.ndarray:
+    def _read_spec(self, spectype: str) -> None:
         # Helper function
         def _read_one_spec(spec_path = Path) -> np.ndarray:
             if not spec_path.exists():
-                raise ValueError(f"processed data file {spec_path} not found.")
+                raise FileNotFoundError(f"processed data file {spec_path}"
+                                        " not found.")
             if np.all(self["dtypp"] == 0):                           # type: ignore # mixin
                 dt = "<" if np.all(self["bytordp"] == 0) else ">"    # type: ignore # mixin
                 dt += "i4"

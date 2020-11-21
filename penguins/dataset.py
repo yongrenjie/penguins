@@ -10,7 +10,82 @@ import numpy as np               # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 
 from . import pgplot
+from .exportdeco import export
 from .type_aliases import *
+
+
+# -- Reading in data ------------------------------------
+
+@export
+def read(path: Union[str, Path],
+         expno: int,
+         procno: int = 1) -> TDatasetnD:
+    """Create a Dataset object from a spectrum folder, expno, and procno.
+
+    The subclass of Dataset returned is determined by what files are available
+    in the spectrum folder. It can be either `Dataset1D`, `Dataset1DProj`, or
+    `Dataset2D`.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the spectrum name folder.
+    expno : int
+        Expno of experiment of interest.
+    procno : int (optional)
+        Procno of processed data. Defaults to 1.
+
+    Returns
+    -------
+    Dataset
+        A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
+        detected spectrum dimensionality.
+    """
+    p = Path(path) / str(expno) / "pdata" / str(procno)
+    return read_abs(p)
+
+
+@export
+def read_abs(path: Union[str, Path]
+             ) -> TDatasetnD:
+    """Create a Dataset object directly from a procno folder.
+
+    There is likely no reason to ever use this because `read()` is far easier
+    to use, especially if you are plotting multiple spectra with different
+    expnos from the same folder.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the procno folder.
+
+    Returns
+    -------
+    Dataset
+        A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
+        detected spectrum dimensionality.
+
+    See Also
+    --------
+    read : The preferred interface for importing datasets.
+    """
+    p = Path(path)
+    # Figure out which type of spectrum it is.
+    if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
+        raise ValueError(f"Invalid path to spectrum {p}:"
+                         " procs or acqus not found")
+    if (p.parents[1] / "ser").exists():
+        if (p / "used_from").exists():
+            return Dataset1DProj(p)
+        else:
+            return Dataset2D(p)
+    elif (p.parents[1] / "fid").exists():
+        return Dataset1D(p)
+    else:
+        raise ValueError(f"Invalid path to spectrum {p}: data files not found")
+
+
+# -- Utility objects ------------------------------------
 
 
 def _try_convert(x: Any, type: Any):

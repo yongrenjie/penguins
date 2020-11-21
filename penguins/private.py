@@ -16,7 +16,7 @@ import pandas as pd  # type: ignore
 import seaborn as sns  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 
-from .main import style_axes
+from .pgplot import style_axes
 from . import dataset as ds
 
 

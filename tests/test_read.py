@@ -33,6 +33,11 @@ def test_read_api():
     assert isinstance(proton, pg.dataset.Dataset1D)
     assert proton.path == datadir / "1" / "pdata" / "1"
 
+    # Test that nonexistent data throws an error
+    with pytest.raises(FileNotFoundError) as exc_info:
+        dontexist = pg.read(datadir, 1, 999999999)
+        assert "Invalid path to spectrum" in str(exc_info)
+
 
 def test_read_instance():
     """

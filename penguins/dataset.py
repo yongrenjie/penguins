@@ -89,10 +89,20 @@ def read_abs(path: Union[str, Path]
 # -- Utility objects ------------------------------------
 
 def _try_convert(x: Any, type: Any):
-    # Tries to convert an input to a specific type.
-    # Returns the original input if it fails.
-    # Works with tuples and lists too: tries to convert individual elements.
-    # Works with np.ndarrays using ndarray.astype()
+    """
+    Tries to convert an input, or each element of a sequence of inputs, to a
+    specific type. Returns the original input if it fails. The sequence can be
+    a tuple, list, or np.ndarray (in which case it delegates to the
+    np.ndarray.astype() method).
+
+    Examples:
+        >>> _try_convert(4, str)
+        "4"
+        >>> _try_convert(("4.3", "5.1"), float)
+        (4.3, 5.1)
+        >>> _try_convert(["a", "b"], int)
+        ["a", "b"]
+    """
     try:
         return type(x)
     except ValueError:
@@ -105,7 +115,10 @@ def _try_convert(x: Any, type: Any):
             else:
                 return y
         elif isinstance(x, np.ndarray):
-            return x.astype(dtype=type)
+            try:
+                return x.astype(dtype=type)
+            except ValueError:
+                return x
         else:
             return x
 
@@ -118,6 +131,37 @@ _list_params = ("AMP AMPCOIL BWFAC CAGPARS CNST CPDPRG D FCUCHAN FN_INDIRECT"
                 " SPNAM SPOAL SPOFFS SPPEX SPW SUBNAM SWIBOX TD_INDIRECT"
                 " TE_STAB TL TOTROT XGAIN").split()
 
+def _parse_bounds(b: TBounds = "",
+                  ) -> Tuple[OF, OF]:
+    """
+    Parses a bounds string or tuple, checking that it is valid. Returns (lower,
+    upper).
+    """
+    if isinstance(b, str):
+        if b == "" or b == "..":
+            return None, None
+        elif b.startswith(".."):   # "..5" -> (None, 5)
+            return None, float(b[2:])
+        elif b.endswith(".."):   # "3.." -> (3, None)
+            return float(b[:-2]), None
+        elif ".." in b:
+            x, y = b.split("..")
+            xf, yf = float(x), float(y)  # let TypeError propagate
+            if xf >= yf:
+                raise ValueError(f"Please use '{yf}..{xf}', not '{xf}..{yf}'.")
+            return xf, yf
+        else:
+            raise ValueError(f"Invalid value {b} provided for bounds.")
+    else:
+        if len(b) != 2:
+            raise ValueError(f"Invalid value {b} provided for bounds.")
+        elif b[0] is not None and b[1] is not None and b[0] > b[1]:
+            raise ValueError(f"Please use {(b[1], b[0])}, not {b}.")
+        else:
+            return b[0], b[1]
+
+
+# -- Fundamental Dataset methods ------------------------
 
 class _parDict(UserDict):
     """Modified dictionary for storing acquisition & processing parameters.
@@ -273,38 +317,6 @@ class _parDict(UserDict):
         s = "{" + ",\n".join(f"'{k}': {self[k]}" for k in keys) + "}"
         return s
 
-
-def _parse_bounds(b: TBounds = "",
-                  ) -> Tuple[OF, OF]:
-    """
-    Parses a bounds string or tuple, checking that it is valid. Returns (lower,
-    upper).
-    """
-    if isinstance(b, str):
-        if b == "":
-            return None, None
-        elif b.startswith(".."):   # "..5" -> (None, 5)
-            return None, float(b[2:])
-        elif b.endswith(".."):   # "3.." -> (3, None)
-            return float(b[:-2]), None
-        elif ".." in b:
-            x, y = b.split("..")
-            xf, yf = float(x), float(y)  # let TypeError propagate
-            if xf >= yf:
-                raise ValueError(f"Use '{yf}..{xf}', not '{xf}..{yf}'.")
-            return xf, yf
-        else:
-            raise ValueError(f"Invalid value {b} provided for bounds.")
-    else:
-        if len(b) != 2:
-            raise ValueError(f"Invalid value {b} provided for bounds.")
-        elif b[0] is not None and b[1] is not None and b[0] > b[1]:
-            raise ValueError(f"Please use {(b[1], b[0])}, not {b}.")
-        else:
-            return b[0], b[1]
-
-
-# -- Fundamental Dataset methods ------------------------
 
 class _Dataset():
     """Defines behaviour that is common to all datasets. Specifically, this

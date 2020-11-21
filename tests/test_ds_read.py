@@ -36,7 +36,12 @@ def test_read_api():
     # Test that nonexistent data throws an error
     with pytest.raises(FileNotFoundError) as exc_info:
         dontexist = pg.read(datadir, 1, 999999999)
-        assert "Invalid path to spectrum" in str(exc_info)
+        assert "procs and acqus not found" in str(exc_info)
+
+    # Test that not yet acquired spectrum data throws an error
+    with pytest.raises(FileNotFoundError) as exc_info:
+        dontexist = pg.read(datadir, 5)
+        assert "no raw data was found" in str(exc_info)
 
 
 def test_read_instance():

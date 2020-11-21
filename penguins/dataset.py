@@ -73,7 +73,7 @@ def read_abs(path: Union[str, Path]
     # Figure out which type of spectrum it is.
     if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
         raise FileNotFoundError(f"Invalid path to spectrum {p}:"
-                                " procs or acqus not found")
+                                " either procs or acqus were not found")
     if (p.parents[1] / "ser").exists():
         if (p / "used_from").exists():
             return Dataset1DProj(p)
@@ -83,7 +83,8 @@ def read_abs(path: Union[str, Path]
         return Dataset1D(p)
     else:
         raise FileNotFoundError(f"Invalid path to spectrum {p}:"
-                                " data files not found")
+                                " no raw data was found. Have you acquired the"
+                                " spectrum yet?")
 
 
 # -- Utility objects ------------------------------------
@@ -148,7 +149,7 @@ def _parse_bounds(b: TBounds = "",
             x, y = b.split("..")
             xf, yf = float(x), float(y)  # let TypeError propagate
             if xf >= yf:
-                raise ValueError(f"Please use '{yf}..{xf}', not '{xf}..{yf}'.")
+                raise ValueError(f"Use '{yf}..{xf}', not '{xf}..{yf}'.")
             return xf, yf
         else:
             raise ValueError(f"Invalid value {b} provided for bounds.")

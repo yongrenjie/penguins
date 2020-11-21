@@ -261,14 +261,18 @@ class _parDict(UserDict):
                 while not line.startswith("##"):
                     s = s + line + " "
                     line = file.readline()
-                # Pick out the desired value and return it
-                return s.split()[int(parr)]
+                # Pick out the desired value
+                val = s.split()[int(parr)]
+                # Strip away surrounding angle brackets
+                if val[0] == '<' and val[-1] == '>':
+                    val = val[1:-1]
+                return val
         else:                                             # e.g. sfo1 or rga
             with open(fp, "r") as file:
                 for line in file:
                     if line.upper().startswith(f"##${par}="):
                         val = line.split(maxsplit=1)[-1].strip()
-                        # strip away surrounding angle brackets
+                        # Strip away surrounding angle brackets
                         if val[0] == '<' and val[-1] == '>':
                             val = val[1:-1]
                         return val

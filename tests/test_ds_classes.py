@@ -78,6 +78,13 @@ def test_dataset_parameters():
     assert np.allclose(cosy["phc0"], np.array([25.363, 90.363]))
     assert "nc_proc" not in cosy.pars
     assert cosy["nc_proc"] == pytest.approx(-3)
+    assert "gpnam12" not in cosy.pars
+    assert cosy["gpnam12"] == "SMSQ10.100"
+
+    # Check errors
+    with pytest.raises(KeyError):
+        cosy["dontexist"]
+        proton["dontexist"]
 
 
 # -- Tests on _1D_RawDataMixin ----------------------
@@ -99,3 +106,4 @@ def test_1d_raw_fid():
     dp = int(unproc_psyche["cnst50"])  # drop points in NOAH PSYCHE is cnst50
     assert np.allclose(fid[:32], ser[0, :32])  # group delay
     assert np.allclose(fid[70:110], ser[0, 70+dp:110+dp])  # first chunk, ish
+

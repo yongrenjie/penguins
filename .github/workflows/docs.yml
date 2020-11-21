@@ -1,0 +1,43 @@
+name: docs
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install penguins and build docs
+      run: |
+        python -m pip install --upgrade pip
+        pip install .   # install penguins itself (needed for autodoc)
+        python -m pip install -r docs/requirements.txt
+        cd docs/
+        sphinx-build -b dirhtml . dirhtml
+
+    - name: Clone gh-pages branch and update content
+      run: |
+        git clone https://github.com/yongrenjie/penguins.git --depth 1 --branch gh-pages --single-branch gh-pages
+        cp -r docs/dirhtml/* gh-pages
+        cd gh-pages
+        git config --local user.name "GitHub Actions"
+        git config --local user.email "<>"
+        git add -A
+        git commit -m "Update online documentation" || true
+
+    - name: Push changes to gh-pages branch
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: gh-pages
+        branch: gh-pages

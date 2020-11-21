@@ -266,6 +266,8 @@ def hsqc_stripplot(molecule: Any,
                    ylabel: str = "Intensity",
                    title: str = "",
                    edited: bool = False,
+                   ncol: int = 3,
+                   loc: str = "upper center",
                    ax: Optional[Any] = None,
                    ) -> Tuple[Any, Any]:
     """
@@ -287,6 +289,10 @@ def hsqc_stripplot(molecule: Any,
         Axes title, defaults to empty string
     edited : bool, default False
         Whether editing is enabled or not.
+    ncol : int, optional
+        Passed to ax.legend(). Defaults to 4.
+    loc : str, optional
+        Passed to ax.legend(). Defaults to "upper center".
     ax : matplotlib.axes.Axes, optional
         Axes instance to plot on. If not provided, uses plt.gca().
 
@@ -321,7 +327,7 @@ def hsqc_stripplot(molecule: Any,
                   dodge=True, data=all_dfs, ax=ax)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
-    ax.legend(ncol=3, loc="upper center",
+    ax.legend(ncol=ncol, loc=loc,
               labels=["CH", r"CH$_2$", r"CH$_3$"]).set(title=None)
     ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
     # Set y-limits. We need to expand it by ~20% to make space for the legend,
@@ -351,6 +357,8 @@ def cosy_stripplot(molecule: Any,
                    xlabel: str = "Experiment",
                    ylabel: str = "Intensity",
                    title: str = "",
+                   ncol: int = 2,
+                   loc: str = "upper center",
                    ax: Optional[Any] = None,
                    ) -> Tuple[Any, Any]:
     """
@@ -370,6 +378,10 @@ def cosy_stripplot(molecule: Any,
         Axes y-label, defaults to "Intensity"
     title : str, optional
         Axes title, defaults to empty string
+    ncol : int, optional
+        Passed to ax.legend(). Defaults to 4.
+    loc : str, optional
+        Passed to ax.legend(). Defaults to "upper center".
     ax : matplotlib.axes.Axes, optional
         Axes instance to plot on. If not provided, uses plt.gca().
 
@@ -404,7 +416,7 @@ def cosy_stripplot(molecule: Any,
                   palette=sns.color_palette("deep")[3:])
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
-    ax.legend(ncol=2, loc="upper center",
+    ax.legend(ncol=ncol, loc=loc,
               labels=["diagonal", "cross"]).set(title=None)
     ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
     # Set y-limits. We need to expand it by ~20% to make space for the legend,
@@ -434,6 +446,8 @@ def hsqc_cosy_stripplot(molecule: Any,
                         ylabel: str = "Intensity",
                         title: str = "",
                         edited: bool = False,
+                        ncol: int = 4,
+                        loc: str = "upper center",
                         ax: Optional[Any] = None,
                         ) -> Tuple[Any, Any]:
     """
@@ -453,6 +467,10 @@ def hsqc_cosy_stripplot(molecule: Any,
         Axes title, defaults to empty string
     edited : bool, default False
         Whether editing in the HSQC is enabled or not.
+    ncol : int, optional
+        Passed to ax.legend(). Defaults to 4.
+    loc : str, optional
+        Passed to ax.legend(). Defaults to "upper center".
     ax : matplotlib.axes.Axes, optional
         Axes instance to plot on. If not provided, uses plt.gca().
 
@@ -486,7 +504,7 @@ def hsqc_cosy_stripplot(molecule: Any,
                   dodge=True, data=rel_ints_df, ax=ax)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title, xticks=[])
-    l = ax.legend(ncol=4, loc="upper center",
+    l = ax.legend(ncol=ncol, loc=loc,
                   labels=["HSQC CH", r"HSQC CH$_2$", r"HSQC CH$_3$", "COSY"])
     l.set(title=None)
     ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")

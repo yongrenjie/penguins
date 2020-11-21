@@ -20,6 +20,7 @@ def test_dataset_initialisation():
                     "o1p", "o1", "bf1", "si", "nuc1"]
     # Check 1D
     proton = pg.read(datadir, 1)
+    assert repr(proton) == f"Dataset1D('{str(proton.path)}')"
     assert all(par in proton.pars for par in initial_pars)
     assert proton["aq"] == pytest.approx(2.9360127)
     assert proton["td"] == 65536
@@ -48,8 +49,9 @@ def test_dataset_initialisation():
     assert cosy["nuc1"] == ("1H", "1H")
 
 
-def test_dataset_parameters():
-    """Tests that other parameters are being lazily read, and accurately read.
+def test_parDict():
+    """Tests the implementation of parDict, i.e. that it is reading values
+    lazily and accurately.
     """
     # Check 1D
     proton = pg.read(datadir, 1)
@@ -80,6 +82,15 @@ def test_dataset_parameters():
     assert cosy["nc_proc"] == pytest.approx(-3)
     assert "gpnam12" not in cosy.pars
     assert cosy["gpnam12"] == "SMSQ10.100"
+    # Check parameter with space and caps
+    assert "GPZ 12" not in cosy.pars
+    assert cosy["GPZ 12"] == pytest.approx(43)
+    assert "gpz12" not in cosy.pars
+    assert cosy["gpz12"] == cosy["GPZ 12"]
+    # Check deletion
+    assert "gpz12" in cosy.pars
+    del cosy["gpz12"]
+    assert "gpz12" not in cosy.pars
 
     # Check errors
     with pytest.raises(KeyError):
@@ -106,4 +117,3 @@ def test_1d_raw_fid():
     dp = int(unproc_psyche["cnst50"])  # drop points in NOAH PSYCHE is cnst50
     assert np.allclose(fid[:32], ser[0, :32])  # group delay
     assert np.allclose(fid[70:110], ser[0, 70+dp:110+dp])  # first chunk, ish
-

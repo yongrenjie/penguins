@@ -2,67 +2,47 @@ from pathlib import Path
 
 import penguins as pg
 
-datadir = Path(__file__).parent.resolve() / "data"
+datadir = Path(__file__).parent.resolve() / "nmrdata"
 
 
-def test_read_1D():
-    # test 1D datasets
-    path = datadir / "pt2"
-    proton = pg.read(path, 1, 1)
+def test_read_api():
+    """
+    Tests API of read() for correctness.
+    """
+    # Test that string arguments are OK too
+    proton = pg.read(str(datadir), 1, 1)
     assert isinstance(proton, pg.dataset.Dataset1D)
-    # make sure that strings are ok too
-    proton = pg.read(str(path), 1, 1)
+    assert proton.path == datadir / "1" / "pdata" / "1"
+
+    # Test that keyword arguments are OK
+    proton = pg.read(path=datadir, expno=1, procno=1)
     assert isinstance(proton, pg.dataset.Dataset1D)
+    assert proton.path == datadir / "1" / "pdata" / "1"
 
-
-def test_read_1Dprojections():
-    # test 1D projections
-    path = datadir / "rot1"
-    proj = pg.read(path, 8, 179)
-    assert isinstance(proj, pg.dataset.Dataset1DProj)
-    # make sure that strings are ok too
-    proj = pg.read(str(path), 8, 179)
-    assert isinstance(proj, pg.dataset.Dataset1DProj)
-
-
-def test_read_2D():
-    # test 2D datasets
-    path = datadir / "rot1"
-    hsqmbc = pg.read(path, 8, 1)
-    assert isinstance(hsqmbc, pg.dataset.Dataset2D)
-    # make sure that strings are ok too
-    hsqmbc = pg.read(str(path), 8, 1)
-    assert isinstance(hsqmbc, pg.dataset.Dataset2D)
-
-
-def test_read_abs_1D():
-    # test 1D datasets
-    path = datadir / "pt2" / "1" / "pdata" / "1"
-    proton = pg.read_abs(path)
+    # Test that leaving out procno defaults to 1
+    proton = pg.read(datadir, 1)
     assert isinstance(proton, pg.dataset.Dataset1D)
-    # make sure that strings are ok too
-    proton = pg.read_abs(str(path))
+    assert proton.path == datadir / "1" / "pdata" / "1"
+
+
+def test_read_instance():
+    """
+    Tests that the correct Dataset subclasses are created according to the type
+    of spectrum.
+    """
+    # 1D
+    proton = pg.read(datadir, 1, 1)
     assert isinstance(proton, pg.dataset.Dataset1D)
-
-
-def test_read_abs_1Dprojections():
-    # test 1D projections
-    path = datadir / "rot1" / "8" / "pdata" / "179"
-    proj = pg.read_abs(path)
+    assert proton.path == datadir / "1" / "pdata" / "1"
+    # 1D projections
+    proj = pg.read(datadir, 2, 1001)
     assert isinstance(proj, pg.dataset.Dataset1DProj)
-    # make sure that strings are ok too
-    proj = pg.read_abs(str(path))
-    assert isinstance(proj, pg.dataset.Dataset1DProj)
-
-
-def test_read_abs_2D():
-    # test 2D datasets
-    path = datadir / "rot1" / "8" / "pdata" / "1"
-    hsqmbc = pg.read_abs(path)
-    assert isinstance(hsqmbc, pg.dataset.Dataset2D)
-    # make sure that strings are ok too
-    hsqmbc = pg.read_abs(str(path))
-    assert isinstance(hsqmbc, pg.dataset.Dataset2D)
-
-
-# Tests for the plotting functions are elsewhere.
+    assert proj.path == datadir / "2" / "pdata" / "1001"
+    # 1D slice. But note that slice is a keyword, hence 'slic'
+    slic = pg.read(datadir, 2, 1002)
+    assert isinstance(slic, pg.dataset.Dataset1DProj)
+    assert slic.path == datadir / "2" / "pdata" / "1002"
+    # 2D 
+    cosy = pg.read(datadir, 2, 1)
+    assert isinstance(cosy, pg.dataset.Dataset2D)
+    assert cosy.path == datadir / "2" / "pdata" / "1"

@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-09-26 01:06:23.546 +0100  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\mfgroup\nmr/200925-7a-c13-sehsqc-full/1/pdata/1/outd
+$$ process C:\Bruker\TopSpin3.6.2\prog\mod\edparproc.exe
+##$CURPLOT= <\\octopus-crl\HP LaserJet 1022>
+##$CURPRIN= <$\\octopus-crl\HP LaserJet 1022>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/1D_H.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

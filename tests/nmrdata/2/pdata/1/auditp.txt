@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:/NMR/data/mfgroup/nmr/201115-7a-c13-sehsqc-full/4/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-15 20:48:34.636 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<go4>,<TopSpin 3.6.2>,
+      <acquisition in progress>)
+(   2,<2020-11-15 21:03:11.400 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc2d>,<TopSpin 3.6.2>,
+      <Start of raw data processing
+       xfb F2: SI = 2K WDW = 4 SSB = 2 FT_mod = 6 PKNL = 1 PHC0 = 90.363 PHC1 = -44.972 F1: SI = 1K ME_mod = 2 NCOEF = 32 WDW = 4 SSB = 2 FT_mod = 6 FCOR = 0.5 PHC0 = 25.363 PHC1 = -50.6
+       data hash MD5: 2K * 1K
+       CC 4A 0D 68 23 44 A0 DE A5 F9 CB 55 94 98 52 CD>)
+$$ /Users/yongrenjie/penguins/tests/nmrdata/4/pdata/1/auditp.txt
+(   3,<2020-11-21 13:37:08.515 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=2D CLIP-COSYTITLE_END
+       data hash MD5: 2K * 1K
+       CC 4A 0D 68 23 44 A0 DE A5 F9 CB 55 94 98 52 CD>)
+##END=
+
+$$ hash MD5
+$$ 98 FB D8 D7 12 8B FF 4E 97 E3 47 5C 40 91 CD E1

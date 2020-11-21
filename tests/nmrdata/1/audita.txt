@@ -1,0 +1,18 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:/NMR/data/mfgroup/nmr/201115-7a-c13-sehsqc-full/1/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-15 20:37:27.267 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<go4>,<TopSpin 3.6.2>,
+      <created by zg
+	started at 2020-11-15 20:36:04.866 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       6B C2 84 CB D3 8F AB 41 65 C0 4E FD DE 35 F2 F4
+       data hash MD5: 64K
+       47 4A 53 AE DE FE 57 70 9F 5F 1A 5D EB 6D 08 75>)
+##END=
+
+$$ hash MD5
+$$ 41 C5 01 DB 0B B8 86 F2 E9 6F 8E 41 53 35 C9 D9

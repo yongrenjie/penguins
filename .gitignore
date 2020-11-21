@@ -7,7 +7,5 @@ penguins.egg-info/
 .tox
 .coverage
 docs/dirhtml
-docs/_static
-docs/_template
 build/*
 dist/*

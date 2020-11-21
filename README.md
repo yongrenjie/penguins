@@ -1,4 +1,3 @@
-[![Travis CI Build Status](https://travis-ci.com/yongrenjie/penguins.svg?branch=master)](https://travis-ci.com/github/yongrenjie/penguins)
 [![GitHub Actions Build Status](https://github.com/yongrenjie/penguins/workflows/tests/badge.svg)](https://github.com/yongrenjie/penguins/actions)
 ![Code Coverage](https://raw.githubusercontent.com/yongrenjie/penguins/master/tests/coverage.svg)
 [![PyPI version](https://badge.fury.io/py/penguins.svg)](https://badge.fury.io/py/penguins)

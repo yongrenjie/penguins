@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from copy import deepcopy
 from collections import UserDict, abc
 from pathlib import Path
 from typing import (Any, Union, Tuple, Optional,
@@ -594,7 +595,7 @@ class _1D_ProcDataMixin():
         Calculates the magnitude mode spectrum and returns it as a new
         Dataset1D object.
         """
-        new_ds = Dataset1D(self.path)   # type: ignore # mixin
+        new_ds = deepcopy(self)
         try:
             new_ds._real = np.abs(new_ds.real + 1j * new_ds.imag)
         except AttributeError:   # no imag
@@ -891,22 +892,24 @@ class _2D_ProcDataMixin():
             The axis along which to perform the magnitude calculation. 0 for
             f1, or 1 for f2.
         """
-        new_ds = Dataset2D(self.path)   # type: ignore # mixin
+        new_ds = deepcopy(self)
         try:
             if axis == 0:
                 new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ri)
+                new_ds._ir = np.abs(new_ds.ir + 1j * new_ds.ii)
+                new_ds._ri = np.zeros(new_ds.rr.shape)
+                new_ds._ii = np.zeros(new_ds.rr.shape)
             elif axis == 1:
                 new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ir)
+                new_ds._ri = np.abs(new_ds.ri + 1j * new_ds.ii)
+                new_ds._ir = np.zeros(new_ds.rr.shape)
+                new_ds._ii = np.zeros(new_ds.rr.shape)
             else:
                 raise ValueError("to_magnitude(): axis must be 0 (for"
                                  " magnitude mode in f1) or 1 (for f2).")
         except AttributeError:
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None
-        # Zero out all the other components.
-        new_ds._ri = np.zeros(new_ds.rr.shape)
-        new_ds._ir = np.zeros(new_ds.rr.shape)
-        new_ds._ii = np.zeros(new_ds.rr.shape)
         return new_ds
 
     def xf1m(self) -> Dataset2D:  # alias
@@ -922,6 +925,24 @@ class _2D_ProcDataMixin():
         along f2.
         """
         return self.to_magnitude(axis=1)
+
+    def xfbm(self) -> Dataset2D:
+        """
+        Performs magnitude mode calculation along both axes. ds.xfbm() is
+        equivalent to ds.xf1m().xf2m(). It is manually implemented here for
+        efficiency reasons.
+        """
+        new_ds = deepcopy(self)
+        try:
+            new_ds._rr = np.sqrt(new_ds.rr ** 2 + new_ds.ri ** 2
+                                 + new_ds.ir ** 2 + new_ds.ii ** 2)
+            new_ds._ri = np.zeros(new_ds.rr.shape)
+            new_ds._ir = np.zeros(new_ds.rr.shape)
+            new_ds._ii = np.zeros(new_ds.rr.shape)
+        except AttributeError:
+            raise TypeError("The imaginary part of the spectrum was not"
+                            " found.") from None
+        return new_ds
 
 
 class _2D_PlotMixin():

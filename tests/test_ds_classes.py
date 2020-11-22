@@ -323,7 +323,51 @@ def test_1d_mc():
     proton_mc_mc = proton_mc.mc()
     assert np.allclose(proton_mc.real, proton_mc_mc.real)
 
-# TODO 2D ones should go here
+
+def test_2d_xfnm():
+    """Tests xf1m(), xf2m(), and xfbm()."""
+    cosy = pg.read(datadir, 2)
+    rr = cosy.rr
+    ri = cosy.ri
+    ir = cosy.ir
+    ii = cosy.ii
+    # Check output of xf1m()
+    xf1 = cosy.xf1m()
+    assert np.allclose(xf1.rr, np.abs(rr + 1j * ri))
+    assert np.allclose(xf1.ir, np.abs(ir + 1j * ii))
+    assert np.allclose(xf1.ri, np.zeros((cosy["si"][0], cosy["si"][1])))
+    assert np.allclose(xf1.ii, np.zeros((cosy["si"][0], cosy["si"][1])))
+    # Check output of xf2m()
+    xf2 = cosy.xf2m()
+    assert np.allclose(xf2.rr, np.abs(rr + 1j * ir))
+    assert np.allclose(xf2.ri, np.abs(ri + 1j * ii))
+    assert np.allclose(xf2.ir, np.zeros((cosy["si"][0], cosy["si"][1])))
+    assert np.allclose(xf2.ii, np.zeros((cosy["si"][0], cosy["si"][1])))
+    # Check that xf1m() is idempotent
+    xf1_xf1m = xf1.xf1m()
+    assert np.allclose(xf1.rr, xf1_xf1m.rr)
+    assert np.allclose(xf1.ri, xf1_xf1m.ri)
+    assert np.allclose(xf1.ir, xf1_xf1m.ir)
+    assert np.allclose(xf1.ii, xf1_xf1m.ii)
+    # Check that xf2m() is idempotent
+    xf2_xf2m = xf2.xf2m()
+    assert np.allclose(xf2.rr, xf2_xf2m.rr)
+    assert np.allclose(xf2.ri, xf2_xf2m.ri)
+    assert np.allclose(xf2.ir, xf2_xf2m.ir)
+    assert np.allclose(xf2.ii, xf2_xf2m.ii)
+    # Check that xf1m() and xf2m() commute
+    xf1_xf2m = xf1.xf2m()
+    xf2_xf1m = xf2.xf1m()
+    assert np.allclose(xf1_xf2m.rr, xf2_xf1m.rr)
+    assert np.allclose(xf1_xf2m.ri, xf2_xf1m.ri)
+    assert np.allclose(xf1_xf2m.ir, xf2_xf1m.ir)
+    assert np.allclose(xf1_xf2m.ii, xf2_xf1m.ii)
+    # Check that ds.xfbm() == ds.xf1m().xf2m()
+    xfbm = cosy.xfbm()
+    assert np.allclose(xfbm.rr, xf2_xf1m.rr)
+    assert np.allclose(xfbm.ri, xf2_xf1m.ri)
+    assert np.allclose(xfbm.ir, xf2_xf1m.ir)
+    assert np.allclose(xfbm.ii, xf2_xf1m.ii)
 
 
 # -- Miscellaneous tests ----------------------------

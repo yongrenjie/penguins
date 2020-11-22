@@ -481,8 +481,9 @@ class _1D_ProcDataMixin():
 
     def _find_proc_data_paths(self) -> None:
         self._p_real = self.path / "1r"        # type: ignore # mixin
-        if (self.path / "1i").exists():        # type: ignore # mixin
-            self._p_imag = self.path / "1i"    # type: ignore # mixin
+        self._p_imag = self.path / "1i"        # type: ignore # mixin
+        # if the imaginary part does not exist, the error will be caught later,
+        # specifically at _read_one_spec().
 
     def _read_spec(self, spectype: str) -> None:
         def _read_one_spec(spec_path: Path) -> np.ndarray:
@@ -723,6 +724,9 @@ class _2D_ProcDataMixin():
         self._p_ri = self.path / "2ri"
         self._p_ir = self.path / "2ir"
         self._p_ii = self.path / "2ii"
+        # if the imaginary parts do not exist, the error will be caught later,
+        # specifically at _read_one_spec().
+
 
     def _read_spec(self, spectype: str) -> None:
         # Helper function
@@ -1439,7 +1443,63 @@ class Dataset1DProjVirtual(Dataset1DProj):
 
     This is a subclass of `Dataset1DProj`, so the available methods are exactly
     the same.
+
+    See the __init__() docstring for implementation details.
     """
+
+    def __init__(self,
+                 path: Union[str, Path],
+                 rr: np.ndarray,
+                 sign: OS = None,
+                 index_bounds: Optional[slice] = None,
+                 index: OI = None,
+                 **kwargs
+                 ) -> None:
+        """
+        The construction of this class is necessarily slightly tortuous. The
+        call to the constructor (in Dataset2D.project() / .slice() / .sum())
+        will contain the doubly real part of the parent dataset, together with
+        all the information needed to figure out the correct data for this
+        dataset (e.g. proj_type, proj_axis, sign...).
+
+        The sequence of events in __init__ is broadly as follows:
+
+         1. Get all of this data from **kwargs into instance variables.
+
+         2. Perform generic dataset initialisation. This sets instance
+            variables such as self.path, etc. and also instantiates the
+            _parDict instance. Because _parDict uses the path to the original
+            2D dataset, any parameters read here will be those of the original
+            2D dataset.
+
+         3. Overwrite the SI parameter manually. This is necessary to maintain
+            compatibility with the ppm_scale() and hz_scale() methods inherited
+            from Dataset1DProj. At an even deeper level, the reason why the
+            Dataset1DProj methods are like this is because in "genuine" 1D
+            projections made in TopSpin, the SI parameter is one-dimensional.
+            So, by manually setting SI, we are actually mimicking this TopSpin
+            behaviour.
+
+        The instance variables stored in step (1) are not used instantaneously,
+        because the data is lazily calculated. Eventually, it will be: see the
+        _read_spec() method.
+        """
+        # Step 1 of the docstring
+        self.proj_type = kwargs["proj_type"]  # "sum", "projection", or "slice"
+        self.proj_axis = kwargs["proj_axis"]  # 0 or 1
+        self.sign = sign  # "positive" or "negative", or None for sums/slices
+        self.index_bounds = index_bounds  # only for projections/sums
+        self.index = index                # only for slice
+        self._rr = rr
+        # Step 2 of the docstring
+        Dataset1DProj.__init__(self, path)
+        # Step 3 of the docstring
+        self["si"] = self["si"][self.proj_axis]
+
+    def _initialise_pars(self):
+        # We don't want to inherit this from Dataset1DProj, because that
+        # tries to look for the used_from file, and we don't have that.
+        _Dataset._initialise_pars(self)
 
     @property
     def real(self):
@@ -1449,63 +1509,53 @@ class Dataset1DProjVirtual(Dataset1DProj):
             self._read_spec(spectype="real")
             return self._real
 
-
-    def __init__(self,
-                 path: Union[str, Path],
-                 rr: np.ndarray,
-                 **kwargs
-                 ) -> None:
-        # Set some flags so that our overriding _read_spec() method can
-        # calculate the projection
-        self.proj_type = kwargs["proj_type"]  # "sum", "projection", or "slice"
-        self.proj_axis = kwargs["proj_axis"]  # 0 or 1
-        self.sign = kwargs.get("sign", None)  # "positive" or "negative", or
-                                              # None for sums/slices
-        self.index_bounds = kwargs.get("index_bounds", None)  # only for sum or projection
-        self.index = kwargs.get("index", None) # only for slice
-        # Carry out the same initialisation tasks.
-        # This calls _initialise_pars.
-        Dataset1DProj.__init__(self, path)
-        # Copy the rr file over from the original 2D dataset.
-        self._rr = rr
-        # Overwrite SI.
-        self["si"] = self["si"][self.proj_axis]
-
-    def _initialise_pars(self):
-        # We don't want to inherit this from Dataset1DProj, because that
-        # tries to look for the used_from file, and we don't have that.
-        _Dataset._initialise_pars(self)
-
     def _read_spec(self, spectype: str) -> np.ndarray:
-        if spectype == "real":
-            # First check if it's a slice; that's the easiest case
-            if self.proj_type == "slice":
-                if self.proj_axis == 0:  # a column
-                    self._real = self._rr[:, self.index]
-                elif self.proj_axis == 1:  # a row
-                    self._real = self._rr[self.index, :]
-                return
-            # Then check if there are bounds
-            if self.index_bounds is not None:
-                if self.proj_axis == 0:  # columns
-                    self._rr = self._rr[:, self.index_bounds]
-                elif self.proj_axis == 1:  # rows
-                    self._rr = self._rr[self.index_bounds, :]
-            # Then make the projection / sum
-            if self.proj_type == "projection":
-                if self.sign == "positive":
-                    self._rr[self._rr < 0] = 0
-                    projection_fn = np.amax
-                elif self.sign == "negative":
-                    self._rr[self._rr > 0] = 0
-                    projection_fn = np.amin
-                self._real = projection_fn(self._rr, axis=(1 - self.proj_axis))
-            # Note that 'sum' doesn't care about the sign, in line with TopSpin's
-            # behaviour.
-            elif self.proj_type == "sum":
-                self._real = np.sum(self._rr, axis=(1 - self.proj_axis))
-        else:
+        """
+        This method does not actually *read* a spectrum, but rather calculates
+        it from the parent 2D rr part, using the instance variables that were
+        stored during initialisation.
+        """
+        # There are no imaginary parts for such a dataset. This line would be
+        # called if the user tries to access ds.imag.
+        if spectype != "real":
             raise ValueError("_read_spec(): projections only have real parts")
+        # Otherwise, we can proceed with the actual calculation.
+        # For a slice, the projection axis and the index specifying which
+        # row/column to take are all we need.
+        if self.proj_type == "slice":
+            if self.proj_axis == 0:  # a column
+                self._real = self._rr[:, self.index]
+            elif self.proj_axis == 1:  # a row
+                self._real = self._rr[self.index, :]
+            return
+        # If we reach here, then it's a projection or sum. First we need to
+        # check the bounds to make sure we take the projection/sum of the
+        # appropriate spectral region. We make sure to not override self._rr
+        # JUST IN CASE the user ever wants it.
+        if self.index_bounds is not None:
+            if self.proj_axis == 0:  # columns
+                rr = self._rr[:, self.index_bounds]
+            elif self.proj_axis == 1:  # rows
+                rr = self._rr[self.index_bounds, :]
+        # Then make the projection / sum.
+        if self.proj_type == "projection":
+            # For positive projections, we zero out any negative elements, then
+            # take the maximum along the axis being projected along..
+            if self.sign == "positive":
+                rr[rr < 0] = 0
+                self._real = np.amax(rr, axis=(1 - self.proj_axis))
+            # And the opposite for negative projections.
+            elif self.sign == "negative":
+                rr[rr > 0] = 0
+                self._real = np.amin(rr, axis=(1 - self.proj_axis))
+        # For a sum, we just add up both positive and negative numbers without
+        # zeroing one of them. This is in line with TopSpin's behaviour.
+        elif self.proj_type == "sum":
+            self._real = np.sum(rr, axis=(1 - self.proj_axis))
+        # We should never reach here, unless the user manually instantiates a
+        # Dataset1DProjVirtual class.
+        else:
+            raise ValueError(f"invalid projection type '{proj_type}'")
 
 
 TDataset1D = Union[Dataset1D, Dataset1DProj, Dataset1DProjVirtual]

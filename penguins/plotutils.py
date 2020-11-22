@@ -9,7 +9,7 @@ wide range of figures.
 import warnings
 from typing import (Any)
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.ticker import AutoMinorLocator  # type: ignore
 
 from .exportdeco import export

@@ -591,7 +591,7 @@ class _1D_ProcDataMixin():
         return slice(self.ppm_to_index(upper) or 0,                      # type: ignore # mixin
                      (self.ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
 
-    def to_magnitude(self) -> Dataset1D:
+    def to_magnitude(self) -> _1D_ProcDataMixin:
         """
         Calculates the magnitude mode spectrum and returns it as a new
         Dataset1D object.
@@ -605,7 +605,7 @@ class _1D_ProcDataMixin():
         new_ds._imag = 0
         return new_ds
 
-    def mc(self) -> Dataset1D:
+    def mc(self) -> _1D_ProcDataMixin:
         """
         Alias for `to_magnitude()`.
         """
@@ -678,7 +678,7 @@ class _2D_RawDataMixin():
         ser = ser.astype(np.complex128)  # otherwise the imaginary part is lost
         ser = ser.reshape((td1, -1, 2))
         ser[:,:,1] = ser[:,:,1] * 1j
-        self._ser = ser.sum(axis=2) * (2 ** self["nc"])
+        self._ser = ser.sum(axis=2) * (2 ** self["nc"])  # type: ignore # mixin
 
     def raw_data(self):
         return self.ser
@@ -885,7 +885,7 @@ class _2D_ProcDataMixin():
         f2_mass = f2[:-len(f2_elem)]
         return (rf"$^{{{f1_mass}}}${f1_elem}", rf"$^{{{f2_mass}}}${f2_elem}")
 
-    def to_magnitude(self, axis: int) -> Dataset2D:
+    def to_magnitude(self, axis: int) -> _2D_ProcDataMixin:
         """
         Calculates the magnitude mode spectrum along the specified axis and
         returns it as a new Dataset2D object.
@@ -916,21 +916,21 @@ class _2D_ProcDataMixin():
                             " found.") from None
         return new_ds
 
-    def xf1m(self) -> Dataset2D:  # alias
+    def xf1m(self) -> _2D_ProcDataMixin:
         """
         Alias for ``to_magnitude(axis=0)``, i.e. magnitude mode calculation
         along f1.
         """
         return self.to_magnitude(axis=0)
 
-    def xf2m(self) -> Dataset2D:  # alias
+    def xf2m(self) -> _2D_ProcDataMixin:
         """
         Alias for ``to_magnitude(axis=1)``, i.e. magnitude mode calculation
         along f2.
         """
         return self.to_magnitude(axis=1)
 
-    def xfbm(self) -> Dataset2D:
+    def xfbm(self) -> _2D_ProcDataMixin:
         """
         Performs magnitude mode calculation along both axes. ds.xfbm() is
         equivalent to ds.xf1m().xf2m(). It is manually implemented here for
@@ -1555,7 +1555,7 @@ class Dataset1DProjVirtual(Dataset1DProj):
         # We should never reach here, unless the user manually instantiates a
         # Dataset1DProjVirtual class.
         else:
-            raise ValueError(f"invalid projection type '{proj_type}'")
+            raise ValueError(f"invalid projection type '{self.proj_type}'")
 
 
 TDataset1D = Union[Dataset1D, Dataset1DProj, Dataset1DProjVirtual]

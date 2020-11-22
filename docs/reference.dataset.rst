@@ -77,6 +77,7 @@ Datasets
    .. automethod:: to_magnitude
    .. automethod:: xf1m
    .. automethod:: xf2m
+   .. automethod:: xfbm
 
 |v|
 

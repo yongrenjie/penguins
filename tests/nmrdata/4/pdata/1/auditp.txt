@@ -23,7 +23,13 @@ $$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1004/pdata/1/auditp.txt
       <abs n ABSG = 5 
        data hash MD5: 64K
        10 0C 43 E9 37 47 7A 63 C5 F4 EC A2 EB 0E DA 67>)
+$$ /Users/yongrenjie/penguins/tests/nmrdata/4/pdata/1/auditp.txt
+(   5,<2020-11-22 16:54:44.027 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=Processed PSYCHE dataTITLE_END
+       data hash MD5: 64K
+       10 0C 43 E9 37 47 7A 63 C5 F4 EC A2 EB 0E DA 67>)
 ##END=
 
 $$ hash MD5
-$$ DF D1 56 91 88 57 EC B8 98 C9 89 36 0A D0 05 E5
+$$ 2B D3 59 91 62 EE 0E 8D 6B 6E 2C 77 C3 E9 F9 48

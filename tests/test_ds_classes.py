@@ -318,7 +318,7 @@ def test_1d_mc():
     assert np.all(np.greater_equal(proton_mc.real, np.zeros(si)))
     assert np.allclose(proton_mc.real, np.abs(r + i * 1j))
     # Check that the imaginary part has been removed
-    assert np.array_equal(proton_mc.imag, np.zeros(si))
+    assert proton_mc.imag == 0
     # Check that mc() is idempotent
     proton_mc_mc = proton_mc.mc()
     assert np.allclose(proton_mc.real, proton_mc_mc.real)
@@ -335,14 +335,14 @@ def test_2d_xfnm():
     xf1 = cosy.xf1m()
     assert np.allclose(xf1.rr, np.abs(rr + 1j * ri))
     assert np.allclose(xf1.ir, np.abs(ir + 1j * ii))
-    assert np.allclose(xf1.ri, np.zeros((cosy["si"][0], cosy["si"][1])))
-    assert np.allclose(xf1.ii, np.zeros((cosy["si"][0], cosy["si"][1])))
+    assert xf1.ri == 0
+    assert xf1.ii == 0
     # Check output of xf2m()
     xf2 = cosy.xf2m()
     assert np.allclose(xf2.rr, np.abs(rr + 1j * ir))
     assert np.allclose(xf2.ri, np.abs(ri + 1j * ii))
-    assert np.allclose(xf2.ir, np.zeros((cosy["si"][0], cosy["si"][1])))
-    assert np.allclose(xf2.ii, np.zeros((cosy["si"][0], cosy["si"][1])))
+    assert xf2.ir == 0
+    assert xf2.ii == 0
     # Check that xf1m() is idempotent
     xf1_xf1m = xf1.xf1m()
     assert np.allclose(xf1.rr, xf1_xf1m.rr)
@@ -385,3 +385,13 @@ def test_rawdata_relationships():
     dp = int(unproc_psyche["cnst50"])  # drop points in NOAH PSYCHE is cnst50
     assert np.allclose(fid[:32], ser[0, :32])  # group delay
     assert np.allclose(fid[70:110], ser[0, 70+dp:110+dp])  # first chunk, ish
+
+
+def test_procdata_relationships():
+    """Check relationships between processed data of different datasets, to
+    make sure that processed data is being read in a consistent manner.
+    """
+    # Check that TopSpin's COSY slice is the same as our COSY slice
+    cosy = pg.read(datadir, 2)
+    cosy_slice = pg.read(datadir, 2, 1002)
+    assert np.allclose(cosy.rr[780,:], cosy_slice.real)

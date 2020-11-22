@@ -601,7 +601,7 @@ class _1D_ProcDataMixin():
         except AttributeError:   # no imag
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None
-        new_ds._imag = np.zeros(new_ds.real.shape)
+        new_ds._imag = 0
         return new_ds
 
     def mc(self) -> Dataset1D:
@@ -897,13 +897,13 @@ class _2D_ProcDataMixin():
             if axis == 0:
                 new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ri)
                 new_ds._ir = np.abs(new_ds.ir + 1j * new_ds.ii)
-                new_ds._ri = np.zeros(new_ds.rr.shape)
-                new_ds._ii = np.zeros(new_ds.rr.shape)
+                new_ds._ri = 0
+                new_ds._ii = 0
             elif axis == 1:
                 new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ir)
                 new_ds._ri = np.abs(new_ds.ri + 1j * new_ds.ii)
-                new_ds._ir = np.zeros(new_ds.rr.shape)
-                new_ds._ii = np.zeros(new_ds.rr.shape)
+                new_ds._ir = 0
+                new_ds._ii = 0
             else:
                 raise ValueError("to_magnitude(): axis must be 0 (for"
                                  " magnitude mode in f1) or 1 (for f2).")
@@ -936,9 +936,9 @@ class _2D_ProcDataMixin():
         try:
             new_ds._rr = np.sqrt(new_ds.rr ** 2 + new_ds.ri ** 2
                                  + new_ds.ir ** 2 + new_ds.ii ** 2)
-            new_ds._ri = np.zeros(new_ds.rr.shape)
-            new_ds._ir = np.zeros(new_ds.rr.shape)
-            new_ds._ii = np.zeros(new_ds.rr.shape)
+            new_ds._ri = 0
+            new_ds._ir = 0
+            new_ds._ii = 0
         except AttributeError:
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None

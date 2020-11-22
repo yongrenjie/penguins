@@ -5,16 +5,15 @@ from itertools import zip_longest, cycle
 from collections import abc
 from typing import (Union, Iterable, Dict, Optional, Any,
                     Tuple, List, Deque, Callable, Sequence, Iterator)
-from numbers import Real
 
 import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.legend_handler import HandlerBase  # type: ignore
-from matplotlib.ticker import AutoMinorLocator  # type: ignore
 import seaborn as sns  # type: ignore
 
 from . import dataset as ds
 from .exportdeco import export
+from .plotutils import *
 from .type_aliases import *
 
 
@@ -266,313 +265,6 @@ def mkinset(ax: Any,
     return inset_ax
 
 
-# -- Top-level plotting utilities -----------------------------
-
-@export
-def style_axes(ax: Any,
-               style: str,
-               ) -> None:
-    """Styles the given |Axes| instance according to the requested style.
-
-    This is useful for making sure that all subplots in a series have a uniform
-    appearance.
-
-    All the styles except ``natural`` call |tight_layout| after they are done.
-
-    Parameters
-    ----------
-    ax : Axes
-        |Axes| instance to style.
-    style : str
-        Style to be applied. The available options are ``1d``, ``1d_box``,
-        ``2d``, ``plot``, and ``natural``.
-
-    Returns
-    -------
-    None
-    """
-    def disable_y_axis(ax):
-        ax.yaxis.set_visible(False)
-
-    def remove_top_left_right_spines(ax):
-        for s in ["top", "left", "right"]:
-            ax.spines[s].set_visible(False)
-
-    def set_xaxis_ticks(ax):
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which="both", width=1.3)
-        ax.tick_params(which="major", length=5)
-        ax.tick_params(which="minor", length=3)
-
-    def set_xyaxis_ticks(ax):
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.yaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which="both", width=1.3)
-        ax.tick_params(which="major", length=5)
-        ax.tick_params(which="minor", length=3)
-
-    def thicken_spines(ax):
-        for s in ["top", "left", "right", "bottom"]:
-            ax.spines[s].set_visible(True)
-        for s in ["top", "left", "right", "bottom"]:
-            ax.spines[s].set_linewidth(1.3)
-
-    if style == "1d":
-        disable_y_axis(ax)
-        set_xaxis_ticks(ax)
-        thicken_spines(ax)
-        remove_top_left_right_spines(ax)
-        tight_layout()
-    elif style == "1d_box":
-        disable_y_axis(ax)
-        set_xaxis_ticks(ax)
-        thicken_spines(ax)
-        tight_layout()
-    elif style == "2d":
-        thicken_spines(ax)
-        set_xyaxis_ticks(ax)
-        tight_layout()
-    elif style == "plot":
-        thicken_spines(ax)
-        tight_layout()
-    elif style == "natural":
-        pass
-    else:
-        warnings.warn(f"Invalid style '{style}' requested.")
-
-
-@export
-def cleanup_axes() -> None:
-    # Need to draw the figure to get the renderer.
-    fig = plt.gcf()
-    fig.canvas.draw()
-    r = fig.canvas.get_renderer()
-    # Iterate over axes and check which ticks overlap with axes label.
-    for ax in fig.axes:
-        xlabel_bbox = ax.xaxis.label.get_window_extent(renderer=r)
-        ylabel_bbox = ax.yaxis.label.get_window_extent(renderer=r)
-        # Just check every bbox.
-        for xtick in ax.xaxis.get_major_ticks():
-            xtick_bbox1 = xtick.label1.get_window_extent(renderer=r)
-            xtick_bbox2 = xtick.label2.get_window_extent(renderer=r)
-            if xtick_bbox1.overlaps(xlabel_bbox):
-                xtick.label1.set_visible(False)
-            if xtick_bbox2.overlaps(xlabel_bbox):
-                xtick.label2.set_visible(False)
-        for ytick in ax.yaxis.get_major_ticks():
-            ytick_bbox1 = ytick.label1.get_window_extent(renderer=r)
-            ytick_bbox2 = ytick.label2.get_window_extent(renderer=r)
-            if ytick_bbox1.overlaps(ylabel_bbox):
-                ytick.label1.set_visible(False)
-            if ytick_bbox2.overlaps(ylabel_bbox):
-                ytick.label2.set_visible(False)
-
-
-@export
-def cleanup_figure(padding: float = 0.02
-                   ) -> None:
-    # Resize subplots so that their titles don't clash with the figure legend.
-    tight_layout()
-    fig = plt.gcf()
-    fig.canvas.draw()
-    r = fig.canvas.get_renderer()
-    # Get minimum bbox y-extent of figure legend(s).
-    inv = fig.transFigure.inverted()
-    legend_bboxs = [inv.transform(legend.get_window_extent(renderer=r))
-                    for legend in fig.legends]
-    legend_miny = min(bbox[0][1] for bbox in legend_bboxs)
-    # Find maximum bbox y-extent of axes titles.
-    titles = [ax.title for ax in fig.axes]
-    title_bboxs = [inv.transform(title.get_window_extent(renderer=r))
-                   for title in titles]
-    offending_title_bboxs = [title_bbox for title_bbox in title_bboxs
-                             if title_bbox[1][1] > legend_miny]
-    # If there are no offending bboxes, then we can skip ahead.
-    if offending_title_bboxs == []:
-        axes_maxy = legend_miny - padding
-    # Otherwise, we need to find which of them is the largest.
-    else:
-        max_offending_height = max(bbox[1][1] - bbox[0][1]
-                                   for bbox in offending_title_bboxs)
-        axes_maxy = legend_miny - padding - max_offending_height
-    # Resize
-    plt.subplots_adjust(top=axes_maxy)
-
-
-@export
-def move_ylabel(ax: Any,
-                pos: str,
-                remove_ticks: int = 0,
-                tight_layout: bool = True,
-                ) -> None:
-    if pos == "topright":
-        # move yticks to right
-        ax.yaxis.tick_right()
-        # remove the first remove_ticks ticks within the ylims
-        max, min = ax.get_ylim()
-        for ytick in ax.yaxis.get_major_ticks():
-            if remove_ticks == 0:
-                break
-            else:
-                ypos = ytick.label2.get_position()[1]
-                if min < ypos and ypos < max:
-                    ytick.label2.set_visible(False)
-                    remove_ticks -= 1
-        # Move the label
-        ax.yaxis.label.set_rotation(0)  # right way up
-        ax.yaxis.label.set_horizontalalignment("left")
-        ax.yaxis.label.set_verticalalignment("top")
-        ax.yaxis.set_label_coords(1.03, 1)
-    else:
-        raise ValueError(f"Invalid position '{pos}' provided.")
-
-    if tight_layout:
-        plt.tight_layout()
-
-
-# -- Matplotlib and Seaborn wrappers --------------------------
-
-@export
-def subplots(nrows: int = 1,
-             ncols: int = 1,
-             **kwargs
-             ) -> Tuple[Any, Any]:
-    """Wrapper around matplotlib's |subplots| function.
-
-    If *figsize* is not passed as a keyword argument, then this by default
-    sets the figure size to be ``(4 * ncols)`` by ``(4 * nrows)``. This means
-    that every subplot will have an area of 4 inches by 4 inches.
-
-    Parameters
-    ----------
-    nrows : int, optional
-        Number of rows.
-    ncols : int, optional
-        Number of columns.
-    kwargs : dict, optional
-        Other keyword arguments passed to |subplots|.
-
-    Returns
-    -------
-    fig : Figure
-        |Figure| instance corresponding to the current plot.
-    axs : Axes, or ndarray of Axes
-        If only one subplot was requested, this is the |Axes| instance.
-        Otherwise this is an |ndarray| of |Axes|, one for each subplot. See
-        the documentation of |subplots| for further explanation.
-    """
-    # This implementation captures nrows and ncols so that we can set figsize
-    # automatically. We don't care about the rest of the arguments, so those
-    # can just be passed on directly.
-    if "figsize" not in kwargs:
-        kwargs["figsize"] = (ncols * 4, nrows * 4)
-    return plt.subplots(nrows=nrows, ncols=ncols, **kwargs)
-
-
-@export
-def figure(*args, **kwargs) -> Any:
-    """Wrapper around matplotlib's |figure| function.
-
-    If *figsize* is not passed as a keyword argument, then it is chosen to be
-    (4, 4) by default.
-
-    Parameters
-    ----------
-    kwargs : dict, optional
-        Other keyword arguments passed to |subplots|.
-
-    Returns
-    -------
-    fig : Figure
-        Newly created |Figure| instance.
-    """
-    if "figsize" not in kwargs:
-        kwargs["figsize"] = (4, 4)
-    return plt.figure(**kwargs)
-
-
-@export
-def set_palette(palette: Union[str, List[str]],
-                ) -> None:
-    """Sets the currently active color palette. The default palette is
-    seaborn's ``deep``.
-
-    The palette is used both for staging successive 1D spectra, as well as for
-    any plots done with seaborn. For 2D spectra, colors from seaborn's
-    ``bright`` palette have been manually chosen. If you want to override these,
-    you should directly pass the *colors* parameter to the stage() method.
-
-    Parameters
-    ----------
-    palette : str or list of str
-        Color palette to use. See :std:doc:`tutorial/color_palettes` for a
-        full description of the possible options.
-
-    Returns
-    -------
-    None
-    """
-    global _current_palette
-    # Change seaborn palette, in case user wants to draw other plots.
-    sns.set_palette(palette)
-    # Change penguins 1D palette.
-    _current_palette = palette
-
-
-@export
-def color_palette(palette: Optional[Union[str, List[str]]] = None,
-                  ) -> List[str]:
-    """Returns a list of colors corresponding to a color palette. If *palette*
-    is not provided, returns the colors in the current color palette.
-
-    This is essentially a wrapper around :func:`sns.color_palette
-    <seaborn.color_palette>`, but it only offers one argument, and it can't be
-    used as a context manager. Use `set_palette` if you want to change the
-    active palette.
-
-    Parameters
-    ----------
-    palette : str or list of str, optional
-        The palette to look up. Defaults to the currently active color palette.
-
-    Returns
-    -------
-    colors : list of str
-        The colors in the current color palette.
-    """
-    if palette is None:
-        palette = _current_palette
-    return sns.color_palette(palette)
-
-
-@export
-def tight_layout(*args, **kwargs) -> None:
-    """Direct wrapper around |tight_layout|.
-    """
-    return plt.tight_layout(*args, **kwargs)
-
-
-@export
-def show(*args, **kwargs) -> None:
-    """Direct wrapper around |show|.
-    """
-    return plt.show(*args, **kwargs)
-
-
-@export
-def savefig(*args, **kwargs) -> None:
-    """Direct wrapper around |savefig|.
-    """
-    return plt.savefig(*args, **kwargs)
-
-
-@export
-def pause(*args, **kwargs) -> None:
-    """Direct wrapper around |pause|.
-    """
-    return plt.pause(*args, **kwargs)
-
-
 # -- Plot holding area and plot properties --------------------
 
 class PlotHoldingArea():
@@ -656,7 +348,7 @@ def _stage1d(dataset: ds.TDataset1D,
              dfilter: Optional[Callable[[float], bool]] = None,
              label: OS = None,
              color: OS = None,
-             plot_options: Optional[Dict] = None,
+             **kwargs: Any,
              ) -> None:
     """Stages a 1D spectrum.
 
@@ -690,10 +382,9 @@ def _stage1d(dataset: ds.TDataset1D,
     label : str, optional
         Label to be used in the plot legend.
     color : str, optional
-        Color to use for plotting. Overrides any *color* key passed in the
-        *plot_options* dictionary.
-    plot_options : dict, optional
-        Dictionary of keyword arguments to be passed to |plot|.
+        Color to use for plotting.
+    **kwargs
+        Any other keyword arguments are passed as-is to |plot|.
 
     Returns
     -------
@@ -744,7 +435,7 @@ def _stage1d(dataset: ds.TDataset1D,
                                 dfilter=dfilter,
                                 label=label,
                                 color=color,
-                                plot_options=plot_options)
+                                plot_options=kwargs)
         ax.pha.plot_objs.append(plot_obj)
 
 
@@ -1089,7 +780,7 @@ def _stage2d(dataset: ds.Dataset2D,
              colors: TColors = (None, None),
              dfilter: Optional[Callable[[float], bool]] = None,
              label: OS = None,
-             plot_options: Optional[Dict] = None,
+             **kwargs: Any
              ) -> None:
     """Stages a 2D spectrum.
 
@@ -1138,8 +829,9 @@ def _stage2d(dataset: ds.Dataset2D,
         Label to be used in the plot legend.
     color : (str, str), optional
         Colors to use for positive and negative contours respectively.
-    plot_options : dict, optional
-        Dictionary of keyword arguments to be passed to |contour|.
+    **kwargs
+        Any other keyword arguments are passed as-is to |contour|. Note that
+        these will be overridden by other keyword arguments passed to stage().
 
     Returns
     -------
@@ -1185,7 +877,7 @@ def _stage2d(dataset: ds.Dataset2D,
                                 f1_bounds=f1_bounds, f2_bounds=f2_bounds,
                                 levels=levels, colors=colors,
                                 dfilter=dfilter, label=label,
-                                plot_options=plot_options)
+                                plot_options=kwargs)
         ax.pha.plot_objs.append(plot_obj)
 
 
@@ -1464,3 +1156,148 @@ def _find_baselev(dataset: ds.Dataset2D,
     plt.close("all")
 
     return fval if okay else None
+
+
+# -- Matplotlib and Seaborn wrappers --------------------------
+
+@export
+def subplots(nrows: int = 1,
+             ncols: int = 1,
+             **kwargs
+             ) -> Tuple[Any, Any]:
+    """Wrapper around matplotlib's |subplots| function.
+
+    If *figsize* is not passed as a keyword argument, then this by default
+    sets the figure size to be ``(4 * ncols)`` by ``(4 * nrows)``. This means
+    that every subplot will have an area of 4 inches by 4 inches.
+
+    Parameters
+    ----------
+    nrows : int, optional
+        Number of rows.
+    ncols : int, optional
+        Number of columns.
+    kwargs : dict, optional
+        Other keyword arguments passed to |subplots|.
+
+    Returns
+    -------
+    fig : Figure
+        |Figure| instance corresponding to the current plot.
+    axs : Axes, or ndarray of Axes
+        If only one subplot was requested, this is the |Axes| instance.
+        Otherwise this is an |ndarray| of |Axes|, one for each subplot. See
+        the documentation of |subplots| for further explanation.
+    """
+    # This implementation captures nrows and ncols so that we can set figsize
+    # automatically. We don't care about the rest of the arguments, so those
+    # can just be passed on directly.
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (ncols * 4, nrows * 4)
+    return plt.subplots(nrows=nrows, ncols=ncols, **kwargs)
+
+
+@export
+def figure(*args, **kwargs) -> Any:
+    """Wrapper around matplotlib's |figure| function.
+
+    If *figsize* is not passed as a keyword argument, then it is chosen to be
+    (4, 4) by default.
+
+    Parameters
+    ----------
+    kwargs : dict, optional
+        Other keyword arguments passed to |subplots|.
+
+    Returns
+    -------
+    fig : Figure
+        Newly created |Figure| instance.
+    """
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (4, 4)
+    return plt.figure(**kwargs)
+
+
+@export
+def set_palette(palette: Union[str, List[str]],
+                ) -> None:
+    """Sets the currently active color palette. The default palette is
+    seaborn's ``deep``.
+
+    The palette is used both for staging successive 1D spectra, as well as for
+    any plots done with seaborn. For 2D spectra, colors from seaborn's
+    ``bright`` palette have been manually chosen. If you want to override these,
+    you should directly pass the *colors* parameter to the stage() method.
+
+    Parameters
+    ----------
+    palette : str or list of str
+        Color palette to use. See :std:doc:`tutorial/color_palettes` for a
+        full description of the possible options.
+
+    Returns
+    -------
+    None
+    """
+    global _current_palette
+    # Change seaborn palette, in case user wants to draw other plots.
+    sns.set_palette(palette)
+    # Change penguins 1D palette.
+    _current_palette = palette
+
+
+@export
+def color_palette(palette: Optional[Union[str, List[str]]] = None,
+                  ) -> List[str]:
+    """Returns a list of colors corresponding to a color palette. If *palette*
+    is not provided, returns the colors in the current color palette.
+
+    This is essentially a wrapper around :func:`sns.color_palette
+    <seaborn.color_palette>`, but it only offers one argument, and it can't be
+    used as a context manager. Use `set_palette` if you want to change the
+    active palette.
+
+    Parameters
+    ----------
+    palette : str or list of str, optional
+        The palette to look up. Defaults to the currently active color palette.
+
+    Returns
+    -------
+    colors : list of str
+        The colors in the current color palette.
+    """
+    if palette is None:
+        palette = _current_palette
+    return sns.color_palette(palette)
+
+
+@export
+def tight_layout(*args, **kwargs) -> None:
+    """Direct wrapper around |tight_layout|.
+    """
+    return plt.tight_layout(*args, **kwargs)
+
+
+@export
+def show(*args, **kwargs) -> None:
+    """Direct wrapper around |show|.
+    """
+    return plt.show(*args, **kwargs)
+
+
+@export
+def savefig(*args, **kwargs) -> None:
+    """Direct wrapper around |savefig|.
+    """
+    return plt.savefig(*args, **kwargs)
+
+
+@export
+def pause(*args, **kwargs) -> None:
+    """Direct wrapper around |pause|.
+    """
+    return plt.pause(*args, **kwargs)
+
+

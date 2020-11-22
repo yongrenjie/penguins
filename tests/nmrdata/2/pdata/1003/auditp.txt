@@ -1,0 +1,20 @@
+##TITLE= Audit trail, TopSpin 4.1.0
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ /Users/yongrenjie/penguins/tests/nmrdata/2/pdata/1003/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-22 18:39:53.022 +0000>,<yongrenjie>,<Empoleon.local>,<mvrow>,<TopSpin 4.1.0>,
+      <f2sum 308 513 from
+       1 2 "nmrdata" "/Users/yongrenjie/penguins/tests"
+       data hash MD5: 2K
+       DA 5E 7F 2D 8E 83 FC 6D DC 22 1D 80 E4 4C FE 6E>)
+(   2,<2020-11-22 18:39:58.196 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=1D sumTITLE_END
+       data hash MD5: 2K
+       DA 5E 7F 2D 8E 83 FC 6D DC 22 1D 80 E4 4C FE 6E>)
+##END=
+
+$$ hash MD5
+$$ 5D 63 44 76 0C A9 47 EE 69 CC B6 E2 39 A9 C0 B7

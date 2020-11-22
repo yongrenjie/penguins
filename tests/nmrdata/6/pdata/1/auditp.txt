@@ -1,0 +1,27 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:\NMR\data\mfgroup\nmr/test/104/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-22 17:47:46.544 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<go4>,<TopSpin 3.6.2>,
+      <created by zg
+	started at 2020-11-22 17:40:24.163 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       6B C2 84 CB D3 8F AB 41 65 C0 4E FD DE 35 F2 F4
+       data hash MD5: 900 * 128
+       BF 6F BA 66 0F 7A 89 35 00 B1 3B 58 D6 52 4D F4>)
+(   2,<2020-11-22 18:08:42.067 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc2d>,<TopSpin 3.6.2>,
+      <Start of raw data processing
+       xfb F2: SI = 1K WDW = 4 SSB = 2 FT_mod = 6 PKNL = 1 PHC0 = 4.873069 PHC1 = 2.38854 F1: SI = 1K ME_mod = 2 NCOEF = 32 WDW = 4 SSB = 2 FT_mod = 6 FCOR = 0.5
+       data hash MD5: 1K * 1K
+       E1 A8 B6 A9 73 E7 E0 36 32 7C 41 0B 5C EE D2 83>)
+(   3,<2020-11-22 18:08:46.255 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<apkm>,<TopSpin 3.6.2>,
+      <apkm 
+       data hash MD5: 1K * 1K
+       06 CE 30 D3 BD 6E 35 D1 15 EC 8A 4B 8A 0B 3E 1E>)
+##END=
+
+$$ hash MD5
+$$ 5E 2D 1F AE 0C 50 21 29 6C D5 D2 61 31 F0 FD 62

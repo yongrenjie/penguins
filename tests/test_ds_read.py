@@ -122,7 +122,7 @@ def test_read_lazy_2d():
     assert sz4 > sz3 + 1.5e7
 
 
-def test_read_unprocessed_data():
+def test_read_nonexistent_data():
     """Test that reading in unprocessed data works (and that appropriate errors
     are thrown when attempting to read the processed data)."""
     # This is a PSYCHE dataset that hasn't been processed. The raw data exists.
@@ -137,5 +137,19 @@ def test_read_unprocessed_data():
     # Check that trying to get the processed data raises an error
     with pytest.raises(FileNotFoundError) as exc_info:
         noproc_psyche.rr
+        assert "processed data file" in str(exc_info.value)
+        assert "not found" in str(exc_info.value)
+
+    # This is a 2D projection, which has a real part but not imaginary
+    cosy_proj = pg.read(datadir, 2, 1001)
+    assert isinstance(cosy_proj, pg.dataset.Dataset1DProj)
+    assert cosy_proj.path == datadir / "2" / "pdata" / "1001"
+    # Check that ser file exists
+    cosy_proj.ser
+    # Check that real part exists
+    cosy_proj.real
+    # Check that imaginary part throws an error
+    with pytest.raises(FileNotFoundError) as exc_info:
+        cosy_proj.imag
         assert "processed data file" in str(exc_info.value)
         assert "not found" in str(exc_info.value)

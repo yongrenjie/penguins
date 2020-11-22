@@ -3,3 +3,8 @@ include =
     penguins/*
 omit =
     penguins/private/*
+
+[report]
+exclude_lines =
+    def __repr__
+    raise NotImplementedError

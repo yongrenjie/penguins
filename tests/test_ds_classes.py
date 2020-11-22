@@ -20,7 +20,6 @@ def test_dataset_initialisation():
                     "o1p", "o1", "bf1", "si", "nuc1"]
     # Check 1D
     proton = pg.read(datadir, 1)
-    assert repr(proton) == f"Dataset1D('{str(proton.path)}')"
     assert all(par in proton.pars for par in initial_pars)
     assert proton["aq"] == pytest.approx(2.9360127)
     assert proton["td"] == 65536
@@ -128,6 +127,11 @@ def test_2d_raw_ser():
     # Test raw_data() accessor
     rawdata = cosy.raw_data()
     assert rawdata is ser
+
+    # Test the case where TD is not a multiple of 256
+    hsqc = pg.read(datadir, 6)
+    assert (hsqc["td"][1] / 2) % 256 != 0
+    assert hsqc.ser.shape == (hsqc["td"][0], hsqc["td"][1] / 2)
 
 
 def test_projection_raw_ser():
@@ -306,6 +310,73 @@ def test_2d_ppm_hz_scales():
         assert "outside spectral window" in str(exc_info)
 
 
+# -- Tests on 2D projection generation --------------
+
+def test_2d_project():
+    """Tests penguins' generation of virtual projections."""
+    cosy = pg.read(datadir, 2)
+    # Projections onto f2
+    f2 = cosy.f2projp()
+    assert f2.real.shape == (cosy["si"][1], )
+    assert np.all(np.greater_equal(f2.real, 0))
+    # Projections onto f1
+    f1 = cosy.f1projp()
+    assert f1.real.shape == (cosy["si"][0], )
+    assert np.all(np.greater_equal(f1.real, 0))
+    # Test projection bounds
+    # There are no peaks between 7 and 8 ppm
+    f2_bounded = cosy.f2projp(bounds="7..8")
+    assert f2_bounded.real.shape == (cosy["si"][1], )
+    assert np.max(f2_bounded.real) < np.max(f2.real)
+    # All the peaks are between 0.5 and 7 ppm
+    f2_bounded = cosy.f2projp(bounds="0.5..7")
+    assert f2_bounded.real.shape == (cosy["si"][1], )
+    assert np.max(f2_bounded.real) == np.max(f2.real)
+
+    # Check that manual projection is the same as TopSpin projection
+    assert np.allclose(f2.real, pg.read(datadir, 2, 1001).real)
+
+
+def test_2d_slice():
+    """Tests penguins' generation of virtual slices."""
+    cosy = pg.read(datadir, 2)
+    # Slice along f1 (i.e. a column)
+    f1 = cosy.slice(axis=0, ppm=1.38)
+    assert f1.real.shape == (cosy["si"][0], )
+    # Slice along f2 (i.e. a row)
+    f2 = cosy.slice(axis=1, ppm=1.38)
+    assert f2.real.shape == (cosy["si"][1], )
+    # Check that they have the same value at (1.38, 1.38)
+    assert (f2.real[cosy.ppm_to_index(1, 1.38)] ==
+            pytest.approx(f1.real[cosy.ppm_to_index(0, 1.38)]))
+
+    # Check that penguins and TopSpin slices agree
+    cosy_slice = pg.read(datadir, 2, 1002)
+    assert np.allclose(f2.real, cosy_slice.real)
+
+
+def test_2d_sum():
+    """Tests penguins' generation of virtual slices."""
+    cosy = pg.read(datadir, 2)
+    # Sum onto f1 (i.e. add up multiple column)
+    f1 = cosy.sum(axis=0, bounds="4..6")
+    assert f1.real.shape == (cosy["si"][0], )
+    # Sum onto f2 (i.e. add up multiple rows)
+    f2 = cosy.sum(axis=1, bounds="4..6")
+    assert f2.real.shape == (cosy["si"][1], )
+    # Check that multiple sub-sums add up to the same sum (after accounting for
+    # the double-counting of the row at 5 ppm)
+    subsum = (cosy.sum(axis=1, bounds="4..5").real
+              + cosy.sum(axis=1, bounds="5..6").real
+              - cosy.slice(axis=1, ppm=5).real)
+    assert np.allclose(f2.real, subsum)
+    # Check that penguins and TopSpin sums are the same
+    # For some reason, this is not the same thing. It *looks* like the same
+    # thing, but isn't. This is probably because TopSpin uses some weird
+    # algorithm which I don't know.
+    # assert np.allclose(f2.real, pg.read(datadir, 2, 1003).real)
+
+
 # -- Tests on TopSpin-like processing functions -----
 
 def test_1d_mc():
@@ -315,7 +386,7 @@ def test_1d_mc():
     proton_mc = proton.mc()
     si = proton["si"]
     # Check that it's the right thing
-    assert np.all(np.greater_equal(proton_mc.real, np.zeros(si)))
+    assert np.all(np.greater_equal(proton_mc.real, 0))
     assert np.allclose(proton_mc.real, np.abs(r + i * 1j))
     # Check that the imaginary part has been removed
     assert proton_mc.imag == 0

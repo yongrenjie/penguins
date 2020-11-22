@@ -1,0 +1,5 @@
+[run]
+include =
+    penguins/*
+omit =
+    penguins/private/*

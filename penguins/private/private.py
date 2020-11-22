@@ -16,10 +16,12 @@ import pandas as pd  # type: ignore
 import seaborn as sns  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 
-from .pgplot import style_axes
-from . import dataset as ds
+from ..pgplot import style_axes
+from .. import dataset as ds
+from ..exportdeco import export
 
 
+@export
 class NHsqc:
     """
     For 15N HSQC experiments. Just set peaks and margin.
@@ -41,6 +43,7 @@ class NHsqc:
                          for peak in self.peaks])
 
 
+@export
 class Hsqc:
     """
     For 13C HSQC experiments. The variables ch, ch2, and ch3 should be
@@ -126,6 +129,7 @@ class Hsqc:
         return df
 
 
+@export
 class Cosy:
     """
     For COSY experiments. The variables diagonal and cross_half should be
@@ -198,6 +202,7 @@ class Cosy:
         return df
 
 
+@export
 class Andrographolide():
     """
     Andrographolide in DMSO.
@@ -228,6 +233,7 @@ class Andrographolide():
     cosy = Cosy(cosy_diagonal, cosy_cross_half)
 
 
+@export
 class Zolmitriptan():
     """
     55 mM zolmitriptan in DMSO.
@@ -255,9 +261,14 @@ def __getenv(key):
         if x.exists():
             return x
     raise FileNotFoundError("$nmrd does not point to a valid location.")
-nmrd = lambda: __getenv("nmrd")
 
-# Plot HSQC strip plots (i.e. plot relative intensities, split by multiplicity)
+
+@export
+def nmrd():
+    return __getenv("nmrd")
+
+
+@export
 def hsqc_stripplot(molecule: Any,
                    datasets: Union[ds.Dataset2D, Sequence[ds.Dataset2D]],
                    ref_dataset: ds.Dataset2D,
@@ -271,6 +282,9 @@ def hsqc_stripplot(molecule: Any,
                    ax: Optional[Any] = None,
                    ) -> Tuple[Any, Any]:
     """
+    Plot HSQC strip plots (i.e. plot relative intensities, split by
+    multiplicity).
+
     Parameters
     ----------
     molecule : pg.private.Andrographolide or pg.private.Zolmitriptan
@@ -349,7 +363,8 @@ def hsqc_stripplot(molecule: Any,
     style_axes(ax, "plot")
     return plt.gcf(), ax
 
-# Plot COSY strip plots (i.e. plot relative intensities, split by multiplicity)
+
+@export
 def cosy_stripplot(molecule: Any,
                    datasets: Union[ds.Dataset2D, Sequence[ds.Dataset2D]],
                    ref_dataset: ds.Dataset2D,
@@ -362,6 +377,8 @@ def cosy_stripplot(molecule: Any,
                    ax: Optional[Any] = None,
                    ) -> Tuple[Any, Any]:
     """
+    Plot COSY strip plots (i.e. plot relative intensities, split by peak type).
+
     Parameters
     ----------
     molecule : pg.private.Andrographolide or pg.private.Zolmitriptan
@@ -439,6 +456,7 @@ def cosy_stripplot(molecule: Any,
     return plt.gcf(), ax
 
 
+@export
 def hsqc_cosy_stripplot(molecule: Any,
                         datasets: Sequence[ds.Dataset2D],
                         ref_datasets: Sequence[ds.Dataset2D],
@@ -451,6 +469,9 @@ def hsqc_cosy_stripplot(molecule: Any,
                         ax: Optional[Any] = None,
                         ) -> Tuple[Any, Any]:
     """
+    Plot HSQC and COSY relative intensities on the same Axes. HSQC peaks are
+    split by multiplicity, COSY peaks are not split.
+
     Parameters
     ----------
     molecule : pg.private.Andrographolide or pg.private.Zolmitriptan

@@ -1354,6 +1354,7 @@ class Dataset2D(_2D_RawDataMixin,
         if axis not in [0, 1]:
             raise ValueError(f"Invalid value for axis '{axis}'")
         # For some reason mypy doesn't realise that axis must be an int by here.
+        # Dynamic typing problems...
         index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="sum",
                                     proj_axis=axis, index_bounds=index_bounds,

@@ -101,6 +101,7 @@ def test_parDict():
 # -- Tests on raw data handling ---------------------
 
 def test_1d_raw_fid():
+    """Test 1D raw data readin."""
     proton = pg.read(datadir, 1)
     fid = proton.fid
     # /2 because fid is complex points and TD is both real + imag
@@ -115,6 +116,7 @@ def test_1d_raw_fid():
 
 
 def test_2d_raw_ser():
+    """Test 2D raw data readin."""
     cosy = pg.read(datadir, 2)
     ser = cosy.ser
     # Note that only TD2 needs to be divided by 2, because there isn't the real
@@ -129,7 +131,8 @@ def test_2d_raw_ser():
 
 
 def test_projection_raw_ser():
-    """Test that projections and slices read in the ser file."""
+    """Verify that "raw data" for projections and slices is indeed the original
+    2D ser file."""
     proj = pg.read(datadir, 2, 1001)
     ser1 = proj.raw_data()
     assert ser1.shape == (proj["td"][0], proj["td"][1] / 2)
@@ -139,9 +142,10 @@ def test_projection_raw_ser():
     assert np.allclose(ser1, ser2)
 
 
-# -- Tests on processed data handling ---------------
+# -- Tests on low-level processed data handling -----
 
 def test_1d_proc_data():
+    """Test 1D processed data readin."""
     proton = pg.read(datadir, 1)
     r = proton.real
     assert r.shape == (proton["si"], )
@@ -149,31 +153,15 @@ def test_1d_proc_data():
     # proc_data() takes bounds, hence we need np.allclose().
     assert np.allclose(proton.proc_data(), r)
 
-    # Check the bounds on proc_data().
+    # Check the bounds on proc_data(). This assumes that ppm_to_index() works
+    # correctly.
     good_bounds = "4..6"
     bad_bounds = "-10..2"
-    # In TopSpin it's 28657, but for some weird reason TopSpin's numbers are
-    # always slightly off. I had a similar problem with nmrpoise.
-    assert np.allclose(proton.proc_data(bounds=good_bounds), r[28658:36880])
+    assert np.allclose(proton.proc_data(bounds=good_bounds),
+                       r[proton.ppm_to_index(6):proton.ppm_to_index(4) + 1])
     with pytest.raises(ValueError) as exc_info:
         proton.proc_data(bounds=bad_bounds)
         assert "outside spectral window" in str(exc_info)
-
-
-def test_1d_mc():
-    proton = pg.read(datadir, 1)
-    r = proton.real
-    i = proton.imag
-    proton_mc = proton.mc()
-    si = proton["si"]
-    # Check that it's the right thing
-    assert np.all(np.greater_equal(proton_mc.real, np.zeros(si)))
-    assert np.allclose(proton_mc.real, np.abs(r + i * 1j))
-    # Check that the imaginary part has been removed
-    assert np.array_equal(proton_mc.imag, np.zeros(si))
-    # Check that mc() is idempotent
-    proton_mc_mc = proton_mc.mc()
-    assert np.allclose(proton_mc.real, proton_mc_mc.real)
 
 
 def test_1d_ppm_to_index():
@@ -203,8 +191,8 @@ def test_1d_ppm_hz_scales():
     assert ppm.shape == (proton["si"], )
     assert np.min(ppm) == proton["o1p"] - (proton["sw"] / 2)
     assert np.max(ppm) == proton["o1p"] + (proton["sw"] / 2)
-    assert np.min(ppm) == ppm[-1]
-    assert np.max(ppm) == ppm[0]
+    assert np.min(ppm) == pytest.approx(ppm[-1])
+    assert np.max(ppm) == pytest.approx(ppm[0])
     assert np.allclose(proton.ppm_scale(bounds=good_bounds), ppm[28658:36880])
     with pytest.raises(ValueError) as exc_info:
         proton.ppm_scale(bounds=bad_bounds)
@@ -214,12 +202,128 @@ def test_1d_ppm_hz_scales():
     assert hz.shape == (proton["si"], )
     assert np.min(hz) == proton["o1"] - (proton["sw"] * proton["sfo1"] / 2)
     assert np.max(hz) == proton["o1"] + (proton["sw"] * proton["sfo1"] / 2)
-    assert np.min(hz) == hz[-1]
-    assert np.max(hz) == hz[0]
+    assert np.min(hz) == pytest.approx(hz[-1])
+    assert np.max(hz) == pytest.approx(hz[0])
     assert np.allclose(proton.hz_scale(bounds=good_bounds), hz[28658:36880])
     with pytest.raises(ValueError) as exc_info:
         proton.hz_scale(bounds=bad_bounds)
         assert "outside spectral window" in str(exc_info)
+
+
+def test_2d_proc_data():
+    """Test 2D processed data readin."""
+    cosy = pg.read(datadir, 2)
+    rr = cosy.rr
+    assert rr.shape == (cosy["si"][0], cosy["si"][1])
+    ri = cosy.ri
+    assert ri.shape == (cosy["si"][0], cosy["si"][1])
+    ir = cosy.ir
+    assert ir.shape == (cosy["si"][0], cosy["si"][1])
+    ii = cosy.ii
+    assert ii.shape == (cosy["si"][0], cosy["si"][1])
+    # Check proc_data() accessor
+    assert np.allclose(cosy.proc_data(), rr)
+    # Check bounds on proc_data(). This assumes that ppm_to_index() works
+    # correctly.
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7"),
+                       rr[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    # Check for bad f1 and f2 bounds
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5")
+        assert "outside spectral window" in str(exc_info)
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f2_bounds="4..20")
+        assert "outside spectral window" in str(exc_info)
+
+
+def test_2d_ppm_to_index():
+    """Test ppm_to_index() for 2D datasets."""
+    cosy = pg.read(datadir, 2)
+    assert cosy.ppm_to_index(axis=0, ppm=6.629) == 244
+    assert cosy.ppm_to_index(axis=1, ppm=6.629) == 487
+    # Test out of bounds
+    with pytest.raises(ValueError) as exc_info:
+        cosy.ppm_to_index(axis=0, ppm=-2)
+        assert "outside spectral window" in str(exc_info)
+    with pytest.raises(ValueError) as exc_info:
+        cosy.ppm_to_index(axis=1, ppm=15)
+        assert "outside spectral window" in str(exc_info)
+
+
+def test_2d_ppm_hz_scales():
+    """Test ppm_scale() and hz_scale() for 2D datasets."""
+    cosy = pg.read(datadir, 2)
+
+    # f1 ppm_scale
+    ppm = cosy.ppm_scale(axis=0)
+    assert ppm.shape == (cosy["si"][0], )
+    assert np.min(ppm) == cosy["o1p"][0] - (cosy["sw"][0] / 2)
+    assert np.max(ppm) == cosy["o1p"][0] + (cosy["sw"][0] / 2)
+    assert np.min(ppm) == pytest.approx(ppm[-1])
+    assert np.max(ppm) == pytest.approx(ppm[0])
+    assert np.allclose(cosy.ppm_scale(axis=0, bounds="4..6"),
+                       ppm[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1])
+    with pytest.raises(ValueError) as exc_info:
+        cosy.ppm_scale(axis=0, bounds="-10..2")
+        assert "outside spectral window" in str(exc_info)
+    # f2 ppm_scale
+    ppm = cosy.ppm_scale(axis=1)
+    assert ppm.shape == (cosy["si"][1], )
+    assert np.min(ppm) == cosy["o1p"][1] - (cosy["sw"][1] / 2)
+    assert np.max(ppm) == cosy["o1p"][1] + (cosy["sw"][1] / 2)
+    assert np.min(ppm) == pytest.approx(ppm[-1])
+    assert np.max(ppm) == pytest.approx(ppm[0])
+    assert np.allclose(cosy.ppm_scale(axis=1, bounds="4..6"),
+                       ppm[cosy.ppm_to_index(1, 6):cosy.ppm_to_index(1, 4) + 1])
+    with pytest.raises(ValueError) as exc_info:
+        cosy.ppm_scale(axis=1, bounds="-10..2")
+        assert "outside spectral window" in str(exc_info)
+
+    # f1 hz_scale
+    hz = cosy.hz_scale(axis=0)
+    assert hz.shape == (cosy["si"][0], )
+    assert np.min(hz) == cosy["o1"][0] - (cosy["sw"][0] * cosy["sfo1"][0] / 2)
+    assert np.max(hz) == cosy["o1"][0] + (cosy["sw"][0] * cosy["sfo1"][0] / 2)
+    assert np.min(hz) == pytest.approx(hz[-1])
+    assert np.max(hz) == pytest.approx(hz[0])
+    assert np.allclose(cosy.hz_scale(axis=0, bounds="4..6"),
+                       hz[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1])
+    with pytest.raises(ValueError) as exc_info:
+        cosy.hz_scale(axis=0, bounds="-10..2")
+        assert "outside spectral window" in str(exc_info)
+    # f2 hz_scale
+    hz = cosy.hz_scale(axis=1)
+    assert hz.shape == (cosy["si"][1], )
+    assert np.min(hz) == cosy["o1"][1] - (cosy["sw"][1] * cosy["sfo1"][1] / 2)
+    assert np.max(hz) == cosy["o1"][1] + (cosy["sw"][1] * cosy["sfo1"][1] / 2)
+    assert np.min(hz) == pytest.approx(hz[-1])
+    assert np.max(hz) == pytest.approx(hz[0])
+    assert np.allclose(cosy.hz_scale(axis=1, bounds="4..6"),
+                       hz[cosy.ppm_to_index(1, 6):cosy.ppm_to_index(1, 4) + 1])
+    with pytest.raises(ValueError) as exc_info:
+        cosy.hz_scale(axis=1, bounds="-10..2")
+        assert "outside spectral window" in str(exc_info)
+
+
+# -- Tests on TopSpin-like processing functions -----
+
+def test_1d_mc():
+    proton = pg.read(datadir, 1)
+    r = proton.real
+    i = proton.imag
+    proton_mc = proton.mc()
+    si = proton["si"]
+    # Check that it's the right thing
+    assert np.all(np.greater_equal(proton_mc.real, np.zeros(si)))
+    assert np.allclose(proton_mc.real, np.abs(r + i * 1j))
+    # Check that the imaginary part has been removed
+    assert np.array_equal(proton_mc.imag, np.zeros(si))
+    # Check that mc() is idempotent
+    proton_mc_mc = proton_mc.mc()
+    assert np.allclose(proton_mc.real, proton_mc_mc.real)
+
+# TODO 2D ones should go here
 
 
 # -- Miscellaneous tests ----------------------------

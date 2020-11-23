@@ -424,7 +424,7 @@ def _stage1d(dataset: ds.TDataset1D,
     # every element.
     if len(ax.pha.plot_objs) != 0 and isinstance(ax.pha.plot_objs[0],
                                                  PlotObject2D):
-        raise TypeError("Plot queue already contains 2D spectra.")
+        raise TypeError("Plot queue already contains 1D spectra.")
     # If we reached here, then it's all good and we should make the
     # PlotObject1D then append it to the PHA.
     else:
@@ -463,7 +463,7 @@ class PlotObject1D():
         self.bounds = bounds
         self._init_options(ax, plot_options, color, label)
         self.ppm_scale = self.dataset.ppm_scale(bounds=self.bounds)
-        self.hz_scale = self.dataset.hz_scale()
+        self.hz_scale = self.dataset.hz_scale(bounds=self.bounds)
         # Handle processed data
         proc_data = self.dataset.proc_data(bounds=self.bounds)
         if dfilter is not None:
@@ -695,8 +695,10 @@ class Contours:
             self.color_negative = color_negative
 
     def generate_contour_levels(self) -> List[float]:
-        neg = [-self.base * (self.increment ** (self.number - i)) for i in range(self.number)]
-        pos = [self.base * (self.increment ** i) for i in range(self.number)]
+        neg = [-self.base * (self.increment ** (i))
+               for i in range(self.number - 1, -1, -1)]
+        pos = [self.base * (self.increment ** i)
+               for i in range(self.number)]
         return neg + pos
 
     def generate_contour_colors(self) -> List[str]:
@@ -735,8 +737,8 @@ class PlotObject2D():
         self._init_options(plot_options)
         self.label = label
         # self.options will include the colors key.
-        self.f1_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
-        self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
+        self.f1_ppm_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
+        self.f2_ppm_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
         self.f1_hz_scale = self.dataset.hz_scale(axis=0)
         self.f2_hz_scale = self.dataset.hz_scale(axis=1)
         # Handle processed data
@@ -869,7 +871,7 @@ def _stage2d(dataset: ds.Dataset2D,
     # every element.
     if len(ax.pha.plot_objs) != 0 and isinstance(ax.pha.plot_objs[0],
                                                  PlotObject1D):
-        raise TypeError("Plot queue already contains 1D spectra.")
+        raise TypeError("Plot queue already contains 2D spectra.")
     # If we reached here, then it's all good and we should make the
     # PlotObject2D then append it to the PHA.
     else:
@@ -957,13 +959,13 @@ def _mkplot2d(ax: Any = None,
     for n, pobj in enumerate(ax.pha.plot_objs):
         # Figure out which x- and y-axes to use (ppm or Hz)
         if f1_units == "ppm":
-            yaxis = pobj.f1_scale - (n * offset[0])
+            yaxis = pobj.f1_ppm_scale - (n * offset[0])
         elif f1_units == "Hz":
             yaxis = pobj.f1_hz_scale - (n * offset[0])
         else:
             raise ValueError('f1_units must be either "ppm" or "Hz".')
         if f2_units == "ppm":
-            xaxis = pobj.f2_scale - (n * offset[1])
+            xaxis = pobj.f2_ppm_scale - (n * offset[1])
         elif f2_units == "Hz":
             xaxis = pobj.f2_hz_scale - (n * offset[1])
         else:

@@ -25,19 +25,18 @@ jobs:
         cd docs/
         sphinx-build -b dirhtml . dirhtml
 
-    - name: Clone gh-pages branch and update content
+    - name: Clone gh-pages branch
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        path: gh-pages
+
+    - name: Update content
       run: |
-        git clone https://github.com/yongrenjie/penguins.git --depth 1 --branch gh-pages --single-branch gh-pages
         cp -r docs/dirhtml/* gh-pages
         cd gh-pages
         git config --local user.name "GitHub Actions"
         git config --local user.email "<>"
         git add -A
         git commit -m "Update online documentation" || true
-
-    - name: Push changes to gh-pages branch
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        directory: gh-pages
-        branch: gh-pages
+        git push

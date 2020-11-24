@@ -280,6 +280,7 @@ def hsqc_stripplot(molecule: Any,
                    ncol: int = 3,
                    loc: str = "upper center",
                    ax: Optional[Any] = None,
+                   **kwargs: Any,
                    ) -> Tuple[Any, Any]:
     """
     Plot HSQC strip plots (i.e. plot relative intensities, split by
@@ -309,6 +310,8 @@ def hsqc_stripplot(molecule: Any,
         Passed to ax.legend(). Defaults to "upper center".
     ax : matplotlib.axes.Axes, optional
         Axes instance to plot on. If not provided, uses plt.gca().
+    kwargs : dict, optional
+        Keywords passed on to sns.stripplot().
 
     Returns
     -------
@@ -338,7 +341,7 @@ def hsqc_stripplot(molecule: Any,
 
     # Plot the intensities.
     sns.stripplot(x="expt", y="int", hue="mult",
-                  dodge=True, data=all_dfs, ax=ax)
+                  dodge=True, data=all_dfs, ax=ax, **kwargs)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
     ax.legend(ncol=ncol, loc=loc,
@@ -375,6 +378,7 @@ def cosy_stripplot(molecule: Any,
                    ncol: int = 2,
                    loc: str = "upper center",
                    ax: Optional[Any] = None,
+                   **kwargs: Any,
                    ) -> Tuple[Any, Any]:
     """
     Plot COSY strip plots (i.e. plot relative intensities, split by peak type).
@@ -401,6 +405,8 @@ def cosy_stripplot(molecule: Any,
         Passed to ax.legend(). Defaults to "upper center".
     ax : matplotlib.axes.Axes, optional
         Axes instance to plot on. If not provided, uses plt.gca().
+    kwargs : dict, optional
+        Keywords passed on to sns.stripplot().
 
     Returns
     -------
@@ -430,7 +436,7 @@ def cosy_stripplot(molecule: Any,
     # Plot the intensities.
     sns.stripplot(x="expt", y="int", hue="type",
                   dodge=True, data=all_dfs, ax=ax,
-                  palette=sns.color_palette("deep")[3:])
+                  palette=sns.color_palette("deep")[3:], **kwargs)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
     ax.legend(ncol=ncol, loc=loc,
@@ -467,6 +473,7 @@ def hsqc_cosy_stripplot(molecule: Any,
                         ncol: int = 4,
                         loc: str = "upper center",
                         ax: Optional[Any] = None,
+                        **kwargs: Any,
                         ) -> Tuple[Any, Any]:
     """
     Plot HSQC and COSY relative intensities on the same Axes. HSQC peaks are
@@ -494,6 +501,8 @@ def hsqc_cosy_stripplot(molecule: Any,
         Passed to ax.legend(). Defaults to "upper center".
     ax : matplotlib.axes.Axes, optional
         Axes instance to plot on. If not provided, uses plt.gca().
+    kwargs : dict, optional
+        Keywords passed on to sns.stripplot().
 
     Returns
     -------
@@ -522,7 +531,7 @@ def hsqc_cosy_stripplot(molecule: Any,
 
     # Plot the intensities.
     sns.stripplot(x="expt", y="int", hue="type",
-                  dodge=True, data=rel_ints_df, ax=ax)
+                  dodge=True, data=rel_ints_df, ax=ax, **kwargs)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title, xticks=[])
     l = ax.legend(ncol=ncol, loc=loc,

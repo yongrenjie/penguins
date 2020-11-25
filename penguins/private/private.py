@@ -42,6 +42,32 @@ class NHsqc:
                                            mode="max")
                          for peak in self.peaks])
 
+    @property
+    def df(self) -> pd.DataFrame:
+        """
+        Return a pandas DataFrame containing all the peaks. This DF has
+        columns "f1" and "f2".
+        """
+        return pd.DataFrame.from_records(self.peaks, columns=("f1", "f2"))
+
+    def rel_ints_df(self,
+                    dataset: ds.Dataset2D,
+                    ref_dataset: ds.Dataset2D,
+                    label: str = "",
+                    ) -> pd.DataFrame:
+        """
+        Construct a dataframe of relative intensities vs a reference
+        dataset.
+
+        This DataFrame will have columns "f1", "f2", "expt", and "int".
+        """
+        df = pd.DataFrame()
+        df["int"] = self.integrate(dataset) / self.integrate(ref_dataset)
+        df["expt"] = label
+        df["f1"] = self.df["f1"]
+        df["f2"] = self.df["f2"]
+        return df
+
 
 @export
 class Hsqc:

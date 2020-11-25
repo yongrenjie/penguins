@@ -107,8 +107,8 @@ class Hsqc:
 
     def rel_ints_df(self,
                     dataset: ds.Dataset2D,
-                    label: str,
                     ref_dataset: ds.Dataset2D,
+                    label: str = "",
                     edited: bool = False,
                     ) -> pd.DataFrame:
         """
@@ -182,8 +182,8 @@ class Cosy:
 
     def rel_ints_df(self,
                     dataset: ds.Dataset2D,
-                    label: str,
                     ref_dataset: ds.Dataset2D,
+                    label: str = "",
                     ) -> pd.DataFrame:
         """
         Construct a dataframe of relative intensities vs a reference
@@ -365,8 +365,8 @@ def hsqc_stripplot(molecule: Any,
         expt_labels = [expt_labels]
     # Calculate dataframes of relative intensities.
     rel_ints_dfs = [molecule.hsqc.rel_ints_df(dataset=ds,
-                                              label=label,
                                               ref_dataset=ref_dataset,
+                                              label=label,
                                               edited=edited)
                     for (ds, label) in zip(datasets, expt_labels)]
     all_dfs = pd.concat(rel_ints_dfs)
@@ -460,8 +460,8 @@ def cosy_stripplot(molecule: Any,
         expt_labels = [expt_labels]
     # Calculate dataframes of relative intensities.
     rel_ints_dfs = [molecule.cosy.rel_ints_df(dataset=ds,
-                                              label=label,
-                                              ref_dataset=ref_dataset)
+                                              ref_dataset=ref_dataset,
+                                              label=label)
                     for (ds, label) in zip(datasets, expt_labels)]
     all_dfs = pd.concat(rel_ints_dfs)
 
@@ -551,13 +551,11 @@ def hsqc_cosy_stripplot(molecule: Any,
     """
     # Calculate dataframes of relative intensities.
     hsqc_rel_ints_df = molecule.hsqc.rel_ints_df(dataset=datasets[0],
-                                                 label="",
                                                  ref_dataset=ref_datasets[0],
                                                  edited=edited)
     # Rename mult -> type to match COSY
     hsqc_rel_ints_df = hsqc_rel_ints_df.rename(columns={"mult": "type"})
     cosy_rel_ints_df = molecule.cosy.rel_ints_df(dataset=datasets[1],
-                                                 label="",
                                                  ref_dataset=ref_datasets[1])
     cosy_rel_ints_df = cosy_rel_ints_df.replace(["diagonal", "cross"], "cosy")
     rel_ints_df = pd.concat((hsqc_rel_ints_df, cosy_rel_ints_df))

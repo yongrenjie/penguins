@@ -21,17 +21,21 @@ from .. import dataset as ds
 from ..exportdeco import export
 
 
-@export
-class NHsqc:
+# -- Experiment types -----------------------------------
+
+class Experiment:
     """
-    For 15N HSQC experiments. Just set peaks and margin.
+    Generic interface for experiments.
     """
+    default_margin = (0.5, 0.02)   # applicable for 13C experiments
+    #            use (0.02, 0.02) for 1H experiments
+    #            use (0.4, 0.05) for 15N experiments
     def __init__(self,
                  peaks: List[Tuple[float, float]],
-                 margin: Optional[Tuple[float, float]] = (0.4, 0.05),
+                 margin: Optional[Tuple[float, float]] = None,
                  ):
         self.peaks = peaks
-        self.margin = margin
+        self.margin = margin or self.default_margin
 
     def integrate(self,
                   dataset: ds.Dataset2D,
@@ -70,11 +74,29 @@ class NHsqc:
 
 
 @export
-class Hsqc:
+class Hmbc(Experiment):
+    """
+    For 13C HMBC experiments. Just call hmbc(peaks, margin) to instantiate.
+    """
+    default_margin = (0.5, 0.02)
+
+
+@export
+class NHsqc(Experiment):
+    """
+    For 15N HSQC experiments. Just call nhsqc(peaks, margin) to instantiate.
+    """
+    default_margin = (0.4, 0.05)
+
+
+@export
+class Hsqc(Experiment):
     """
     For 13C HSQC experiments. The variables ch, ch2, and ch3 should be
     lists of 2-tuples (f1_shift, f2_shift) which indicate, well, CH, CH2,
     and CH3 peaks respectively.
+
+    None of the methods from Experiment are actually inherited.
     """
     def __init__(self,
                  ch: List[Tuple[float, float]],
@@ -157,12 +179,14 @@ class Hsqc:
 
 
 @export
-class Cosy:
+class Cosy(Experiment):
     """
     For COSY experiments. The variables diagonal and cross_half should be
     lists of 2-tuples (f1_shift, f2_shift). cross_half should only contain
     half the peaks, i.e. only at (f1, f2) and not at (f2, f1). These will
     be automatically reflected.
+    
+    Only integrate() is actually inherited from Experiment.
     """
     def __init__(self,
                  diagonal: List[Tuple[float, float]],
@@ -197,15 +221,6 @@ class Cosy:
         _crossdf["type"] = "cross"
         return pd.concat((_diagdf, _crossdf), ignore_index=True)
 
-    def integrate(self,
-                  dataset: ds.Dataset2D,
-                  ) -> np.ndarray:
-        # Get absolute peak intensities for a given dataset.
-        return np.array([dataset.integrate(peak=peak,
-                                           margin=self.margin,
-                                           mode="max")
-                         for peak in self.peaks])
-
     def rel_ints_df(self,
                     dataset: ds.Dataset2D,
                     ref_dataset: ds.Dataset2D,
@@ -228,6 +243,8 @@ class Cosy:
         df["f2"] = self.df["f2"]
         return df
 
+
+# -- Molecules ------------------------------------------
 
 @export
 class Andrographolide():
@@ -316,6 +333,8 @@ class Gramicidin():
     hsqc_margin = (0.5, 0.02)
     hsqc = Hsqc(hsqc_ch, hsqc_ch2, hsqc_ch3, hsqc_margin)
 
+
+# -- Personal functions ---------------------------------
 
 # These are pure convenience routines for my personal use.
 # Default save location for plots

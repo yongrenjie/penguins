@@ -1515,47 +1515,51 @@ class Dataset1DProjVirtual(Dataset1DProj):
         it from the parent 2D rr part, using the instance variables that were
         stored during initialisation.
         """
-        # There are no imaginary parts for such a dataset. This line would be
-        # called if the user tries to access ds.imag.
-        if spectype != "real":
-            raise ValueError("_read_spec(): projections only have real parts")
-        # Otherwise, we can proceed with the actual calculation.
-        # For a slice, the projection axis and the index specifying which
-        # row/column to take are all we need.
-        if self.proj_type == "slice":
-            if self.proj_axis == 0:  # a column
-                self._real = self._rr[:, self.index]
-            elif self.proj_axis == 1:  # a row
-                self._real = self._rr[self.index, :]
-            return
-        # If we reach here, then it's a projection or sum. First we need to
-        # check the bounds to make sure we take the projection/sum of the
-        # appropriate spectral region. We make sure to not override self._rr
-        # JUST IN CASE the user ever wants it.
-        if self.index_bounds is not None:
-            if self.proj_axis == 0:  # columns
-                rr = self._rr[:, self.index_bounds]
-            elif self.proj_axis == 1:  # rows
-                rr = self._rr[self.index_bounds, :]
-        # Then make the projection / sum.
-        if self.proj_type == "projection":
-            # For positive projections, we zero out any negative elements, then
-            # take the maximum along the axis being projected along..
-            if self.sign == "positive":
-                rr[rr < 0] = 0
-                self._real = np.amax(rr, axis=(1 - self.proj_axis))
-            # And the opposite for negative projections.
-            elif self.sign == "negative":
-                rr[rr > 0] = 0
-                self._real = np.amin(rr, axis=(1 - self.proj_axis))
-        # For a sum, we just add up both positive and negative numbers without
-        # zeroing one of them. This is in line with TopSpin's behaviour.
-        elif self.proj_type == "sum":
-            self._real = np.sum(rr, axis=(1 - self.proj_axis))
-        # We should never reach here, unless the user manually instantiates a
-        # Dataset1DProjVirtual class.
+        # The imaginary part can just be 0. It does not exist, but having a
+        # zero value allows us to do things like mc() on a projection.
+        if spectype == "imag":
+            self._imag = 0
+        # This is the real part of this function. Ha ha.
+        elif spectype == "real":
+            # Otherwise, we can proceed with the actual calculation.
+            # For a slice, the projection axis and the index specifying which
+            # row/column to take are all we need.
+            if self.proj_type == "slice":
+                if self.proj_axis == 0:  # a column
+                    self._real = self._rr[:, self.index]
+                elif self.proj_axis == 1:  # a row
+                    self._real = self._rr[self.index, :]
+                return
+            # If we reach here, then it's a projection or sum. First we need to
+            # check the bounds to make sure we take the projection/sum of the
+            # appropriate spectral region. We make sure to not override self._rr
+            # JUST IN CASE the user ever wants it.
+            if self.index_bounds is not None:
+                if self.proj_axis == 0:  # columns
+                    rr = self._rr[:, self.index_bounds]
+                elif self.proj_axis == 1:  # rows
+                    rr = self._rr[self.index_bounds, :]
+            # Then make the projection / sum.
+            if self.proj_type == "projection":
+                # For positive projections, we zero out any negative elements, then
+                # take the maximum along the axis being projected along..
+                if self.sign == "positive":
+                    rr[rr < 0] = 0
+                    self._real = np.amax(rr, axis=(1 - self.proj_axis))
+                # And the opposite for negative projections.
+                elif self.sign == "negative":
+                    rr[rr > 0] = 0
+                    self._real = np.amin(rr, axis=(1 - self.proj_axis))
+            # For a sum, we just add up both positive and negative numbers without
+            # zeroing one of them. This is in line with TopSpin's behaviour.
+            elif self.proj_type == "sum":
+                self._real = np.sum(rr, axis=(1 - self.proj_axis))
+            # We should never reach here, unless the user manually instantiates a
+            # Dataset1DProjVirtual class.
+            else:
+                raise ValueError(f"invalid projection type '{self.proj_type}'")
         else:
-            raise ValueError(f"invalid projection type '{self.proj_type}'")
+            raise ValueError("_read_spec(): invalid spectype")
 
 
 TDataset1D = Union[Dataset1D, Dataset1DProj, Dataset1DProjVirtual]

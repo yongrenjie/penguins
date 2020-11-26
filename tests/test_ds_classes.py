@@ -333,6 +333,11 @@ def test_2d_project():
     assert f2_bounded.real.shape == (cosy["si"][1], )
     assert np.max(f2_bounded.real) == np.max(f2.real)
 
+    # Check that imaginary part of a projection is zero
+    assert f1.imag == 0
+    assert f2.imag == 0
+    assert f2_bounded.imag == 0
+
     # Check that manual projection is the same as TopSpin projection
     assert np.allclose(f2.real, pg.read(datadir, 2, 1001).real)
 

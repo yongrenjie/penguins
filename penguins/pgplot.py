@@ -676,7 +676,7 @@ class Contours:
                     increment: OF = None,
                     number: Optional[int] = None
                     ) -> None:
-        self.base = base or self.dataset._tsbaselev
+        self.base = base or self.dataset.ts_baselev
         self.increment = increment or 1.5
         self.number = number or 10
 
@@ -1067,7 +1067,7 @@ def _find_baselev(dataset: ds.Dataset2D,
     # plotting is faster -- otherwise it's super laggy. We try to cover the
     # same dynamic range as 1.5 ** 10 by default, unless the user specified
     # an increment.
-    initial_baselev = dataset._tsbaselev
+    initial_baselev = dataset.ts_baselev
     increment = increment or (1.5 ** 10) ** (1 / nlev)
     initial_clev = (initial_baselev, increment, nlev)
     # Maximum level of the slider should be the greatest intensity of the

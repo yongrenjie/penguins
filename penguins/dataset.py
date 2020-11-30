@@ -718,6 +718,12 @@ class _2D_ProcDataMixin():
             self._read_spec(spectype="ii")
             return self._ii
 
+    @property
+    def ts_baselev(self):
+        """TopSpin base level for contours."""
+        return self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
+
+
     def _find_proc_data_paths(self) -> None:
         self.path: Path
         self._p_rr = self.path / "2rr"
@@ -757,8 +763,6 @@ class _2D_ProcDataMixin():
         # Read the spectra
         if spectype == "rr":
             self._rr = _read_one_spec(self._p_rr)
-            # Calculate a suitable baselev
-            self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
         elif spectype == "ri":
             self._ri = _read_one_spec(self._p_ri)
         elif spectype == "ir":

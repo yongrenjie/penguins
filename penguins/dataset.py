@@ -887,7 +887,7 @@ class _2D_ProcDataMixin():
         f1_mass = f1[:-len(f1_elem)]
         f2_elem = f2.lstrip("1234567890")
         f2_mass = f2[:-len(f2_elem)]
-        return (rf"$^{{{f1_mass}}}${f1_elem}", rf"$^{{{f2_mass}}}${f2_elem}")
+        return (rf"$\rm ^{{{f1_mass}}}{f1_elem}$", rf"$\rm ^{{{f2_mass}}}{f2_elem}$")
 
     def to_magnitude(self, axis: int) -> _2D_ProcDataMixin:
         """
@@ -1056,7 +1056,7 @@ class Dataset1D(_1D_RawDataMixin,
         nuc = self["nuc1"]          # type: ignore
         elem = nuc.lstrip("1234567890")
         mass = nuc[:-len(elem)]
-        return rf"$^{{{mass}}}${elem}"
+        return rf"$\rm ^{{{mass}}}{elem}$"
 
 
 class Dataset1DProj(_2D_RawDataMixin,
@@ -1174,7 +1174,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         nuc = self["nuc1"][self.proj_axis]   # type: ignore
         elem = nuc.lstrip("1234567890")
         mass = nuc[:-len(elem)]
-        return rf"$^{{{mass}}}${elem}"
+        return rf"$\rm ^{{{mass}}}{elem}$"
 
 
 class Dataset2D(_2D_RawDataMixin,

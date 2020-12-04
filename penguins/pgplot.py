@@ -553,7 +553,7 @@ def _mkplot1d(ax: Any = None,
         is ``nucl`` (the default), which generates a LaTeX representation of
         the nucleus of the first staged spectrum (e.g. for a proton spectrum,
         using this would automatically generate the *x*-axis label
-        ``r"$^{1}$H (ppm)"``).
+        ``r"$\\rm ^{1}H$ (ppm)"``).
     xlabel : str, optional
         *x*-Axis label. Overrides the autolabel parameter if given.
     legend_loc : str or (float, float), optional
@@ -916,9 +916,9 @@ def _mkplot2d(ax: Any = None,
         Automatic label to use for the *x*-axis. The ``nucl`` option generates
         a LaTeX representation of the nuclei of the first spectrum (e.g. for a
         C–H HSQC, using this would automatically generate the *x*- and *y*-axis
-        labels ``r"$^{1}$H (ppm)"`` and ``r"$^{13}$C (ppm)"`` respectively).
-        The ``f1f2`` option  generates generic ``f1 (ppm)`` and ``f2 (ppm)``
-        strings. There are no other options for now.
+        labels ``r"$\\rm ^{1}H$ (ppm)"`` and ``r"$\\rm ^{13}C$ (ppm)"``
+        respectively).  The ``f1f2`` option  generates generic ``f1 (ppm)`` and
+        ``f2 (ppm)`` strings. There are no other options for now.
     xlabel : str, optional
         *x*-Axis label. If either *xlabel* or *ylabel* are set, they will
         override the *autolabel* parameter (if only one is set then the other
@@ -1301,5 +1301,3 @@ def pause(*args, **kwargs) -> None:
     """Direct wrapper around |pause|.
     """
     return plt.pause(*args, **kwargs)
-
-

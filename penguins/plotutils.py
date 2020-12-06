@@ -149,6 +149,25 @@ def cleanup_figure(padding: float = 0.02
 
 
 @export
+def move_xlabel(ax: Any,
+                pos: str,
+                remove_ticks: int = 0,
+                tight_layout: bool = True,
+                ) -> None:
+    if pos == "right":
+        max, min = ax.get_xlim()
+        # Move the label
+        ax.xaxis.label.set_horizontalalignment("center")
+        ax.xaxis.label.set_verticalalignment("top")
+        ax.xaxis.set_label_coords(1.02, -0.05)
+    else:
+        raise ValueError(f"Invalid position '{pos}' provided.")
+
+    if tight_layout:
+        plt.tight_layout()
+
+
+@export
 def move_ylabel(ax: Any,
                 pos: str,
                 remove_ticks: int = 0,
@@ -171,7 +190,7 @@ def move_ylabel(ax: Any,
         ax.yaxis.label.set_rotation(0)  # right way up
         ax.yaxis.label.set_horizontalalignment("left")
         ax.yaxis.label.set_verticalalignment("top")
-        ax.yaxis.set_label_coords(1.03, 1)
+        ax.yaxis.set_label_coords(1.05, 1)
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
 

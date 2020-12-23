@@ -253,11 +253,13 @@ class Andrographolide():
     """
     hsqc_ch = [(146.6206, 6.6294), (65.0306, 4.9207), (78.9220, 3.2353),
                (54.8319, 1.2222), (56.0628, 1.8698)]
-    hsqc_ch2 = [(108.6390, 4.8192), (108.6390, 4.6320), (74.7018, 4.3979),
-                (74.7018, 4.0390), (63.0964, 3.8517), (63.0964, 3.2587),
-                (24.5873, 2.5096), (37.0720, 1.2144), (37.9512, 1.9400),
-                (36.8961, 1.7138), (37.9512, 2.3380), (24.4115, 1.3705),
-                (24.4115, 1.7528), (28.4558, 1.6435)]
+    hsqc_ch2 = [(108.6390, 4.8192), (108.6390, 4.6320),
+                (74.7018, 4.3979), (74.7018, 4.0390),
+                (63.0964, 3.8517), (63.0964, 3.2587),
+                (37.9512, 2.3380), (37.9512, 1.9400),
+                (37.0720, 1.2144), (36.8961, 1.7138),
+                (28.4558, 1.6435), (24.5873, 2.5096),
+                (24.4115, 1.7528), (24.4115, 1.3705)]
     hsqc_ch3 = [(23.5323, 1.0896), (15.0919, 0.6682)]
     hsqc = Hsqc(hsqc_ch, hsqc_ch2, hsqc_ch3)
 
@@ -383,6 +385,7 @@ def hsqc_stripplot(molecule: Any,
                    ylabel: str = "Intensity",
                    title: str = "",
                    edited: bool = False,
+                   show_averages: bool = True,
                    ncol: int = 3,
                    loc: str = "upper center",
                    ax: Optional[Any] = None,
@@ -410,6 +413,8 @@ def hsqc_stripplot(molecule: Any,
         Axes title, defaults to empty string
     edited : bool, default False
         Whether editing is enabled or not.
+    show_averages : bool, default True
+        Whether to indicate averages in each category using sns.pointplot.
     ncol : int, optional
         Passed to ax.legend(). Defaults to 4.
     loc : str, optional
@@ -446,12 +451,21 @@ def hsqc_stripplot(molecule: Any,
         ax = plt.gca()
 
     # Plot the intensities.
+    stripplot_alpha = 0.3 if show_averages else 0.8
     sns.stripplot(x="expt", y="int", hue="mult",
+                  zorder=0, alpha=stripplot_alpha,
                   dodge=True, data=all_dfs, ax=ax, **kwargs)
+    if show_averages:
+        sns.pointplot(x="expt", y="int", hue="mult", zorder=1,
+                      dodge=0.5, data=all_dfs, ax=ax, join=False,
+                      markers='_', palette="dark", ci=None, scale=1.25)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
-    ax.legend(ncol=ncol, loc=loc,
-              labels=["CH", r"CH$_2$", r"CH$_3$"]).set(title=None)
+    handles, _ = ax.get_legend_handles_labels()
+    l = ax.legend(ncol=ncol, loc=loc,
+                  markerscale=0.4,
+                  handles=handles[0:3],
+                  labels=["CH", r"CH$_2$", r"CH$_3$"])
     ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
     # Set y-limits. We need to expand it by ~20% to make space for the legend,
     # as well as the averaged values.
@@ -576,6 +590,7 @@ def hsqc_cosy_stripplot(molecule: Any,
                         ylabel: str = "Intensity",
                         title: str = "",
                         edited: bool = False,
+                        show_averages: bool = True,
                         ncol: int = 4,
                         loc: str = "upper center",
                         ax: Optional[Any] = None,
@@ -601,6 +616,8 @@ def hsqc_cosy_stripplot(molecule: Any,
         Axes title, defaults to empty string
     edited : bool, default False
         Whether editing in the HSQC is enabled or not.
+    show_averages : bool, default True
+        Whether to indicate averages in each category using sns.pointplot.
     ncol : int, optional
         Passed to ax.legend(). Defaults to 4.
     loc : str, optional
@@ -634,11 +651,23 @@ def hsqc_cosy_stripplot(molecule: Any,
         ax = plt.gca()
 
     # Plot the intensities.
+    stripplot_alpha = 0.3 if show_averages else 0.8
     sns.stripplot(x="expt", y="int", hue="type",
+                  zorder=0, alpha=stripplot_alpha,
                   dodge=True, data=rel_ints_df, ax=ax, **kwargs)
+    if show_averages:
+        sns.pointplot(x="expt", y="int", hue="type", zorder=1,
+                      dodge=0.6, data=rel_ints_df, ax=ax, join=False,
+                      markers='_', palette="dark", ci=None, scale=1.25)
+
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title, xticks=[])
+    # Setting the handles manually ensures that we get stripplot handles
+    # rather than the pointplot ones (if present).
+    handles, _ = ax.get_legend_handles_labels()
     l = ax.legend(ncol=ncol, loc=loc,
+                  markerscale=0.4,
+                  handles=handles[0:4],
                   labels=["HSQC CH", r"HSQC CH$_2$", r"HSQC CH$_3$", "COSY"])
     l.set(title=None)
     ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
@@ -651,12 +680,18 @@ def hsqc_cosy_stripplot(molecule: Any,
     new_ymin = ymean - (EXPANSION_FACTOR * ylength)
     new_ymax = ymean + (EXPANSION_FACTOR * ylength)
     ax.set_ylim((new_ymin, new_ymax))
-    # add the text
+
+    # Add the text and averages
     for x, (_, expt_avgs) in enumerate(avgd_ints.items()):
-        for i, ((_, avg), color) in enumerate(zip(expt_avgs.items(),
-                                                  sns.color_palette("deep"))):
+        for i, ((_, avg), deep, dark) in enumerate(zip(expt_avgs.items(),
+                                                       sns.color_palette("deep"),
+                                                       sns.color_palette("dark"))):
             ax.text(x=x-0.3+i*0.2, y=0.02, s=f"({avg:.2f})",
-                    color=color, horizontalalignment="center",
+                    color=deep, horizontalalignment="center",
                     transform=ax.get_xaxis_transform())
+            # I prefer pointplot() over this.
+            # if show_averages:
+            #     ax.hlines(y=avg, xmin=(x-0.35+i*0.2), xmax=(x-0.25+i*0.2),
+            #               color=dark, zorder=1, linewidth=2)
     style_axes(ax, "plot")
     return plt.gcf(), ax

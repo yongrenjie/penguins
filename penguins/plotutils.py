@@ -172,6 +172,8 @@ def move_ylabel(ax: Any,
                 pos: str,
                 remove_ticks: int = 0,
                 tight_layout: bool = True,
+                dx: float = 0,
+                dy: float = 0,
                 ) -> None:
     if pos == "topright":
         # move yticks to right
@@ -190,7 +192,7 @@ def move_ylabel(ax: Any,
         ax.yaxis.label.set_rotation(0)  # right way up
         ax.yaxis.label.set_horizontalalignment("left")
         ax.yaxis.label.set_verticalalignment("top")
-        ax.yaxis.set_label_coords(1.05, 1)
+        ax.yaxis.set_label_coords(1.03 + dx, 1 + dy)
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
 

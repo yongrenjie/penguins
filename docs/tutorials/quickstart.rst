@@ -13,7 +13,7 @@ This returns one of several possible Dataset objects, depending on the dimension
    >>> pg.read("tests/data/rot1", 2)
    Dataset1D('/Users/yongrenjie/penguins/tests/data/rot1/2/pdata/1')
 
-(If you are not familiar with TopSpin's directory layout yet, see `topspin`.)
+(If you are not familiar with TopSpin's directory layout yet, see :doc:`/topspin`.)
 Note that penguins is only capable of reading Bruker data, and there is no support for 3D or higher spectra.
 
 
@@ -38,7 +38,6 @@ The first element is always the value for the indirect dimension (f1), and the s
 
 Penguins does not aspire to be a full processing package; it mainly focuses on plotting.
 However, there are some functions for processing datasets, including integration and generation of projections/slices.
-See :doc:`datasets` for more information.
 
 
 Plotting spectra
@@ -87,5 +86,3 @@ There are a few details worth mentioning here, since these are likely to be freq
  - Contour levels are specified using the *levels* parameter as a tuple of ``(baselev, increment, nlev)``. In total, ``nlev`` positive contours will be drawn at heights of ``baselev``, ``baselev * increment``, ``baselev * (increment ** 2)``, ..., and ``nlev`` negative contours will be drawn at the corresponding negative values.
 
  - In the second stage of plot construction, the *autolabel* parameter generates nice axes labels that show the nucleus being measured.
-
-From here, you may want to consider reading :doc:`paradigm` to get to know penguins' overall approach to plotting.

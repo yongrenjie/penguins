@@ -6,7 +6,7 @@ The following "basic" pages cover bite-sized pieces and can largely be read in s
 
 * `quickstart`  <-- This needs to be heavily simplified and split up into the next three.
 
-* Reading data (TODO)
+* `Reading data <read_tutorial>`
 
 * 1D plotting (TODO)
 

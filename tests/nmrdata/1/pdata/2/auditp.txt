@@ -1,0 +1,84 @@
+##TITLE= Audit trail, TopSpin 4.1.0
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ /Users/yongrenjie/penguins/tests/nmrdata/1/pdata/2/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-15 20:37:27.267 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<go4>,<TopSpin 3.6.2>,
+      <created by zg
+	started at 2020-11-15 20:36:04.866 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       6B C2 84 CB D3 8F AB 41 65 C0 4E FD DE 35 F2 F4
+       data hash MD5: 64K
+       47 4A 53 AE DE FE 57 70 9F 5F 1A 5D EB 6D 08 75>)
+(   2,<2020-11-15 20:37:32.470 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <Start of raw data processing
+       efp LB = 0.3 FT_mod = 6 PKNL = 1 PHC0 = 268.5477 PHC1 = -46.89809 SI = 64K 
+       data hash MD5: 64K
+       FE E5 8C 3E 64 A9 BD FE 4E 5D 88 B2 E7 92 BE 6C>)
+(   3,<2020-11-15 20:37:34.407 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <apk 
+       data hash MD5: 64K
+       4E 29 AC 4C 32 D6 12 18 6A 3B 25 81 FD AE 96 D3>)
+(   4,<2020-11-15 20:37:35.032 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <abs ABSG = 5 
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+(   5,<2020-11-15 20:39:59.024 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<audit>,<TopSpin 3.6.2>,
+      <user comment:
+       TITLE=1H
+       This dataset is similar to 200925, but all decoupling is done with GARP now, and there are a couple of additions.TITLE_END
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+$$ /Users/yongrenjie/penguins/tests/data/1d/1/pdata/1/auditp.txt
+(   6,<2020-11-21 13:25:43.374 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=1H, fully processedTITLE_END
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+$$ /Users/yongrenjie/penguins/tests/nmrdata/1/pdata/1/auditp.txt
+(   7,<2020-11-21 13:37:13.055 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=1D protonTITLE_END
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+(   8,<2021-01-01 22:31:20.933 +0000>,<yongrenjie>,<Empoleon.local>,<dirdata>,<TopSpin 4.1.0>,
+      <wrp from 1 1 "nmrdata" "/Users/yongrenjie/penguins/tests"
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+$$ /Users/yongrenjie/penguins/tests/nmrdata/1/pdata/2/auditp.txt
+(   9,<2021-01-01 22:31:28.456 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=1D proton processed with GMTITLE_END
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+(  10,<2021-01-01 22:31:33.722 +0000>,<yongrenjie>,<Empoleon.local>,<proc1d>,<TopSpin 4.1.0>,
+      <Start of raw data processing
+       gfp LB = -2 GB = 0.2 FT_mod = 6 PKNL = 1 PHC0 = 270.7441 PHC1 = -47.67344 SI = 64K 
+       data hash MD5: 64K
+       9E 20 13 BF EA A8 45 9F A1 60 C4 19 77 0C 76 3A>)
+(  11,<2021-01-03 16:17:58.856 +0000>,<yongrenjie>,<Empoleon.local>,<proc1d>,<TopSpin 4.1.0>,
+      <Start of raw data processing
+       gfp LB = -2 GB = 0.25 FT_mod = 6 PKNL = 1 PHC0 = 270.7441 PHC1 = -47.67344 SI = 64K 
+       data hash MD5: 64K
+       DD F8 C8 CD F5 A9 F9 9A 75 A8 FC 64 4A CE E4 B1>)
+(  12,<2021-01-03 16:18:01.956 +0000>,<yongrenjie>,<Empoleon.local>,<proc1d>,<TopSpin 4.1.0>,
+      <Start of raw data processing
+       gfp LB = -2 GB = 0.2 FT_mod = 6 PKNL = 1 PHC0 = 270.7441 PHC1 = -47.67344 SI = 64K 
+       data hash MD5: 64K
+       9E 20 13 BF EA A8 45 9F A1 60 C4 19 77 0C 76 3A>)
+(  13,<2021-01-03 16:18:06.938 +0000>,<yongrenjie>,<Empoleon.local>,<proc1d>,<TopSpin 4.1.0>,
+      <Start of raw data processing
+       gfp LB = -2 GB = 0.3 FT_mod = 6 PKNL = 1 PHC0 = 270.7441 PHC1 = -47.67344 SI = 64K 
+       data hash MD5: 64K
+       66 73 71 44 D6 89 EC FF 14 A4 95 EF 29 5C 99 E4>)
+(  14,<2021-01-03 16:18:10.023 +0000>,<yongrenjie>,<Empoleon.local>,<proc1d>,<TopSpin 4.1.0>,
+      <Start of raw data processing
+       gfp LB = -2 GB = 0.2 FT_mod = 6 PKNL = 1 PHC0 = 270.7441 PHC1 = -47.67344 SI = 64K 
+       data hash MD5: 64K
+       9E 20 13 BF EA A8 45 9F A1 60 C4 19 77 0C 76 3A>)
+##END=
+
+$$ hash MD5
+$$ C6 12 50 78 D8 AC AE DC 6C B1 15 44 5E 8C 63 E8

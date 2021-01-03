@@ -43,7 +43,12 @@ $$ /Users/yongrenjie/penguins/tests/nmrdata/1/pdata/1/auditp.txt
        TITLE=1D protonTITLE_END
        data hash MD5: 64K
        22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
+(   8,<2021-01-01 22:31:46.053 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=1D proton processed with EMTITLE_END
+       data hash MD5: 64K
+       22 7C 40 87 66 D0 63 BC A8 1A 5F 35 25 FA D3 2C>)
 ##END=
 
 $$ hash MD5
-$$ 82 B0 13 6D A2 35 B5 AC 88 68 D9 E3 A2 EF 40 FE
+$$ AB AC 90 C7 1D 32 25 AC 76 1E 62 0A 1E C1 F0 5B

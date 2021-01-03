@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 4.1.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2021-01-01 22:31:20.932 +0000  yongrenjie@Empoleon.local
+$$ /Users/yongrenjie/penguins/tests/nmrdata/1/pdata/2/outd
+$$ process /opt/topspin4.1.0/prog/mod/dirdata
+##$CURPLOT= <\\octopus-crl\HP LaserJet 1022>
+##$CURPRIN= <$\\octopus-crl\HP LaserJet 1022>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/1D_H.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

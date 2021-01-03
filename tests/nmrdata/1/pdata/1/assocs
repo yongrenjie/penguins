@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TopSpin 4.1.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 2	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2021-01-03 16:17:50.513 +0000  yongrenjie@Empoleon.local
+$$ /Users/yongrenjie/penguins/tests/nmrdata/1/pdata/1/assocs
+$$ process /opt/topspin4.1.0/prog/mod/dataserver
+##$MULTDISP= </Users/yongrenjie/penguins/tests/nmrdata/1/pdata/2>
+##END=

@@ -1,27 +1,25 @@
 Tutorials
 =========
 
-If you are new to penguins, then this is the place to start.
-The following "basic" pages cover bite-sized pieces and can largely be read in sequence.
+If you are new to penguins, then this is the place to start: each tutorial covers a bite-sized piece, and can be read in sequence.
 
-* `quickstart`  <-- This needs to be heavily simplified and split up into the next three.
-
-* `Reading data <read_tutorial>`
-
-* 1D plotting (TODO)
-
-* 2D plotting (TODO)
-
-The following "intermediate" topics cover some common use cases:
-
-* Processing datasets (TODO) (projections, sums, magnitude mode, integration)
-
-* Adding text (TODO)
-
-* Having multiple spectra on a figure (TODO)
+Tutorials 1 through 5 introduce penguins' basic functionality, whereas tutorials 6 through 9 cover "intermediate" topics which are common use cases.
 
 .. toctree::
    :maxdepth: 2
 
-   quickstart
-   subplots
+   read
+   plot
+   customise_1d
+   multiple_1d
+   customise_2d
+
+
+Intermediate tutorials (to be written):
+
+* Interfacing with matplotlib
+
+* Processing datasets (TODO) (projections, sums, magnitude mode, integration)
+
+* Adding text (TODO)
+* Having multiple spectra on a figure (TODO) See: :doc:`subplots`

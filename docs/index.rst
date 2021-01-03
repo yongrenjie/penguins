@@ -14,8 +14,8 @@ The current penguins version is |version|. penguins requires Python 3.7 or above
 As of the current version, penguins only supports Bruker data, and can only work with processed data; there are no functions for working with raw data.
 
 
-How to use this documentation
------------------------------
+About this documentation
+------------------------
 
 The documentation is divided into five major sections (largely adhering to the principles outlined by `Divio <https://documentation.divio.com/introduction/>`_):
 
@@ -28,6 +28,15 @@ The documentation is divided into five major sections (largely adhering to the p
 4. **Explanations**: a more in-depth look at how penguins works behind the scenes.
 
 5. **Reference**: a full description of the penguins API.
+
+
+I have a question!
+------------------
+
+Please `create an issue on GitHub <https://github.com/yongrenjie/penguins/issues>`_.
+All comments/questions are more than welcome!
+
+If you are thinking of making a pull request, please get in touch first (via an issue).
 
 
 Contents

@@ -33,6 +33,8 @@ master_doc = 'index'
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx_math_dollar",
+    "sphinx.ext.mathjax",
     "numpydoc",
     "matplotlib.sphinxext.plot_directive"
 ]
@@ -49,7 +51,7 @@ plot_html_show_source_link = False
 # Code to run before each plot
 plot_pre_code = ""
 # Path to run in when generating plots
-plot_working_directory = os.path.abspath("..")
+plot_working_directory = os.path.abspath("../tests/nmrdata")
 # Make high-quality images...! The low-res PNGs are horrible advertising
 plot_formats = ["svg"]
 # Don't display links to the source code / images.
@@ -114,7 +116,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = 'alabaster'
 html_theme_options = {
-    "page_width": "1200px",
+    "sidebar_width": "270px",
+    "page_width": "1000px",
+    "show_relbar_bottom": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

@@ -1,17 +1,11 @@
 How-tos
 =======
 
-There's necessarily going to be a lot of overlap with matplotlib.
+* Subplots
 
-Possible candidates here:
+* Add text
 
-* How to customise 1D plots?
-
-* How to customise 2D plots?
-
-* How to compare two spectra? (this would use all the tools in the tutorial)
-
-* How to read NUS data?
+* NUS data
 
 * How to create own layouts for plots (e.g. 5 spectra)?
 
@@ -23,4 +17,6 @@ Possible candidates here:
 .. toctree::
    :maxdepth: 2
 
+   subplots
    nus
+

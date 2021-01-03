@@ -125,14 +125,6 @@ def _try_convert(x: Any, type: Any):
             return x
 
 
-# Parameters that are lists, i.e. can be followed by a number.
-_list_params = ("AMP AMPCOIL BWFAC CAGPARS CNST CPDPRG D FCUCHAN FN_INDIRECT"
-                " FS GPNAM GPX GPY GPZ HGAIN HPMOD IN INF INP INTEGFAC L"
-                " MULEXPNO P PACOIL PCPD PEXSEL PHCOR PL PLW PLWMAX PRECHAN"
-                " PROBINPUTS RECCHAN RECPRE RECPRFX RECSEL RSEL S SELREC SP"
-                " SPNAM SPOAL SPOFFS SPPEX SPW SUBNAM SWIBOX TD_INDIRECT"
-                " TE_STAB TL TOTROT XGAIN").split()
-
 def _parse_bounds(b: TBounds = "",
                   ) -> Tuple[OF, OF]:
     """
@@ -163,13 +155,24 @@ def _parse_bounds(b: TBounds = "",
             return b[0], b[1]
 
 
+# Parameters that are lists, i.e. can be followed by a number.
+_list_pars = """AMP AMPCOIL BWFAC CAGPARS CNST CPDPRG D FCUCHAN FN_INDIRECT FS
+GPNAM GPX GPY GPZ HGAIN HPMOD IN INF INP INTEGFAC L MULEXPNO P PACOIL PCPD
+PEXSEL PHCOR PL PLW PLWMAX PRECHAN PROBINPUTS RECCHAN RECPRE RECPRFX RECSEL
+RSEL S SELREC SP SPNAM SPOAL SPOFFS SPPEX SPW SUBNAM SWIBOX TD_INDIRECT TE_STAB
+TL TOTROT XGAIN""".split()
+
+# Parameters that should be integers, not floats. Taken from TopSpin 4.10 AU
+# programming documentation.
+_int_pars = """ABSG AQORDER AQSEQ AQ_MOD BC_MOD BYTORDA BYTORDP DATMOD DIGMOD
+DIGTYP DS EXPNO2 EXPNO3 FNMODE FT_MOD HGAIN HOLDER HPMOD HPPRGN INTBC L LOCSHFT
+LPBIN MASR MC2 ME_MOD NBL NC NCOEF NC_PROC NLEV NS NSP NZP OVERFLW PARMODE
+PH_MOD PKNL POWMOD PPARMOD PRGAIN PSCAL PSIGN PROCNO2 PROCNO3 QNP REVERSE RO
+RSEL SI STSI STSR SYMM TD TD0 TDEFF TDOFF TILT WBST WDW XDIM XGAIN YMAX_P
+YMIN_P""".split()
+
+
 # -- Fundamental Dataset methods ------------------------
-
-# Parameters that should be integers, not floats.
-# TODO: there are MANY more of these. Every dropdown list (e.g. FnTYPE) should
-# be an int parameter.
-_int_pars = "TD SI NS XDIM NUSTD BYTORDA BYTORDP DTYPA DTYPP".split()
-
 
 class _parDict(UserDict):
     """Modified dictionary for storing acquisition & processing parameters.
@@ -186,15 +189,14 @@ class _parDict(UserDict):
 
     The lookup function attempts to be clever and convert the parameters to
     floats if possible; otherwise, the parameters are stored as strings. There
-    are currently several exceptions to this rule, such as ``TD`` and ``SI``,
-    which are stored as ints. However, this list is not complete, and if there
-    is a parameter that should be an int but isn't, it would be great if you
-    could report it.
+    are a number of exceptions to this rule, such as ``TD`` and ``SI``, which
+    should be ints and not floats. The list of such parameters is extracted
+    from the TopSpin documentation.
 
     For 2D spectra, string parameters are stored as a tuple of *(f1_value,
-    f2_value)*. Float parameters are stored as a |ndarray| to facilitate
-    elementwise manipulations (e.g. calculating ``O1P`` in both dimensions at
-    one go).
+    f2_value)*. Float and int parameters are stored as a |ndarray| to
+    facilitate elementwise manipulations (e.g. calculating ``O1P`` in both
+    dimensions at one go).
     """
 
     def _editkey(self, key: object):
@@ -247,7 +249,7 @@ class _parDict(UserDict):
         parl = par.rstrip("1234567890")
         parr = par[len(parl):]
         # Get the parameter
-        if (parr != "") and (parl in _list_params):  # e.g. cnst2
+        if (parr != "") and (parl in _list_pars):  # e.g. cnst2
             with open(fp, "r") as file:
                 # Read up to the line declaring the parameters
                 for line in file:
@@ -498,7 +500,8 @@ class _1D_ProcDataMixin():
             if not spec_path.exists():
                 raise FileNotFoundError(f"processed data file {spec_path}"
                                         " not found.")
-            return np.fromfile(spec_path, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
+            return (np.fromfile(spec_path, dtype=np.dtype(dt))
+                    * (2 ** float(self["nc_proc"])))          # type: ignore # mixin
 
         if spectype == "real":
             self._real = _read_one_spec(self._p_real)
@@ -721,7 +724,9 @@ class _2D_ProcDataMixin():
     @property
     def ts_baselev(self):
         """TopSpin base level for contours."""
-        return self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
+        return (self["s_dev"][1]
+                * 35
+                * (2 ** float(self["nc_proc"][1])))   # type: ignore # mixin
 
 
     def _find_proc_data_paths(self) -> None:
@@ -758,7 +763,7 @@ class _2D_ProcDataMixin():
             sp = np.hsplit(sp, nrows)
             sp = np.concatenate(sp, axis=0)
             sp = sp.reshape(self["si"])                              # type: ignore # mixin
-            return sp * (2 ** self["nc_proc"][1])                    # type: ignore # mixin
+            return sp * (2 ** float(self["nc_proc"][1]))             # type: ignore # mixin
 
         # Read the spectra
         if spectype == "rr":

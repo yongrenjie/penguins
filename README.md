@@ -1,6 +1,7 @@
 [![GitHub Actions Build Status](https://github.com/yongrenjie/penguins/workflows/tests/badge.svg?branch=dev-0.2)](https://github.com/yongrenjie/penguins/actions)
 [![CodeCov coverage](https://codecov.io/gh/yongrenjie/penguins/branch/dev-0.2/graph/badge.svg?token=S8U2LJFVPY)](https://codecov.io/gh/yongrenjie/penguins)
 [![PyPI version](https://badge.fury.io/py/penguins.svg)](https://badge.fury.io/py/penguins)
+[![License](https://img.shields.io/github/license/yongrenjie/penguins)](https://en.wikipedia.org/wiki/MIT_License)
 
 ## Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra
 

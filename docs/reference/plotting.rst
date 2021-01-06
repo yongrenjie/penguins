@@ -1,8 +1,8 @@
 Plotting spectra
-----------------
+================
 
 General plotting
-****************
+----------------
 
 .. currentmodule:: penguins
 
@@ -39,7 +39,7 @@ General plotting
 |v|
 
 1D plotting interfaces
-**********************
+----------------------
 
 .. currentmodule:: penguins.pgplot
 
@@ -52,7 +52,7 @@ General plotting
 |v|
 
 2D plotting interfaces
-**********************
+----------------------
 
 .. autofunction:: _stage2d
 
@@ -67,7 +67,7 @@ General plotting
 |v|
 
 Auxiliary plotting utilities
-****************************
+----------------------------
 
 .. currentmodule:: penguins
 

@@ -1,8 +1,3 @@
-.. penguins documentation master file, created by
-   sphinx-quickstart on Wed Jun 10 13:21:50 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 .. |penguin| replace:: 🐧
 
 Welcome to penguins!
@@ -10,20 +5,39 @@ Welcome to penguins!
 
 |penguin| *Penguins: an Easy and NullPointerException-free Gateway to Unpacking and Illustrating NMR Spectra* |penguin|
 
-**Penguins** is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
+**Penguins** is a Python 3 package intended for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
 
-The current penguins version is |version|. Penguins requires Python >= 3.7, and can be installed via ``pip``::
+The current penguins version is |version|. penguins requires Python 3.7 or above, and can be installed via ``pip``::
 
    pip install penguins
 
-At the time of writing, it only supports Bruker data, and can only work with processed data. It is not intended to be an NMR processing suite, so does not have any functions for dealing with raw data (e.g. Fourier transformation).
+As of the current version, penguins only supports Bruker data, and can only work with processed data; there are no functions for working with raw data.
 
-To get started, head over to the :doc:`quickstart` page.
 
-.. note::
-   All code examples in the documentation, such as the following, can be run directly from the top-level penguins directory.
+About this documentation
+------------------------
 
-.. plot:: examples/index.py
+The documentation is divided into five major sections (largely adhering to the principles outlined by `Divio <https://documentation.divio.com/introduction/>`_):
+
+1. **Tutorials**: intended as a brief introduction to penguins' core features.
+
+2. **How-to guides**: ways of accomplishing specific tasks which are likely to occur frequently.
+
+3. **Gallery**: case studies from real-life plots with step-by-step walkthroughs.
+
+4. **Explanations**: a more in-depth look at how penguins works behind the scenes.
+
+5. **Reference**: a full description of the penguins API.
+
+
+I have a question!
+------------------
+
+Please `create an issue on GitHub <https://github.com/yongrenjie/penguins/issues>`_.
+All comments/questions are more than welcome!
+
+If you are thinking of making a pull request, please get in touch first (via an issue).
+
 
 Contents
 ========
@@ -32,13 +46,11 @@ Contents
    :maxdepth: 2
    
    install
-   quickstart
-   datasets
-   paradigm
-   subplots
-   nus
+   tutorials/index
+   howto/index
+   explanations/index
    topspin
-   reference
+   reference/index
 
 * :ref:`genindex`
 * :ref:`search`

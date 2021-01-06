@@ -1,5 +1,5 @@
-Datasets
---------
+Reference: Datasets
+===================
 
 .. currentmodule:: penguins.dataset
 
@@ -32,7 +32,7 @@ Datasets
 |v|
 
 1D mixins
-*********
+---------
 
 .. autoclass:: _1D_RawDataMixin
    :members: ..
@@ -61,7 +61,7 @@ Datasets
 |v|
 
 2D mixins
-*********
+---------
 
 .. autoclass:: _2D_RawDataMixin
    :members: ..
@@ -77,6 +77,7 @@ Datasets
    .. automethod:: to_magnitude
    .. automethod:: xf1m
    .. automethod:: xf2m
+   .. automethod:: xfbm
 
 |v|
 
@@ -89,7 +90,7 @@ Datasets
 |v|
 
 Actual Dataset classes
-**********************
+----------------------
 
 These are the classes that the user will see.
 Even then, much of the interface is abstracted away: for example, the staging and plotting functions have a unified interface that delegate to different methods behind the scenes depending on the object that is being staged / plotted.

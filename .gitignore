@@ -9,3 +9,4 @@ penguins.egg-info/
 docs/dirhtml
 build/*
 dist/*
+.envrc

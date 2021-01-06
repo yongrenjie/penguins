@@ -18,7 +18,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'penguins'
-copyright = '2020, Jonathan Yong'
+copyright = '2020–2021, Jonathan Yong'
 author = 'Jonathan Yong'
 
 
@@ -33,6 +33,8 @@ master_doc = 'index'
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx_math_dollar",
+    "sphinx.ext.mathjax",
     "numpydoc",
     "matplotlib.sphinxext.plot_directive"
 ]
@@ -49,7 +51,7 @@ plot_html_show_source_link = False
 # Code to run before each plot
 plot_pre_code = ""
 # Path to run in when generating plots
-plot_working_directory = os.path.abspath("..")
+plot_working_directory = os.path.abspath("../tests/nmrdata")
 # Make high-quality images...! The low-res PNGs are horrible advertising
 plot_formats = ["svg"]
 # Don't display links to the source code / images.
@@ -113,6 +115,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+html_theme_options = {
+    "sidebar_width": "270px",
+    "page_width": "1000px",
+    "show_relbar_bottom": True,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

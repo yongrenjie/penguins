@@ -120,6 +120,7 @@ html_theme_options = {
     "page_width": "1000px",
     "show_relbar_bottom": True,
 }
+html_favicon = "favicon-32x32.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

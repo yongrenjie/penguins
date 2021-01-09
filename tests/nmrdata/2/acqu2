@@ -1,0 +1,27 @@
+##TITLE= Parameter file, TopSpin 4.1.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 7	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-11-21 17:33:58.498 +0000  yongrenjie@Empoleon.local
+$$ /Users/yongrenjie/penguins/tests/nmrdata/2/acqu2
+$$ process /opt/topspin4.1.0/prog/mod/dataserver
+##$ACQT0= 0
+##$BF1= 699.99
+##$DE= 44.62502
+##$DECIM= 1
+##$DR= 32
+##$FW= 2.4e+08
+##$FnMODE= 4
+##$NUC1= <1H>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 0
+##$O1= 2799.96
+##$ProjAngle= 0
+##$SFO1= 699.99279996
+##$SW= 10.0041
+##$SW_h= 7002.79797007984
+##$TD= 256
+##END=

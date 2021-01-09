@@ -1,0 +1,17 @@
+##TITLE= Parameter file, TopSpin 4.1.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yongrenjie
+$$ 2020-11-21 13:38:09.426 +0000  yongrenjie@Empoleon.local
+$$ /Users/yongrenjie/penguins/tests/nmrdata/4/pdata/1002/used_from
+$$ process /opt/topspin4.1.0/prog/mod/mvrow
+##$CUREXP= <row>
+##$DATPATH= </Users/yongrenjie/penguins/tests>
+##$EXPNO= 4
+##$NAME= <nmrdata>
+##$PROCNO= 1
+##$PROCNO2= 781
+##END=
+r

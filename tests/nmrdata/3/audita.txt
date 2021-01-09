@@ -1,0 +1,17 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1003/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-01 17:37:14.914 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<splitx_au>,<TopSpin 3.6.2>,
+      <created by splitx 3 3. dataset from
+       C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1
+       data hash MD5: 1K * 256
+       56 D3 6E 62 36 72 1A 2B 96 5C 3F 62 1D 90 7A 88>)
+(   2,<2020-11-01 17:37:15.648 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<sipar>,<TopSpin 3.6.2>,
+      <1s changed FnMODE{F1} = Echo-Antiecho to QF>)
+##END=
+
+$$ hash MD5
+$$ 8B D2 7D 08 B5 9B 36 DD 68 5F 48 5B B3 B0 49 C8

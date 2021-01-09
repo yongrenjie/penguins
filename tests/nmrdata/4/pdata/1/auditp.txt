@@ -1,0 +1,35 @@
+##TITLE= Audit trail, TopSpin 3.6.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1004/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-11-01 17:37:16.711 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<mvrow>,<TopSpin 3.6.2>,
+      <rser 1 from
+       1003 "201101-7g-noah-psyche" "C:\NMR\data\mfgroup\nmr"
+       data hash MD5: 1K
+       59 28 64 A8 98 72 A7 AB 04 A2 C0 3D 50 9A BD 38>)
+(   2,<2020-11-01 17:37:16.960 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <Unknown data manipulation detected
+       Start of raw data processing
+       efp LB = 0 FT_mod = 6 PKNL = 1 PHC0 = 105.7712 PHC1 = 4.9 SI = 64K 
+       data hash MD5: 64K
+       32 94 AC DA 52 DB A9 91 25 2D 9B 33 4E 84 7A E7>)
+(   3,<2020-11-01 17:37:17.398 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <apk 
+       data hash MD5: 64K
+       CF 58 07 53 F9 12 79 E5 62 C2 8C C5 AE 41 50 3B>)
+(   4,<2020-11-01 17:37:17.570 +0000>,<CHEM\nmr-user>,<CUTTLEFISH-CRL>,<proc1d>,<TopSpin 3.6.2>,
+      <abs n ABSG = 5 
+       data hash MD5: 64K
+       10 0C 43 E9 37 47 7A 63 C5 F4 EC A2 EB 0E DA 67>)
+$$ /Users/yongrenjie/penguins/tests/nmrdata/4/pdata/1/auditp.txt
+(   5,<2020-11-22 16:54:44.027 +0000>,<yongrenjie>,<Empoleon.local>,<audit>,<TopSpin 4.1.0>,
+      <user comment:
+       TITLE=Processed PSYCHE dataTITLE_END
+       data hash MD5: 64K
+       10 0C 43 E9 37 47 7A 63 C5 F4 EC A2 EB 0E DA 67>)
+##END=
+
+$$ hash MD5
+$$ 2B D3 59 91 62 EE 0E 8D 6B 6E 2C 77 C3 E9 F9 48

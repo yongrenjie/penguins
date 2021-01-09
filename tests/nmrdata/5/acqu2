@@ -1,0 +1,23 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-11-20 18:16:40.252 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\mfgroup\nmr/201120-7a-xstspx/102/acqu2
+$$ process C:\Bruker\TopSpin3.6.2\prog\au\bin\iexpno.exe
+##$ACQT0= 0
+##$BF1= 176.012625
+##$FnMODE= 6
+##$NUC1= <13C>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 0
+##$O1= 15841.14
+##$ProjAngle= 0
+##$SFO1= 176.02846614
+##$SW= 180.001799831624
+##$SW_h= 31685.4407268
+##$TD= 256
+##END=

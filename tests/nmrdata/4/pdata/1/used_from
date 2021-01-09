@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 3.6.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr-user
+$$ 2020-11-01 17:37:16.711 +0000  CHEM\nmr-user@CUTTLEFISH-CRL
+$$ C:\NMR\data\mfgroup\nmr/201101-7g-noah-psyche/1004/pdata/1/used_from
+$$ process C:\Bruker\TopSpin3.6.2\prog\mod\mvrow.exe
+##$CUREXP= <ser>
+##$DATPATH= <C:\NMR\data\mfgroup\nmr>
+##$EXPNO= 1003
+##$NAME= <201101-7g-noah-psyche>
+##$PROCNO= 1
+##$PROCNO2= 1
+##END=

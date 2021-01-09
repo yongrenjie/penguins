@@ -12,7 +12,7 @@ Let's revisit the original 2D plot that we did back in :doc:`/tutorials/plot`.
 As before, it's probably a good idea to move this into a script (or notebook).
 
 .. plot::
-   :context:
+   :context: reset
 
     import penguins as pg
     data_2d = pg.read(".", 2, 1)

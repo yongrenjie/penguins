@@ -2,7 +2,6 @@ Tutorial 4: Plotting multiple 1Ds
 =================================
 
 It is quite common to want to plot multiple 1D spectra on the same plot: in fact, so common that we will dedicate an entire introductory tutorial to it.
-This also serves as a useful opportunity to introduce the *construction* options, i.e. the arguments that can be passed to `mkplot()`.
 
 Because we will be doing quite a number of repetitive calls here, I suggest moving these commands into a Python script (or a Jupyter notebook), instead of typing them into the interactive REPL.
 All of the following code examples are scripts which can be run from inside the ``nmrdata`` folder.
@@ -11,7 +10,7 @@ You can put the script anywhere you like, but will have to adjust the path to th
 If you are using the sample ``nmrdata`` spectra, **start by placing these lines at the top of your script (or notebook cell):**
 
 .. plot::
-   :context:
+   :context: reset
    :nofigs:
 
    import penguins as pg
@@ -69,7 +68,6 @@ The f-string syntax in Python 3.7+ is especially useful for this: for example, `
 Horizontal and vertical offsets
 -------------------------------
 
-For a while now, I've been saying that I'll introduce `mkplot()` options: here they are!
 TopSpin's multiple display mode has a few settings which allow you to stack spectra or to shift them by a constant amount, which is really useful for plotting.
 However, these are not *spectrum-specific* options: they are options which affect the *entire plot*.
 That's why these options will be passed to ``mkplot()``, rather than ``stage()``.
@@ -105,9 +103,8 @@ This is commonly used, for example, when plotting a series of related spectra.
 voffset and stacked
 -------------------
 
-Now, we're going to do something weird for a while.
-Humour me, and stage ``em`` one time and ``gm`` three times (this effectively creates a few copies of ``gm`` to be plotted).
-Then, call `mkplot()` with ``voffset=1.1``:
+We're going to do something weird for a while.
+Stage ``em`` one time and ``gm`` three times (this effectively creates a few copies of ``gm`` to be plotted), then call `mkplot()` with ``voffset=1.1``:
 
 .. plot::
    :context: close-figs

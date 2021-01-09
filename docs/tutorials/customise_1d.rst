@@ -18,7 +18,7 @@ As a refresher, these are the steps which we took to make it:
 
 .. plot::
    :format: doctest
-   :context:
+   :context: reset
 
     >>> import penguins as pg
     >>> data_1d = pg.read(".", 1, 1)    # read in data

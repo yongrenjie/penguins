@@ -1,8 +1,6 @@
 How-tos
 =======
 
-* Subplots
-
 * Add text
 
 * NUS data
@@ -17,6 +15,5 @@ How-tos
 .. toctree::
    :maxdepth: 2
 
-   subplots
    nus
 

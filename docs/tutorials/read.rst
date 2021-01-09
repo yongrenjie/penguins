@@ -1,11 +1,8 @@
 Tutorial 1: Reading data
 ========================
 
-To get started with penguins, you will need some NMR data to play with (penguins currently **only** works with processed Bruker data).
-If you don't have any, you can get some of the penguins test data: `click here to download a .zip archive <https://github.com/yongrenjie/penguins/blob/develop/tests/nmrdata/nmrdata.zip>`_.
-
 In TopSpin, each NMR experiment has its own "expno", and can be found in a folder numbered by its expno.
-The ``nmrdata`` folder downloaded above will contain two such numbered datasets, which correspond to different "expnos" in TopSpin.
+If you downloaded the penguins test data, you will find that it contains two such numbered datasets, which correspond to different "expnos" in TopSpin.
 
 Of course, feel free to use your own data: your top-level data directory should also contain one or more numbered expno folders, and each of these datasets must have already been processed in TopSpin.
 
@@ -17,7 +14,8 @@ Importing spectra: pg.read()
 Spectra can be imported using the `read()` function.
 `read()` takes three parameters: the path to the *spectrum folder*, the *expno*, and the *procno*.
 
-First, navigate to the folder which contains the numbered expno datasets, if you aren't already in it.
+We are going to assume here that you are using the penguins test data, but if you aren't, you just need to adapt these three arguments accordingly.
+First, open a terminal and ``cd`` to the folder which contains the numbered expno datasets.
 Then, launch the interactive Python REPL, and type::
 
     >>> import penguins as pg

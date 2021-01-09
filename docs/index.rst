@@ -21,22 +21,19 @@ The documentation is divided into five major sections (largely adhering to the p
 
 1. **Tutorials**: intended as a brief introduction to penguins' core features.
 
-2. **How-to guides**: ways of accomplishing specific tasks which are likely to occur frequently.
+2. *(Not yet written)* **How-to guides**: ways of accomplishing specific tasks which are likely to occur frequently.
 
-3. **Gallery**: case studies from real-life plots with step-by-step walkthroughs.
+3. *(Not yet written)* **Gallery**: case studies from real-life plots with step-by-step walkthroughs.
 
 4. **Explanations**: a more in-depth look at how penguins works behind the scenes.
 
 5. **Reference**: a full description of the penguins API.
 
 
-I have a question!
-------------------
+Contact
+-------
 
-Please `create an issue on GitHub <https://github.com/yongrenjie/penguins/issues>`_.
-All comments/questions are more than welcome!
-
-If you are thinking of making a pull request, please get in touch first (via an issue).
+If you have (any) question, comments, or would like to report a bug, please `create an issue on GitHub <https://github.com/yongrenjie/penguins/issues>`_.
 
 
 Contents
@@ -49,7 +46,6 @@ Contents
    tutorials/index
    howto/index
    explanations/index
-   topspin
    reference/index
 
 * :ref:`genindex`

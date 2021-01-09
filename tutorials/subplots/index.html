@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tutorial 6: Subplots &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Tutorial 7: Using matplotlib" href="../matplotlib/" />
+    <link rel="prev" title="Tutorial 5: Customising 2D plots" href="../customise_2d/" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-6-subplots">
+<h1>Tutorial 6: Subplots<a class="headerlink" href="#tutorial-6-subplots" title="Permalink to this headline">¶</a></h1>
+<p>Many of the most useful plots involve having multiple plots in one figure, for example to present a series of spectra, or to compare multiple different spectra.
+In this tutorial, we will cover the basic usage of <em>subplots</em>.
+We will assume you have already read in the <code class="docutils literal notranslate"><span class="pre">data_1d</span></code> and <code class="docutils literal notranslate"><span class="pre">data_2d</span></code> objects (either using the test data provided, or with your own data).</p>
+<hr class="docutils" />
+<div class="section" id="getting-to-know-subplots">
+<h2>Getting to know subplots()<a class="headerlink" href="#getting-to-know-subplots" title="Permalink to this headline">¶</a></h2>
+<p>The first part of creating a plot with multiple subplots is to first specify the layout of the subplots.
+This can be done using the <a class="reference internal" href="../../reference/plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    <span class="c1"># creates a 2-by-2 grid of subplots</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../../reference/plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> returns two matplotlib objects.
+The first, <code class="docutils literal notranslate"><span class="pre">fig</span></code>, is a handle for the entire <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> (which encompasses all four subplots).
+The second, <code class="docutils literal notranslate"><span class="pre">axs</span></code>, is a 2D numpy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> whose elements are the individual <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> which we can plot on.</p>
+<p>Each subplot has one <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>, and we can access these by selecting the correct element of the 2D <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.
+For example, to access the top-left subplot, we need to manipulate only the top-left <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>, which can be accessed via <code class="docutils literal notranslate"><span class="pre">axs[0][0]</span></code>.
+Likewise, the top-right <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> can be accessed via <code class="docutils literal notranslate"><span class="pre">axs[0][1]</span></code>.</p>
+<p>(If you are already familiar with matplotlib, you will know that matplotlib itself has a <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots()</span></code></a> function.
+The penguins version is a wrapper around this with a few changes made for convenience:
+please see the <a class="reference internal" href="../../reference/plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> documentation for more info.)</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="the-ax-keyword-argument">
+<h2>The ax keyword argument<a class="headerlink" href="#the-ax-keyword-argument" title="Permalink to this headline">¶</a></h2>
+<p>So far, we have carried out staging and construction on a single Axes.
+But wait! We didn’t actually <em>specify</em> that we wanted this.
+It turns out that if you don’t specify it, penguins takes care of automatically setting up a new Axes for us to plot on, which is why the previous plots worked perfectly well.</p>
+<p>Now, though, we need a bit more control over the process.
+We can therefore pass the <code class="docutils literal notranslate"><span class="pre">ax</span></code> parameter to both the staging method <code class="docutils literal notranslate"><span class="pre">stage()</span></code>, as well as the construction function <code class="docutils literal notranslate"><span class="pre">mkplot()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">levels</span><span class="o">=</span><span class="mf">3e5</span><span class="p">)</span>   <span class="c1"># top-left</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">levels</span><span class="o">=</span><span class="mf">3e5</span><span class="p">)</span>   <span class="c1"># top-right</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">levels</span><span class="o">=</span><span class="mf">3e5</span><span class="p">)</span>   <span class="c1"># bottom-left</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">levels</span><span class="o">=</span><span class="mf">3e5</span><span class="p">)</span>   <span class="c1"># bottom-right</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="../../_images/subplots-3_00.svg" src="../../_images/subplots-3_00.svg" /></div>
+<div class="figure align-default">
+<img alt="../../_images/subplots-3_01.svg" src="../../_images/subplots-3_01.svg" /></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="for-loops-and-zip">
+<h2>For loops and zip()<a class="headerlink" href="#for-loops-and-zip" title="Permalink to this headline">¶</a></h2>
+<p>Typing this out by hand is pretty inefficient.
+It is far better to use a for loop which accomplishes the same thing.</p>
+<p>Recall that <code class="docutils literal notranslate"><span class="pre">axs</span></code> was a 2D array of Axes instances.
+This is analogous to a list of lists, and if we directly iterated over <code class="docutils literal notranslate"><span class="pre">axs</span></code>, such as <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">ax</span> <span class="pre">in</span> <span class="pre">axs</span></code>, <code class="docutils literal notranslate"><span class="pre">ax</span></code> wouldn’t be the individual Axes themselves but rather lists of Axes.
+Instead, we can iterate over <code class="docutils literal notranslate"><span class="pre">axs.flat</span></code>, which behaves <em>like</em> a 1D array (technically, it’s an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.flat.html#numpy.ndarray.flat" title="(in NumPy v1.19)"><code class="xref any docutils literal notranslate"><span class="pre">iterator</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">:</span>
+    <span class="c1"># Inside this loop, `ax` refers to an individual Axes.</span>
+    <span class="c1"># It is also the name of the keyword parameter.</span>
+    <span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mf">3e5</span><span class="p">)</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="../../_images/subplots-4.svg" src="../../_images/subplots-4.svg" /></div>
+<p>Obviously, it’s not particularly useful to plot the same thing four times.
+However, you can easily customise each plot by staging a different dataset, or by passing various options to <code class="docutils literal notranslate"><span class="pre">stage()</span></code> as well as <code class="docutils literal notranslate"><span class="pre">mkplot()</span></code>, as was already described in previous tutorials.
+For this purpose, the builtin Python function <a class="reference external" href="https://docs.python.org/3/library/functions.html#zip" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">zip()</span></code></a> is incredibly useful.
+Let’s see, for example, how we can plot the same spectrum 4 times with different contour levels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">contour_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e4</span><span class="p">,</span> <span class="mf">3e4</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">,</span> <span class="mf">3e5</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Lots of noise&quot;</span><span class="p">,</span> <span class="s2">&quot;Some noise&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Just a bit of noise&quot;</span><span class="p">,</span> <span class="s2">&quot;No noise&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">contour_levels</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+    <span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="../../_images/subplots-5.svg" src="../../_images/subplots-5.svg" /></div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">zip()</span></code> allows us to write a for loop which consumes multiple lists in parallel.
+That is to say, each time we advance through the for loop, we advance through all of the lists provided to <code class="docutils literal notranslate"><span class="pre">zip()</span></code> simultaneously, such that the first contour level and the first title are associated with the first Axes, and so on.</p>
+<p><strong>This is one of the most common “patterns” used for subplots in penguins.</strong>
+As another example, you can zip together a list of datasets with <code class="docutils literal notranslate"><span class="pre">axs.flat</span></code> to plot a series of different spectra.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../customise_2d/" title="Previous document">Tutorial 5: Customising 2D plots</a>
+        </li>
+        <li>
+          <a href="../matplotlib/" title="Next document">Tutorial 7: Using matplotlib</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../read/">Tutorial 1: Reading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plot/">Tutorial 2: Plotting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../customise_1d/">Tutorial 3: Customising 1D plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multiple_1d/">Tutorial 4: Plotting multiple 1Ds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../customise_2d/">Tutorial 5: Customising 2D plots</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 6: Subplots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../matplotlib/">Tutorial 7: Using matplotlib</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../howto/">How-tos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explanations/">Explanations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li><a href="../">Tutorials</a><ul>
+      <li>Previous: <a href="../customise_2d/" title="previous chapter">Tutorial 5: Customising 2D plots</a></li>
+      <li>Next: <a href="../matplotlib/" title="next chapter">Tutorial 7: Using matplotlib</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020–2021, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/tutorials/subplots.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

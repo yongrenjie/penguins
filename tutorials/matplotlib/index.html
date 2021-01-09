@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tutorial 7: Using matplotlib &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="How-tos" href="../../howto/" />
+    <link rel="prev" title="Tutorial 6: Subplots" href="../subplots/" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-7-using-matplotlib">
+<h1>Tutorial 7: Using matplotlib<a class="headerlink" href="#tutorial-7-using-matplotlib" title="Permalink to this headline">¶</a></h1>
+<p>penguins is a <em>wrapper</em> around matplotlib, which is a library that provides plotting capabilities in Python.
+What this means is that all the code in penguins ultimately calls a series of matplotlib functions.
+The penguins functions are provided as “higher-level” constructs, which allow you to directly work with and plot NMR data, without worrying about “low-level” implementation details.</p>
+<p>However, you will notice that on its own, penguins’ plotting capabilities are slightly limited.
+For example, it doesn’t provide a function which lets you write arbitrary text on a graph.</p>
+<p>The reason for this is because penguins (generally) does not try to reinvent the wheel.
+If matplotlib already has a way to do something, then penguins will not re-implement it; instead, you should simply call the matplotlib function itself.
+For writing arbitrary text, for example, one should call the <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.text()</span></code></a> method on the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> of interest.
+penguins, in turn, gives you access to the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> object via <a class="reference internal" href="../../reference/plotting/#penguins.subplots" title="penguins.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> or <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>.</p>
+<p>In general, one can interleave matplotlib and penguins functions without many issues.
+In this regard, penguins behaves very similarly to other plotting packages such as <a href="#id1"><span class="problematic" id="id2">`seaborn&lt;http://seaborn.pydata.org/&gt;`_</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are not familiar with matplotlib, it is a good idea to check out some of the <a class="reference external" href="https://matplotlib.org/tutorials/index.html">introductory matplotlib tutorials</a>.
+matplotlib’s documentation itself – although very extensive – can appear slightly intimidating to a beginner.
+There are also a great number of other tutorials online which may be more approachable.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../subplots/" title="Previous document">Tutorial 6: Subplots</a>
+        </li>
+        <li>
+          <a href="../../howto/" title="Next document">How-tos</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../read/">Tutorial 1: Reading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plot/">Tutorial 2: Plotting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../customise_1d/">Tutorial 3: Customising 1D plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multiple_1d/">Tutorial 4: Plotting multiple 1Ds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../customise_2d/">Tutorial 5: Customising 2D plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../subplots/">Tutorial 6: Subplots</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 7: Using matplotlib</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../howto/">How-tos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explanations/">Explanations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li><a href="../">Tutorials</a><ul>
+      <li>Previous: <a href="../subplots/" title="previous chapter">Tutorial 6: Subplots</a></li>
+      <li>Next: <a href="../../howto/" title="next chapter">How-tos</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020–2021, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/tutorials/matplotlib.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

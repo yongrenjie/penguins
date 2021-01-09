@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tutorial 1: Reading data &#8212; penguins  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Tutorial 2: Plotting data" href="../plot/" />
+    <link rel="prev" title="Tutorials" href="../" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-1-reading-data">
+<h1>Tutorial 1: Reading data<a class="headerlink" href="#tutorial-1-reading-data" title="Permalink to this headline">¶</a></h1>
+<p>In TopSpin, each NMR experiment has its own “expno”, and can be found in a folder numbered by its expno.
+If you downloaded the penguins test data, you will find that it contains two such numbered datasets, which correspond to different “expnos” in TopSpin.</p>
+<p>Of course, feel free to use your own data: your top-level data directory should also contain one or more numbered expno folders, and each of these datasets must have already been processed in TopSpin.</p>
+<hr class="docutils" />
+<div class="section" id="importing-spectra-pg-read">
+<h2>Importing spectra: pg.read()<a class="headerlink" href="#importing-spectra-pg-read" title="Permalink to this headline">¶</a></h2>
+<p>Spectra can be imported using the <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function.
+<a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> takes three parameters: the path to the <em>spectrum folder</em>, the <em>expno</em>, and the <em>procno</em>.</p>
+<p>We are going to assume here that you are using the penguins test data, but if you aren’t, you just need to adapt these three arguments accordingly.
+First, open a terminal and <code class="docutils literal notranslate"><span class="pre">cd</span></code> to the folder which contains the numbered expno datasets.
+Then, launch the interactive Python REPL, and type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span>
+<span class="go">Dataset1D(&#39;/Users/yongrenjie/penguins/tests/nmrdata/1/pdata/1&#39;)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code> argument refers to the current directory that you are in: in general, this can be any folder that contains Bruker NMR data.
+The <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> that follow mean that we are importing the dataset with expno 1 and procno 1.
+If you call the <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">PATH</span><span class="p">,</span> <span class="n">EXPNO</span><span class="p">,</span> <span class="n">PROCNO</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then penguins will expect to find processed NMR data at the folder <code class="docutils literal notranslate"><span class="pre">&lt;PATH&gt;/&lt;EXPNO&gt;/pdata/&lt;PROCNO&gt;</span></code>.</p>
+<p>Let’s now try it with some 2D data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span>
+<span class="go">Dataset2D(&#39;/Users/yongrenjie/penguins/tests/nmrdata/2/pdata/1&#39;)</span>
+</pre></div>
+</div>
+<p>Notice how the returned object is a <code class="docutils literal notranslate"><span class="pre">Dataset2D</span></code> object now, as opposed to a <code class="docutils literal notranslate"><span class="pre">Dataset1D</span></code> object previously: penguins is capable of automatically detecting the dimensionality of the data you import.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="accessing-spectrum-parameters">
+<h2>Accessing spectrum parameters<a class="headerlink" href="#accessing-spectrum-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Once imported using <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>, spectrum parameters can be accessed using dictionary-like syntax.
+All parameters are referred to using their standard Bruker names, just as you would type them in the TopSpin command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span>
+<span class="go">9.22</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span><span class="p">[</span><span class="s2">&quot;pulprog&quot;</span><span class="p">]</span>
+<span class="go">&#39;zg60&#39;</span>
+</pre></div>
+</div>
+<p>So, we can tell that this is a proton spectrum acquired using a 90° pulse width of 9.22 µs (the units that are used are always consistent with those in TopSpin).</p>
+<p>For the 2D case, many parameters differ between the two spectral dimensions.
+In these cases, they are returned either as a numpy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref any docutils literal notranslate"><span class="pre">ndarray</span></code></a> or as a tuple.
+The first always refers to the indirect-dimension (<span class="math notranslate nohighlight">\(f_1\)</span>) value, and the second to the direct-dimension (<span class="math notranslate nohighlight">\(f_2\)</span>) value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span>    <span class="c1"># no difference between f1 and f2, so just a plain float</span>
+<span class="go">10.83</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span><span class="p">[</span><span class="s2">&quot;td&quot;</span><span class="p">]</span>
+<span class="go">array([ 256, 1024])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span><span class="p">[</span><span class="s2">&quot;nuc1&quot;</span><span class="p">]</span>
+<span class="go">(&#39;1H&#39;, &#39;1H&#39;)</span>
+</pre></div>
+</div>
+<p>Accessing the value of TD in <span class="math notranslate nohighlight">\(f_1\)</span> is simply then <code class="docutils literal notranslate"><span class="pre">data_2d[&quot;td&quot;][0]</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../" title="Previous document">Tutorials</a>
+        </li>
+        <li>
+          <a href="../plot/" title="Next document">Tutorial 2: Plotting data</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 1: Reading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plot/">Tutorial 2: Plotting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../customise_1d/">Tutorial 3: Customising 1D plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multiple_1d/">Tutorial 4: Plotting multiple 1Ds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../customise_2d/">Tutorial 5: Customising 2D plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../subplots/">Tutorial 6: Subplots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../matplotlib/">Tutorial 7: Using matplotlib</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../howto/">How-tos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explanations/">Explanations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li><a href="../">Tutorials</a><ul>
+      <li>Previous: <a href="../" title="previous chapter">Tutorials</a></li>
+      <li>Next: <a href="../plot/" title="next chapter">Tutorial 2: Plotting data</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020–2021, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/tutorials/read.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

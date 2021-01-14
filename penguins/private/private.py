@@ -594,6 +594,7 @@ def hsqc_cosy_stripplot(molecule: Any,
                         ncol: int = 4,
                         loc: str = "upper center",
                         ax: Optional[Any] = None,
+                        font_kwargs: Optional[dict] = None,
                         **kwargs: Any,
                         ) -> Tuple[Any, Any]:
     """
@@ -631,6 +632,8 @@ def hsqc_cosy_stripplot(molecule: Any,
     -------
     (fig, ax).
     """
+    # Set up default font_kwargs if not provided.
+    font_kwargs = font_kwargs or {}
     # Calculate dataframes of relative intensities.
     hsqc_rel_ints_df = molecule.hsqc.rel_ints_df(dataset=datasets[0],
                                                  ref_dataset=ref_datasets[0],
@@ -688,7 +691,8 @@ def hsqc_cosy_stripplot(molecule: Any,
                                                        sns.color_palette("dark"))):
             ax.text(x=x-0.3+i*0.2, y=0.02, s=f"({avg:.2f})",
                     color=deep, horizontalalignment="center",
-                    transform=ax.get_xaxis_transform())
+                    transform=ax.get_xaxis_transform(),
+                    **font_kwargs)
             # I prefer pointplot() over this.
             # if show_averages:
             #     ax.hlines(y=avg, xmin=(x-0.35+i*0.2), xmax=(x-0.25+i*0.2),

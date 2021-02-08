@@ -488,7 +488,7 @@ class Contours:
                  colors: TColors = (None, None),
                  ) -> None:
         self.dataset = dataset
-        if isinstance(levels, float):
+        if isinstance(levels, (float, int)):
             levels = (levels, None, None)
         self.make_levels(*levels)
         self.make_colors(ax, *colors)

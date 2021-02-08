@@ -93,7 +93,7 @@ which are stored as ints. However, this list is not complete, and if there
 is a parameter that should be an int but isn’t, it would be great if you
 could report it.</p>
 <p>For 2D spectra, string parameters are stored as a tuple of <em>(f1_value,
-f2_value)</em>. Float parameters are stored as a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> to facilitate
+f2_value)</em>. Float parameters are stored as a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> to facilitate
 elementwise manipulations (e.g. calculating <code class="docutils literal notranslate"><span class="pre">O1P</span></code> in both dimensions at
 one go).</p>
 </dd></dl>
@@ -118,7 +118,7 @@ the paths to the parameter files.</p>
 <dl class="py method">
 <dt id="penguins.dataset._1D_RawDataMixin.raw_data">
 <code class="sig-name descname">raw_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin.raw_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the FID as a complex <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
+<dd><p>Returns the FID as a complex <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -131,13 +131,13 @@ the paths to the parameter files.</p>
 <dl class="field-list">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl>
-<dt><strong>real</strong><span class="classifier">ndarray</span></dt><dd><p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the real spectrum. <code class="docutils literal notranslate"><span class="pre">real[0]</span></code>
+<dt><strong>real</strong><span class="classifier">ndarray</span></dt><dd><p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the real spectrum. <code class="docutils literal notranslate"><span class="pre">real[0]</span></code>
 contains the left-most point of the spectrum, i.e. the greatest
 chemical shift.</p>
 </dd>
 <dt><strong>imag</strong><span class="classifier">ndarray</span></dt><dd><p>This attribute only applies to <a class="reference internal" href="#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a> instances. The projection
 classes do not have this attribute.</p>
-<p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the imaginary spectrum. <code class="docutils literal notranslate"><span class="pre">imag[0]</span></code>
+<p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the imaginary spectrum. <code class="docutils literal notranslate"><span class="pre">imag[0]</span></code>
 contains the left-most point of the spectrum, i.e. the greatest
 chemical shift.</p>
 </dd>
@@ -147,7 +147,7 @@ chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset._1D_ProcDataMixin.proc_data">
 <code class="sig-name descname">proc_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the real part of the spectrum as a real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
+<dd><p>Returns the real part of the spectrum as a real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <p>Note that if (for example) a magnitude mode calculation has been
 performed, then the “real” part is actually the magnitude mode
 spectrum. In short, the “real” part is whatever is stored in the <code class="docutils literal notranslate"><span class="pre">1r</span></code>
@@ -210,7 +210,7 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 <code class="sig-name descname">bounds_to_slice</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.bounds_to_slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a string <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code> or a tuple of chemical shifts
 <code class="docutils literal notranslate"><span class="pre">(upper,</span> <span class="pre">lower)</span></code> to a slice object, which can be used to slice a
-spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. Note that <code class="docutils literal notranslate"><span class="pre">upper</span></code> must be greater than
+spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. Note that <code class="docutils literal notranslate"><span class="pre">upper</span></code> must be greater than
 <code class="docutils literal notranslate"><span class="pre">lower</span></code>.</p>
 </dd></dl>
 
@@ -265,7 +265,7 @@ parameter files, so it’s not useless at all.</p>
 <dt id="penguins.dataset._2D_ProcDataMixin.proc_data">
 <code class="sig-name descname">proc_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f1_bounds</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">f2_bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the real part of the spectrum (the ‘RR quadrant’) as a
-two-dimensional, real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
+two-dimensional, real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <p>This is used in constructing the <em>z</em>-values to be plotted.</p>
 <p>Note that if a magnitude mode calculation has been performed, this will
 return the magnitude mode spectrum (i.e. it returns whatever is in
@@ -332,7 +332,7 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 <code class="sig-name descname">bounds_to_slice</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis</span></em>, <em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.bounds_to_slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a string <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code> or a tuple of chemical shifts
 <code class="docutils literal notranslate"><span class="pre">(upper,</span> <span class="pre">lower)</span></code> to a slice object, which can be used to slice a
-spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
+spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -438,7 +438,7 @@ chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset.Dataset1D.ppm_scale">
 <code class="sig-name descname">ppm_scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.ppm_scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
+<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>-values for plotting.</p>
 <dl class="field-list simple">
@@ -460,7 +460,7 @@ spectrum, in descending order of chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset.Dataset1D.hz_scale">
 <code class="sig-name descname">hz_scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.hz_scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
+<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -524,7 +524,7 @@ chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset.Dataset1DProj.ppm_scale">
 <code class="sig-name descname">ppm_scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.ppm_scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
+<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>-values for plotting.</p>
 <dl class="field-list simple">
@@ -546,7 +546,7 @@ spectrum, in descending order of chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset.Dataset1DProj.hz_scale">
 <code class="sig-name descname">hz_scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.hz_scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
+<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -606,7 +606,7 @@ chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset.Dataset2D.ppm_scale">
 <code class="sig-name descname">ppm_scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis</span></em>, <em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.ppm_scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
+<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>- and <em>y</em>-values for plotting.</p>
 <dl class="field-list simple">
@@ -630,7 +630,7 @@ spectrum, in descending order of chemical shift.</p>
 <dl class="py method">
 <dt id="penguins.dataset.Dataset2D.hz_scale">
 <code class="sig-name descname">hz_scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis</span></em>, <em class="sig-param"><span class="n">bounds</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.hz_scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
+<dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

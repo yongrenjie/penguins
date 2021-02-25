@@ -171,6 +171,9 @@ PH_MOD PKNL POWMOD PPARMOD PRGAIN PSCAL PSIGN PROCNO2 PROCNO3 QNP REVERSE RO
 RSEL SI STSI STSR SYMM TD TD0 TDEFF TDOFF TILT WBST WDW XDIM XGAIN YMAX_P
 YMIN_P""".split()
 
+# Extra integer parameters that weren't documented.
+_int_pars = _int_pars + """DTYPA DTYPP GRPDLY""".split()
+
 
 # -- Fundamental Dataset methods ------------------------
 
@@ -432,12 +435,23 @@ class _1D_RawDataMixin():
         self._p_acqus = self.path.parents[1] / "acqus"
 
     def _read_raw_data(self) -> np.ndarray:
-        datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
-        datatype += "i4"
-        fid = np.fromfile(self._p_fid, dtype=datatype)
-        fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
-        fid = np.transpose(fid) * (2 ** self["nc"])      # type: ignore # mixin
-        self._fid = fid[0] + (1j * fid[1])
+        # Determine datatype of FID
+        if self["dtypa"] == 0:                               # type: ignore # mixin
+            datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
+            datatype += "i4"
+            fid = np.fromfile(self._p_fid, dtype=datatype)
+            fid = fid[:self["td"]]                           # type: ignore # mixin
+            fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
+            fid = np.transpose(fid) * (2 ** self["nc"])      # type: ignore # mixin
+            self._fid = fid[0] + (1j * fid[1])
+        elif self["dtypa"] == 2:
+            datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
+            datatype += "d"
+            fid = np.fromfile(self._p_fid, dtype=datatype)
+            fid = fid[:self["td"]]                           # type: ignore # mixin
+            fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
+            fid = np.transpose(fid)
+            self._fid = fid[0] + (1j * fid[1])
 
     def raw_data(self) -> np.ndarray:
         """

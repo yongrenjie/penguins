@@ -244,6 +244,28 @@ class Cosy(Experiment):
         return df
 
 
+@export
+class Tocsy(Cosy):
+    """
+    For TOCSY experiments. The variables diagonal and cross_half should be
+    lists of 2-tuples (f1_shift, f2_shift). cross_half should only contain
+    half the peaks, i.e. only at (f1, f2) and not at (f2, f1). These will
+    be automatically reflected.
+
+    The code is derived from the Cosy code, but for Tocsy classes there is
+    additionally a `mixing_time` attribute which gives the TOCSY mixing time in
+    milliseconds.
+    """
+    def __init__(self,
+                 diagonal: List[Tuple[float, float]],
+                 cross_half: List[Tuple[float, float]],
+                 mixing_time: float,
+                 margin: Optional[Tuple[float, float]] = (0.02, 0.02),
+                 ):
+        super().__init__(diagonal, cross_half, margin)
+        self.mixing_time = mixing_time
+
+
 # -- Molecules ------------------------------------------
 
 @export
@@ -314,6 +336,28 @@ class Zolmitriptan():
     hsqc_ch3 = [(45.5760, 2.2195)]
     hsqc_margin = (0.5, 0.02)
     hsqc = Hsqc(hsqc_ch, hsqc_ch2, hsqc_ch3, hsqc_margin)
+
+    cosy_diagonal = [
+        (10.7041, 10.7041), (7.3602, 7.3602), (6.9345, 6.9345),
+        (4.2335, 4.2335), (7.1136, 7.1136), (7.2545, 7.2545),
+        (7.7771, 7.7771), (4.0398, 4.0398), (3.3616, 3.3616),
+        (2.8948, 2.8948), (2.8008, 2.8008), (2.5278, 2.5278),
+        (2.2283, 2.2283)
+    ]
+    cosy_cross_half = [
+        (7.2516, 6.9345), (4.0456, 4.2277), (2.7891, 4.0515),
+        (2.8830, 4.0515), (2.7891, 2.8889), (2.5307, 2.8008),
+    ]
+    cosy = Cosy(cosy_diagonal, cosy_cross_half)
+
+    # TOCSY with 35 ms mixing
+    tocsy_35ms_cross_half = [
+        (7.1156, 10.7150), (7.2565, 6.9336), (4.0506, 4.2326),
+        (2.8998, 4.2326), (2.7941, 4.2326), (2.7941, 4.0389),
+        (2.8998, 4.0447), (2.7941, 2.8939), (2.5592, 2.8117),
+        (6.9395, 7.3622)
+    ]
+    tocsy_35ms = Tocsy(cosy_diagonal, tocsy_35ms_cross_half, 35)
 
 
 @export

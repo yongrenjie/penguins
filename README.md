@@ -31,7 +31,7 @@ import penguins as pg
 hmqc, hsqc, cosy, noesy = (pg.read("tests/data/noah", i, 1)
                            for i in range(1, 5))
 
-fig, axs = pg.subplots(2, 2)
+fig, axs = pg.subplots2d(2, 2)
 hmqc.stage(axs[0, 0], levels=7e3, f1_bounds="110..130", f2_bounds="7..9.5")
 hsqc.stage(axs[0, 1], levels=4e4, f1_bounds="12..65", f2_bounds="0.5..5")
 cosy.stage(axs[1, 0], levels=8e5)

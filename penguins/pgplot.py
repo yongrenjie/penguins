@@ -1163,15 +1163,22 @@ def _find_baselev(dataset: ds.Dataset2D,
 # -- Matplotlib and Seaborn wrappers --------------------------
 
 @export
-def subplots(nrows: int = 1,
-             ncols: int = 1,
-             **kwargs
-             ) -> Tuple[Any, Any]:
-    """Wrapper around matplotlib's |subplots| function.
+def subplots(*args, **kwargs) -> None:
+    """Direct wrapper around |subplots|.
+    """
+    return plt.subplots(*args, **kwargs)
 
-    If *figsize* is not passed as a keyword argument, then this by default
-    sets the figure size to be ``(4 * ncols)`` by ``(4 * nrows)``. This means
-    that every subplot will have an area of 4 inches by 4 inches.
+
+@export
+def subplots2d(nrows: int = 1,
+               ncols: int = 1,
+               **kwargs
+               ) -> Tuple[Any, Any]:
+    """Wrapper around matplotlib's |subplots| function, which (in addition to
+    performing everything |subplots| does) also sets the figure size to
+    ``(4 * ncols)`` by ``(4 * nrows)`` by default. This means that every
+    subplot will have an area of 4 inches by 4 inches, which is a good size for
+    2D spectra.
 
     Parameters
     ----------

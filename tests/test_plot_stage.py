@@ -11,7 +11,7 @@ datadir = Path(__file__).parent.resolve() / "nmrdata"
 
 def test_1d_stage():
     """Tests the stage() method on 1D datasets."""
-    fig, (empty_ax, plot_ax) = pg.subplots(1, 2) 
+    fig, (empty_ax, plot_ax) = pg.subplots2d(1, 2) 
     proton = pg.read(datadir, 1)
     proton.stage(ax=plot_ax)
     # Check that the PHA was created on the right axes
@@ -54,7 +54,7 @@ def test_1d_stage():
 
 def test_2d_stage():
     """Tests the stage() method on 2D datasets."""
-    fig, (empty_ax, plot_ax) = pg.subplots(1, 2) 
+    fig, (empty_ax, plot_ax) = pg.subplots2d(1, 2) 
     cosy = pg.read(datadir, 2)
     cosy.stage(ax=plot_ax, levels=(1e5, 1.2, 10))
     # Check that the PHA was created on the right axes

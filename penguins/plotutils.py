@@ -129,6 +129,8 @@ def cleanup_figure(padding: float = 0.02
     inv = fig.transFigure.inverted()
     legend_bboxs = [inv.transform(legend.get_window_extent(renderer=r))
                     for legend in fig.legends]
+    if len(legend_bboxs) == 0:
+        raise ValueError("cleanup_figure(): no figure legends were found")
     legend_miny = min(bbox[0][1] for bbox in legend_bboxs)
     # Find maximum bbox y-extent of axes titles.
     titles = [ax.title for ax in fig.axes]

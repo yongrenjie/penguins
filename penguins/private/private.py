@@ -635,6 +635,7 @@ def hsqc_cosy_stripplot(molecule: Any,
                         title: str = "",
                         edited: bool = False,
                         show_averages: bool = True,
+                        separate_mult: bool = True,
                         ncol: int = 4,
                         loc: str = "upper center",
                         ax: Optional[Any] = None,
@@ -684,13 +685,19 @@ def hsqc_cosy_stripplot(molecule: Any,
                                                  edited=edited)
     # Rename mult -> type to match COSY
     hsqc_rel_ints_df = hsqc_rel_ints_df.rename(columns={"mult": "type"})
+    # Remove multiplicity information if separation is not desired
+    if not separate_mult:
+        hsqc_rel_ints_df = hsqc_rel_ints_df.assign(type="hsqc")
     cosy_rel_ints_df = molecule.cosy.rel_ints_df(dataset=datasets[1],
                                                  ref_dataset=ref_datasets[1])
-    cosy_rel_ints_df = cosy_rel_ints_df.replace(["diagonal", "cross"], "cosy")
+    cosy_rel_ints_df = cosy_rel_ints_df.assign(type="cosy")
     rel_ints_df = pd.concat((hsqc_rel_ints_df, cosy_rel_ints_df))
 
     # Calculate the average integrals by multiplicity
     avgd_ints = rel_ints_df.groupby("type").mean()
+    # Fix the order if we need to (because by default it would be alphabetical)
+    if not separate_mult:
+        avgd_ints = avgd_ints.reindex(["hsqc", "cosy"])
     avgd_ints.drop(columns=["f1", "f2"], inplace=True)
 
     # Get currently active axis if none provided
@@ -703,8 +710,9 @@ def hsqc_cosy_stripplot(molecule: Any,
                   zorder=0, alpha=stripplot_alpha,
                   dodge=True, data=rel_ints_df, ax=ax, **kwargs)
     if show_averages:
+        dodge = 0.6 if separate_mult else 0.4
         sns.pointplot(x="expt", y="int", hue="type", zorder=1,
-                      dodge=0.6, data=rel_ints_df, ax=ax, join=False,
+                      dodge=dodge, data=rel_ints_df, ax=ax, join=False,
                       markers='_', palette="dark", ci=None, scale=1.25)
 
     # Customise the plot
@@ -729,17 +737,14 @@ def hsqc_cosy_stripplot(molecule: Any,
     ax.set_ylim((new_ymin, new_ymax))
 
     # Add the text and averages
+    x0 = -0.3 if separate_mult else -0.2
+    dx = 0.2 if separate_mult else 0.4
     for x, (_, expt_avgs) in enumerate(avgd_ints.items()):
-        for i, ((_, avg), deep, dark) in enumerate(zip(expt_avgs.items(),
-                                                       sns.color_palette("deep"),
-                                                       sns.color_palette("dark"))):
-            ax.text(x=x-0.3+i*0.2, y=0.02, s=f"({avg:.2f})",
+        for i, ((_, avg), deep) in enumerate(zip(expt_avgs.items(),
+                                                 sns.color_palette("deep"))):
+            ax.text(x=x+x0+i*dx, y=0.02, s=f"({avg:.2f})",
                     color=deep, horizontalalignment="center",
                     transform=ax.get_xaxis_transform(),
                     **font_kwargs)
-            # I prefer pointplot() over this.
-            # if show_averages:
-            #     ax.hlines(y=avg, xmin=(x-0.35+i*0.2), xmax=(x-0.25+i*0.2),
-            #               color=dark, zorder=1, linewidth=2)
     style_axes(ax, "plot")
     return plt.gcf(), ax

@@ -503,6 +503,7 @@ class PlotObject1D():
 
 def _mkplot1d(ax: Any = None,
               style: str = "1d",
+              tight_layout: bool = True,
               stacked: bool = False,
               voffset: Union[Sequence, float] = 0,
               hoffset: Union[Sequence, float] = 0,
@@ -525,6 +526,8 @@ def _mkplot1d(ax: Any = None,
     style : str, optional
         Plot style to use. By default this is ``1d``. For the list of plot
         styles, see `style_axes()`.
+    tight_layout : bool, optional (default True)
+        Whether to call plt.tight_layout() after constructing the plot.
     stacked : bool, optional
         True to make spectra tightly stacked vertically (i.e. not
         superimposed). If True, overrides any value passed in *voffset*.
@@ -650,7 +653,7 @@ def _mkplot1d(ax: Any = None,
     if make_legend:
         ax.legend(loc=legend_loc)
     # Apply axis styles.
-    style_axes(ax, style)
+    style_axes(ax, style=style, tight_layout=tight_layout)
     return ax.figure, ax
 
 
@@ -885,6 +888,7 @@ def _stage2d(dataset: ds.Dataset2D,
 
 def _mkplot2d(ax: Any = None,
               style: str = "2d",
+              tight_layout: bool = True,
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
               autolabel: str = "nucl",
@@ -907,6 +911,8 @@ def _mkplot2d(ax: Any = None,
     style : str, optional
         Plot style to use. By default this is ``2d``. For the list of plot
         styles, see `style_axes()`.
+    tight_layout : bool, optional (default True)
+        Whether to call plt.tight_layout() after constructing the plot.
     offset : (float, float), optional
         Amount to offset successive spectra by in units of ppm, provided as
         *(f1_offset, f2_offset)*.
@@ -1018,7 +1024,7 @@ def _mkplot2d(ax: Any = None,
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     # Apply other styles.
-    style_axes(ax, style)
+    style_axes(ax, style=style, tight_layout=tight_layout)
 
     # Make legend. This part is not easy...
     # See https://stackoverflow.com/questions/41752309/ for an example

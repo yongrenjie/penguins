@@ -20,6 +20,7 @@ from .exportdeco import export
 @export
 def style_axes(ax: Any,
                style: str,
+               tight_layout: bool = True,
                ) -> None:
     """Styles the given |Axes| instance according to the requested style.
 
@@ -35,6 +36,8 @@ def style_axes(ax: Any,
     style : str
         Style to be applied. The available options are ``1d``, ``1d_box``,
         ``2d``, ``plot``, and ``natural``.
+    tight_layout : bool, default True
+        Whether to apply plt.tight_layout().
 
     Returns
     -------
@@ -71,23 +74,22 @@ def style_axes(ax: Any,
         set_xaxis_ticks(ax)
         thicken_spines(ax)
         remove_top_left_right_spines(ax)
-        plt.tight_layout()
     elif style == "1d_box":
         disable_y_axis(ax)
         set_xaxis_ticks(ax)
         thicken_spines(ax)
-        plt.tight_layout()
     elif style == "2d":
         thicken_spines(ax)
         set_xyaxis_ticks(ax)
-        plt.tight_layout()
     elif style == "plot":
         thicken_spines(ax)
-        plt.tight_layout()
     elif style == "natural":
         pass
     else:
         warnings.warn(f"Invalid style '{style}' requested.")
+
+    if tight_layout:
+        plt.tight_layout()
 
 
 @export
@@ -120,7 +122,8 @@ def cleanup_axes() -> None:
 @export
 def cleanup_figure(padding: float = 0.02
                    ) -> None:
-    # Resize subplots so that their titles don't clash with the figure legend.
+    # Resize subplots so that their titles don't clash with the figure legend,
+    # or figure suptitle.
     plt.tight_layout()
     fig = plt.gcf()
     fig.canvas.draw()
@@ -129,8 +132,13 @@ def cleanup_figure(padding: float = 0.02
     inv = fig.transFigure.inverted()
     legend_bboxs = [inv.transform(legend.get_window_extent(renderer=r))
                     for legend in fig.legends]
+    # Try to add figure suptitle.
+    if fig._suptitle is not None:
+        title_bbox = inv.transform(fig._suptitle.get_window_extent(renderer=r))
+        legend_bboxs.append(title_bbox)
     if len(legend_bboxs) == 0:
-        raise ValueError("cleanup_figure(): no figure legends were found")
+        raise ValueError("cleanup_figure(): no figure legends or titles"
+                         " were found")
     legend_miny = min(bbox[0][1] for bbox in legend_bboxs)
     # Find maximum bbox y-extent of axes titles.
     titles = [ax.title for ax in fig.axes]

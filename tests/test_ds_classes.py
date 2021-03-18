@@ -23,7 +23,7 @@ def test_dataset_initialisation():
     assert all(par in proton.pars for par in initial_pars)
     assert proton["aq"] == pytest.approx(2.9360127)
     assert proton["td"] == 65536
-    assert proton["sw"] == pytest.approx(15.9440, abs=0.0001)
+    assert proton["sw"] == pytest.approx(15.9440, rel=1e-4)
     assert proton["sfo1"] == pytest.approx(699.9935)
     assert proton["dw"] == pytest.approx(44.800)
     assert proton["bf1"] == pytest.approx(699.99)
@@ -193,19 +193,37 @@ def test_1d_ppm_hz_scales():
 
     ppm = proton.ppm_scale()
     assert ppm.shape == (proton["si"], )
-    assert np.min(ppm) == proton["o1p"] - (proton["sw"] / 2)
-    assert np.max(ppm) == proton["o1p"] + (proton["sw"] / 2)
+    assert np.min(ppm) == proton["offset"] - (proton["sw_p"] / proton["sfo1"])
+    assert np.max(ppm) == proton["offset"]
+    # for this dataset offset and sw_p should be almost the same as O1 and SW_h
+    assert np.allclose(ppm, np.linspace(proton["o1p"] + proton["sw"]/2,
+                                        proton["o1p"] - proton["sw"]/2,
+                                        proton["si"]),
+                       atol=1e-4)
+    # check that ppm scale is in the right order
     assert np.min(ppm) == pytest.approx(ppm[-1])
     assert np.max(ppm) == pytest.approx(ppm[0])
+    # check bounds argument
     assert np.allclose(proton.ppm_scale(bounds=good_bounds), ppm[28658:36880])
+    # check outside spectral window
     with pytest.raises(ValueError) as exc_info:
         proton.ppm_scale(bounds=bad_bounds)
         assert "outside spectral window" in str(exc_info)
 
     hz = proton.hz_scale()
     assert hz.shape == (proton["si"], )
-    assert np.min(hz) == proton["o1"] - (proton["sw"] * proton["sfo1"] / 2)
-    assert np.max(hz) == proton["o1"] + (proton["sw"] * proton["sfo1"] / 2)
+    assert np.min(hz) == pytest.approx((proton["offset"] * proton["sfo1"])
+                                       - proton["sw_p"],
+                                       rel=1e-4)
+    assert np.max(hz) == pytest.approx(proton["offset"] * proton["sfo1"],
+                                       rel=1e-4)
+    # for this dataset offset and sw_p should be almost the same as O1 and SW_h
+    assert np.min(hz) == pytest.approx(proton["o1"]
+                                       - (proton["sw"] * proton["sfo1"] / 2),
+                                       rel=1e-4)
+    assert np.max(hz) == pytest.approx(proton["o1"]
+                                       + (proton["sw"] * proton["sfo1"] / 2),
+                                       rel=1e-4)
     assert np.min(hz) == pytest.approx(hz[-1])
     assert np.max(hz) == pytest.approx(hz[0])
     assert np.allclose(proton.hz_scale(bounds=good_bounds), hz[28658:36880])
@@ -262,24 +280,41 @@ def test_2d_ppm_hz_scales():
     # f1 ppm_scale
     ppm = cosy.ppm_scale(axis=0)
     assert ppm.shape == (cosy["si"][0], )
-    assert np.min(ppm) == cosy["o1p"][0] - (cosy["sw"][0] / 2)
-    assert np.max(ppm) == cosy["o1p"][0] + (cosy["sw"][0] / 2)
+    assert np.min(ppm) == cosy["offset"][0] - (cosy["sw_p"][0] / cosy["sfo1"][0])
+    assert np.max(ppm) == cosy["offset"][0]
+    # for this dataset offset and sw_p should be almost the same as O1 and SW_h
+    assert np.allclose(ppm, np.linspace(cosy["o1p"][0] + cosy["sw"][0]/2,
+                                        cosy["o1p"][0] - cosy["sw"][0]/2,
+                                        cosy["si"][0]),
+                       atol=1e-4)
+    # Check that ppm scale is in the right order
     assert np.min(ppm) == pytest.approx(ppm[-1])
     assert np.max(ppm) == pytest.approx(ppm[0])
+    # Check bounds argument
     assert np.allclose(cosy.ppm_scale(axis=0, bounds="4..6"),
                        ppm[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1])
+    # Check outside spectral window
     with pytest.raises(ValueError) as exc_info:
         cosy.ppm_scale(axis=0, bounds="-10..2")
         assert "outside spectral window" in str(exc_info)
+
     # f2 ppm_scale
     ppm = cosy.ppm_scale(axis=1)
     assert ppm.shape == (cosy["si"][1], )
-    assert np.min(ppm) == cosy["o1p"][1] - (cosy["sw"][1] / 2)
-    assert np.max(ppm) == cosy["o1p"][1] + (cosy["sw"][1] / 2)
+    assert np.min(ppm) == cosy["offset"][1] - (cosy["sw_p"][1] / cosy["sfo1"][1])
+    assert np.max(ppm) == cosy["offset"][1]
+    # for this dataset offset and sw_p should be almost the same as O1 and SW_h
+    assert np.allclose(ppm, np.linspace(cosy["o1p"][1] + cosy["sw"][1]/2,
+                                        cosy["o1p"][1] - cosy["sw"][1]/2,
+                                        cosy["si"][1]),
+                       atol=1e-4)
+    # Check that ppm scale is in the right order
     assert np.min(ppm) == pytest.approx(ppm[-1])
     assert np.max(ppm) == pytest.approx(ppm[0])
+    # Check bounds argument
     assert np.allclose(cosy.ppm_scale(axis=1, bounds="4..6"),
                        ppm[cosy.ppm_to_index(1, 6):cosy.ppm_to_index(1, 4) + 1])
+    # Check outside spectral window
     with pytest.raises(ValueError) as exc_info:
         cosy.ppm_scale(axis=1, bounds="-10..2")
         assert "outside spectral window" in str(exc_info)
@@ -287,8 +322,12 @@ def test_2d_ppm_hz_scales():
     # f1 hz_scale
     hz = cosy.hz_scale(axis=0)
     assert hz.shape == (cosy["si"][0], )
-    assert np.min(hz) == cosy["o1"][0] - (cosy["sw"][0] * cosy["sfo1"][0] / 2)
-    assert np.max(hz) == cosy["o1"][0] + (cosy["sw"][0] * cosy["sfo1"][0] / 2)
+    assert np.min(hz) == pytest.approx((cosy["offset"][0] * cosy["sfo1"][0]) -
+                                       cosy["sw_p"][0],
+                                       rel=1e-4)
+    assert np.max(hz) == pytest.approx(cosy["offset"][0] * cosy["sfo1"][0],
+                                       rel=1e-4)
+    # check that hz scale is in the right order
     assert np.min(hz) == pytest.approx(hz[-1])
     assert np.max(hz) == pytest.approx(hz[0])
     assert np.allclose(cosy.hz_scale(axis=0, bounds="4..6"),
@@ -299,8 +338,9 @@ def test_2d_ppm_hz_scales():
     # f2 hz_scale
     hz = cosy.hz_scale(axis=1)
     assert hz.shape == (cosy["si"][1], )
-    assert np.min(hz) == cosy["o1"][1] - (cosy["sw"][1] * cosy["sfo1"][1] / 2)
-    assert np.max(hz) == cosy["o1"][1] + (cosy["sw"][1] * cosy["sfo1"][1] / 2)
+    assert np.min(hz) == pytest.approx((cosy["offset"][1] * cosy["sfo1"][1]) -
+                                       cosy["sw_p"][1])
+    assert np.max(hz) == pytest.approx(cosy["offset"][1] * cosy["sfo1"][1])
     assert np.min(hz) == pytest.approx(hz[-1])
     assert np.max(hz) == pytest.approx(hz[0])
     assert np.allclose(cosy.hz_scale(axis=1, bounds="4..6"),

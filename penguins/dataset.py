@@ -743,7 +743,6 @@ class _2D_ProcDataMixin():
                 * 35
                 * (2 ** float(self["nc_proc"][1])))   # type: ignore # mixin
 
-
     def _find_proc_data_paths(self) -> None:
         self.path: Path
         self._p_rr = self.path / "2rr"
@@ -752,7 +751,6 @@ class _2D_ProcDataMixin():
         self._p_ii = self.path / "2ii"
         # if the imaginary parts do not exist, the error will be caught later,
         # specifically at _read_one_spec().
-
 
     def _read_spec(self, spectype: str) -> None:
         # Helper function
@@ -1015,8 +1013,8 @@ class Dataset1D(_1D_RawDataMixin,
         """
         if ppm is None:
             return None
-        max_ppm = self["o1p"] + self["sw"]/2
-        min_ppm = self["o1p"] - self["sw"]/2
+        ppm_scale = self.ppm_scale()
+        max_ppm, min_ppm = ppm_scale[0], ppm_scale[-1]
         if ppm > max_ppm or ppm < min_ppm:
             raise ValueError(f"Chemical shift {ppm} is outside spectral window.")
         spacing = (max_ppm - min_ppm)/(self["si"] - 1)
@@ -1041,8 +1039,8 @@ class Dataset1D(_1D_RawDataMixin,
         scale : ndarray
             The appropriate slice of chemical shifts.
         """
-        max_ppm = self["o1p"] + self["sw"]/2
-        min_ppm = self["o1p"] - self["sw"]/2
+        max_ppm = self["offset"]
+        min_ppm = max_ppm - (self["sw_p"] / self["sfo1"])
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self.bounds_to_slice(bounds)]
 
@@ -1062,10 +1060,7 @@ class Dataset1D(_1D_RawDataMixin,
         scale : ndarray
             The appropriate slice of frequencies.
         """
-        # These use SFO, not BF
-        max_hz = self["o1"] + (self["sw"] * self["sfo1"] / 2)
-        min_hz = self["o1"] - (self["sw"] * self["sfo1"] / 2)
-        full_hz_scale = np.linspace(max_hz, min_hz, self["si"])
+        full_hz_scale = self.ppm_scale() * self["sfo1"]
         return full_hz_scale[self.bounds_to_slice(bounds)]
 
     def nuclei_to_str(self
@@ -1228,8 +1223,8 @@ class Dataset2D(_2D_RawDataMixin,
         """
         if ppm is None:
             return None
-        max_ppm = self["o1p"][axis] + self["sw"][axis]/2
-        min_ppm = self["o1p"][axis] - self["sw"][axis]/2
+        ppm_scale = self.ppm_scale(axis=axis)
+        max_ppm, min_ppm = ppm_scale[0], ppm_scale[-1]
         if ppm > max_ppm or ppm < min_ppm:
             raise ValueError(f"Chemical shift {ppm} is outside spectral window.")
         spacing = (max_ppm - min_ppm)/(self["si"][axis] - 1)
@@ -1257,8 +1252,8 @@ class Dataset2D(_2D_RawDataMixin,
         scale : ndarray
             The appropriate slice of chemical shifts.
         """
-        max_ppm = self["o1p"][axis] + (self["sw"][axis] / 2)
-        min_ppm = self["o1p"][axis] - (self["sw"][axis] / 2)
+        max_ppm = self["offset"][axis]
+        min_ppm = max_ppm - (self["sw_p"][axis] / self["sfo1"][axis])
         full_scale = np.linspace(max_ppm, min_ppm, int(self["si"][axis]))
         return full_scale[self.bounds_to_slice(axis, bounds)]
 
@@ -1282,9 +1277,7 @@ class Dataset2D(_2D_RawDataMixin,
             The appropriate slice of frequencies.
         """
         # These use SFO, not BF
-        max_hz = self["o1"][axis] + (self["sw"][axis] * self["sfo1"][axis] / 2)
-        min_hz = self["o1"][axis] - (self["sw"][axis] * self["sfo1"][axis] / 2)
-        full_hz_scale = np.linspace(max_hz, min_hz, int(self["si"][axis]))
+        full_hz_scale = self.ppm_scale(axis=axis) * self["sfo1"][axis]
         return full_hz_scale[self.bounds_to_slice(axis, bounds)]
 
     def project(self,

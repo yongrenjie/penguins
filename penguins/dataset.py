@@ -238,7 +238,8 @@ class _parDict(UserDict):
                     val = np.array([val_indirect, val])
                 else:
                     val = (val_indirect, val)
-        if par.upper() in _int_pars:
+        if (par.upper() in _int_pars
+                or par.rstrip("1234567890").upper() in _int_pars):
             val = _try_convert(val, int)
         return val
 

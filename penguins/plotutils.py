@@ -140,20 +140,16 @@ def cleanup_figure(padding: float = 0.02
         raise ValueError("cleanup_figure(): no figure legends or titles"
                          " were found")
     legend_miny = min(bbox[0][1] for bbox in legend_bboxs)
+
     # Find maximum bbox y-extent of axes titles.
     titles = [ax.title for ax in fig.axes]
     title_bboxs = [inv.transform(title.get_window_extent(renderer=r))
                    for title in titles]
-    offending_title_bboxs = [title_bbox for title_bbox in title_bboxs
-                             if title_bbox[1][1] > legend_miny]
-    # If there are no offending bboxes, then we can skip ahead.
-    if offending_title_bboxs == []:
-        axes_maxy = legend_miny - padding
-    # Otherwise, we need to find which of them is the largest.
-    else:
-        max_offending_height = max(bbox[1][1] - bbox[0][1]
-                                   for bbox in offending_title_bboxs)
-        axes_maxy = legend_miny - padding - max_offending_height
+    title_yextents = [title_bbox[1][1] - title_bbox[0][1]
+                      for title_bbox in title_bboxs]
+    max_title_height = max(title_yextents, default=0)
+
+    axes_maxy = legend_miny - padding - max_title_height
     # Resize
     plt.subplots_adjust(top=axes_maxy)
 

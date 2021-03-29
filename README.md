@@ -50,4 +50,4 @@ pg.show()
 
 ----------
 
-[Regarding the 'NPE' in the name: I made this package after getting fed up of getting `java.lang.NullPointerException` in TopSpin's Plot tab. It's especially bad on OS X Catalina, but even on Windows it's rather buggy. Also, penguins are cute. 🐧]
+(The 'NPE' in the name stands for the "billion-dollar mistake", i.e. the `NullPointerException` familiar to TopSpin users.)

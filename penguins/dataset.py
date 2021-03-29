@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from copy import deepcopy
 from collections import UserDict, abc
 from pathlib import Path
 from typing import (Any, Union, Tuple, Optional,
@@ -10,14 +11,100 @@ import numpy as np               # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 
 from . import pgplot
+from .exportdeco import export
 from .type_aliases import *
 
 
+# -- Reading in data ------------------------------------
+
+@export
+def read(path: Union[str, Path],
+         expno: int,
+         procno: int = 1) -> TDatasetnD:
+    """Create a Dataset object from a spectrum folder, expno, and procno.
+
+    The subclass of Dataset returned is determined by what files are available
+    in the spectrum folder. It can be either `Dataset1D`, `Dataset1DProj`, or
+    `Dataset2D`.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the spectrum name folder.
+    expno : int
+        Expno of experiment of interest.
+    procno : int (optional)
+        Procno of processed data. Defaults to 1.
+
+    Returns
+    -------
+    Dataset
+        A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
+        detected spectrum dimensionality.
+    """
+    p = Path(path) / str(expno) / "pdata" / str(procno)
+    return read_abs(p)
+
+
+@export
+def read_abs(path: Union[str, Path]
+             ) -> TDatasetnD:
+    """Create a Dataset object directly from a procno folder.
+
+    There is likely no reason to ever use this because `read()` is far easier
+    to use, especially if you are plotting multiple spectra with different
+    expnos from the same folder.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the procno folder.
+
+    Returns
+    -------
+    Dataset
+        A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
+        detected spectrum dimensionality.
+
+    See Also
+    --------
+    read : The preferred interface for importing datasets.
+    """
+    p = Path(path)
+    # Figure out which type of spectrum it is.
+    if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
+        raise FileNotFoundError(f"Invalid path to spectrum {p}:"
+                                " either procs or acqus were not found")
+    if (p.parents[1] / "ser").exists():
+        if (p / "used_from").exists():
+            return Dataset1DProj(p)
+        else:
+            return Dataset2D(p)
+    elif (p.parents[1] / "fid").exists():
+        return Dataset1D(p)
+    else:
+        raise FileNotFoundError(f"Invalid path to spectrum {p}:"
+                                " no raw data was found. Have you acquired the"
+                                " spectrum yet?")
+
+
+# -- Utility objects ------------------------------------
+
 def _try_convert(x: Any, type: Any):
-    # Tries to convert an input to a specific type.
-    # Returns the original input if it fails.
-    # Works with tuples and lists too: tries to convert individual elements.
-    # Works with np.ndarrays using ndarray.astype()
+    """
+    Tries to convert an input, or each element of a sequence of inputs, to a
+    specific type. Returns the original input if it fails. The sequence can be
+    a tuple, list, or np.ndarray (in which case it delegates to the
+    np.ndarray.astype() method).
+
+    Examples:
+        >>> _try_convert(4, str)
+        "4"
+        >>> _try_convert(("4.3", "5.1"), float)
+        (4.3, 5.1)
+        >>> _try_convert(["a", "b"], int)
+        ["a", "b"]
+    """
     try:
         return type(x)
     except ValueError:
@@ -30,10 +117,65 @@ def _try_convert(x: Any, type: Any):
             else:
                 return y
         elif isinstance(x, np.ndarray):
-            return x.astype(dtype=type)
+            try:
+                return x.astype(dtype=type)
+            except ValueError:
+                return x
         else:
             return x
 
+
+def _parse_bounds(b: TBounds = "",
+                  ) -> Tuple[OF, OF]:
+    """
+    Parses a bounds string or tuple, checking that it is valid. Returns (lower,
+    upper).
+    """
+    if isinstance(b, str):
+        if b == "" or b == "..":
+            return None, None
+        elif b.startswith(".."):   # "..5" -> (None, 5)
+            return None, float(b[2:])
+        elif b.endswith(".."):   # "3.." -> (3, None)
+            return float(b[:-2]), None
+        elif ".." in b:
+            x, y = b.split("..")
+            xf, yf = float(x), float(y)  # let TypeError propagate
+            if xf >= yf:
+                raise ValueError(f"Use '{yf}..{xf}', not '{xf}..{yf}'.")
+            return xf, yf
+        else:
+            raise ValueError(f"Invalid value {b} provided for bounds.")
+    else:
+        if len(b) != 2:
+            raise ValueError(f"Invalid value {b} provided for bounds.")
+        elif b[0] is not None and b[1] is not None and b[0] > b[1]:
+            raise ValueError(f"Please use {(b[1], b[0])}, not {b}.")
+        else:
+            return b[0], b[1]
+
+
+# Parameters that are lists, i.e. can be followed by a number.
+_list_pars = """AMP AMPCOIL BWFAC CAGPARS CNST CPDPRG D FCUCHAN FN_INDIRECT FS
+GPNAM GPX GPY GPZ HGAIN HPMOD IN INF INP INTEGFAC L MULEXPNO P PACOIL PCPD
+PEXSEL PHCOR PL PLW PLWMAX PRECHAN PROBINPUTS RECCHAN RECPRE RECPRFX RECSEL
+RSEL S SELREC SP SPNAM SPOAL SPOFFS SPPEX SPW SUBNAM SWIBOX TD_INDIRECT TE_STAB
+TL TOTROT XGAIN""".split()
+
+# Parameters that should be integers, not floats. Taken from TopSpin 4.10 AU
+# programming documentation.
+_int_pars = """ABSG AQORDER AQSEQ AQ_MOD BC_MOD BYTORDA BYTORDP DATMOD DIGMOD
+DIGTYP DS EXPNO2 EXPNO3 FNMODE FT_MOD HGAIN HOLDER HPMOD HPPRGN INTBC L LOCSHFT
+LPBIN MASR MC2 ME_MOD NBL NC NCOEF NC_PROC NLEV NS NSP NZP OVERFLW PARMODE
+PH_MOD PKNL POWMOD PPARMOD PRGAIN PSCAL PSIGN PROCNO2 PROCNO3 QNP REVERSE RO
+RSEL SI STSI STSR SYMM TD TD0 TDEFF TDOFF TILT WBST WDW XDIM XGAIN YMAX_P
+YMIN_P""".split()
+
+# Extra integer parameters that weren't documented.
+_int_pars = _int_pars + """DTYPA DTYPP GRPDLY""".split()
+
+
+# -- Fundamental Dataset methods ------------------------
 
 class _parDict(UserDict):
     """Modified dictionary for storing acquisition & processing parameters.
@@ -50,15 +192,14 @@ class _parDict(UserDict):
 
     The lookup function attempts to be clever and convert the parameters to
     floats if possible; otherwise, the parameters are stored as strings. There
-    are currently several exceptions to this rule, such as ``TD`` and ``SI``,
-    which are stored as ints. However, this list is not complete, and if there
-    is a parameter that should be an int but isn't, it would be great if you
-    could report it.
+    are a number of exceptions to this rule, such as ``TD`` and ``SI``, which
+    should be ints and not floats. The list of such parameters is extracted
+    from the TopSpin documentation.
 
     For 2D spectra, string parameters are stored as a tuple of *(f1_value,
-    f2_value)*. Float parameters are stored as a |ndarray| to facilitate
-    elementwise manipulations (e.g. calculating ``O1P`` in both dimensions at
-    one go).
+    f2_value)*. Float and int parameters are stored as a |ndarray| to
+    facilitate elementwise manipulations (e.g. calculating ``O1P`` in both
+    dimensions at one go).
     """
 
     def _editkey(self, key: object):
@@ -97,10 +238,8 @@ class _parDict(UserDict):
                     val = np.array([val_indirect, val])
                 else:
                     val = (val_indirect, val)
-        # Some parameters must be ints, this will save the user (and me) headaches
-        int_pars = ["td", "si", "ns", "xdim", "nustd", "bytorda", "bytordp",
-                    "dtypa", "dtypp"]
-        if par.lower() in int_pars:
+        if (par.upper() in _int_pars
+                or par.rstrip("1234567890").upper() in _int_pars):
             val = _try_convert(val, int)
         return val
 
@@ -113,11 +252,8 @@ class _parDict(UserDict):
         # Split par into number-less bit and number bit
         parl = par.rstrip("1234567890")
         parr = par[len(parl):]
-        params_with_space = ["CNST", "D", "P", "PLW", "PCPD", "GPX", "GPY",
-                             "GPZ", "SPW", "SPOAL", "SPOFFS", "L", "IN",
-                             "INP", "PHCOR"]
         # Get the parameter
-        if (parr != "") and (parl in params_with_space):  # e.g. cnst2
+        if (parr != "") and (parl in _list_pars):  # e.g. cnst2
             with open(fp, "r") as file:
                 # Read up to the line declaring the parameters
                 for line in file:
@@ -132,14 +268,18 @@ class _parDict(UserDict):
                 while not line.startswith("##"):
                     s = s + line + " "
                     line = file.readline()
-                # Pick out the desired value and return it
-                return s.split()[int(parr)]
+                # Pick out the desired value
+                val = s.split()[int(parr)]
+                # Strip away surrounding angle brackets
+                if val[0] == '<' and val[-1] == '>':
+                    val = val[1:-1]
+                return val
         else:                                             # e.g. sfo1 or rga
             with open(fp, "r") as file:
                 for line in file:
                     if line.upper().startswith(f"##${par}="):
                         val = line.split(maxsplit=1)[-1].strip()
-                        # strip away surrounding angle brackets
+                        # Strip away surrounding angle brackets
                         if val[0] == '<' and val[-1] == '>':
                             val = val[1:-1]
                         return val
@@ -193,38 +333,6 @@ class _parDict(UserDict):
         return s
 
 
-def _parse_bounds(b: TBounds = "",
-                  ) -> Tuple[OF, OF]:
-    """
-    Parses a bounds string or tuple, checking that it is valid. Returns (lower,
-    upper).
-    """
-    if isinstance(b, str):
-        if b == "":
-            return None, None
-        elif b.startswith(".."):   # "..5" -> (None, 5)
-            return None, float(b[2:])
-        elif b.endswith(".."):   # "3.." -> (3, None)
-            return float(b[:-2]), None
-        elif ".." in b:
-            x, y = b.split("..")
-            xf, yf = float(x), float(y)  # let TypeError propagate
-            if xf >= yf:
-                raise ValueError(f"Use '{yf}..{xf}', not '{xf}..{yf}'.")
-            return xf, yf
-        else:
-            raise ValueError(f"Invalid value {b} provided for bounds.")
-    else:
-        if len(b) != 2:
-            raise ValueError(f"Invalid value {b} provided for bounds.")
-        elif b[0] is not None and b[1] is not None and b[0] > b[1]:
-            raise ValueError(f"Please use {(b[1], b[0])}, not {b}.")
-        else:
-            return b[0], b[1]
-
-
-# -- Fundamental Dataset methods ------------------------
-
 class _Dataset():
     """Defines behaviour that is common to all datasets. Specifically, this
     class defines the dictionary-style lookup of NMR parameters.
@@ -247,21 +355,25 @@ class _Dataset():
                  ) -> None:
         # Set up file path information
         self.path = Path(path).resolve().expanduser()
-        self.expno = self.path.parents[1].name
-        self.procno = self.path.name
+        self.expno = int(self.path.parents[1].name)
+        self.procno = int(self.path.name)
         # Initialise _parDict and some key parameters
         self._initialise_pars()
         # Get paths to data and parameter files
         self._find_raw_data_paths()     # type: ignore # mixin
         self._find_proc_data_paths()    # type: ignore # mixin
         self._find_param_file_paths()   # type: ignore # mixin
-        # Don't read in the actual 2D data, *until* the user asks for it. In
-        # other words, data reading is lazy. Haskell is really growing on me.
+        # Don't read in the actual data, *until* the user asks for it. In other
+        # words, data reading is lazy. Haskell is really growing on me...
 
     def _initialise_pars(self) -> None:
         self.pars = _parDict(self.path)
         self["aq"] = (self["td"] / 2) / (self["sw"] * self["sfo1"])  # This is sfo1
-        self["dw"] = self["aq"] * 1000000 / self["td"]
+        if isinstance(self["aq"], np.ndarray):  # 2D
+            self["dw"] = self["aq"][1] * 1000000 / self["td"][1]
+            self["inf1"]
+        else:  # 1D
+            self["dw"] = self["aq"] * 1000000 / self["td"]
         self["o1p"] = self["o1"] / self["bf1"]   # This is BF1
         self["si"]
         self["nuc1"]
@@ -324,12 +436,23 @@ class _1D_RawDataMixin():
         self._p_acqus = self.path.parents[1] / "acqus"
 
     def _read_raw_data(self) -> np.ndarray:
-        datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
-        datatype += "i4"
-        fid = np.fromfile(self._p_fid, dtype=datatype)
-        fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
-        fid = np.transpose(fid) * (2 ** self["nc"])      # type: ignore # mixin
-        self._fid = fid[0] + (1j * fid[1])
+        # Determine datatype of FID
+        if self["dtypa"] == 0:                               # type: ignore # mixin
+            datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
+            datatype += "i4"
+            fid = np.fromfile(self._p_fid, dtype=datatype)
+            fid = fid[:self["td"]]                           # type: ignore # mixin
+            fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
+            fid = np.transpose(fid) * (2 ** self["nc"])      # type: ignore # mixin
+            self._fid = fid[0] + (1j * fid[1])
+        elif self["dtypa"] == 2:
+            datatype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
+            datatype += "d"
+            fid = np.fromfile(self._p_fid, dtype=datatype)
+            fid = fid[:self["td"]]                           # type: ignore # mixin
+            fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
+            fid = np.transpose(fid)
+            self._fid = fid[0] + (1j * fid[1])
 
     def raw_data(self) -> np.ndarray:
         """
@@ -375,19 +498,30 @@ class _1D_ProcDataMixin():
 
     def _find_proc_data_paths(self) -> None:
         self._p_real = self.path / "1r"        # type: ignore # mixin
-        if (self.path / "1i").exists():        # type: ignore # mixin
-            self._p_imag = self.path / "1i"    # type: ignore # mixin
+        self._p_imag = self.path / "1i"        # type: ignore # mixin
+        # if the imaginary part does not exist, the error will be caught later,
+        # specifically at _read_one_spec().
 
-    def _read_spec(self, spectype: str) -> np.ndarray:
-        if self["dtypp"] == 0:                            # type: ignore # mixin
-            dt = "<" if self["bytordp"] == 0 else ">"     # type: ignore # mixin
-            dt += "i4"
-        else:
-            raise NotImplementedError("float data not yet accepted")
+    def _read_spec(self, spectype: str) -> None:
+        def _read_one_spec(spec_path: Path) -> np.ndarray:
+            """Helper function."""
+            # Determine datatype
+            if self["dtypp"] == 0:                            # type: ignore # mixin
+                dt = "<" if self["bytordp"] == 0 else ">"     # type: ignore # mixin
+                dt += "i4"
+            else:
+                raise NotImplementedError("float data not yet accepted")
+            # Return the spectrum as an ndarray
+            if not spec_path.exists():
+                raise FileNotFoundError(f"processed data file {spec_path}"
+                                        " not found.")
+            return (np.fromfile(spec_path, dtype=np.dtype(dt))
+                    * (2 ** float(self["nc_proc"])))          # type: ignore # mixin
+
         if spectype == "real":
-            self._real = np.fromfile(self._p_real, dtype=np.dtype(dt)) * (2 ** self["nc_proc"])  # type: ignore # mixin
+            self._real = _read_one_spec(self._p_real)
         elif spectype == "imag":
-            self._imag = np.fromfile(self._p_imag, dtype=np.int32) * (2 ** self["nc_proc"])  # type: ignore # mixin
+            self._imag = _read_one_spec(self._p_imag)
         else:
             raise ValueError("_read_spec(): invalid spectype")
 
@@ -475,21 +609,21 @@ class _1D_ProcDataMixin():
         return slice(self.ppm_to_index(upper) or 0,                      # type: ignore # mixin
                      (self.ppm_to_index(lower) or self["si"] - 1) + 1)   # type: ignore # mixin
 
-    def to_magnitude(self) -> Dataset1D:
+    def to_magnitude(self) -> _1D_ProcDataMixin:
         """
         Calculates the magnitude mode spectrum and returns it as a new
         Dataset1D object.
         """
-        new_ds = Dataset1D(self.path)   # type: ignore # mixin
+        new_ds = deepcopy(self)
         try:
             new_ds._real = np.abs(new_ds.real + 1j * new_ds.imag)
         except AttributeError:   # no imag
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None
-        new_ds._imag = np.zeros(new_ds.real.shape)
+        new_ds._imag = 0
         return new_ds
 
-    def mc(self) -> Dataset1D:
+    def mc(self) -> _1D_ProcDataMixin:
         """
         Alias for `to_magnitude()`.
         """
@@ -562,7 +696,7 @@ class _2D_RawDataMixin():
         ser = ser.astype(np.complex128)  # otherwise the imaginary part is lost
         ser = ser.reshape((td1, -1, 2))
         ser[:,:,1] = ser[:,:,1] * 1j
-        self._ser = ser.sum(axis=2)
+        self._ser = ser.sum(axis=2) * (2 ** self["nc"])  # type: ignore # mixin
 
     def raw_data(self):
         return self.ser
@@ -602,18 +736,28 @@ class _2D_ProcDataMixin():
             self._read_spec(spectype="ii")
             return self._ii
 
+    @property
+    def ts_baselev(self):
+        """TopSpin base level for contours."""
+        return (self["s_dev"][1]
+                * 35
+                * (2 ** float(self["nc_proc"][1])))   # type: ignore # mixin
+
     def _find_proc_data_paths(self) -> None:
         self.path: Path
         self._p_rr = self.path / "2rr"
         self._p_ri = self.path / "2ri"
         self._p_ir = self.path / "2ir"
         self._p_ii = self.path / "2ii"
+        # if the imaginary parts do not exist, the error will be caught later,
+        # specifically at _read_one_spec().
 
-    def _read_spec(self, spectype: str) -> np.ndarray:
+    def _read_spec(self, spectype: str) -> None:
         # Helper function
         def _read_one_spec(spec_path = Path) -> np.ndarray:
             if not spec_path.exists():
-                raise ValueError(f"processed data file {spec_path} not found.")
+                raise FileNotFoundError(f"processed data file {spec_path}"
+                                        " not found.")
             if np.all(self["dtypp"] == 0):                           # type: ignore # mixin
                 dt = "<" if np.all(self["bytordp"] == 0) else ">"    # type: ignore # mixin
                 dt += "i4"
@@ -632,13 +776,11 @@ class _2D_ProcDataMixin():
             sp = np.hsplit(sp, nrows)
             sp = np.concatenate(sp, axis=0)
             sp = sp.reshape(self["si"])                              # type: ignore # mixin
-            return sp * (2 ** self["nc_proc"][1])                    # type: ignore # mixin
+            return sp * (2 ** float(self["nc_proc"][1]))             # type: ignore # mixin
 
         # Read the spectra
         if spectype == "rr":
             self._rr = _read_one_spec(self._p_rr)
-            # Calculate a suitable baselev
-            self._tsbaselev = self["s_dev"][1] * 35 * (2 ** self["nc_proc"][1])    # type: ignore # mixin
         elif spectype == "ri":
             self._ri = _read_one_spec(self._p_ri)
         elif spectype == "ir":
@@ -763,9 +905,9 @@ class _2D_ProcDataMixin():
         f1_mass = f1[:-len(f1_elem)]
         f2_elem = f2.lstrip("1234567890")
         f2_mass = f2[:-len(f2_elem)]
-        return (rf"$^{{{f1_mass}}}${f1_elem}", rf"$^{{{f2_mass}}}${f2_elem}")
+        return (rf"$\rm ^{{{f1_mass}}}{f1_elem}$", rf"$\rm ^{{{f2_mass}}}{f2_elem}$")
 
-    def to_magnitude(self, axis: int) -> Dataset2D:
+    def to_magnitude(self, axis: int) -> _2D_ProcDataMixin:
         """
         Calculates the magnitude mode spectrum along the specified axis and
         returns it as a new Dataset2D object.
@@ -776,37 +918,57 @@ class _2D_ProcDataMixin():
             The axis along which to perform the magnitude calculation. 0 for
             f1, or 1 for f2.
         """
-        new_ds = Dataset2D(self.path)   # type: ignore # mixin
+        new_ds = deepcopy(self)
         try:
             if axis == 0:
                 new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ri)
+                new_ds._ir = np.abs(new_ds.ir + 1j * new_ds.ii)
+                new_ds._ri = 0
+                new_ds._ii = 0
             elif axis == 1:
                 new_ds._rr = np.abs(new_ds.rr + 1j * new_ds.ir)
+                new_ds._ri = np.abs(new_ds.ri + 1j * new_ds.ii)
+                new_ds._ir = 0
+                new_ds._ii = 0
             else:
                 raise ValueError("to_magnitude(): axis must be 0 (for"
                                  " magnitude mode in f1) or 1 (for f2).")
         except AttributeError:
             raise TypeError("The imaginary part of the spectrum was not"
                             " found.") from None
-        # Zero out all the other components.
-        new_ds._ri = np.zeros(new_ds.rr.shape)
-        new_ds._ir = np.zeros(new_ds.rr.shape)
-        new_ds._ii = np.zeros(new_ds.rr.shape)
         return new_ds
 
-    def xf1m(self) -> Dataset2D:  # alias
+    def xf1m(self) -> _2D_ProcDataMixin:
         """
         Alias for ``to_magnitude(axis=0)``, i.e. magnitude mode calculation
         along f1.
         """
         return self.to_magnitude(axis=0)
 
-    def xf2m(self) -> Dataset2D:  # alias
+    def xf2m(self) -> _2D_ProcDataMixin:
         """
         Alias for ``to_magnitude(axis=1)``, i.e. magnitude mode calculation
         along f2.
         """
         return self.to_magnitude(axis=1)
+
+    def xfbm(self) -> _2D_ProcDataMixin:
+        """
+        Performs magnitude mode calculation along both axes. ds.xfbm() is
+        equivalent to ds.xf1m().xf2m(). It is manually implemented here for
+        efficiency reasons.
+        """
+        new_ds = deepcopy(self)
+        try:
+            new_ds._rr = np.sqrt(new_ds.rr ** 2 + new_ds.ri ** 2
+                                 + new_ds.ir ** 2 + new_ds.ii ** 2)
+            new_ds._ri = 0
+            new_ds._ir = 0
+            new_ds._ii = 0
+        except AttributeError:
+            raise TypeError("The imaginary part of the spectrum was not"
+                            " found.") from None
+        return new_ds
 
 
 class _2D_PlotMixin():
@@ -851,8 +1013,8 @@ class Dataset1D(_1D_RawDataMixin,
         """
         if ppm is None:
             return None
-        max_ppm = self["o1p"] + self["sw"]/2
-        min_ppm = self["o1p"] - self["sw"]/2
+        ppm_scale = self.ppm_scale()
+        max_ppm, min_ppm = ppm_scale[0], ppm_scale[-1]
         if ppm > max_ppm or ppm < min_ppm:
             raise ValueError(f"Chemical shift {ppm} is outside spectral window.")
         spacing = (max_ppm - min_ppm)/(self["si"] - 1)
@@ -877,8 +1039,8 @@ class Dataset1D(_1D_RawDataMixin,
         scale : ndarray
             The appropriate slice of chemical shifts.
         """
-        max_ppm = self["o1p"] + self["sw"]/2
-        min_ppm = self["o1p"] - self["sw"]/2
+        max_ppm = self["offset"]
+        min_ppm = max_ppm - (self["sw_p"] / self["sfo1"])
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self.bounds_to_slice(bounds)]
 
@@ -898,10 +1060,7 @@ class Dataset1D(_1D_RawDataMixin,
         scale : ndarray
             The appropriate slice of frequencies.
         """
-        # These use SFO, not BF
-        max_hz = self["o1"] + (self["sw"] * self["sfo1"] / 2)
-        min_hz = self["o1"] - (self["sw"] * self["sfo1"] / 2)
-        full_hz_scale = np.linspace(max_hz, min_hz, self["si"])
+        full_hz_scale = self.ppm_scale() * self["sfo1"]
         return full_hz_scale[self.bounds_to_slice(bounds)]
 
     def nuclei_to_str(self
@@ -912,7 +1071,7 @@ class Dataset1D(_1D_RawDataMixin,
         nuc = self["nuc1"]          # type: ignore
         elem = nuc.lstrip("1234567890")
         mass = nuc[:-len(elem)]
-        return rf"$^{{{mass}}}${elem}"
+        return rf"$\rm ^{{{mass}}}{elem}$"
 
 
 class Dataset1DProj(_2D_RawDataMixin,
@@ -1030,7 +1189,7 @@ class Dataset1DProj(_2D_RawDataMixin,
         nuc = self["nuc1"][self.proj_axis]   # type: ignore
         elem = nuc.lstrip("1234567890")
         mass = nuc[:-len(elem)]
-        return rf"$^{{{mass}}}${elem}"
+        return rf"$\rm ^{{{mass}}}{elem}$"
 
 
 class Dataset2D(_2D_RawDataMixin,
@@ -1064,8 +1223,8 @@ class Dataset2D(_2D_RawDataMixin,
         """
         if ppm is None:
             return None
-        max_ppm = self["o1p"][axis] + self["sw"][axis]/2
-        min_ppm = self["o1p"][axis] - self["sw"][axis]/2
+        ppm_scale = self.ppm_scale(axis=axis)
+        max_ppm, min_ppm = ppm_scale[0], ppm_scale[-1]
         if ppm > max_ppm or ppm < min_ppm:
             raise ValueError(f"Chemical shift {ppm} is outside spectral window.")
         spacing = (max_ppm - min_ppm)/(self["si"][axis] - 1)
@@ -1093,8 +1252,8 @@ class Dataset2D(_2D_RawDataMixin,
         scale : ndarray
             The appropriate slice of chemical shifts.
         """
-        max_ppm = self["o1p"][axis] + (self["sw"][axis] / 2)
-        min_ppm = self["o1p"][axis] - (self["sw"][axis] / 2)
+        max_ppm = self["offset"][axis]
+        min_ppm = max_ppm - (self["sw_p"][axis] / self["sfo1"][axis])
         full_scale = np.linspace(max_ppm, min_ppm, int(self["si"][axis]))
         return full_scale[self.bounds_to_slice(axis, bounds)]
 
@@ -1118,9 +1277,7 @@ class Dataset2D(_2D_RawDataMixin,
             The appropriate slice of frequencies.
         """
         # These use SFO, not BF
-        max_hz = self["o1"][axis] + (self["sw"][axis] * self["sfo1"][axis] / 2)
-        min_hz = self["o1"][axis] - (self["sw"][axis] * self["sfo1"][axis] / 2)
-        full_hz_scale = np.linspace(max_hz, min_hz, int(self["si"][axis]))
+        full_hz_scale = self.ppm_scale(axis=axis) * self["sfo1"][axis]
         return full_hz_scale[self.bounds_to_slice(axis, bounds)]
 
     def project(self,
@@ -1239,6 +1396,7 @@ class Dataset2D(_2D_RawDataMixin,
         if axis not in [0, 1]:
             raise ValueError(f"Invalid value for axis '{axis}'")
         # For some reason mypy doesn't realise that axis must be an int by here.
+        # Dynamic typing problems...
         index_bounds = self.bounds_to_slice(axis=(1 - axis), bounds=bounds)  # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="sum",
                                     proj_axis=axis, index_bounds=index_bounds,
@@ -1302,7 +1460,63 @@ class Dataset1DProjVirtual(Dataset1DProj):
 
     This is a subclass of `Dataset1DProj`, so the available methods are exactly
     the same.
+
+    See the __init__() docstring for implementation details.
     """
+
+    def __init__(self,
+                 path: Union[str, Path],
+                 rr: np.ndarray,
+                 sign: OS = None,
+                 index_bounds: Optional[slice] = None,
+                 index: OI = None,
+                 **kwargs
+                 ) -> None:
+        """
+        The construction of this class is necessarily slightly tortuous. The
+        call to the constructor (in Dataset2D.project() / .slice() / .sum())
+        will contain the doubly real part of the parent dataset, together with
+        all the information needed to figure out the correct data for this
+        dataset (e.g. proj_type, proj_axis, sign...).
+
+        The sequence of events in __init__ is broadly as follows:
+
+         1. Get all of this data from **kwargs into instance variables.
+
+         2. Perform generic dataset initialisation. This sets instance
+            variables such as self.path, etc. and also instantiates the
+            _parDict instance. Because _parDict uses the path to the original
+            2D dataset, any parameters read here will be those of the original
+            2D dataset.
+
+         3. Overwrite the SI parameter manually. This is necessary to maintain
+            compatibility with the ppm_scale() and hz_scale() methods inherited
+            from Dataset1DProj. At an even deeper level, the reason why the
+            Dataset1DProj methods are like this is because in "genuine" 1D
+            projections made in TopSpin, the SI parameter is one-dimensional.
+            So, by manually setting SI, we are actually mimicking this TopSpin
+            behaviour.
+
+        The instance variables stored in step (1) are not used instantaneously,
+        because the data is lazily calculated. Eventually, it will be: see the
+        _read_spec() method.
+        """
+        # Step 1 of the docstring
+        self.proj_type = kwargs["proj_type"]  # "sum", "projection", or "slice"
+        self.proj_axis = kwargs["proj_axis"]  # 0 or 1
+        self.sign = sign  # "positive" or "negative", or None for sums/slices
+        self.index_bounds = index_bounds  # only for projections/sums
+        self.index = index                # only for slice
+        self._rr = rr
+        # Step 2 of the docstring
+        Dataset1DProj.__init__(self, path)
+        # Step 3 of the docstring
+        self["si"] = self["si"][self.proj_axis]
+
+    def _initialise_pars(self):
+        # We don't want to inherit this from Dataset1DProj, because that
+        # tries to look for the used_from file, and we don't have that.
+        _Dataset._initialise_pars(self)
 
     @property
     def real(self):
@@ -1312,63 +1526,57 @@ class Dataset1DProjVirtual(Dataset1DProj):
             self._read_spec(spectype="real")
             return self._real
 
-
-    def __init__(self,
-                 path: Union[str, Path],
-                 rr: np.ndarray,
-                 **kwargs
-                 ) -> None:
-        # Set some flags so that our overriding _read_spec() method can
-        # calculate the projection
-        self.proj_type = kwargs["proj_type"]  # "sum", "projection", or "slice"
-        self.proj_axis = kwargs["proj_axis"]  # 0 or 1
-        self.sign = kwargs.get("sign", None)  # "positive" or "negative", or
-                                              # None for sums/slices
-        self.index_bounds = kwargs.get("index_bounds", None)  # only for sum or projection
-        self.index = kwargs.get("index", None) # only for slice
-        # Carry out the same initialisation tasks.
-        # This calls _initialise_pars.
-        Dataset1DProj.__init__(self, path)
-        # Copy the rr file over from the original 2D dataset.
-        self._rr = rr
-        # Overwrite SI.
-        self["si"] = self["si"][self.proj_axis]
-
-    def _initialise_pars(self):
-        # We don't want to inherit this from Dataset1DProj, because that
-        # tries to look for the used_from file, and we don't have that.
-        _Dataset._initialise_pars(self)
-
     def _read_spec(self, spectype: str) -> np.ndarray:
-        if spectype == "real":
-            # First check if it's a slice; that's the easiest case
+        """
+        This method does not actually *read* a spectrum, but rather calculates
+        it from the parent 2D rr part, using the instance variables that were
+        stored during initialisation.
+        """
+        # The imaginary part can just be 0. It does not exist, but having a
+        # zero value allows us to do things like mc() on a projection.
+        if spectype == "imag":
+            self._imag = 0
+        # This is the real part of this function. Ha ha.
+        elif spectype == "real":
+            # Otherwise, we can proceed with the actual calculation.
+            # For a slice, the projection axis and the index specifying which
+            # row/column to take are all we need.
             if self.proj_type == "slice":
                 if self.proj_axis == 0:  # a column
                     self._real = self._rr[:, self.index]
                 elif self.proj_axis == 1:  # a row
                     self._real = self._rr[self.index, :]
                 return
-            # Then check if there are bounds
+            # If we reach here, then it's a projection or sum. First we need to
+            # check the bounds to make sure we take the projection/sum of the
+            # appropriate spectral region. We make sure to not override self._rr
+            # JUST IN CASE the user ever wants it.
             if self.index_bounds is not None:
                 if self.proj_axis == 0:  # columns
-                    self._rr = self._rr[:, self.index_bounds]
+                    rr = self._rr[:, self.index_bounds]
                 elif self.proj_axis == 1:  # rows
-                    self._rr = self._rr[self.index_bounds, :]
-            # Then make the projection / sum
+                    rr = self._rr[self.index_bounds, :]
+            # Then make the projection / sum.
             if self.proj_type == "projection":
+                # For positive projections, we zero out any negative elements, then
+                # take the maximum along the axis being projected along..
                 if self.sign == "positive":
-                    self._rr[self._rr < 0] = 0
-                    projection_fn = np.amax
+                    rr[rr < 0] = 0
+                    self._real = np.amax(rr, axis=(1 - self.proj_axis))
+                # And the opposite for negative projections.
                 elif self.sign == "negative":
-                    self._rr[self._rr > 0] = 0
-                    projection_fn = np.amin
-                self._real = projection_fn(self._rr, axis=(1 - self.proj_axis))
-            # Note that 'sum' doesn't care about the sign, in line with TopSpin's
-            # behaviour.
+                    rr[rr > 0] = 0
+                    self._real = np.amin(rr, axis=(1 - self.proj_axis))
+            # For a sum, we just add up both positive and negative numbers without
+            # zeroing one of them. This is in line with TopSpin's behaviour.
             elif self.proj_type == "sum":
-                self._real = np.sum(self._rr, axis=(1 - self.proj_axis))
+                self._real = np.sum(rr, axis=(1 - self.proj_axis))
+            # We should never reach here, unless the user manually instantiates a
+            # Dataset1DProjVirtual class.
+            else:
+                raise ValueError(f"invalid projection type '{self.proj_type}'")
         else:
-            raise ValueError("_read_spec(): projections only have real parts")
+            raise ValueError("_read_spec(): invalid spectype")
 
 
 TDataset1D = Union[Dataset1D, Dataset1DProj, Dataset1DProjVirtual]

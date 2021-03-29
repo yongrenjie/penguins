@@ -1,10 +1,10 @@
 from __future__ import annotations   # PEP 563
 
+import warnings
 from itertools import zip_longest, cycle
 from collections import abc
 from typing import (Union, Iterable, Dict, Optional, Any,
                     Tuple, List, Deque, Callable, Sequence, Iterator)
-from numbers import Real
 
 import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
@@ -12,11 +12,12 @@ from matplotlib.legend_handler import HandlerBase  # type: ignore
 import seaborn as sns  # type: ignore
 
 from . import dataset as ds
-from . import main
+from .exportdeco import export
+from .plotutils import *
 from .type_aliases import *
 
 
-# -- HELPER OBJECTS -------------------------------------------
+# -- Helper objects -------------------------------------------
 
 # 1D color palette to use (from seaborn). By default "deep".
 _current_palette: Union[str, List[str]] = "deep"
@@ -33,56 +34,235 @@ _bright_2d = [("#023EFF", "#E8000B"), # blue, red
               ]
 
 
-def set_palette(palette: Union[str, List[str]],
-                ) -> None:
-    """Sets the currently active color palette. The default palette is
-    seaborn's ``deep``.
+# -- Top-level plotting interface -----------------------------
 
-    The palette is used both for staging successive 1D spectra, as well as for
-    any plots done with seaborn. For 2D spectra, colors from seaborn's
-    ``bright`` palette have been manually chosen. If you want to override these,
-    you should directly pass the *colors* parameter to the stage() method.
-
-    Parameters
-    ----------
-    palette : str or list of str
-        Color palette to use. See :std:doc:`tutorial/color_palettes` for a
-        full description of the possible options.
-
-    Returns
-    -------
-    None
-    """
-    global _current_palette
-    # Change seaborn palette, in case user wants to draw other plots.
-    sns.set_palette(palette)
-    # Change penguins 1D palette.
-    _current_palette = palette
-
-
-def color_palette(palette: Optional[Union[str, List[str]]] = None,
-                  ) -> List[str]:
-    """Returns a list of colors corresponding to a color palette. If *palette*
-    is not provided, returns the colors in the current color palette.
-
-    This is essentially a wrapper around :func:`sns.color_palette
-    <seaborn.color_palette>`, but it only offers one argument, and it can't be
-    used as a context manager. Use `set_palette` if you want to change the
-    active palette.
+@export
+def mkplot(ax: Any = None,
+           empty_pha: bool = True,
+           **kwargs
+           ) -> Tuple[Any, Any]:
+    """Construct a plot from one or more staged spectra.
 
     Parameters
     ----------
-    palette : str or list of str, optional
-        The palette to look up. Defaults to the currently active color palette.
+    ax : Axes, optional
+        |Axes| instance to plot the spectra on. If not provided, creates new
+        |Figure| and |Axes| instances.
+    kwargs : dict, optional
+        Keyword arguments that are passed on to `_mkplot1d()` or `_mkplot2d()`
+        respectively, depending on the dimensionality of the spectrum being
+        plotted. In turn, these are passed on to |plot| or |contour|.
 
     Returns
     -------
-    colors : list of str
-        The colors in the current color palette.
+    fig : Figure
+        |Figure| instance for the active plot.
+    ax : Axes
+        |Axes| instance for the active plot.
+
+    Other Parameters
+    ----------------
+    empty_pha : bool, optional
+        Whether to empty the `PlotHoldingArea` of the |Axes| after constructing
+        the plots. The average user should have no use for this; it only exists
+        to make `find_baselev()` work.
+
+    Notes
+    -----
+    This function itself does not do very much. It mainly performs setup
+    and teardown actions, whereas the actual plotting itself is delegated
+    to `_mkplot1d()` and `_mkplot2d()`. (Those functions should not be used
+    directly.)
+
+    See Also
+    --------
+    penguins.pgplot._mkplot1d : Keyword arguments for 1D plots are described
+                                here.
+    penguins.pgplot._mkplot2d : Keyword arguments for 2D plots are described
+                                here.
     """
-    if palette is None:
-        palette = _current_palette
-    return sns.color_palette(palette)
+    try:
+        # Make sure that there is an active figure...
+        if not plt.get_fignums():
+            raise ValueError("No active figure found.")
+        # Get currently active Axes if it wasn't specified.
+        # Note that gca() creates one if there isn't already one...
+        if ax is None:
+            ax = plt.gca()
+
+        # Check if the PHA exists and isn't empty.
+        if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
+            warnings.warn("No plots have been staged on this Axes yet.")
+            return None, None
+        else:
+            # Reset (or create) plot properties
+            ax.prop = PlotProperties()
+            if isinstance(ax.pha.plot_objs[0], PlotObject1D):
+                fig, ax = _mkplot1d(ax=ax, **kwargs)
+            elif isinstance(ax.pha.plot_objs[0], PlotObject2D):
+                fig, ax = _mkplot2d(ax=ax, **kwargs)
+            else:
+                raise TypeError("Plot holding area has invalid elements.")
+    finally:
+        # Reset the PHA to being empty
+        if ax is not None and empty_pha:
+            ax.pha = PlotHoldingArea()
+    return fig, ax
+
+
+@export
+def mkplots(axs: Any = None,
+            titles: Sequence[OS] = None,
+            **kwargs
+            ) -> Tuple[Any, Any]:
+    """
+    Convenience function which essentially calls mkplot(ax, title=title) for
+    ax, title in zip(axs.flat, titles).
+
+    Parameters
+    ----------
+    axs : list, tuple, or ndarray of Axes (optional)
+        If not passed, will iterate over all Axes in the currently active
+        figure. >1D arrays (e.g. those returned by `subplots()`) are allowed.
+
+    titles : list or tuple of str (optional)
+        A series of subplot titles. Use None or an empty string to not have a
+        a title.
+
+    **kwargs : dict
+        Other keyword arguments which are passed on to `mkplot()` (and
+        consequently the other functions that it calls).
+
+    Returns
+    -------
+    fig : Figure
+        |Figure| instance for the active plot.
+    axs : ndarray of Axes
+        The same ndarray that was provided.
+    """
+    # Make sure that there is an active figure...
+    if not plt.get_fignums():
+        raise ValueError("No active figure found.")
+    # Get all active Axes if none were given
+    fig = plt.gcf()
+    if axs is None:
+        axs_it = fig.get_axes()
+    else:
+        if isinstance(axs, np.ndarray):
+            axs_it = axs.flat
+        else:
+            axs_it = axs  # if not iterable, will raise TypeError later
+    # If no titles were given, use an empty list
+    if titles is None:
+        titles = []
+    # Call mkplot() on each Axes.
+    for ax, title in zip_longest(axs_it, titles):
+        mkplot(ax, title=title, **kwargs)
+    return fig, axs
+
+
+@export
+def mkinset(ax: Any,
+            pos: Tuple[float, float],
+            size: Tuple[float, float],
+            transform: Any = None,
+            show_zoom: bool = True,
+            parent_corners: Tuple[str, str] = ("sw", "se"),
+            inset_corners: Tuple[str, str] = ("sw", "se"),
+            plot_options: Optional[dict] = None,
+            inset_options: Optional[dict] = None,
+            ) -> Any:
+    """Constructs an inset on a given Axes instance and plots any staged
+    spectra on the inset Axes.
+
+    Parameters
+    ----------
+    ax : Axes
+        |Axes| instance to construct the inset inside.
+    pos : (float, float)
+        Position of lower-left corner of inset axes given as (x, y).
+    size : (float, float)
+        Size of inset axes, given as (width, height).
+    transform : Transform
+        |Transform| to use for specifying the coordinates of
+        *pos* and *size*. By default, axes coordinates are used for both.
+    show_zoom : bool, optional
+        Whether to draw lines between the parent and inset axes (to indicate
+        the section of the spectrum zoomed into).
+    parent_corners : (str, str), optional
+        Corners of the parent axes to draw the zoom lines from. Each element of
+        the tuple can be chosen from {"southwest", "southeast", "northeast",
+        "northwest", "sw", "se", "ne", "nw"}.
+    inset_corners : (str, str), optional
+        Corners of the inset axes to draw the zoom lines to.
+    plot_options : dict, optional
+        Dictionary of options passed to `mkplot()`, which is in turn passed to
+        either |plot| or |contour|.
+    inset_options : dict, optional
+        Dictionary of options passed to |mark_inset|.
+
+    Returns
+    -------
+    inset_ax : Axes
+        The |Axes| instance corresponding to the inset.
+    """
+    # Find the axes to draw on
+    ax = ax or plt.gca()
+    # Generate inset axes
+    inset_ax = ax.inset_axes([*pos, *size], transform=transform)
+    plot_options = plot_options or {}
+    mkplot(ax=inset_ax, xlabel="", ylabel="", **plot_options)
+
+    # Convert the strings to numbers
+    def convert_corner(ax: Any, cornerstr: str, is_inset: bool):
+        """
+        For non-inverted axes, ne = 1, nw = 2, sw = 3, se = 4
+        If x-axis is inverted, ne = 2, nw = 1, sw = 4, se = 3
+        If y-axis is inverted, ne = 4, nw = 3, sw = 2, se = 1
+        If both are inverted,  ne = 3, nw = 4, sw = 1, se = 2
+        However, inset axes ALWAYS behave as if they are not inverted,
+        regardless of whether they were inverted or not.
+        If there's a more elegant way of writing this, please let me know.
+        """
+        xinv, yinv = ax.xaxis_inverted(), ax.yaxis_inverted()
+        if cornerstr in ["ne", "northeast"]:
+            return 1 if (is_inset or (not xinv and not yinv)) else \
+                2 if (xinv and not yinv) else \
+                4 if (not xinv and yinv) else 3
+        elif cornerstr in ["nw", "northwest"]:
+            return 2 if (is_inset or (not xinv and not yinv)) else \
+                1 if (xinv and not yinv) else \
+                3 if (not xinv and yinv) else 4
+        elif cornerstr in ["sw", "southwest"]:
+            return 3 if (is_inset or (not xinv and not yinv)) else \
+                4 if (xinv and not yinv) else \
+                2 if (not xinv and yinv) else 1
+        elif cornerstr in ["se", "southeast"]:
+            return 4 if (is_inset or (not xinv and not yinv)) else \
+                3 if (xinv and not yinv) else \
+                1 if (not xinv and yinv) else 2
+        else:
+            raise ValueError("Invalid corner provided to mkinset().")
+
+    from mpl_toolkits.axes_grid1.inset_locator import mark_inset  # type: ignore
+
+    # The loc1 and loc2 are throwaway values, they'll be replaced later.
+    default_inset_options = {"loc1": 1, "loc2": 2,
+                             "edgecolor": "silver",
+                             }
+    # Construct options
+    options = dict(default_inset_options)
+    if inset_options is not None:
+        options.update(inset_options)
+    # Make the inset, if requested
+    if show_zoom:
+        _, line1, line2 = mark_inset(ax, inset_ax, **options)
+        # Change the corners from which the lines are drawn.
+        line1.loc1 = convert_corner(inset_ax, inset_corners[0], True)
+        line1.loc2 = convert_corner(ax, parent_corners[0], False)
+        line2.loc1 = convert_corner(inset_ax, inset_corners[1], True)
+        line2.loc2 = convert_corner(ax, parent_corners[1], False)
+    return inset_ax
 
 
 # -- Plot holding area and plot properties --------------------
@@ -154,12 +334,12 @@ class PlotProperties():
         self.artists: List[Any] = []
 
 
-# -- 1D PLOTTING ----------------------------------------------
+# -- 1D low-level plotting ------------------------------------
 
 # This is the same as matplotlib's default figure size, but we set it here
 # anyway just in case the user has otherwise changed it using .matplotlibrc or
 # mpl.rcParams.
-_default_1d_figsize = (6, 4)
+default_1d_figsize = (6, 4)
 
 def _stage1d(dataset: ds.TDataset1D,
              ax: Any = None,
@@ -168,7 +348,7 @@ def _stage1d(dataset: ds.TDataset1D,
              dfilter: Optional[Callable[[float], bool]] = None,
              label: OS = None,
              color: OS = None,
-             plot_options: Optional[Dict] = None,
+             **kwargs: Any,
              ) -> None:
     """Stages a 1D spectrum.
 
@@ -202,10 +382,9 @@ def _stage1d(dataset: ds.TDataset1D,
     label : str, optional
         Label to be used in the plot legend.
     color : str, optional
-        Color to use for plotting. Overrides any *color* key passed in the
-        *plot_options* dictionary.
-    plot_options : dict, optional
-        Dictionary of keyword arguments to be passed to |plot|.
+        Color to use for plotting.
+    **kwargs
+        Any other keyword arguments are passed as-is to |plot|.
 
     Returns
     -------
@@ -223,7 +402,7 @@ def _stage1d(dataset: ds.TDataset1D,
         # Before calling gca(), we check whether a figure exists yet. If it
         # doesn't, then we make a figure ourselves with a default figsize.
         if not plt.get_fignums():  # == empty list if no figures yet.
-            plt.figure(figsize=_default_1d_figsize)
+            plt.figure(figsize=default_1d_figsize)
         ax = plt.gca()
     # Create the plot holding area if it doesn't exist yet
     if not hasattr(ax, "pha"):
@@ -245,7 +424,7 @@ def _stage1d(dataset: ds.TDataset1D,
     # every element.
     if len(ax.pha.plot_objs) != 0 and isinstance(ax.pha.plot_objs[0],
                                                  PlotObject2D):
-        raise TypeError("Plot queue already contains 2D spectra.")
+        raise TypeError("Plot queue already contains 1D spectra.")
     # If we reached here, then it's all good and we should make the
     # PlotObject1D then append it to the PHA.
     else:
@@ -256,7 +435,7 @@ def _stage1d(dataset: ds.TDataset1D,
                                 dfilter=dfilter,
                                 label=label,
                                 color=color,
-                                plot_options=plot_options)
+                                plot_options=kwargs)
         ax.pha.plot_objs.append(plot_obj)
 
 
@@ -284,7 +463,7 @@ class PlotObject1D():
         self.bounds = bounds
         self._init_options(ax, plot_options, color, label)
         self.ppm_scale = self.dataset.ppm_scale(bounds=self.bounds)
-        self.hz_scale = self.dataset.hz_scale()
+        self.hz_scale = self.dataset.hz_scale(bounds=self.bounds)
         # Handle processed data
         proc_data = self.dataset.proc_data(bounds=self.bounds)
         if dfilter is not None:
@@ -324,6 +503,7 @@ class PlotObject1D():
 
 def _mkplot1d(ax: Any = None,
               style: str = "1d",
+              tight_layout: bool = True,
               stacked: bool = False,
               voffset: Union[Sequence, float] = 0,
               hoffset: Union[Sequence, float] = 0,
@@ -346,6 +526,8 @@ def _mkplot1d(ax: Any = None,
     style : str, optional
         Plot style to use. By default this is ``1d``. For the list of plot
         styles, see `style_axes()`.
+    tight_layout : bool, optional (default True)
+        Whether to call plt.tight_layout() after constructing the plot.
     stacked : bool, optional
         True to make spectra tightly stacked vertically (i.e. not
         superimposed). If True, overrides any value passed in *voffset*.
@@ -374,7 +556,7 @@ def _mkplot1d(ax: Any = None,
         is ``nucl`` (the default), which generates a LaTeX representation of
         the nucleus of the first staged spectrum (e.g. for a proton spectrum,
         using this would automatically generate the *x*-axis label
-        ``r"$^{1}$H (ppm)"``).
+        ``r"$\\rm ^{1}H$ (ppm)"``).
     xlabel : str, optional
         *x*-Axis label. Overrides the autolabel parameter if given.
     legend_loc : str or (float, float), optional
@@ -471,11 +653,11 @@ def _mkplot1d(ax: Any = None,
     if make_legend:
         ax.legend(loc=legend_loc)
     # Apply axis styles.
-    main.style_axes(ax, style)
+    style_axes(ax, style=style, tight_layout=tight_layout)
     return ax.figure, ax
 
 
-# -- 2D PLOTTING ----------------------------------------------
+# -- 2D low-level plotting ------------------------------------
 
 _default_2d_figsize = (5, 5)
 
@@ -497,7 +679,7 @@ class Contours:
                     increment: OF = None,
                     number: Optional[int] = None
                     ) -> None:
-        self.base = base or self.dataset._tsbaselev
+        self.base = base or self.dataset.ts_baselev
         self.increment = increment or 1.5
         self.number = number or 10
 
@@ -516,8 +698,10 @@ class Contours:
             self.color_negative = color_negative
 
     def generate_contour_levels(self) -> List[float]:
-        neg = [-self.base * (self.increment ** (self.number - i)) for i in range(self.number)]
-        pos = [self.base * (self.increment ** i) for i in range(self.number)]
+        neg = [-self.base * (self.increment ** (i))
+               for i in range(self.number - 1, -1, -1)]
+        pos = [self.base * (self.increment ** i)
+               for i in range(self.number)]
         return neg + pos
 
     def generate_contour_colors(self) -> List[str]:
@@ -556,8 +740,8 @@ class PlotObject2D():
         self._init_options(plot_options)
         self.label = label
         # self.options will include the colors key.
-        self.f1_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
-        self.f2_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
+        self.f1_ppm_scale = self.dataset.ppm_scale(axis=0, bounds=self.f1_bounds)
+        self.f2_ppm_scale = self.dataset.ppm_scale(axis=1, bounds=self.f2_bounds)
         self.f1_hz_scale = self.dataset.hz_scale(axis=0)
         self.f2_hz_scale = self.dataset.hz_scale(axis=1)
         # Handle processed data
@@ -601,7 +785,7 @@ def _stage2d(dataset: ds.Dataset2D,
              colors: TColors = (None, None),
              dfilter: Optional[Callable[[float], bool]] = None,
              label: OS = None,
-             plot_options: Optional[Dict] = None,
+             **kwargs: Any
              ) -> None:
     """Stages a 2D spectrum.
 
@@ -650,8 +834,9 @@ def _stage2d(dataset: ds.Dataset2D,
         Label to be used in the plot legend.
     color : (str, str), optional
         Colors to use for positive and negative contours respectively.
-    plot_options : dict, optional
-        Dictionary of keyword arguments to be passed to |contour|.
+    **kwargs
+        Any other keyword arguments are passed as-is to |contour|. Note that
+        these will be overridden by other keyword arguments passed to stage().
 
     Returns
     -------
@@ -689,7 +874,7 @@ def _stage2d(dataset: ds.Dataset2D,
     # every element.
     if len(ax.pha.plot_objs) != 0 and isinstance(ax.pha.plot_objs[0],
                                                  PlotObject1D):
-        raise TypeError("Plot queue already contains 1D spectra.")
+        raise TypeError("Plot queue already contains 2D spectra.")
     # If we reached here, then it's all good and we should make the
     # PlotObject2D then append it to the PHA.
     else:
@@ -697,12 +882,13 @@ def _stage2d(dataset: ds.Dataset2D,
                                 f1_bounds=f1_bounds, f2_bounds=f2_bounds,
                                 levels=levels, colors=colors,
                                 dfilter=dfilter, label=label,
-                                plot_options=plot_options)
+                                plot_options=kwargs)
         ax.pha.plot_objs.append(plot_obj)
 
 
 def _mkplot2d(ax: Any = None,
               style: str = "2d",
+              tight_layout: bool = True,
               offset: Tuple[float, float] = (0, 0),
               title: OS = None,
               autolabel: str = "nucl",
@@ -725,6 +911,8 @@ def _mkplot2d(ax: Any = None,
     style : str, optional
         Plot style to use. By default this is ``2d``. For the list of plot
         styles, see `style_axes()`.
+    tight_layout : bool, optional (default True)
+        Whether to call plt.tight_layout() after constructing the plot.
     offset : (float, float), optional
         Amount to offset successive spectra by in units of ppm, provided as
         *(f1_offset, f2_offset)*.
@@ -734,9 +922,9 @@ def _mkplot2d(ax: Any = None,
         Automatic label to use for the *x*-axis. The ``nucl`` option generates
         a LaTeX representation of the nuclei of the first spectrum (e.g. for a
         C–H HSQC, using this would automatically generate the *x*- and *y*-axis
-        labels ``r"$^{1}$H (ppm)"`` and ``r"$^{13}$C (ppm)"`` respectively).
-        The ``f1f2`` option  generates generic ``f1 (ppm)`` and ``f2 (ppm)``
-        strings. There are no other options for now.
+        labels ``r"$\\rm ^{1}H$ (ppm)"`` and ``r"$\\rm ^{13}C$ (ppm)"``
+        respectively).  The ``f1f2`` option  generates generic ``f1 (ppm)`` and
+        ``f2 (ppm)`` strings. There are no other options for now.
     xlabel : str, optional
         *x*-Axis label. If either *xlabel* or *ylabel* are set, they will
         override the *autolabel* parameter (if only one is set then the other
@@ -777,13 +965,13 @@ def _mkplot2d(ax: Any = None,
     for n, pobj in enumerate(ax.pha.plot_objs):
         # Figure out which x- and y-axes to use (ppm or Hz)
         if f1_units == "ppm":
-            yaxis = pobj.f1_scale - (n * offset[0])
+            yaxis = pobj.f1_ppm_scale - (n * offset[0])
         elif f1_units == "Hz":
             yaxis = pobj.f1_hz_scale - (n * offset[0])
         else:
             raise ValueError('f1_units must be either "ppm" or "Hz".')
         if f2_units == "ppm":
-            xaxis = pobj.f2_scale - (n * offset[1])
+            xaxis = pobj.f2_ppm_scale - (n * offset[1])
         elif f2_units == "Hz":
             xaxis = pobj.f2_hz_scale - (n * offset[1])
         else:
@@ -836,7 +1024,7 @@ def _mkplot2d(ax: Any = None,
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     # Apply other styles.
-    main.style_axes(ax, style)
+    style_axes(ax, style=style, tight_layout=tight_layout)
 
     # Make legend. This part is not easy...
     # See https://stackoverflow.com/questions/41752309/ for an example
@@ -885,7 +1073,7 @@ def _find_baselev(dataset: ds.Dataset2D,
     # plotting is faster -- otherwise it's super laggy. We try to cover the
     # same dynamic range as 1.5 ** 10 by default, unless the user specified
     # an increment.
-    initial_baselev = dataset._tsbaselev
+    initial_baselev = dataset.ts_baselev
     increment = increment or (1.5 ** 10) ** (1 / nlev)
     initial_clev = (initial_baselev, increment, nlev)
     # Maximum level of the slider should be the greatest intensity of the
@@ -897,7 +1085,7 @@ def _find_baselev(dataset: ds.Dataset2D,
     # Plot the spectrum on the top portion of the figure.
     fig, plot_axes = plt.subplots()
     dataset.stage(plot_axes, levels=initial_clev)
-    main.mkplot(plot_axes, empty_pha=False)
+    mkplot(plot_axes, empty_pha=False)
     orig_xlim = plot_axes.get_xlim()
     orig_ylim = plot_axes.get_ylim()
     plt.subplots_adjust(left=0.1, bottom=0.25)
@@ -930,7 +1118,7 @@ def _find_baselev(dataset: ds.Dataset2D,
         ylim = plot_axes.get_ylim()
         plot_axes.cla()
         plt.sca(plot_axes)
-        main.mkplot(plot_axes, empty_pha=False, style="natural")
+        mkplot(plot_axes, empty_pha=False, style="natural")
         plot_axes.set_xlim(xlim)
         plot_axes.set_ylim(ylim)
 
@@ -959,7 +1147,7 @@ def _find_baselev(dataset: ds.Dataset2D,
     reset_button.on_clicked(reset)
 
     # Show it to the user.
-    main.show()
+    show()
 
     # Post-OK actions
     if okay:
@@ -976,3 +1164,153 @@ def _find_baselev(dataset: ds.Dataset2D,
     plt.close("all")
 
     return fval if okay else None
+
+
+# -- Matplotlib and Seaborn wrappers --------------------------
+
+@export
+def subplots(*args, **kwargs) -> None:
+    """Direct wrapper around |subplots|.
+    """
+    return plt.subplots(*args, **kwargs)
+
+
+@export
+def subplots2d(nrows: int = 1,
+               ncols: int = 1,
+               **kwargs
+               ) -> Tuple[Any, Any]:
+    """Wrapper around matplotlib's |subplots| function, which (in addition to
+    performing everything |subplots| does) also sets the figure size to
+    ``(4 * ncols)`` by ``(4 * nrows)`` by default. This means that every
+    subplot will have an area of 4 inches by 4 inches, which is a good size for
+    2D spectra.
+
+    Parameters
+    ----------
+    nrows : int, optional
+        Number of rows.
+    ncols : int, optional
+        Number of columns.
+    kwargs : dict, optional
+        Other keyword arguments passed to |subplots|.
+
+    Returns
+    -------
+    fig : Figure
+        |Figure| instance corresponding to the current plot.
+    axs : Axes, or ndarray of Axes
+        If only one subplot was requested, this is the |Axes| instance.
+        Otherwise this is an |ndarray| of |Axes|, one for each subplot. See
+        the documentation of |subplots| for further explanation.
+    """
+    # This implementation captures nrows and ncols so that we can set figsize
+    # automatically. We don't care about the rest of the arguments, so those
+    # can just be passed on directly.
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (ncols * 4, nrows * 4)
+    return plt.subplots(nrows=nrows, ncols=ncols, **kwargs)
+
+
+@export
+def figure(*args, **kwargs) -> Any:
+    """Wrapper around matplotlib's |figure| function.
+
+    If *figsize* is not passed as a keyword argument, then it is chosen to be
+    (4, 4) by default.
+
+    Parameters
+    ----------
+    kwargs : dict, optional
+        Other keyword arguments passed to |subplots|.
+
+    Returns
+    -------
+    fig : Figure
+        Newly created |Figure| instance.
+    """
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (4, 4)
+    return plt.figure(**kwargs)
+
+
+@export
+def set_palette(palette: Union[str, List[str]],
+                ) -> None:
+    """Sets the currently active color palette. The default palette is
+    seaborn's ``deep``.
+
+    The palette is used both for staging successive 1D spectra, as well as for
+    any plots done with seaborn. For 2D spectra, colors from seaborn's
+    ``bright`` palette have been manually chosen. If you want to override these,
+    you should directly pass the *colors* parameter to the stage() method.
+
+    Parameters
+    ----------
+    palette : str or list of str
+        Color palette to use. See :std:doc:`tutorial/color_palettes` for a
+        full description of the possible options.
+
+    Returns
+    -------
+    None
+    """
+    global _current_palette
+    # Change seaborn palette, in case user wants to draw other plots.
+    sns.set_palette(palette)
+    # Change penguins 1D palette.
+    _current_palette = palette
+
+
+@export
+def color_palette(palette: Optional[Union[str, List[str]]] = None,
+                  ) -> List[str]:
+    """Returns a list of colors corresponding to a color palette. If *palette*
+    is not provided, returns the colors in the current color palette.
+
+    This is essentially a wrapper around :func:`sns.color_palette
+    <seaborn.color_palette>`, but it only offers one argument, and it can't be
+    used as a context manager. Use `set_palette` if you want to change the
+    active palette.
+
+    Parameters
+    ----------
+    palette : str or list of str, optional
+        The palette to look up. Defaults to the currently active color palette.
+
+    Returns
+    -------
+    colors : list of str
+        The colors in the current color palette.
+    """
+    if palette is None:
+        palette = _current_palette
+    return sns.color_palette(palette)
+
+
+@export
+def tight_layout(*args, **kwargs) -> None:
+    """Direct wrapper around |tight_layout|.
+    """
+    return plt.tight_layout(*args, **kwargs)
+
+
+@export
+def show(*args, **kwargs) -> None:
+    """Direct wrapper around |show|.
+    """
+    return plt.show(*args, **kwargs)
+
+
+@export
+def savefig(*args, **kwargs) -> None:
+    """Direct wrapper around |savefig|.
+    """
+    return plt.savefig(*args, **kwargs)
+
+
+@export
+def pause(*args, **kwargs) -> None:
+    """Direct wrapper around |pause|.
+    """
+    return plt.pause(*args, **kwargs)

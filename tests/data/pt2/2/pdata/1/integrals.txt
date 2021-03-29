@@ -1,5 +1,0 @@
-   Current data set:
-   NAME =	q34 HCYSB	EXPNO =	2	PROCNO = 1
-   DU   =	/Users/yongrenjie/Desktop/Oxford/PtIINMR-final
-
-   Number   Integrated Region     Integral

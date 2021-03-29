@@ -16,19 +16,19 @@ We will assume you have already read in the ``data_1d`` and ``data_2d`` objects 
 
 --------------------------------
 
-Getting to know subplots()
---------------------------
+Getting to know subplots2d()
+----------------------------
 
 The first part of creating a plot with multiple subplots is to first specify the layout of the subplots.
-This can be done using the :func:`~penguins.subplots` function:
+This can be done using the `subplots2d` function:
 
 .. plot::
    :nofigs:
    :context:
 
-   fig, axs = pg.subplots(2, 2)    # creates a 2-by-2 grid of subplots
+   fig, axs = pg.subplots2d(2, 2)    # creates a 2-by-2 grid of subplots
 
-:func:`~penguins.subplots` returns two matplotlib objects.
+`subplots2d()` returns two matplotlib objects.
 The first, ``fig``, is a handle for the entire |Figure| (which encompasses all four subplots).
 The second, ``axs``, is a 2D numpy |ndarray| whose elements are the individual |Axes| which we can plot on.
 
@@ -36,9 +36,19 @@ Each subplot has one |Axes|, and we can access these by selecting the correct el
 For example, to access the top-left subplot, we need to manipulate only the top-left |Axes|, which can be accessed via ``axs[0][0]``.
 Likewise, the top-right |Axes| can be accessed via ``axs[0][1]``.
 
-(If you are already familiar with matplotlib, you will know that matplotlib itself has a |subplots| function.
-The penguins version is a wrapper around this with a few changes made for convenience:
-please see the :func:`~penguins.subplots` documentation for more info.)
+The `subplots2d()` function automatically sets the figure size such that each subplot has (approximately) a 4 inch by 4 inch area.
+This is a good starting size for 2D spectra, hence the name of the function.
+If you want to specify the figure size (i.e. the size of the *entire* figure, not the size of a single subplot!) then you may do so by passing a tuple of ``(width, height)`` as the ``figsize`` keyword argument of `subplots2d()`, viz.
+
+::
+
+   fig, axs = pg.subplots2d(2, 2, figsize=(10, 4))
+
+.. note::
+
+    If you are already familiar with matplotlib, you will know that matplotlib itself has a |subplots| function.
+    You can use that if you prefer: penguins' `subplots2d()` is merely a wrapper around this with a default ``figsize``.
+    penguins also provides a direct wrapper, :func:`~penguins.subplots()`, that *doesn't* set a default ``figsize``; the only purpose of this is to potentially save an import.
 
 ----------------------------------
 
@@ -79,7 +89,7 @@ Instead, we can iterate over ``axs.flat``, which behaves *like* a 1D array (tech
 .. plot::
    :context: close-figs
 
-   fig, axs = pg.subplots(2, 2)
+   fig, axs = pg.subplots2d(2, 2)
    for ax in axs.flat:
        # Inside this loop, `ax` refers to an individual Axes.
        # It is also the name of the keyword parameter.
@@ -95,7 +105,7 @@ Let's see, for example, how we can plot the same spectrum 4 times with different
 .. plot::
    :context: close-figs
 
-   fig, axs = pg.subplots(2, 2)
+   fig, axs = pg.subplots2d(2, 2)
 
    contour_levels = [1e4, 3e4, 1e5, 3e5]
    titles = ["Lots of noise", "Some noise",

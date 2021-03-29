@@ -1178,6 +1178,8 @@ def subplots(*args, **kwargs) -> None:
 @export
 def subplots2d(nrows: int = 1,
                ncols: int = 1,
+               height_ratios: Optional[List[float]] = None,
+               width_ratios: Optional[List[float]] = None,
                **kwargs
                ) -> Tuple[Any, Any]:
     """Wrapper around matplotlib's |subplots| function, which (in addition to
@@ -1186,14 +1188,26 @@ def subplots2d(nrows: int = 1,
     subplot will have an area of 4 inches by 4 inches, which is a good size for
     2D spectra.
 
+    Also accepts the gridspec keyword arguments ``height_ratios`` and
+    ``width_ratios``. The effect of this is that each subplot will have a
+    height equal to the height_ratio times 4, i.e. if one specifies
+    ``height_ratios = [0.5, 1]`` then the top row will be 2 inches tall and the
+    bottom row 4 inches tall.
+
     Parameters
     ----------
     nrows : int, optional
         Number of rows.
     ncols : int, optional
         Number of columns.
+    height_ratios : list of float, optional
+        Ratios of Axes heights.
+    width_ratios : list of float, optional
+        Ratios of Axes widths.
     kwargs : dict, optional
-        Other keyword arguments passed to |subplots|.
+        Other keyword arguments passed to |subplots|. Note that if either
+        *height_ratios* or *width_ratios* are passed, they will override both
+        the *figsize* as well as *gridspec_kw* keyword arguments.
 
     Returns
     -------
@@ -1204,12 +1218,47 @@ def subplots2d(nrows: int = 1,
         Otherwise this is an |ndarray| of |Axes|, one for each subplot. See
         the documentation of |subplots| for further explanation.
     """
-    # This implementation captures nrows and ncols so that we can set figsize
-    # automatically. We don't care about the rest of the arguments, so those
-    # can just be passed on directly.
-    if "figsize" not in kwargs:
-        kwargs["figsize"] = (ncols * 4, nrows * 4)
-    return plt.subplots(nrows=nrows, ncols=ncols, **kwargs)
+    # Empty dictionary, we will fill this as we go along.
+    gridspec_kw = {}
+    # Determine figure width and figure height. First check if either
+    # width_ratios or height_ratios were given: if so, use that to calculate
+    # the height.
+    if width_ratios is not None or height_ratios is not None:
+        # If width_ratios or height_ratios were passed as keyword arguments, we
+        # should ignore the gridspec_kw keyword argument.
+        kwargs.pop("gridspec_kw", None)
+        # Error out if either of the lists don't match the number of
+        # columns/rows.
+        if width_ratios is not None and len(width_ratios) != ncols:
+            raise ValueError("width_ratios must have the same number of"
+                             " elements as there are columns.")
+        if height_ratios is not None and len(height_ratios) != nrows:
+            raise ValueError("height_ratios must have the same number of"
+                             " elements as there are rows.")
+        # Calculate the width/height.
+        if width_ratios is not None:
+            fig_width = np.sum(width_ratios) * 4
+            gridspec_kw["width_ratios"] = width_ratios
+        else:
+            fig_width = ncols * 4
+        if height_ratios is not None:
+            fig_height = np.sum(height_ratios) * 4
+            gridspec_kw["height_ratios"] = height_ratios
+        else:
+            fig_height = nrows * 4
+        figsize = (fig_width, fig_height)
+        # Remove figsize from kwargs if it's there.
+        kwargs.pop("figsize", None)
+    # Otherwise, if figsize is there, just use it.
+    elif "figsize" in kwargs:
+        figsize = kwargs.pop("figsize")
+    # Otherwise, use nrows and ncols * 4.
+    else:
+        figsize = (ncols * 4, nrows * 4)
+    return plt.subplots(nrows=nrows, ncols=ncols,
+                        figsize=figsize,
+                        gridspec_kw=gridspec_kw,
+                        **kwargs)
 
 
 @export

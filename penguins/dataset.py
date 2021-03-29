@@ -1254,7 +1254,7 @@ class Dataset2D(_2D_RawDataMixin,
         """
         max_ppm = self["offset"][axis]
         min_ppm = max_ppm - (self["sw_p"][axis] / self["sfo1"][axis])
-        full_scale = np.linspace(max_ppm, min_ppm, int(self["si"][axis]))
+        full_scale = np.linspace(max_ppm, min_ppm, self["si"][axis])
         return full_scale[self.bounds_to_slice(axis, bounds)]
 
     def hz_scale(self,

@@ -8,6 +8,8 @@ General plotting
 
 .. autofunction:: subplots
 
+.. autofunction:: subplots2d
+
 |v|
 
 .. autofunction:: mkplot

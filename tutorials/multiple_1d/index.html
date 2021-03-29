@@ -8,11 +8,12 @@
     <title>Tutorial 4: Plotting multiple 1Ds &#8212; penguins  documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
     <link rel="next" title="Tutorial 5: Customising 2D plots" href="../customise_2d/" />
@@ -60,6 +61,8 @@ Add the following lines to your script, then run it:</p>
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                                       <span class="c1"># display as usual</span>
 </pre></div>
 </div>
+<div class="figure align-default">
+<img alt="../../_images/multiple_1d-2.svg" class="plot-directive" src="../../_images/multiple_1d-2.svg" /></div>
 </div>
 <hr class="docutils" />
 <div class="section" id="adding-a-legend">
@@ -67,7 +70,7 @@ Add the following lines to your script, then run it:</p>
 <p>To add a plot legend, do one of the following:</p>
 <ol class="arabic simple">
 <li><p>Pass the legend labels as the <code class="docutils literal notranslate"><span class="pre">label</span></code> keyword argument when staging. penguins will automatically create a legend if any of the plots are staged with the <code class="docutils literal notranslate"><span class="pre">label</span></code> keyword.</p></li>
-<li><p>Manually call <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">legend()</span></code></a> function.</p></li>
+<li><p>Manually call <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="(in Matplotlib v3.4.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">legend()</span></code></a> function.</p></li>
 </ol>
 <p>If you do the latter, we assume you are at least a little familiar with <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, and won’t discuss it further.
 Here’s an example of the former. Modify the two calls to <code class="docutils literal notranslate"><span class="pre">stage()</span></code> to include a <code class="docutils literal notranslate"><span class="pre">label</span></code> argument:</p>
@@ -77,6 +80,8 @@ Here’s an example of the former. Modify the two calls to <code class="docutils
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure align-default">
+<img alt="../../_images/multiple_1d-3.svg" class="plot-directive" src="../../_images/multiple_1d-3.svg" /></div>
 <p>Because the label is just any old Python string, you can combine this with the attribute access discussed in <a class="reference internal" href="../read/"><span class="doc">Tutorial 1: Reading data</span></a>.
 The f-string syntax in Python 3.7+ is especially useful for this: for example, <code class="docutils literal notranslate"><span class="pre">label=f&quot;lb={em['lb']}&quot;</span></code> would create a legend label which contains the value of the <code class="docutils literal notranslate"><span class="pre">LB</span></code> parameter for that dataset.</p>
 </div>
@@ -95,7 +100,7 @@ The first spectrum will not be shifted, and subsequent spectra will be shifted r
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/multiple_1d-4.svg" src="../../_images/multiple_1d-4.svg" /></div>
+<img alt="../../_images/multiple_1d-4.svg" class="plot-directive" src="../../_images/multiple_1d-4.svg" /></div>
 <p>Vertical offsets <code class="docutils literal notranslate"><span class="pre">voffset</span></code> are specified as a fraction of the height of the tallest spectrum.
 Successive spectra are moved upwards.
 Note that <code class="docutils literal notranslate"><span class="pre">1</span></code> is not the best value: often <code class="docutils literal notranslate"><span class="pre">1.1</span></code> or so is better as that adds a bit of empty space between plots.</p>
@@ -106,7 +111,7 @@ Note that <code class="docutils literal notranslate"><span class="pre">1</span><
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/multiple_1d-5.svg" src="../../_images/multiple_1d-5.svg" /></div>
+<img alt="../../_images/multiple_1d-5.svg" class="plot-directive" src="../../_images/multiple_1d-5.svg" /></div>
 <p>Of course, you can specify <em>both</em> <code class="docutils literal notranslate"><span class="pre">hoffset</span></code> and <code class="docutils literal notranslate"><span class="pre">voffset</span></code> to get spectra that are diagonally offset from one another.
 This is commonly used, for example, when plotting a series of related spectra.</p>
 </div>
@@ -121,7 +126,7 @@ Stage <code class="docutils literal notranslate"><span class="pre">em</span></co
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/multiple_1d-6.svg" src="../../_images/multiple_1d-6.svg" /></div>
+<img alt="../../_images/multiple_1d-6.svg" class="plot-directive" src="../../_images/multiple_1d-6.svg" /></div>
 <p>You will notice that the three <code class="docutils literal notranslate"><span class="pre">gm</span></code> spectra are separated by quite a bit of white space.
 This is the expected behaviour: the vertical separation between each plot is defined to be 1.1 times the height of the tallest spectrum (which in this case is <code class="docutils literal notranslate"><span class="pre">em</span></code>).</p>
 <p>In many cases this is OK, but in some situations this may not be desirable.
@@ -134,7 +139,7 @@ penguins lets you do this quickly using the <code class="docutils literal notran
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/multiple_1d-7.svg" src="../../_images/multiple_1d-7.svg" /></div>
+<img alt="../../_images/multiple_1d-7.svg" class="plot-directive" src="../../_images/multiple_1d-7.svg" /></div>
 <p>Which you use will depend on the scenario as well as your personal taste.</p>
 </div>
 </div>
@@ -225,7 +230,7 @@ penguins lets you do this quickly using the <code class="docutils literal notran
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -8,11 +8,12 @@
     <title>Tutorial 5: Customising 2D plots &#8212; penguins  documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
     <link rel="next" title="Tutorial 6: Subplots" href="../subplots/" />
@@ -48,6 +49,8 @@ As before, it’s probably a good idea to move this into a script (or notebook).
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure align-default">
+<img alt="../../_images/customise_2d-1.svg" class="plot-directive" src="../../_images/customise_2d-1.svg" /></div>
 <p>The most obvious problem is that the contour levels chosen are too <em>low</em>: that is, we are plotting quite a bit of noise along with the peaks.
 penguins tries to choose a reasonable contour level (using the same algorithm as TopSpin), but you will find that for nearly every spectrum you plot you will have to specify the contour levels manually.</p>
 <p>This can be done using the <code class="docutils literal notranslate"><span class="pre">levels</span></code> parameter.
@@ -60,7 +63,7 @@ Finding a good number usually requires some experimentation.</p>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/customise_2d-2.svg" src="../../_images/customise_2d-2.svg" /></div>
+<img alt="../../_images/customise_2d-2.svg" class="plot-directive" src="../../_images/customise_2d-2.svg" /></div>
 <p>Contours are always shown for both positive and negative levels.
 If you want to disable negative contours, the best way is currently to set the <em>negative contour colour</em> to be the same as the background.
 Contour colours are a 2-tuple of strings (positive colour and negative colour), passed as the <code class="docutils literal notranslate"><span class="pre">colors</span></code> parameter (note the American English spelling!).</p>
@@ -71,7 +74,7 @@ Contour colours are a 2-tuple of strings (positive colour and negative colour), 
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/customise_2d-3.svg" src="../../_images/customise_2d-3.svg" /></div>
+<img alt="../../_images/customise_2d-3.svg" class="plot-directive" src="../../_images/customise_2d-3.svg" /></div>
 </div>
 <hr class="docutils" />
 <div class="section" id="bounds">
@@ -85,7 +88,7 @@ The syntax is exactly the same, so either a string or a tuple can be passed:</p>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/customise_2d-4.svg" src="../../_images/customise_2d-4.svg" /></div>
+<img alt="../../_images/customise_2d-4.svg" class="plot-directive" src="../../_images/customise_2d-4.svg" /></div>
 </div>
 </div>
 
@@ -175,7 +178,7 @@ The syntax is exactly the same, so either a string or a tuple can be passed:</p>
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

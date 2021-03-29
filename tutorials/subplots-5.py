@@ -1,4 +1,4 @@
-fig, axs = pg.subplots(2, 2)
+fig, axs = pg.subplots2d(2, 2)
 
 contour_levels = [1e4, 3e4, 1e5, 3e5]
 titles = ["Lots of noise", "Some noise",

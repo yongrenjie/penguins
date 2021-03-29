@@ -8,11 +8,12 @@
     <title>Tutorial 3: Customising 1D plots &#8212; penguins  documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
     <link rel="next" title="Tutorial 4: Plotting multiple 1Ds" href="../multiple_1d/" />
@@ -54,7 +55,7 @@ As a refresher, these are the steps which we took to make it:</p>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/customise_1d-1.svg" src="../../_images/customise_1d-1.svg" /></div>
+<img alt="../../_images/customise_1d-1.svg" class="plot-directive" src="../../_images/customise_1d-1.svg" /></div>
 <p>It would probably be a good idea to only show the region between, say, 0.3 ppm and 7 ppm.
 To do this, we pass the <em>bounds</em> parameter to <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.
 If you have the previous figure still open, close it first, and re-stage the dataset again.
@@ -65,7 +66,7 @@ This will use the same dataset to make a new plot:</p>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="../../_images/customise_1d-2.svg" src="../../_images/customise_1d-2.svg" /></div>
+<img alt="../../_images/customise_1d-2.svg" class="plot-directive" src="../../_images/customise_1d-2.svg" /></div>
 <p>In this example, we specified the bounds as a string <code class="docutils literal notranslate"><span class="pre">{low}..{high}</span></code>.
 The bounds can alternatively be specified as a tuple of numbers:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>    <span class="c1"># same as above</span>
@@ -110,12 +111,12 @@ The following handy table describes all the possibilities (the last case is equi
 <div class="section" id="colours-and-other-aesthetics">
 <h2>Colours and other aesthetics<a class="headerlink" href="#colours-and-other-aesthetics" title="Permalink to this headline">¶</a></h2>
 <p>The other major spectrum-specific options are aesthetic choices, such as colours, linewidths, and so on.
-The way <code class="docutils literal notranslate"><span class="pre">stage()</span></code> handles this is by taking keyword arguments and passing them along to <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> function (which penguins ultimately uses to draw the actual spectrum).</p>
-<p>That means that <em>any</em> configuration option that you can pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> can <em>also</em> be passed to <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.
+The way <code class="docutils literal notranslate"><span class="pre">stage()</span></code> handles this is by taking keyword arguments and passing them along to <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> function (which penguins ultimately uses to draw the actual spectrum).</p>
+<p>That means that <em>any</em> configuration option that you can pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> can <em>also</em> be passed to <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.
 The full list of options is described in the <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> documentation, but some of the most commonly used ones are listed here.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">color</span></code>: any of the formats listed in <a class="reference external" href="https://matplotlib.org/tutorials/colors/colors.html" title="(in Matplotlib v3.3.3)"><span>Specifying Colors</span></a>. If you don’t specify a colour, penguins will draw from the <code class="docutils literal notranslate"><span class="pre">deep</span></code> palette in the <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">color</span></code>: any of the formats listed in <a class="reference external" href="https://matplotlib.org/tutorials/colors/colors.html" title="(in Matplotlib v3.4.0)"><span>Specifying Colors</span></a>. If you don’t specify a colour, penguins will draw from the <code class="docutils literal notranslate"><span class="pre">deep</span></code> palette in the <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> package.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linewidth</span></code>: a float. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linestyle</span></code>: set to (for example) <code class="docutils literal notranslate"><span class="pre">--</span></code> for a dashed line.</p></li>
 </ul>
@@ -126,6 +127,8 @@ The full list of options is described in the <code class="docutils literal notra
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure align-default">
+<img alt="../../_images/customise_1d-3.svg" class="plot-directive" src="../../_images/customise_1d-3.svg" /></div>
 </div>
 </div>
 
@@ -215,7 +218,7 @@ The full list of options is described in the <code class="docutils literal notra
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

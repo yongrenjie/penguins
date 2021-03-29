@@ -1,4 +1,4 @@
-fig, axs = pg.subplots(2, 2)
+fig, axs = pg.subplots2d(2, 2)
 for ax in axs.flat:
     # Inside this loop, `ax` refers to an individual Axes.
     # It is also the name of the keyword parameter.

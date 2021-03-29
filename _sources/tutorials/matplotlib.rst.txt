@@ -15,7 +15,7 @@ penguins, in turn, gives you access to the |Axes| object via :func:`~penguins.su
 
 
 In general, one can interleave matplotlib and penguins functions without many issues.
-In this regard, penguins behaves very similarly to other plotting packages such as `seaborn<http://seaborn.pydata.org/>`_.
+In this regard, penguins behaves very similarly to other plotting packages such as `seaborn <http://seaborn.pydata.org/>`_.
 
 .. note::
 

@@ -77,7 +77,19 @@ Auxiliary plotting utilities
 
 |v|
 
-.. autofunction:: move_ylabel
+.. autofunction:: xmove
+
+|v|
+
+.. autofunction:: ymove
+
+|v|
+
+.. autofunction:: cleanup_axes
+
+|v|
+
+.. autofunction:: cleanup_figure
 
 |v|
 

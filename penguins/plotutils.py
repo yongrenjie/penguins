@@ -155,11 +155,11 @@ def cleanup_figure(padding: float = 0.02
 
 
 @export
-def move_xlabel(ax: Any,
-                pos: str,
-                remove_ticks: int = 0,
-                tight_layout: bool = True,
-                ) -> None:
+def xmove(ax: Any,
+          pos: str,
+          remove_ticks: int = 0,
+          tight_layout: bool = True,
+          ) -> None:
     if pos == "right":
         # Move the label
         ax.xaxis.label.set_horizontalalignment("center")
@@ -173,12 +173,12 @@ def move_xlabel(ax: Any,
 
 
 @export
-def move_ylabel(ax: Any,
-                pos: str,
-                tight_layout: bool = True,
-                dx: float = 0,
-                dy: float = 0,
-                ) -> None:
+def ymove(ax: Any,
+          pos: str,
+          tight_layout: bool = True,
+          dx: float = 0,
+          dy: float = 0,
+          ) -> None:
     """
     Utility function which moves the Axes y-label and y-axis ticks to one of
     several preset configurations. It is a good idea to call `cleanup_axes()`

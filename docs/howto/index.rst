@@ -15,5 +15,6 @@ How-tos
 .. toctree::
    :maxdepth: 2
 
+   move_axes
    nus
 

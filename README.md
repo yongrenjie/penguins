@@ -38,12 +38,11 @@ cosy.stage(axs[1, 0], levels=8e5)
 noesy.stage(axs[1, 1], levels=9e4)
 
 titles = [r"$^{15}$N HMQC", r"$^{13}$C HSQC", "COSY", "NOESY"]
-for ax, title, char in zip(axs.flat, titles, "abcd"):
-    pg.mkplot(ax, title=title, autolabel="nucl")
-    ax.text(x=0.02, y=0.98, s=f"({char})", transform=ax.transAxes,
-            fontweight="semibold", verticalalignment="top")
-    pg.move_ylabel(ax, pos="topright")
+for ax, title in zip(axs.flat, titles):
+    pg.mkplot(ax, title=title)
+    pg.ymove(ax, pos="topright")
 
+pg.label_axes(s=f"({})", fontweight="semibold")
 pg.cleanup_axes()
 pg.show()
 ```

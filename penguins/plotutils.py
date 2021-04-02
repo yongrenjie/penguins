@@ -27,8 +27,6 @@ def style_axes(ax: Any,
     This is useful for making sure that all subplots in a series have a uniform
     appearance.
 
-    All the styles except ``natural`` call |tight_layout| after they are done.
-
     Parameters
     ----------
     ax : Axes
@@ -37,7 +35,7 @@ def style_axes(ax: Any,
         Style to be applied. The available options are ``1d``, ``1d_box``,
         ``2d``, ``plot``, and ``natural``.
     tight_layout : bool, default True
-        Whether to apply plt.tight_layout().
+        Whether to call |tight_layout| after completion.
 
     Returns
     -------
@@ -102,7 +100,9 @@ def cleanup_axes() -> None:
     for ax in fig.axes:
         xlabel_bbox = ax.xaxis.label.get_window_extent(renderer=r)
         ylabel_bbox = ax.yaxis.label.get_window_extent(renderer=r)
-        # Just check every bbox.
+        # Just check every bbox. label1 and label2 correspond to the bottom and
+        # top positions (for x-axis) and the left and right positions (for
+        # y-axis).
         for xtick in ax.xaxis.get_major_ticks():
             xtick_bbox1 = xtick.label1.get_window_extent(renderer=r)
             xtick_bbox2 = xtick.label2.get_window_extent(renderer=r)
@@ -161,7 +161,6 @@ def move_xlabel(ax: Any,
                 tight_layout: bool = True,
                 ) -> None:
     if pos == "right":
-        max, min = ax.get_xlim()
         # Move the label
         ax.xaxis.label.set_horizontalalignment("center")
         ax.xaxis.label.set_verticalalignment("top")
@@ -176,29 +175,84 @@ def move_xlabel(ax: Any,
 @export
 def move_ylabel(ax: Any,
                 pos: str,
-                remove_ticks: int = 0,
                 tight_layout: bool = True,
                 dx: float = 0,
                 dy: float = 0,
                 ) -> None:
-    if pos == "topright":
-        # move yticks to right
+    """
+    Utility function which moves the Axes y-label and y-axis ticks to one of
+    several preset configurations. It is a good idea to call `cleanup_axes()`
+    after using this function in order to remove any tick labels that clash
+    with the axis label.
+
+    Parameters
+    ----------
+    ax : |Axes|
+        The Axes instance to apply the changes to.
+    pos : str from {"topright", "midright", "topspin"}
+        The configuration of the y-axis. This is better explained through a
+        picture than in words.
+    tight_layout : bool, default True
+        Whether to call |tight_layout| after completion.
+    dx : float, default 0
+        Amount to horizontally shift the resulting y-axis label by, expressed
+        in terms of Axes coordinates (i.e. 0 is left-most part of Axes and 1 is
+        right-most). Positive numbers shift the label to the right and vice
+        versa. This should generally not be needed but can be useful for
+        tweaking the layout if the result is not satisfactory.
+    dy : float, default 0
+        Amount to vertically shift the resulting y-axis label by, expressed in
+        terms of Axes coordinates. Positive numbers shift the label up.
+    """
+    def move_yticks_to_right():
         ax.yaxis.tick_right()
-        # remove the first remove_ticks ticks within the ylims
-        max, min = ax.get_ylim()
-        for ytick in ax.yaxis.get_major_ticks():
-            if remove_ticks == 0:
-                break
-            else:
-                ypos = ytick.label2.get_position()[1]
-                if min < ypos and ypos < max:
-                    ytick.label2.set_visible(False)
-                    remove_ticks -= 1
-        # Move the label
+
+    def draw_fig():
+        fig = plt.gcf()
+        fig.canvas.draw()
+        return fig.canvas.get_renderer()
+
+    if pos == "topright":
+        move_yticks_to_right()
         ax.yaxis.label.set_rotation(0)  # right way up
         ax.yaxis.label.set_horizontalalignment("left")
         ax.yaxis.label.set_verticalalignment("top")
         ax.yaxis.set_label_coords(1.03 + dx, 1 + dy)
+
+    elif pos == "midright":
+        move_yticks_to_right()
+
+        # First, figure out the maximum x-extent of ytick labels. We need only
+        # consider those within the y-axis limits.
+        x_extents = []
+        r = draw_fig()
+        inv = ax.transAxes.inverted()
+        y1, y2 = ax.get_ylim()
+        ymin, ymax = min(y1, y2), max(y1, y2)  # account for inverted axis
+        for ytick in ax.yaxis.get_major_ticks():
+            loc = ytick.get_loc()
+            if loc >= ymin and loc <= ymax:
+                bbox = ytick.label2.get_window_extent(renderer=r)
+                x_extents.append(inv.transform(bbox)[1, 0])
+        ax.yaxis.set_label_coords(max(x_extents, default=1) + 0.05 + dx,
+                                  0.5 + dy)
+        ax.yaxis.label.set_rotation(90)
+        ax.yaxis.label.set_horizontalalignment("center")
+        ax.yaxis.label.set_verticalalignment("center")
+
+    elif pos == "topspin":
+        move_yticks_to_right()
+        for ytick in ax.yaxis.get_major_ticks():
+            ytick.label2.set_rotation(90)
+        # The y-axis label should be bottom-aligned together with these.
+        r = draw_fig()
+        inv = ax.transAxes.inverted()
+        bbox = ytick.label2.get_window_extent(renderer=r)
+        x_base = inv.transform(bbox)[1, 0]
+        ax.yaxis.label.set_horizontalalignment("right")
+        ax.yaxis.label.set_verticalalignment("bottom")
+        ax.yaxis.set_label_coords(x_base + dx, 1 + dy)
+
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
 

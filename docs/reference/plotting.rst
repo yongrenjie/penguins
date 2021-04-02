@@ -77,6 +77,10 @@ Auxiliary plotting utilities
 
 |v|
 
+.. autofunction:: move_ylabel
+
+|v|
+
 .. autofunction:: set_palette
 
 |v|

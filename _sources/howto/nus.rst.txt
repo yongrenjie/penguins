@@ -1,7 +1,7 @@
-Non-Uniform Sampling
-====================
+Reading NUS data
+================
 
-NUS is an acquisition method where an incomplete set of *t*:subscript:`1` increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.
+Non-uniform sampling is an acquisition method where an incomplete set of *t*:subscript:`1` increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.
 
 From penguins' point of view, once they have been processed, there is almost no difference between NUS spectra and uniformly sampled spectra. However, you may need to watch out for the ``TD`` parameter::
 

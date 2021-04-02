@@ -43,10 +43,10 @@
 <h2>The three stages of plotting<a class="headerlink" href="#the-three-stages-of-plotting" title="Permalink to this headline">¶</a></h2>
 <p>Plotting spectra using penguins is accomplished through three distinct steps:</p>
 <ol class="arabic">
-<li><p><strong>Staging</strong>. In this step, a spectrum (i.e. the dataset returned by <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>) is associated with an <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> which it will be plotted on.</p>
+<li><p><strong>Staging</strong>. In this step, a spectrum (i.e. the dataset returned by <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>) is associated with an <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> which it will be plotted on.</p>
 <p><em>Individual spectrum-level options</em> (e.g. the plot bounds and line colour) are specified here.</p>
 </li>
-<li><p><strong>Construction</strong>. Here, all the spectra that were previously staged on a particular <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> are plotted.</p>
+<li><p><strong>Construction</strong>. Here, all the spectra that were previously staged on a particular <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> are plotted.</p>
 <p><em>Plot-level options</em> (e.g. horizontal / vertical separation between spectra, and axis labels) are specified here.</p>
 </li>
 <li><p><strong>Display</strong>. The plot just needs to be displayed, and that’s what we do here.</p></li>
@@ -72,7 +72,7 @@
 <span class="go">(&lt;Figure size 600x400 with 1 Axes&gt;, &lt;AxesSubplot:xlabel=&#39;$\\rm ^{1}H$ (ppm)&#39;&gt;)</span>
 </pre></div>
 </div>
-<p>When we call <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>, we can see from the output that a <a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and an <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> (technically an <code class="docutils literal notranslate"><span class="pre">AxesSubplot</span></code>) have been set up for us.
+<p>When we call <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>, we can see from the output that a <a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and an <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> (technically an <code class="docutils literal notranslate"><span class="pre">AxesSubplot</span></code>) have been set up for us.
 The <em>x</em>-axis label of the plot has automatically been set to a string which renders as <span class="math notranslate nohighlight">\(\mathrm{^1H~(ppm)}\)</span>.</p>
 <p>Finally, <strong>display</strong> the plot using <a class="reference internal" href="../../reference/plotting/#penguins.show" title="penguins.show"><code class="xref any py py-func docutils literal notranslate"><span class="pre">show()</span></code></a>:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -99,7 +99,7 @@ These will be described shortly in <a class="reference internal" href="../custom
 </div>
 <div class="figure align-default">
 <img alt="../../_images/plot-5.svg" class="plot-directive" src="../../_images/plot-5.svg" /></div>
-<p>Notice that the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> is set to a square shape: penguins does this automatically for 2D spectra.
+<p>Notice that the <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> is set to a square shape: penguins does this automatically for 2D spectra.
 However, there are some aspects of this plot which are clearly undesirable.
 In <a class="reference internal" href="../customise_2d/"><span class="doc">Tutorial 5: Customising 2D plots</span></a> we will see how to improve it.</p>
 </div>

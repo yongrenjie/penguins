@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Non-Uniform Sampling &#8212; penguins  documentation</title>
+    <title>Reading NUS data &#8212; penguins  documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
     <link rel="next" title="Explanations" href="../../explanations/" />
-    <link rel="prev" title="How-tos" href="../" />
+    <link rel="prev" title="Changing the axes layouts" href="../move_axes/" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -34,9 +34,9 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="non-uniform-sampling">
-<h1>Non-Uniform Sampling<a class="headerlink" href="#non-uniform-sampling" title="Permalink to this headline">¶</a></h1>
-<p>NUS is an acquisition method where an incomplete set of <em>t</em><sub>1</sub> increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.</p>
+  <div class="section" id="reading-nus-data">
+<h1>Reading NUS data<a class="headerlink" href="#reading-nus-data" title="Permalink to this headline">¶</a></h1>
+<p>Non-uniform sampling is an acquisition method where an incomplete set of <em>t</em><sub>1</sub> increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.</p>
 <p>From penguins’ point of view, once they have been processed, there is almost no difference between NUS spectra and uniformly sampled spectra. However, you may need to watch out for the <code class="docutils literal notranslate"><span class="pre">TD</span></code> parameter:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nus_hsqc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nus_hsqc</span><span class="p">[</span><span class="s2">&quot;td&quot;</span><span class="p">]</span>
@@ -64,7 +64,7 @@
     <ul>
         <li>
           &larr;
-          <a href="../" title="Previous document">How-tos</a>
+          <a href="../move_axes/" title="Previous document">Changing the axes layouts</a>
         </li>
         <li>
           <a href="../../explanations/" title="Next document">Explanations</a>
@@ -92,7 +92,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install/">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../">How-tos</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Non-Uniform Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../move_axes/">Changing the axes layouts</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reading NUS data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../#other-planned-topics">Other planned topics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../explanations/">Explanations</a></li>
@@ -104,7 +106,7 @@
 <ul>
   <li><a href="../../">Documentation overview</a><ul>
   <li><a href="../">How-tos</a><ul>
-      <li>Previous: <a href="../" title="previous chapter">How-tos</a></li>
+      <li>Previous: <a href="../move_axes/" title="previous chapter">Changing the axes layouts</a></li>
       <li>Next: <a href="../../explanations/" title="next chapter">Explanations</a></li>
   </ul></li>
   </ul></li>

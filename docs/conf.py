@@ -51,7 +51,8 @@ plot_html_show_source_link = False
 # Code to run before each plot
 plot_pre_code = ""
 # Path to run in when generating plots
-plot_working_directory = os.path.abspath("../tests/nmrdata")
+# Before running this make sure that the submodule is updated!
+plot_working_directory = os.path.abspath("../penguins-testdata")
 # Make high-quality images...! The low-res PNGs are horrible advertising
 plot_formats = ["svg"]
 # Don't display links to the source code / images.

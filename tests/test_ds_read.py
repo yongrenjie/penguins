@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import penguins as pg
 
-datadir = Path(__file__).parent.resolve() / "nmrdata"
+datadir = Path(__file__).parents[1].resolve() / "penguins-testdata"
 
 
 def get_size(ds):

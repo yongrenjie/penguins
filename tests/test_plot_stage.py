@@ -6,7 +6,7 @@ import penguins as pg
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-datadir = Path(__file__).parent.resolve() / "nmrdata"
+datadir = Path(__file__).parents[1].resolve() / "penguins-testdata"
 
 
 def test_1d_stage():

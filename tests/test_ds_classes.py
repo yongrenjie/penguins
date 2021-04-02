@@ -5,7 +5,7 @@ import pytest
 import numpy as np
 import penguins as pg
 
-datadir = Path(__file__).parent.resolve() / "nmrdata"
+datadir = Path(__file__).parents[1].resolve() / "penguins-testdata"
 
 
 # -- Tests on _Dataset() base class -----------------

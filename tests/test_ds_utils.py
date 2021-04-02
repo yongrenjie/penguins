@@ -6,7 +6,7 @@ import numpy as np
 import penguins as pg
 from penguins.dataset import _try_convert, _parse_bounds
 
-datadir = Path(__file__).parent.resolve() / "nmrdata"
+datadir = Path(__file__).parents[1].resolve() / "penguins-testdata"
 
 
 # -- Tests on utility functions ---------------------

@@ -73,8 +73,7 @@ def read_abs(path: Union[str, Path]
     p = Path(path)
     # Figure out which type of spectrum it is.
     if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
-        raise FileNotFoundError(f"Invalid path to spectrum {p}:"
-                                " either procs or acqus were not found")
+        raise FileNotFoundError(f"Invalid path to spectrum {p}")
     if (p.parents[1] / "ser").exists():
         if (p / "used_from").exists():
             return Dataset1DProj(p)

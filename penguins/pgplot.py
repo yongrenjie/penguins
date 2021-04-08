@@ -437,6 +437,10 @@ def _stage1d(dataset: ds.TDataset1D,
                                 color=color,
                                 plot_options=kwargs)
         ax.pha.plot_objs.append(plot_obj)
+    # Make the Axes the currently active one so that mkplot() will
+    # automatically construct the correct Axes, even if the ax parameter is not
+    # passed to it.
+    plt.sca(ax)
 
 
 class PlotObject1D():
@@ -884,6 +888,10 @@ def _stage2d(dataset: ds.Dataset2D,
                                 dfilter=dfilter, label=label,
                                 plot_options=kwargs)
         ax.pha.plot_objs.append(plot_obj)
+    # Make the Axes the currently active one so that mkplot() will
+    # automatically construct the correct Axes, even if the ax parameter is not
+    # passed to it.
+    plt.sca(ax)
 
 
 def _mkplot2d(ax: Any = None,

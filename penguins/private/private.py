@@ -179,6 +179,93 @@ class Hsqc(Experiment):
 
 
 @export
+class HsqcCosy(Experiment):
+    """
+    For 13C HSQC-COSY experiments. The variables hsqc and cosy should be lists
+    of 2-tuples (f1_shift, f2_shift) which indicate the direct (HSQC) and
+    indirect (HSQC-COSY) responses respectively.
+
+    None of the methods from Experiment are actually inherited.
+    """
+    def __init__(self,
+                 hsqc: List[Tuple[float, float]],
+                 cosy: List[Tuple[float, float]],
+                 margin: Optional[Tuple[float, float]] = (0.5, 0.02),
+                 ):
+        self.hsqc = hsqc
+        self.cosy = cosy
+        self.margin = margin
+
+    @property
+    def peaks(self) -> List[Tuple[float, float]]:
+        """
+        Returns a list of all peaks.
+        """
+        return self.hsqc + self.cosy
+
+    @property
+    def df(self) -> pd.DataFrame:
+        """
+        Return a pandas DataFrame containing all the peaks. This DF has
+        columns "f1", "f2", and "type".
+        """
+        hsqc_df, cosy_df = (
+            pd.DataFrame.from_records(peaklist, columns=("f1", "f2"))
+            for peaklist in (self.hsqc, self.cosy)
+        )
+        hsqc_df["type"] = "hsqc"
+        cosy_df["type"] = "cosy"
+        return pd.concat((hsqc_df, cosy_df), ignore_index=True)
+
+    def integrate(self,
+                  dataset: ds.Dataset2D,
+                  edited: bool = True,
+                  ) -> np.ndarray:
+        """
+        Calculates the absolute integral of each peak in the HSQC. If editing
+        is enabled, assumes that HSQC peaks are positive and HSQC-COSY peaks
+        negative.
+        """
+        if edited:
+            # We need self.df here as it contains multiplicity information.
+            return np.array([dataset.integrate(peak=(peak.f1, peak.f2),
+                                               margin=self.margin,
+                                               mode=("max"
+                                                     if peak.type == "hsqc"
+                                                     else "min"))
+                             for peak in self.df.itertuples()])
+        else:
+            return np.array([dataset.integrate(peak=peak,
+                                               margin=self.margin,
+                                               mode=("max"))
+                             for peak in self.peaks])
+
+    def rel_ints_df(self,
+                    dataset: ds.Dataset2D,
+                    ref_dataset: ds.Dataset2D,
+                    label: str = "",
+                    edited: bool = False,
+                    ) -> pd.DataFrame:
+        """
+        Construct a dataframe of relative intensities vs a reference
+        dataset.
+
+        This DataFrame will have columns (f1, f2, mult) just like self.df,
+        but will also have "expt" which is a string indicating the type of
+        experiment being ran, and "int" which is the relative integral vs a
+        reference dataset.
+        """
+        df = pd.DataFrame()
+        df["int"] = (self.integrate(dataset, edited=edited) /
+                     self.integrate(ref_dataset, edited=edited))
+        df["expt"] = label
+        df["type"] = self.df["type"]
+        df["f1"] = self.df["f1"]
+        df["f2"] = self.df["f2"]
+        return df
+
+
+@export
 class Cosy(Experiment):
     """
     For COSY experiments. The variables diagonal and cross_half should be
@@ -299,6 +386,16 @@ class Andrographolide():
                        (1.3598, 1.9367), (1.3598, 1.7412), (1.2131, 1.7020),
                        (1.2131, 1.6434), (1.2131, 1.3500), (1.3696, 2.3181)]
     cosy = Cosy(cosy_diagonal, cosy_cross_half)
+
+    # HSQC-COSY spectrum, we treat it as a HSQC-COSY for now
+    hsqc_cosy_hsqc = hsqc_ch + hsqc_ch2 + hsqc_ch3
+    hsqc_cosy_cosy = [(24.3311, 1.2059), (28.3694, 1.2156), (24.5067, 1.9386),
+                      (24.5067, 1.8702), (28.3694, 1.7090), (36.9727, 1.6455),
+                      (38.0262, 1.3524), (54.8816, 1.3671), (55.9351, 2.5101),
+                      (28.3694, 3.2331), (24.5067, 2.3147), (37.8506, 1.7383),
+                      (24.5067, 6.6280), (64.8896, 5.7146), (74.7219, 4.9183),
+                      (65.0651, 4.4006), (78.9358, 1.6455), (146.7087, 2.4889)]
+    hsqc_cosy = HsqcCosy(hsqc_cosy_hsqc, hsqc_cosy_cosy)
 
 
 @export

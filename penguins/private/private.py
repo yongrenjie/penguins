@@ -244,7 +244,7 @@ class HsqcCosy(Experiment):
                     dataset: ds.Dataset2D,
                     ref_dataset: ds.Dataset2D,
                     label: str = "",
-                    edited: bool = False,
+                    edited: bool = True,
                     ) -> pd.DataFrame:
         """
         Construct a dataframe of relative intensities vs a reference
@@ -637,6 +637,7 @@ def cosy_stripplot(molecule: Any,
                    ylabel: str = "Intensity",
                    title: str = "",
                    ncol: int = 2,
+                   separate_type: bool = True,
                    loc: str = "upper center",
                    ax: Optional[Any] = None,
                    **kwargs: Any,
@@ -683,6 +684,9 @@ def cosy_stripplot(molecule: Any,
                                               ref_dataset=ref_dataset,
                                               label=label)
                     for (ds, label) in zip(datasets, expt_labels)]
+    if not separate_type:
+        rel_ints_dfs = [rel_int_df.assign(type="cosy")
+                        for rel_int_df in rel_ints_dfs]
     all_dfs = pd.concat(rel_ints_dfs)
 
     # Calculate the average integrals by type
@@ -700,8 +704,11 @@ def cosy_stripplot(molecule: Any,
                   palette=sns.color_palette("deep")[3:], **kwargs)
     # Customise the plot
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
-    ax.legend(ncol=ncol, loc=loc,
-              labels=["diagonal", "cross"]).set(title=None)
+    if separate_type:
+        ax.legend(ncol=ncol, loc=loc,
+                  labels=["diagonal", "cross"]).set(title=None)
+    else:
+        ax.legend().set_visible(False)
     ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
     # Set y-limits. We need to expand it by ~20% to make space for the legend,
     # as well as the averaged values.
@@ -713,10 +720,12 @@ def cosy_stripplot(molecule: Any,
     new_ymax = ymean + (EXPANSION_FACTOR * ylength)
     ax.set_ylim((new_ymin, new_ymax))
     # add the text
+    offset = -0.2 if separate_type else 0
+    dx = 0.4 if separate_type else 1
     for x, (_, expt_avgs) in enumerate(avgd_ints.items()):
         for i, ((_, avg), color) in enumerate(zip(
                 expt_avgs.items(), sns.color_palette("deep")[3:])):
-            ax.text(x=x-0.2+i*0.4, y=0.02, s=f"({avg:.2f})",
+            ax.text(x=x-offset+i*dx, y=0.02, s=f"({avg:.2f})",
                     color=color, horizontalalignment="center",
                     transform=ax.get_xaxis_transform())
     style_axes(ax, "plot")
@@ -843,5 +852,116 @@ def hsqc_cosy_stripplot(molecule: Any,
                     color=deep, horizontalalignment="center",
                     transform=ax.get_xaxis_transform(),
                     **font_kwargs)
+    style_axes(ax, "plot")
+    return plt.gcf(), ax
+
+
+@export
+def hsqcc_stripplot(molecule: Any,
+                    datasets: Union[ds.Dataset2D, Sequence[ds.Dataset2D]],
+                    ref_dataset: ds.Dataset2D,
+                    expt_labels: Union[str, Sequence[str]],
+                    xlabel: str = "Experiment",
+                    ylabel: str = "Intensity",
+                    title: str = "",
+                    edited: bool = True,
+                    show_averages: bool = True,
+                    ncol: int = 2,
+                    loc: str = "upper center",
+                    ax: Optional[Any] = None,
+                    **kwargs: Any,
+                    ) -> Tuple[Any, Any]:
+    """
+    Plot HSQC-COSY strip plots (i.e. plot relative intensities, split by peak
+    type).
+
+    Parameters
+    ----------
+    molecule : pg.private.Andrographolide
+        The class from which the hsqc attribute will be taken from
+    datasets : pg.Dataset2D or sequence of pg.Dataset2D
+        Dataset(s) to analyse intensities of
+    ref_dataset : pg.Dataset2D
+        Reference dataset
+    expt_labels : str or sequence of strings
+        Labels for the analysed datasets
+    xlabel : str, optional
+        Axes x-label, defaults to "Experiment"
+    ylabel : str, optional
+        Axes y-label, defaults to "Intensity"
+    title : str, optional
+        Axes title, defaults to empty string
+    edited : bool, default False
+        Whether editing is enabled or not.
+    show_averages : bool, default True
+        Whether to indicate averages in each category using sns.pointplot.
+    ncol : int, optional
+        Passed to ax.legend(). Defaults to 2.
+    loc : str, optional
+        Passed to ax.legend(). Defaults to "upper center".
+    ax : matplotlib.axes.Axes, optional
+        Axes instance to plot on. If not provided, uses plt.gca().
+    kwargs : dict, optional
+        Keywords passed on to sns.stripplot().
+
+    Returns
+    -------
+    (fig, ax).
+    """
+    # Stick dataset/label into a list if needed
+    if isinstance(datasets, ds.Dataset2D):
+        datasets = [datasets]
+    if isinstance(expt_labels, str):
+        expt_labels = [expt_labels]
+    # Calculate dataframes of relative intensities.
+    rel_ints_dfs = [molecule.hsqc_cosy.rel_ints_df(dataset=ds,
+                                                   ref_dataset=ref_dataset,
+                                                   label=label,
+                                                   edited=edited)
+                    for (ds, label) in zip(datasets, expt_labels)]
+    all_dfs = pd.concat(rel_ints_dfs)
+
+    # Calculate the average integrals by multiplicity
+    avgd_ints = pd.concat((df.groupby("type").mean() for df in rel_ints_dfs),
+                          axis=1)
+    avgd_ints.drop(columns=["f1", "f2"], inplace=True)
+
+    # Get currently active axis if none provided
+    if ax is None:
+        ax = plt.gca()
+
+    # Plot the intensities.
+    stripplot_alpha = 0.3 if show_averages else 0.8
+    sns.stripplot(x="expt", y="int", hue="type",
+                  zorder=0, alpha=stripplot_alpha,
+                  dodge=True, data=all_dfs, ax=ax, **kwargs)
+    if show_averages:
+        sns.pointplot(x="expt", y="int", hue="type", zorder=1,
+                      dodge=0.4, data=all_dfs, ax=ax, join=False,
+                      markers='_', palette="dark", ci=None, scale=1.25)
+    # Customise the plot
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    handles, _ = ax.get_legend_handles_labels()
+    l = ax.legend(ncol=ncol, loc=loc,
+                  markerscale=0.4,
+                  handles=handles[0:3],
+                  labels=["direct", "indirect"])
+    ax.axhline(y=1, color="grey", linewidth=0.5, linestyle="--")
+    # Set y-limits. We need to expand it by ~20% to make space for the legend,
+    # as well as the averaged values.
+    EXPANSION_FACTOR = 1.2
+    ymin, ymax = ax.get_ylim()
+    ymean = (ymin + ymax)/2
+    ylength = (ymax - ymin)/2
+    new_ymin = ymean - (EXPANSION_FACTOR * ylength)
+    new_ymax = ymean + (EXPANSION_FACTOR * ylength)
+    ax.set_ylim((new_ymin, new_ymax))
+    # add the text
+    for x, (_, expt_avgs) in enumerate(avgd_ints.items()):
+        for i, ((_, avg), color) in enumerate(zip(expt_avgs.items(),
+                                                  sns.color_palette("deep"))):
+            ax.text(x=x-0.2+i*0.4, y=0.02, s=f"({avg:.2f})",
+                    color=color, horizontalalignment="center",
+                    transform=ax.get_xaxis_transform())
     style_axes(ax, "plot")
     return plt.gcf(), ax

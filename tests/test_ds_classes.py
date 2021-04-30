@@ -384,25 +384,27 @@ def test_2d_project():
 
 def test_2d_slice():
     """Tests penguins' generation of virtual slices."""
+    # TODO: improve these tests. I think SI here is (1k, 1k) which makes SI
+    # a poor check!
     cosy = pg.read(datadir, 2)
-    # Slice along f1 (i.e. a column)
-    f1 = cosy.slice(axis=0, ppm=1.38)
-    assert f1.real.shape == (cosy["si"][0], )
-    # Slice along f2 (i.e. a row)
-    f2 = cosy.slice(axis=1, ppm=1.38)
-    assert f2.real.shape == (cosy["si"][1], )
+    # Slice along f1 at one point of f2 (i.e. a column)
+    along_f1 = cosy.slice(axis="column", ppm=1.38)
+    assert along_f1.real.shape == (cosy["si"][0], )
+    # Slice along f2 at one point of f1 (i.e. a row)
+    along_f2 = cosy.slice(axis="row", ppm=1.38)
+    assert along_f2.real.shape == (cosy["si"][1], )
     # Check that they have the same value at (1.38, 1.38)
-    assert (f2.real[cosy.ppm_to_index(1, 1.38)] ==
-            pytest.approx(f1.real[cosy.ppm_to_index(0, 1.38)]))
+    assert (along_f2.real[cosy.ppm_to_index(1, 1.38)] ==
+            pytest.approx(along_f1.real[cosy.ppm_to_index(0, 1.38)]))
 
-    # Check that slice(f1=x) is the same as slice(axis=1, ppm=x)
-    assert np.array_equal(cosy.slice(f1=1.38).real, f2.real)
-    # Check that slice(f2=y) is the same as slice(axis=0, ppm=y)
-    assert np.array_equal(cosy.slice(f2=1.38).real, f1.real)
+    # Check that slice(f1=x) is the same as slice(axis="row", ppm=x)
+    assert np.array_equal(cosy.slice(f1=1.38).real, along_f2.real)
+    # Check that slice(f2=y) is the same as slice(axis="column", ppm=y)
+    assert np.array_equal(cosy.slice(f2=1.38).real, along_f1.real)
 
     # Check that penguins and TopSpin slices agree
     cosy_slice = pg.read(datadir, 2, 1002)
-    assert np.allclose(f2.real, cosy_slice.real)
+    assert np.allclose(along_f2.real, cosy_slice.real)
 
 
 def test_2d_sum():
@@ -418,7 +420,7 @@ def test_2d_sum():
     # the double-counting of the row at 5 ppm)
     subsum = (cosy.sum(axis=1, bounds="4..5").real
               + cosy.sum(axis=1, bounds="5..6").real
-              - cosy.slice(axis=1, ppm=5).real)
+              - cosy.slice(axis="row", ppm=5).real)
     assert np.allclose(f2.real, subsum)
     # Check that penguins and TopSpin sums are the same
     # For some reason, this is not the same thing. It *looks* like the same

@@ -1419,18 +1419,17 @@ class Dataset2D(_2D_RawDataMixin,
               f1: OF = None,
               f2: OF = None,
               ) -> Dataset1DProjVirtual:
-        """Extract a 1D slice from a 2D spectrum.
+        """Extract a 1D slice from a 2D spectrum. You must either specify both
+        *axis* and *ppm* arguments, or *f1* only, or *f2* only.
 
         Parameters
         ----------
-        axis : int or str from {0, "column", 1, "row"}
-            Axis to slice along. To extract a column (which corresponds to a
-            slice along f1, at one specific value of f2), use ``0`` or
-            ``column``, and vice versa for ``row``.
-        ppm : float
-            The chemical shift of the other axis to slice at. For example, if
-            you are extracting a column, then this would be the f2 chemical
-            shift of interest.
+        axis : str from {"column", "row"}, optional
+            Axis to slice along. To extract a column (i.e. at one particular
+            value of f2), use ``column``, and vice versa.
+        ppm : float, optional
+            The chemical shift to slice at. For example, if you are extracting
+            a column, then this would be the f2 chemical shift of interest.
         f1 : float, optional
             slice(f1=y) is an alias for slice(axis="row", ppm=y). If
             specified, this overrules the *axis* and *ppm* keyword arguments.
@@ -1453,28 +1452,24 @@ class Dataset2D(_2D_RawDataMixin,
             raise ValueError("'f1' and 'f2' keyword arguments cannot be used"
                              " simultaneously.")
         elif f1 is not None:
-            axis, ppm = 1, f1
+            axis_index, ppm = 1, f1
         elif f2 is not None:
-            axis, ppm = 0, f2
+            axis_index, ppm = 0, f2
         # If we reach this else block, then neither of them were passed.
         else:
-            # Convert "column"/"row" to 0 and 1
-            if axis == "column":  # extract a column
-                axis = 0
-            elif axis == "row":   # extract a row
-                axis = 1
-
-        # Check for invalid values passed as 'axis'
-        if axis is None:
-            raise ValueError("slice() requires either the 'axis' and 'ppm'"
-                             " keyword arguments, or one of 'f1' or 'f2'.")
-        if axis not in [0, 1]:
-            raise ValueError(f"Invalid value for axis '{axis}'")
+            if axis is None or ppm is None:
+                raise ValueError("slice() requires either the 'axis' and 'ppm'"
+                                 " keyword arguments, or one of 'f1' or 'f2'.")
+            if axis not in ["column", "row"]:
+                raise ValueError(f"Invalid value for axis '{axis}'")
+            # Determine axis_index from axis argument.
+            axis_index = 1 if axis == "row" else 0
 
         # Generate the virtual projection, then return it
-        index = self.ppm_to_index(axis=(1 - axis), ppm=ppm)   # type: ignore
+        shift_index = self.ppm_to_index(axis=(1 - axis_index), ppm=ppm)   # type: ignore
         return Dataset1DProjVirtual(self.path, proj_type="slice",
-                                    proj_axis=axis, index=index,
+                                    proj_axis=axis_index,
+                                    index=shift_index,
                                     rr=self.rr)
 
 

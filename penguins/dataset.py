@@ -1432,11 +1432,11 @@ class Dataset2D(_2D_RawDataMixin,
             you are extracting a column, then this would be the f2 chemical
             shift of interest.
         f1 : float, optional
-            slice(f1=x) is an alias for slice(axis="column", ppm=x). If
+            slice(f1=y) is an alias for slice(axis="row", ppm=y). If
             specified, this overrules the *axis* and *ppm* keyword arguments.
             Cannot be used together with *f2*.
         f2 : float, optional
-            slice(f2=y) is an alias for slice(axis="row", ppm=y). If specified,
+            slice(f2=x) is an alias for slice(axis="column", ppm=x). If specified,
             this overrules the *axis* and *ppm* keyword arguments. Cannot be
             used together with *f1*.
 
@@ -1453,9 +1453,9 @@ class Dataset2D(_2D_RawDataMixin,
             raise ValueError("'f1' and 'f2' keyword arguments cannot be used"
                              " simultaneously.")
         elif f1 is not None:
-            axis, ppm = 0, f1
+            axis, ppm = 1, f1
         elif f2 is not None:
-            axis, ppm = 1, f2
+            axis, ppm = 0, f2
         # If we reach this else block, then neither of them were passed.
         else:
             # Convert "column"/"row" to 0 and 1

@@ -395,10 +395,10 @@ def test_2d_slice():
     assert (f2.real[cosy.ppm_to_index(1, 1.38)] ==
             pytest.approx(f1.real[cosy.ppm_to_index(0, 1.38)]))
 
-    # Check that slice(f1=x) is the same as slice(axis=0, ppm=x)
-    assert np.array_equal(cosy.slice(f1=1.38).real, f1.real)
-    # Check that slice(f2=y) is the same as slice(axis=1, ppm=y)
-    assert np.array_equal(cosy.slice(f2=1.38).real, f2.real)
+    # Check that slice(f1=x) is the same as slice(axis=1, ppm=x)
+    assert np.array_equal(cosy.slice(f1=1.38).real, f2.real)
+    # Check that slice(f2=y) is the same as slice(axis=0, ppm=y)
+    assert np.array_equal(cosy.slice(f2=1.38).real, f1.real)
 
     # Check that penguins and TopSpin slices agree
     cosy_slice = pg.read(datadir, 2, 1002)

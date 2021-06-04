@@ -171,7 +171,7 @@ RSEL SI STSI STSR SYMM TD TD0 TDEFF TDOFF TILT WBST WDW XDIM XGAIN YMAX_P
 YMIN_P""".split()
 
 # Extra integer parameters that weren't documented.
-_int_pars = _int_pars + """DTYPA DTYPP GRPDLY""".split()
+_int_pars = _int_pars + """DTYPA DTYPP""".split()
 
 
 # -- Fundamental Dataset methods ------------------------

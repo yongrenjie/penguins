@@ -79,7 +79,7 @@ def phase_1d_interactive(ds: ds.Dataset1D) -> (ds.Dataset1D, float, float):
                    verticalalignment="center")
 
     phc1_axes = plt.axes([0.17, 0.1, 0.73, 0.03], facecolor="lavender")
-    phc1_slider = Slider(phc1_axes, "", -100, +100, 0, color="purple")
+    phc1_slider = Slider(phc1_axes, "", -300, +300, 0, color="purple")
     phc1_axes.text(-0.02, 0.5, "phc1", transform=phc1_axes.transAxes,
                    horizontalalignment="right",
                    verticalalignment="center")
@@ -194,7 +194,7 @@ def phase_2d_interactive(ds: ds.Dataset2D) -> (ds.Dataset2D,
                       horizontalalignment="right",
                       verticalalignment="center")
     f1_phc1_axes = plt.axes([0.15, 0.27, 0.03, 0.63], facecolor="lavender")
-    f1_phc1_slider = Slider(f1_phc1_axes, "", -100, +100, 0, color="purple",
+    f1_phc1_slider = Slider(f1_phc1_axes, "", -300, +300, 0, color="purple",
                             orientation='vertical')
     f1_phc1_axes.text(0.5, -0.10, "f1_phc1", transform=f1_phc1_axes.transAxes,
                       horizontalalignment="left",
@@ -205,7 +205,7 @@ def phase_2d_interactive(ds: ds.Dataset2D) -> (ds.Dataset2D,
                       horizontalalignment="right",
                       verticalalignment="center")
     f2_phc1_axes = plt.axes([0.17, 0.10, 0.73, 0.03], facecolor="lavender")
-    f2_phc1_slider = Slider(f2_phc1_axes, "", -100, +100, 0, color="purple")
+    f2_phc1_slider = Slider(f2_phc1_axes, "", -300, +300, 0, color="purple")
     f2_phc1_axes.text(-0.02, 0.5, "f2_phc1", transform=f2_phc1_axes.transAxes,
                       horizontalalignment="right",
                       verticalalignment="center")

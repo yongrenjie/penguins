@@ -50,8 +50,8 @@ def phase_1d_manual(ds: ds.Dataset1D,
     si = ds['si']
     phases = DEG_TO_RAD * (phc0 + phc1 * np.linspace(0, 1, si))
     phased_spec = complex_spec * np.exp(1j * phases)
-    ds._real = phased_spec.real
-    ds._imag = phased_spec.imag
+    ds.real = phased_spec.real
+    ds.imag = phased_spec.imag
 
 
 def phase_1d_interactive(ds: ds.Dataset1D) -> (ds.Dataset1D, float, float):
@@ -143,10 +143,10 @@ def phase_2d_manual(ds: ds.Dataset2D,
     phased_real_in_f2 = real_in_f2 * np.exp(1j * phases_f1)
     phased_imag_in_f2 = imag_in_f2 * np.exp(1j * phases_f1)
     # Separate complex pairs
-    ds._rr = phased_real_in_f2.real
-    ds._ri = phased_real_in_f2.imag
-    ds._ir = phased_imag_in_f2.real
-    ds._ii = phased_imag_in_f2.imag
+    ds.rr = phased_real_in_f2.real
+    ds.ri = phased_real_in_f2.imag
+    ds.ir = phased_imag_in_f2.real
+    ds.ii = phased_imag_in_f2.imag
 
     # F2 phasing, follows the same principles
     real_in_f1 = ds.rr + 1j * ds.ir
@@ -155,10 +155,10 @@ def phase_2d_manual(ds: ds.Dataset2D,
     phases_f2 = phases_f2[np.newaxis, :]
     phased_real_in_f1 = real_in_f1 * np.exp(1j * phases_f2)
     phased_imag_in_f1 = imag_in_f1 * np.exp(1j * phases_f2)
-    ds._rr = phased_real_in_f1.real
-    ds._ir = phased_real_in_f1.imag
-    ds._ri = phased_imag_in_f1.real
-    ds._ii = phased_imag_in_f1.imag
+    ds.rr = phased_real_in_f1.real
+    ds.ir = phased_real_in_f1.imag
+    ds.ri = phased_imag_in_f1.real
+    ds.ii = phased_imag_in_f1.imag
 
 
 def phase_2d_interactive(ds: ds.Dataset2D) -> (ds.Dataset2D,

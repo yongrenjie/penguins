@@ -426,6 +426,10 @@ class _1D_RawDataMixin():
             self._read_raw_data()
             return self._fid
 
+    @fid.setter
+    def fid(self, value):
+        self._fid = value
+
     def _find_raw_data_paths(self) -> None:
         self.path: Path
         self._p_fid = self.path.parents[1] / "fid"
@@ -471,12 +475,12 @@ class _1D_ProcDataMixin():
         chemical shift.
 
     imag : ndarray
-        This attribute only applies to `Dataset1D` instances. The projection
-        classes do not have this attribute.
-
         Real-valued |ndarray| containing the imaginary spectrum. ``imag[0]``
         contains the left-most point of the spectrum, i.e. the greatest
         chemical shift.
+
+        This attribute only applies to `Dataset1D` instances. The projection
+        classes do not have this attribute.
     """
 
     @property
@@ -487,6 +491,10 @@ class _1D_ProcDataMixin():
             self._read_spec(spectype="real")
             return self._real
 
+    @real.setter
+    def real(self, value):
+        self._real = value
+
     @property
     def imag(self):
         try:
@@ -494,6 +502,10 @@ class _1D_ProcDataMixin():
         except AttributeError:
             self._read_spec(spectype="imag")
             return self._imag
+
+    @imag.setter
+    def imag(self, value):
+        self._imag = value
 
     def _find_proc_data_paths(self) -> None:
         self._p_real = self.path / "1r"        # type: ignore # mixin
@@ -662,6 +674,10 @@ class _2D_RawDataMixin():
             self._read_raw_data()
             return self._ser
 
+    @ser.setter
+    def ser(self, value):
+        self._ser = value
+
     def _find_raw_data_paths(self) -> None:
         self.path: Path
         self._p_ser = self.path.parents[1] / "ser"
@@ -711,6 +727,10 @@ class _2D_ProcDataMixin():
             self._read_spec(spectype="rr")
             return self._rr
 
+    @rr.setter
+    def rr(self, value):
+        self._rr = value
+
     @property
     def ri(self):
         try:
@@ -718,6 +738,10 @@ class _2D_ProcDataMixin():
         except AttributeError:
             self._read_spec(spectype="ri")
             return self._ri
+
+    @ri.setter
+    def ri(self, value):
+        self._ri = value
 
     @property
     def ir(self):
@@ -727,6 +751,10 @@ class _2D_ProcDataMixin():
             self._read_spec(spectype="ir")
             return self._ir
 
+    @ir.setter
+    def ir(self, value):
+        self._ir = value
+
     @property
     def ii(self):
         try:
@@ -734,6 +762,10 @@ class _2D_ProcDataMixin():
         except AttributeError:
             self._read_spec(spectype="ii")
             return self._ii
+
+    @ii.setter
+    def ii(self, value):
+        self._ii = value
 
     @property
     def ts_baselev(self):

@@ -1245,15 +1245,27 @@ def subplots2d(nrows: int = 1,
                              " elements as there are rows.")
         # Calculate the width/height.
         if width_ratios is not None:
-            fig_width = np.sum(width_ratios) * 4
+            if "figsize" in kwargs:
+                fig_width = kwargs["figsize"][0]
+            else:
+                fig_width = np.sum(width_ratios) * 4
             gridspec_kw["width_ratios"] = width_ratios
         else:
-            fig_width = ncols * 4
+            if "figsize" in kwargs:
+                fig_width = kwargs["figsize"][0]
+            else:
+                fig_width = ncols * 4
         if height_ratios is not None:
-            fig_height = np.sum(height_ratios) * 4
+            if "figsize" in kwargs:
+                fig_height = kwargs["figsize"][1]
+            else:
+                fig_height = np.sum(height_ratios) * 4
             gridspec_kw["height_ratios"] = height_ratios
         else:
-            fig_height = nrows * 4
+            if "figsize" in kwargs:
+                fig_height = kwargs["figsize"][1]
+            else:
+                fig_height = nrows * 4
         figsize = (fig_width, fig_height)
         # Remove figsize from kwargs if it's there.
         kwargs.pop("figsize", None)

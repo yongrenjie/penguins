@@ -4,16 +4,17 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Tutorial 1: Reading data &#8212; penguins  documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
@@ -35,13 +36,13 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="tutorial-1-reading-data">
+  <section id="tutorial-1-reading-data">
 <h1>Tutorial 1: Reading data<a class="headerlink" href="#tutorial-1-reading-data" title="Permalink to this headline">¶</a></h1>
 <p>In TopSpin, each NMR experiment has its own “expno”, and can be found in a folder numbered by its expno.
 If you downloaded the penguins test data, you will find that it contains two such numbered datasets, which correspond to different “expnos” in TopSpin.</p>
 <p>Of course, feel free to use your own data: your top-level data directory should also contain one or more numbered expno folders, and each of these datasets must have already been processed in TopSpin.</p>
 <hr class="docutils" />
-<div class="section" id="importing-spectra-pg-read">
+<section id="importing-spectra-pg-read">
 <h2>Importing spectra: pg.read()<a class="headerlink" href="#importing-spectra-pg-read" title="Permalink to this headline">¶</a></h2>
 <p>Spectra can be imported using the <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function.
 <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> takes three parameters: the path to the <em>spectrum folder</em>, the <em>expno</em>, and the <em>procno</em>.</p>
@@ -68,9 +69,9 @@ If you call the <a class="reference internal" href="../../reference/reading/#pen
 </pre></div>
 </div>
 <p>Notice how the returned object is a <code class="docutils literal notranslate"><span class="pre">Dataset2D</span></code> object now, as opposed to a <code class="docutils literal notranslate"><span class="pre">Dataset1D</span></code> object previously: penguins is capable of automatically detecting the dimensionality of the data you import.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="accessing-spectrum-parameters">
+<section id="accessing-spectrum-parameters">
 <h2>Accessing spectrum parameters<a class="headerlink" href="#accessing-spectrum-parameters" title="Permalink to this headline">¶</a></h2>
 <p>Once imported using <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>, spectrum parameters can be accessed using dictionary-like syntax.
 All parameters are referred to using their standard Bruker names, just as you would type them in the TopSpin command line:</p>
@@ -93,8 +94,8 @@ The first always refers to the indirect-dimension (<span class="math notranslate
 </pre></div>
 </div>
 <p>Accessing the value of TD in <span class="math notranslate nohighlight">\(f_1\)</span> is simply then <code class="docutils literal notranslate"><span class="pre">data_2d[&quot;td&quot;][0]</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -182,7 +183,7 @@ The first always refers to the indirect-dimension (<span class="math notranslate
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

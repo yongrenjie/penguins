@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Reference: Datasets &#8212; penguins  documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -34,7 +35,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="reference-datasets">
+  <section id="reference-datasets">
 <h1>Reference: Datasets<a class="headerlink" href="#reference-datasets" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -55,8 +56,8 @@ So I chose to use multiple inheritance as a way of not repeating code.
 I’ve provided “aggregate classes” which have useful groups of methods, and the user should never actually have to deal with any of the issues associated with multiple inheritance.</p>
 </div>
 <dl class="py class">
-<dt id="penguins.dataset._Dataset">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_Dataset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._Dataset" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._Dataset">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._Dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is common to all datasets. Specifically, this
 class defines the dictionary-style lookup of NMR parameters.</p>
 <p>This should <strong>never</strong> be instantiated directly! Use <a class="reference internal" href="../reading/#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>
@@ -76,8 +77,8 @@ etc.) are routed to the underlying <a class="reference internal" href="#penguins
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset._parDict">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_parDict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._parDict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._parDict">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_parDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._parDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified dictionary for storing acquisition &amp; processing parameters.</p>
 <p>Parameter names are stored as lower-case strings. When looking up a
 parameter, if its value is not already stored, the dictionary will look it
@@ -99,11 +100,11 @@ dimensions at one go).</p>
 </dd></dl>
 
 <p><br /> </p>
-<div class="section" id="d-mixins">
+<section id="d-mixins">
 <h2>1D mixins<a class="headerlink" href="#d-mixins" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="penguins.dataset._1D_RawDataMixin">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_1D_RawDataMixin</span></code><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_RawDataMixin">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 1D raw data, i.e. <code class="docutils literal notranslate"><span class="pre">fid</span></code>
 files. Also contains a few private methods which initialise (for example)
 the paths to the parameter files.</p>
@@ -116,8 +117,8 @@ the paths to the parameter files.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="penguins.dataset._1D_RawDataMixin.raw_data">
-<code class="sig-name descname"><span class="pre">raw_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin.raw_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_RawDataMixin.raw_data">
+<span class="sig-name descname"><span class="pre">raw_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin.raw_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the FID as a complex <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 </dd></dl>
 
@@ -125,8 +126,8 @@ the paths to the parameter files.</p>
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset._1D_ProcDataMixin">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_1D_ProcDataMixin</span></code><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 1D processed data.</p>
 <dl class="field-list">
 <dt class="field-odd">Attributes</dt>
@@ -135,18 +136,18 @@ the paths to the parameter files.</p>
 contains the left-most point of the spectrum, i.e. the greatest
 chemical shift.</p>
 </dd>
-<dt><strong>imag</strong><span class="classifier">ndarray</span></dt><dd><p>This attribute only applies to <a class="reference internal" href="#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a> instances. The projection
-classes do not have this attribute.</p>
-<p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the imaginary spectrum. <code class="docutils literal notranslate"><span class="pre">imag[0]</span></code>
+<dt><strong>imag</strong><span class="classifier">ndarray</span></dt><dd><p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the imaginary spectrum. <code class="docutils literal notranslate"><span class="pre">imag[0]</span></code>
 contains the left-most point of the spectrum, i.e. the greatest
 chemical shift.</p>
+<p>This attribute only applies to <a class="reference internal" href="#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a> instances. The projection
+classes do not have this attribute.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="penguins.dataset._1D_ProcDataMixin.proc_data">
-<code class="sig-name descname"><span class="pre">proc_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin.proc_data">
+<span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the real part of the spectrum as a real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <p>Note that if (for example) a magnitude mode calculation has been
 performed, then the “real” part is actually the magnitude mode
@@ -172,8 +173,8 @@ spectrum will be taken.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._1D_ProcDataMixin.integrate">
-<code class="sig-name descname"><span class="pre">integrate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">peak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.integrate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin.integrate">
+<span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">peak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.integrate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Integrates a region of a spectrum.</p>
 <p>Regions can either be defined via <em>peak</em> and <em>margin</em>, which leads to
 the region of <em>(peak - margin)</em> to <em>(peak + margin)</em>, or manually via
@@ -206,8 +207,8 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._1D_ProcDataMixin.bounds_to_slice">
-<code class="sig-name descname"><span class="pre">bounds_to_slice</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.bounds_to_slice" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin.bounds_to_slice">
+<span class="sig-name descname"><span class="pre">bounds_to_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.bounds_to_slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a string <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code> or a tuple of chemical shifts
 <code class="docutils literal notranslate"><span class="pre">(upper,</span> <span class="pre">lower)</span></code> to a slice object, which can be used to slice a
 spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. Note that <code class="docutils literal notranslate"><span class="pre">upper</span></code> must be greater than
@@ -215,15 +216,15 @@ spectrum <a class="reference external" href="https://numpy.org/doc/stable/refere
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._1D_ProcDataMixin.to_magnitude">
-<code class="sig-name descname"><span class="pre">to_magnitude</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.to_magnitude" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin.to_magnitude">
+<span class="sig-name descname"><span class="pre">to_magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.to_magnitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the magnitude mode spectrum and returns it as a new
 Dataset1D object.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._1D_ProcDataMixin.mc">
-<code class="sig-name descname"><span class="pre">mc</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.mc" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin.mc">
+<span class="sig-name descname"><span class="pre">mc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.mc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#penguins.dataset._1D_ProcDataMixin.to_magnitude" title="penguins.dataset._1D_ProcDataMixin.to_magnitude"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">to_magnitude()</span></code></a>.</p>
 </dd></dl>
 
@@ -231,24 +232,24 @@ Dataset1D object.</p>
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset._1D_PlotMixin">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_1D_PlotMixin</span></code><a class="headerlink" href="#penguins.dataset._1D_PlotMixin" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_PlotMixin">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_PlotMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_PlotMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines 1D plotting methods.</p>
 <dl class="py method">
-<dt id="penguins.dataset._1D_PlotMixin.stage">
-<code class="sig-name descname"><span class="pre">stage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_PlotMixin.stage" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._1D_PlotMixin.stage">
+<span class="sig-name descname"><span class="pre">stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_PlotMixin.stage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls <a class="reference internal" href="../plotting/#penguins.pgplot._stage1d" title="penguins.pgplot._stage1d"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.pgplot._stage1d()</span></code></a> on the dataset.</p>
 </dd></dl>
 
 </dd></dl>
 
 <p><br /> </p>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h2>2D mixins<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="penguins.dataset._2D_RawDataMixin">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_2D_RawDataMixin</span></code><a class="headerlink" href="#penguins.dataset._2D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_RawDataMixin">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 2D raw data, i.e. <code class="docutils literal notranslate"><span class="pre">ser</span></code>
 files.</p>
 <p>There are no functions which actually read the <code class="docutils literal notranslate"><span class="pre">ser</span></code> file (I haven’t
@@ -259,11 +260,11 @@ parameter files, so it’s not useless at all.</p>
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset._2D_ProcDataMixin">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_2D_ProcDataMixin</span></code><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.proc_data">
-<code class="sig-name descname"><span class="pre">proc_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.proc_data">
+<span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the real part of the spectrum (the ‘RR quadrant’) as a
 two-dimensional, real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <p>This is used in constructing the <em>z</em>-values to be plotted.</p>
@@ -289,8 +290,8 @@ TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</sp
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.integrate">
-<code class="sig-name descname"><span class="pre">integrate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">peak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.integrate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.integrate">
+<span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">peak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.integrate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Integrates a region of a spectrum.</p>
 <p>The interface is exactly analogous to the 1D version
 (<a class="reference internal" href="#penguins.dataset._1D_ProcDataMixin.integrate" title="penguins.dataset._1D_ProcDataMixin.integrate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">integrate()</span></code></a>), except that <em>peak</em> and <em>margin</em>
@@ -328,8 +329,8 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.bounds_to_slice">
-<code class="sig-name descname"><span class="pre">bounds_to_slice</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.bounds_to_slice" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.bounds_to_slice">
+<span class="sig-name descname"><span class="pre">bounds_to_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.bounds_to_slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a string <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code> or a tuple of chemical shifts
 <code class="docutils literal notranslate"><span class="pre">(upper,</span> <span class="pre">lower)</span></code> to a slice object, which can be used to slice a
 spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
@@ -352,8 +353,8 @@ spectrum <a class="reference external" href="https://numpy.org/doc/stable/refere
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.to_magnitude">
-<code class="sig-name descname"><span class="pre">to_magnitude</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.to_magnitude" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.to_magnitude">
+<span class="sig-name descname"><span class="pre">to_magnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.to_magnitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the magnitude mode spectrum along the specified axis and
 returns it as a new Dataset2D object.</p>
 <dl class="field-list simple">
@@ -368,22 +369,22 @@ f1, or 1 for f2.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.xf1m">
-<code class="sig-name descname"><span class="pre">xf1m</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.xf1m" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.xf1m">
+<span class="sig-name descname"><span class="pre">xf1m</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.xf1m" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">to_magnitude(axis=0)</span></code>, i.e. magnitude mode calculation
 along f1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.xf2m">
-<code class="sig-name descname"><span class="pre">xf2m</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.xf2m" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.xf2m">
+<span class="sig-name descname"><span class="pre">xf2m</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.xf2m" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">to_magnitude(axis=1)</span></code>, i.e. magnitude mode calculation
 along f2.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_ProcDataMixin.xfbm">
-<code class="sig-name descname"><span class="pre">xfbm</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.xfbm" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.xfbm">
+<span class="sig-name descname"><span class="pre">xfbm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.xfbm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs magnitude mode calculation along both axes. ds.xfbm() is
 equivalent to ds.xf1m().xf2m(). It is manually implemented here for
 efficiency reasons.</p>
@@ -393,38 +394,38 @@ efficiency reasons.</p>
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset._2D_PlotMixin">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">_2D_PlotMixin</span></code><a class="headerlink" href="#penguins.dataset._2D_PlotMixin" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_PlotMixin">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_PlotMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines 2D plotting methods.</p>
 <dl class="py method">
-<dt id="penguins.dataset._2D_PlotMixin.stage">
-<code class="sig-name descname"><span class="pre">stage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin.stage" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_PlotMixin.stage">
+<span class="sig-name descname"><span class="pre">stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin.stage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls <a class="reference internal" href="../plotting/#penguins.pgplot._stage2d" title="penguins.pgplot._stage2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.pgplot._stage2d()</span></code></a> on the dataset.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset._2D_PlotMixin.find_baselev">
-<code class="sig-name descname"><span class="pre">find_baselev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin.find_baselev" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset._2D_PlotMixin.find_baselev">
+<span class="sig-name descname"><span class="pre">find_baselev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin.find_baselev" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls <a class="reference internal" href="../plotting/#penguins.pgplot._find_baselev" title="penguins.pgplot._find_baselev"><code class="xref py py-func docutils literal notranslate"><span class="pre">penguins.pgplot._find_baselev()</span></code></a> on the dataset.</p>
 </dd></dl>
 
 </dd></dl>
 
 <p><br /> </p>
-</div>
-<div class="section" id="actual-dataset-classes">
+</section>
+<section id="actual-dataset-classes">
 <h2>Actual Dataset classes<a class="headerlink" href="#actual-dataset-classes" title="Permalink to this headline">¶</a></h2>
 <p>These are the classes that the user will see.
 Even then, much of the interface is abstracted away: for example, the staging and plotting functions have a unified interface that delegate to different methods behind the scenes depending on the object that is being staged / plotted.</p>
 <dl class="py class">
-<dt id="penguins.dataset.Dataset1D">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">Dataset1D</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1D">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset object representing 1D spectra.</p>
 <p>Inherits from: <a class="reference internal" href="#penguins.dataset._1D_RawDataMixin" title="penguins.dataset._1D_RawDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_RawDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_ProcDataMixin" title="penguins.dataset._1D_ProcDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_ProcDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_PlotMixin" title="penguins.dataset._1D_PlotMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_PlotMixin</span></code></a>,
 and <a class="reference internal" href="#penguins.dataset._Dataset" title="penguins.dataset._Dataset"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_Dataset</span></code></a>.</p>
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1D.ppm_to_index">
-<code class="sig-name descname"><span class="pre">ppm_to_index</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.ppm_to_index" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1D.ppm_to_index">
+<span class="sig-name descname"><span class="pre">ppm_to_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.ppm_to_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a chemical shift into the index which is closest to the
 chemical shift.</p>
 <dl class="field-list simple">
@@ -444,8 +445,8 @@ chemical shift.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1D.ppm_scale">
-<code class="sig-name descname"><span class="pre">ppm_scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.ppm_scale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1D.ppm_scale">
+<span class="sig-name descname"><span class="pre">ppm_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.ppm_scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>-values for plotting.</p>
@@ -466,8 +467,8 @@ spectrum, in descending order of chemical shift.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1D.hz_scale">
-<code class="sig-name descname"><span class="pre">hz_scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.hz_scale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1D.hz_scale">
+<span class="sig-name descname"><span class="pre">hz_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.hz_scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
@@ -487,8 +488,8 @@ point of the spectrum, in descending order of frequency.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1D.nuclei_to_str">
-<code class="sig-name descname"><span class="pre">nuclei_to_str</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.nuclei_to_str" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1D.nuclei_to_str">
+<span class="sig-name descname"><span class="pre">nuclei_to_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D.nuclei_to_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string with the nucleus nicely formatted in LaTeX syntax.
 Can be directly used with e.g. matplotlib.</p>
 </dd></dl>
@@ -497,8 +498,8 @@ Can be directly used with e.g. matplotlib.</p>
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset.Dataset1DProj">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">Dataset1DProj</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1DProj">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1DProj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset object representing 1D projections or slices of 2D spectra,
 which have been generated inside TopSpin.</p>
 <p>Inherits from: <a class="reference internal" href="#penguins.dataset._2D_RawDataMixin" title="penguins.dataset._2D_RawDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_RawDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_ProcDataMixin" title="penguins.dataset._1D_ProcDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_ProcDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_PlotMixin" title="penguins.dataset._1D_PlotMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_PlotMixin</span></code></a>,
@@ -509,8 +510,8 @@ methods on <a class="reference internal" href="#penguins.dataset.Dataset1D" titl
 2-element arrays (for both dimensions) but the returned value must select
 the correct projection axis.</p>
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1DProj.ppm_to_index">
-<code class="sig-name descname"><span class="pre">ppm_to_index</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.ppm_to_index" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1DProj.ppm_to_index">
+<span class="sig-name descname"><span class="pre">ppm_to_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.ppm_to_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a chemical shift into the index which is closest to the
 chemical shift.</p>
 <dl class="field-list simple">
@@ -530,8 +531,8 @@ chemical shift.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1DProj.ppm_scale">
-<code class="sig-name descname"><span class="pre">ppm_scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.ppm_scale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1DProj.ppm_scale">
+<span class="sig-name descname"><span class="pre">ppm_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.ppm_scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>-values for plotting.</p>
@@ -552,8 +553,8 @@ spectrum, in descending order of chemical shift.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1DProj.hz_scale">
-<code class="sig-name descname"><span class="pre">hz_scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.hz_scale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1DProj.hz_scale">
+<span class="sig-name descname"><span class="pre">hz_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.hz_scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
@@ -573,8 +574,8 @@ point of the spectrum, in descending order of frequency.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset1DProj.nuclei_to_str">
-<code class="sig-name descname"><span class="pre">nuclei_to_str</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.nuclei_to_str" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1DProj.nuclei_to_str">
+<span class="sig-name descname"><span class="pre">nuclei_to_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj.nuclei_to_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string with the nucleus nicely formatted in LaTeX syntax.
 Can be directly used with e.g. matplotlib.</p>
 </dd></dl>
@@ -583,14 +584,14 @@ Can be directly used with e.g. matplotlib.</p>
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset.Dataset2D">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">Dataset2D</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset object representing 2D spectra.</p>
 <p>Inherits from: <a class="reference internal" href="#penguins.dataset._2D_RawDataMixin" title="penguins.dataset._2D_RawDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_RawDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._2D_ProcDataMixin" title="penguins.dataset._2D_ProcDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_ProcDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._2D_PlotMixin" title="penguins.dataset._2D_PlotMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_PlotMixin</span></code></a>,
 and <a class="reference internal" href="#penguins.dataset._Dataset" title="penguins.dataset._Dataset"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_Dataset</span></code></a>.</p>
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.ppm_to_index">
-<code class="sig-name descname"><span class="pre">ppm_to_index</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.ppm_to_index" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.ppm_to_index">
+<span class="sig-name descname"><span class="pre">ppm_to_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.ppm_to_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a chemical shift into the index which is closest to the
 chemical shift.</p>
 <dl class="field-list simple">
@@ -612,8 +613,8 @@ chemical shift.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.ppm_scale">
-<code class="sig-name descname"><span class="pre">ppm_scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.ppm_scale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.ppm_scale">
+<span class="sig-name descname"><span class="pre">ppm_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.ppm_scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the chemical shifts at each point of the
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>- and <em>y</em>-values for plotting.</p>
@@ -636,8 +637,8 @@ spectrum, in descending order of chemical shift.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.hz_scale">
-<code class="sig-name descname"><span class="pre">hz_scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.hz_scale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.hz_scale">
+<span class="sig-name descname"><span class="pre">hz_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.hz_scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
@@ -659,8 +660,8 @@ point of the spectrum, in descending order of frequency.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.project">
-<code class="sig-name descname"><span class="pre">project</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.project" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.project">
+<span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a 1D projection from a 2D spectrum.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -697,32 +698,32 @@ same manner. The actual projection can be accessed using
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.f1projp">
-<code class="sig-name descname"><span class="pre">f1projp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f1projp" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.f1projp">
+<span class="sig-name descname"><span class="pre">f1projp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f1projp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">project(axis=&quot;column&quot;,</span> <span class="pre">sign=&quot;pos&quot;)</span></code>. See <a class="reference internal" href="#penguins.dataset.Dataset2D.project" title="penguins.dataset.Dataset2D.project"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">project</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.f1projn">
-<code class="sig-name descname"><span class="pre">f1projn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f1projn" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.f1projn">
+<span class="sig-name descname"><span class="pre">f1projn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f1projn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">project(axis=&quot;column&quot;,</span> <span class="pre">sign=&quot;neg&quot;)</span></code>. See <a class="reference internal" href="#penguins.dataset.Dataset2D.project" title="penguins.dataset.Dataset2D.project"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">project</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.f2projp">
-<code class="sig-name descname"><span class="pre">f2projp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f2projp" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.f2projp">
+<span class="sig-name descname"><span class="pre">f2projp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f2projp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">project(axis=&quot;row&quot;,</span> <span class="pre">sign=&quot;pos&quot;)</span></code>. See <a class="reference internal" href="#penguins.dataset.Dataset2D.project" title="penguins.dataset.Dataset2D.project"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">project</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.f2projn">
-<code class="sig-name descname"><span class="pre">f2projn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f2projn" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.f2projn">
+<span class="sig-name descname"><span class="pre">f2projn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f2projn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">project(axis=&quot;row&quot;,</span> <span class="pre">sign=&quot;neg&quot;)</span></code>. See <a class="reference internal" href="#penguins.dataset.Dataset2D.project" title="penguins.dataset.Dataset2D.project"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">project</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.sum">
-<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.sum" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.sum">
+<span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a 1D sum from a 2D spectrum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -752,31 +753,38 @@ same manner. The actual sum can be accessed using
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.f1sum">
-<code class="sig-name descname"><span class="pre">f1sum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f1sum" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.f1sum">
+<span class="sig-name descname"><span class="pre">f1sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f1sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">sum(axis=&quot;column&quot;)</span></code>. See <a class="reference internal" href="#penguins.dataset.Dataset2D.sum" title="penguins.dataset.Dataset2D.sum"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">sum</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.f2sum">
-<code class="sig-name descname"><span class="pre">f2sum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f2sum" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.f2sum">
+<span class="sig-name descname"><span class="pre">f2sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.f2sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <code class="docutils literal notranslate"><span class="pre">sum(axis=&quot;row&quot;)</span></code>. See <a class="reference internal" href="#penguins.dataset.Dataset2D.sum" title="penguins.dataset.Dataset2D.sum"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">sum</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="penguins.dataset.Dataset2D.slice">
-<code class="sig-name descname"><span class="pre">slice</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.slice" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract a 1D slice from a 2D spectrum.</p>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset2D.slice">
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a 1D slice from a 2D spectrum. You must either specify both
+<em>axis</em> and <em>ppm</em> arguments, or <em>f1</em> only, or <em>f2</em> only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>axis</strong><span class="classifier">int or str from {0, “column”, 1, “row”}</span></dt><dd><p>Axis to slice along. To extract a column (which corresponds to a
-slice along f1, at one specific value of f2), use <code class="docutils literal notranslate"><span class="pre">0</span></code> or
-<code class="docutils literal notranslate"><span class="pre">column</span></code>, and vice versa for <code class="docutils literal notranslate"><span class="pre">row</span></code>.</p>
+<dt><strong>axis</strong><span class="classifier">str from {“column”, “row”}, optional</span></dt><dd><p>Axis to slice along. To extract a column (i.e. at one particular
+value of f2), use <code class="docutils literal notranslate"><span class="pre">column</span></code>, and vice versa.</p>
 </dd>
-<dt><strong>ppm</strong><span class="classifier">float</span></dt><dd><p>The chemical shift of the other axis to slice at. For example, if
-you are extracting a column, then this would be the f2 chemical
-shift of interest.</p>
+<dt><strong>ppm</strong><span class="classifier">float, optional</span></dt><dd><p>The chemical shift to slice at. For example, if you are extracting
+a column, then this would be the f2 chemical shift of interest.</p>
+</dd>
+<dt><strong>f1</strong><span class="classifier">float, optional</span></dt><dd><p>slice(f1=y) is an alias for slice(axis=”row”, ppm=y). If
+specified, this overrules the <em>axis</em> and <em>ppm</em> keyword arguments.
+Cannot be used together with <em>f2</em>.</p>
+</dd>
+<dt><strong>f2</strong><span class="classifier">float, optional</span></dt><dd><p>slice(f2=x) is an alias for slice(axis=”column”, ppm=x). If specified,
+this overrules the <em>axis</em> and <em>ppm</em> keyword arguments. Cannot be
+used together with <em>f1</em>.</p>
 </dd>
 </dl>
 </dd>
@@ -796,8 +804,8 @@ same manner. The actual projection or sum can be accessed using
 
 <p><br /> </p>
 <dl class="py class">
-<dt id="penguins.dataset.Dataset1DProjVirtual">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></code><code class="sig-name descname"><span class="pre">Dataset1DProjVirtual</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProjVirtual" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="penguins.dataset.Dataset1DProjVirtual">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1DProjVirtual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProjVirtual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset representing 1D projections which have been constructed by
 calling the <a class="reference internal" href="#penguins.dataset.Dataset2D.project" title="penguins.dataset.Dataset2D.project"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">project</span></code></a>, <a class="reference internal" href="#penguins.dataset.Dataset2D.slice" title="penguins.dataset.Dataset2D.slice"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">slice</span></code></a>, or <a class="reference internal" href="#penguins.dataset.Dataset2D.sum" title="penguins.dataset.Dataset2D.sum"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">sum</span></code></a> methods (or their short forms) on
 <a class="reference internal" href="#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a> objects.</p>
@@ -806,8 +814,8 @@ the same.</p>
 <p>See the __init__() docstring for implementation details.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -891,7 +899,7 @@ the same.</p>
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

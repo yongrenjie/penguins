@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Tutorial 4: Plotting multiple 1Ds &#8212; penguins  documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -34,7 +35,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="tutorial-4-plotting-multiple-1ds">
+  <section id="tutorial-4-plotting-multiple-1ds">
 <h1>Tutorial 4: Plotting multiple 1Ds<a class="headerlink" href="#tutorial-4-plotting-multiple-1ds" title="Permalink to this headline">¶</a></h1>
 <p>It is quite common to want to plot multiple 1D spectra on the same plot: in fact, so common that we will dedicate an entire introductory tutorial to it.</p>
 <p>Because we will be doing quite a number of repetitive calls here, I suggest moving these commands into a Python script (or a Jupyter notebook), instead of typing them into the interactive REPL.
@@ -49,7 +50,7 @@ You can put the script anywhere you like, but will have to adjust the path to th
 <p>These two datasets have the same raw data, but are processed with different window functions: <code class="docutils literal notranslate"><span class="pre">em</span></code> uses an exponential window function, whereas <code class="docutils literal notranslate"><span class="pre">gm</span></code> uses a Gaussian window function.
 You are, of course, free to substitute this with any of your own data.</p>
 <hr class="docutils" />
-<div class="section" id="staging-multiple-spectra">
+<section id="staging-multiple-spectra">
 <h2>Staging multiple spectra<a class="headerlink" href="#staging-multiple-spectra" title="Permalink to this headline">¶</a></h2>
 <p>This is easy: just stage them with any of the options described in <a class="reference internal" href="../customise_1d/"><span class="doc">Tutorial 3: Customising 1D plots</span></a>.
 For the purposes of this tutorial, let’s focus on the multiplet at 4.63 ppm.
@@ -61,11 +62,11 @@ Add the following lines to your script, then run it:</p>
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                                       <span class="c1"># display as usual</span>
 </pre></div>
 </div>
-<div class="figure align-default">
-<img alt="../../_images/multiple_1d-2.svg" class="plot-directive" src="../../_images/multiple_1d-2.svg" /></div>
-</div>
+<figure class="align-default">
+<img alt="../../_images/multiple_1d-2.svg" class="plot-directive" src="../../_images/multiple_1d-2.svg" /></figure>
+</section>
 <hr class="docutils" />
-<div class="section" id="adding-a-legend">
+<section id="adding-a-legend">
 <h2>Adding a legend<a class="headerlink" href="#adding-a-legend" title="Permalink to this headline">¶</a></h2>
 <p>To add a plot legend, do one of the following:</p>
 <ol class="arabic simple">
@@ -80,13 +81,13 @@ Here’s an example of the former. Modify the two calls to <code class="docutils
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default">
-<img alt="../../_images/multiple_1d-3.svg" class="plot-directive" src="../../_images/multiple_1d-3.svg" /></div>
+<figure class="align-default">
+<img alt="../../_images/multiple_1d-3.svg" class="plot-directive" src="../../_images/multiple_1d-3.svg" /></figure>
 <p>Because the label is just any old Python string, you can combine this with the attribute access discussed in <a class="reference internal" href="../read/"><span class="doc">Tutorial 1: Reading data</span></a>.
 The f-string syntax in Python 3.7+ is especially useful for this: for example, <code class="docutils literal notranslate"><span class="pre">label=f&quot;lb={em['lb']}&quot;</span></code> would create a legend label which contains the value of the <code class="docutils literal notranslate"><span class="pre">LB</span></code> parameter for that dataset.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="horizontal-and-vertical-offsets">
+<section id="horizontal-and-vertical-offsets">
 <h2>Horizontal and vertical offsets<a class="headerlink" href="#horizontal-and-vertical-offsets" title="Permalink to this headline">¶</a></h2>
 <p>TopSpin’s multiple display mode has a few settings which allow you to stack spectra or to shift them by a constant amount, which is really useful for plotting.
 However, these are not <em>spectrum-specific</em> options: they are options which affect the <em>entire plot</em>.
@@ -99,8 +100,8 @@ The first spectrum will not be shifted, and subsequent spectra will be shifted r
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default">
-<img alt="../../_images/multiple_1d-4.svg" class="plot-directive" src="../../_images/multiple_1d-4.svg" /></div>
+<figure class="align-default">
+<img alt="../../_images/multiple_1d-4.svg" class="plot-directive" src="../../_images/multiple_1d-4.svg" /></figure>
 <p>Vertical offsets <code class="docutils literal notranslate"><span class="pre">voffset</span></code> are specified as a fraction of the height of the tallest spectrum.
 Successive spectra are moved upwards.
 Note that <code class="docutils literal notranslate"><span class="pre">1</span></code> is not the best value: often <code class="docutils literal notranslate"><span class="pre">1.1</span></code> or so is better as that adds a bit of empty space between plots.</p>
@@ -110,13 +111,13 @@ Note that <code class="docutils literal notranslate"><span class="pre">1</span><
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default">
-<img alt="../../_images/multiple_1d-5.svg" class="plot-directive" src="../../_images/multiple_1d-5.svg" /></div>
+<figure class="align-default">
+<img alt="../../_images/multiple_1d-5.svg" class="plot-directive" src="../../_images/multiple_1d-5.svg" /></figure>
 <p>Of course, you can specify <em>both</em> <code class="docutils literal notranslate"><span class="pre">hoffset</span></code> and <code class="docutils literal notranslate"><span class="pre">voffset</span></code> to get spectra that are diagonally offset from one another.
 This is commonly used, for example, when plotting a series of related spectra.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="voffset-and-stacked">
+<section id="voffset-and-stacked">
 <h2>voffset and stacked<a class="headerlink" href="#voffset-and-stacked" title="Permalink to this headline">¶</a></h2>
 <p>We’re going to do something weird for a while.
 Stage <code class="docutils literal notranslate"><span class="pre">em</span></code> one time and <code class="docutils literal notranslate"><span class="pre">gm</span></code> three times (this effectively creates a few copies of <code class="docutils literal notranslate"><span class="pre">gm</span></code> to be plotted), then call <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> with <code class="docutils literal notranslate"><span class="pre">voffset=1.1</span></code>:</p>
@@ -125,8 +126,8 @@ Stage <code class="docutils literal notranslate"><span class="pre">em</span></co
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default">
-<img alt="../../_images/multiple_1d-6.svg" class="plot-directive" src="../../_images/multiple_1d-6.svg" /></div>
+<figure class="align-default">
+<img alt="../../_images/multiple_1d-6.svg" class="plot-directive" src="../../_images/multiple_1d-6.svg" /></figure>
 <p>You will notice that the three <code class="docutils literal notranslate"><span class="pre">gm</span></code> spectra are separated by quite a bit of white space.
 This is the expected behaviour: the vertical separation between each plot is defined to be 1.1 times the height of the tallest spectrum (which in this case is <code class="docutils literal notranslate"><span class="pre">em</span></code>).</p>
 <p>In many cases this is OK, but in some situations this may not be desirable.
@@ -138,11 +139,11 @@ penguins lets you do this quickly using the <code class="docutils literal notran
 <span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="figure align-default">
-<img alt="../../_images/multiple_1d-7.svg" class="plot-directive" src="../../_images/multiple_1d-7.svg" /></div>
+<figure class="align-default">
+<img alt="../../_images/multiple_1d-7.svg" class="plot-directive" src="../../_images/multiple_1d-7.svg" /></figure>
 <p>Which you use will depend on the scenario as well as your personal taste.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -230,7 +231,7 @@ penguins lets you do this quickly using the <code class="docutils literal notran
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

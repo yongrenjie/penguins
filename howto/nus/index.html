@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Reading NUS data &#8212; penguins  documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -34,7 +35,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="reading-nus-data">
+  <section id="reading-nus-data">
 <h1>Reading NUS data<a class="headerlink" href="#reading-nus-data" title="Permalink to this headline">¶</a></h1>
 <p>Non-uniform sampling is an acquisition method where an incomplete set of <em>t</em><sub>1</sub> increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.</p>
 <p>From penguins’ point of view, once they have been processed, there is almost no difference between NUS spectra and uniformly sampled spectra. However, you may need to watch out for the <code class="docutils literal notranslate"><span class="pre">TD</span></code> parameter:</p>
@@ -54,7 +55,7 @@
 </pre></div>
 </div>
 <p>Thankfully, this has zero impact on penguins’ plotting routines since these depend on <code class="docutils literal notranslate"><span class="pre">SI</span></code> and not <code class="docutils literal notranslate"><span class="pre">TD</span></code>.</p>
-</div>
+</section>
 
 
           </div>
@@ -138,7 +139,7 @@
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

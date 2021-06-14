@@ -32,9 +32,13 @@ def test_subplots2d():
     with pytest.raises(ValueError):
         fig, _ = pg.subplots2d(2, 2, width_ratios=[0.5, 1, 0.2])
 
-    # check that width_ratios overrules figsize
+    # check that figsize overrides width_ratios
     fig, _ = pg.subplots2d(2, 2, width_ratios=[0.5, 1], figsize=(100, 100))
-    assert np.array_equal([6, 8], fig.get_size_inches())
-    # check that height_ratios overrules figsize
+    assert np.array_equal([100, 100], fig.get_size_inches())
+    # check that figsize overrides height_ratios
     fig, _ = pg.subplots2d(2, 2, height_ratios=[0.5, 1], figsize=(100, 100))
-    assert np.array_equal([8, 6], fig.get_size_inches())
+    assert np.array_equal([100, 100], fig.get_size_inches())
+    # check that figsize overrides both of these
+    fig, _ = pg.subplots2d(2, 2, width_ratios=[0.5, 1],
+                           height_ratios=[0.5, 1], figsize=(100, 100))
+    assert np.array_equal([100, 100], fig.get_size_inches())

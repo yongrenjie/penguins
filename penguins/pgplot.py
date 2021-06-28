@@ -211,7 +211,7 @@ def mkinset(ax: Any,
     # Generate inset axes
     inset_ax = ax.inset_axes([*pos, *size], transform=transform)
     plot_options = plot_options or {}
-    mkplot(ax=inset_ax, xlabel="", ylabel="", **plot_options)
+    # mkplot(ax=inset_ax, xlabel="", ylabel="", **plot_options)
 
     # Convert the strings to numbers
     def convert_corner(ax: Any, cornerstr: str, is_inset: bool):
@@ -440,7 +440,10 @@ def _stage1d(dataset: ds.TDataset1D,
     # Make the Axes the currently active one so that mkplot() will
     # automatically construct the correct Axes, even if the ax parameter is not
     # passed to it.
-    plt.sca(ax)
+    try:
+        plt.sca(ax)
+    except ValueError:  # happens with inset axes
+        pass
 
 
 class PlotObject1D():
@@ -891,7 +894,10 @@ def _stage2d(dataset: ds.Dataset2D,
     # Make the Axes the currently active one so that mkplot() will
     # automatically construct the correct Axes, even if the ax parameter is not
     # passed to it.
-    plt.sca(ax)
+    try:
+        plt.sca(ax)
+    except ValueError:  # happens with inset axes
+        pass
 
 
 def _mkplot2d(ax: Any = None,

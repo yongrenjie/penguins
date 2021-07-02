@@ -5,18 +5,17 @@
 
 ## Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra
 
-```
-pip install penguins
-```
-
 `penguins` is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
 
-Documentation can be found at https://yongrenjie.github.io/penguins.
-Everything is documented in one form or another, although I'm still working on tutorial-type pages which are easier to read than the docstrings.
+### Install
 
-Note that `penguins` is still in development, so the interface should not be assumed to be (too) stable. For now, I am working directly on the master branch, and rebasing/force pushing may occur without warning.
+```
+python -m pip install penguins
+```
 
----------
+(It's a good idea to use a virtual environment.)
+
+### Example
 
 As an example of the output, here's Figure 2 from [*Angew. Chem. Int. Ed.* **2017**, *56* (39), 11779–11783](https://doi.org/10.1002/anie.201705506):
 
@@ -47,6 +46,14 @@ pg.cleanup_axes()
 pg.show()
 ```
 
-----------
+### Get started
+
+Documentation can be found at https://yongrenjie.github.io/penguins.
+There are tutorial-type articles intended for entirely new users; I'm working on documentation beyond that, but it's not my main job, so it's a little slow.
+
+Note that `penguins` is still in development, so the interface should not be assumed to be (too) stable. For now, I am working directly on the master branch, and rebasing/force pushing may occur without warning.
+
+-------
+
 
 (The 'NPE' in the name stands for the "billion-dollar mistake", i.e. the `NullPointerException` familiar to TopSpin users.)

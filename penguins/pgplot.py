@@ -417,7 +417,10 @@ def _stage1d(dataset: ds.TDataset1D,
                                      " 'pha'. Did you mean to iterate over"
                                      " axs.flat instead of axs?") from None
             else:
-                raise e
+                raise AttributeError("The first argument passed to stage()"
+                                     " has no attribute 'pha'. Did you mean"
+                                     " to pass a keyword argument such as"
+                                     " 'bounds' instead?") from None
 
     # Check that it doesn't already have 2D spectra. We can just check against
     # the first element. By induction, it is equivalent to checking against
@@ -874,7 +877,10 @@ def _stage2d(dataset: ds.Dataset2D,
                                      " 'pha'. Did you mean to iterate over"
                                      " axs.flat instead of axs?") from None
             else:
-                raise e
+                raise AttributeError("The first argument passed to stage()"
+                                     " has no attribute 'pha'. Did you mean"
+                                     " to pass a keyword argument such as"
+                                     " 'bounds' instead?") from None
 
     # Check that it doesn't already have 1D spectra. We can just check against
     # the first element. By induction, it is equivalent to checking against

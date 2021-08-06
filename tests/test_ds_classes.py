@@ -108,10 +108,21 @@ def test_1d_raw_fid():
     # Check raw_data accessor
     assert proton.raw_data() is fid
 
+    # Check group delay shifting
+    fid2 = proton.raw_data(shift_grpdly=True)
+    assert np.allclose(fid[67:167], fid2[:100])  # start of actual data
+    assert np.allclose(fid[0:67], fid2[-67:])    # the group delay
+
+    # Check 1D processed PSYCHE edge case
     proc_psyche = pg.read(datadir, 4)
     fid = proc_psyche.fid
     assert fid.shape == (proc_psyche["td"] / 2,)
     assert proc_psyche.raw_data() is fid
+
+    # Check double-precision data
+    double_proton = pg.read(datadir, 7)
+    assert double_proton.fid.shape == (double_proton["td"] / 2,)
+    assert double_proton.raw_data() is double_proton.fid
 
 
 def test_2d_raw_ser():
@@ -120,18 +131,28 @@ def test_2d_raw_ser():
     ser = cosy.ser
     # Note that only TD2 needs to be divided by 2, because there isn't the real
     # + imag -> complex combination in the indirect dimension. (Well, in a way
-    # there *could*, but traditionally (for example) the cosine- and
-    # sine-modulated FIDs in the States method are kept separate for
-    # appropriate processing.)
+    # there *could*, and then we would get quarternionic data; but
+    # traditionally (for example) the cosine- and sine-modulated FIDs in the
+    # States method are kept separate for appropriate processing.)
     assert ser.shape == (cosy["td"][0], cosy["td"][1] / 2)
     # Test raw_data() accessor
-    rawdata = cosy.raw_data()
-    assert rawdata is ser
+    assert cosy.raw_data() is ser
+
+    # Check group delay shifting
+    ser2 = cosy.raw_data(shift_grpdly=True)
+    assert np.allclose(ser[:,67:167], ser2[:,:100])  # start of actual data
+    assert np.allclose(ser[:,0:67], ser2[:,-67:])    # the group delay
 
     # Test the case where TD is not a multiple of 256
     hsqc = pg.read(datadir, 6)
     assert (hsqc["td"][1] / 2) % 256 != 0
     assert hsqc.ser.shape == (hsqc["td"][0], hsqc["td"][1] / 2)
+
+    # Test double-precision data
+    double_hmbc = pg.read(datadir, 8)
+    ser = double_hmbc.ser
+    assert ser.shape == (double_hmbc["td"][0], double_hmbc["td"][1] / 2)
+    assert double_hmbc.raw_data() is ser
 
 
 def test_projection_raw_ser():
@@ -165,6 +186,18 @@ def test_1d_proc_data():
                        r[proton.ppm_to_index(6):proton.ppm_to_index(4) + 1])
     with pytest.raises(ValueError) as exc_info:
         proton.proc_data(bounds=bad_bounds)
+        assert "outside spectral window" in str(exc_info)
+
+    # Check other possible values for component
+    i = proton.imag
+    assert np.allclose(proton.proc_data(component="imag"), i)
+    assert np.allclose(proton.proc_data(component="i"), i)
+    assert np.allclose(proton.proc_data(component="real"), r)
+    assert np.allclose(proton.proc_data(component="r"), r)
+    assert np.allclose(proton.proc_data(bounds=good_bounds, component="imag"),
+                       i[proton.ppm_to_index(6):proton.ppm_to_index(4) + 1])
+    with pytest.raises(ValueError) as exc_info:
+        proton.proc_data(bounds=bad_bounds, component="imag")
         assert "outside spectral window" in str(exc_info)
 
 
@@ -243,6 +276,7 @@ def test_2d_proc_data():
     assert ir.shape == (cosy["si"][0], cosy["si"][1])
     ii = cosy.ii
     assert ii.shape == (cosy["si"][0], cosy["si"][1])
+
     # Check proc_data() accessor
     assert np.allclose(cosy.proc_data(), rr)
     # Check bounds on proc_data(). This assumes that ppm_to_index() works
@@ -256,6 +290,34 @@ def test_2d_proc_data():
         assert "outside spectral window" in str(exc_info)
     with pytest.raises(ValueError) as exc_info:
         cosy.proc_data(f2_bounds="4..20")
+        assert "outside spectral window" in str(exc_info)
+
+    # Check other values for component
+    assert np.allclose(cosy.proc_data(component="rr"), rr)
+    assert np.allclose(cosy.proc_data(component="ri"), ri)
+    assert np.allclose(cosy.proc_data(component="ir"), ir)
+    assert np.allclose(cosy.proc_data(component="ii"), ii)
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7",
+                                      component="ri"),
+                       ri[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7",
+                                      component="ir"),
+                       ir[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7",
+                                      component="ii"),
+                       ii[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    # Check for bad f1 and f2 bounds
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5", component="ri")
+        assert "outside spectral window" in str(exc_info)
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5", component="ir")
+        assert "outside spectral window" in str(exc_info)
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5", component="ii")
         assert "outside spectral window" in str(exc_info)
 
 

@@ -8,6 +8,7 @@ from typing import (Union, Iterable, Dict, Optional, Any,
 
 import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
+from matplotlib.axes import Axes  # type: ignore
 from matplotlib.legend_handler import HandlerBase  # type: ignore
 import seaborn as sns  # type: ignore
 
@@ -92,7 +93,12 @@ def mkplot(ax: Any = None,
 
         # Check if the PHA exists and isn't empty.
         if not hasattr(ax, "pha") or len(ax.pha.plot_objs) == 0:
-            warnings.warn("No plots have been staged on this Axes yet.")
+            if isinstance(ax, Axes):
+                warnings.warn("No plots have been staged on this Axes yet.")
+            else:
+                raise TypeError("The first argument passed to mkplot() was"
+                                " not an Axes. Did you mean to pass a keyword"
+                                " argument instead?")
             return None, None
         else:
             # Reset (or create) plot properties
@@ -105,8 +111,11 @@ def mkplot(ax: Any = None,
                 raise TypeError("Plot holding area has invalid elements.")
     finally:
         # Reset the PHA to being empty
-        if ax is not None and empty_pha:
-            ax.pha = PlotHoldingArea()
+        if empty_pha:
+            try:
+                ax.pha = PlotHoldingArea()
+            except AttributeError:
+                pass
     return fig, ax
 
 
@@ -417,7 +426,10 @@ def _stage1d(dataset: ds.TDataset1D,
                                      " 'pha'. Did you mean to iterate over"
                                      " axs.flat instead of axs?") from None
             else:
-                raise e
+                raise AttributeError("The first argument passed to stage()"
+                                     " has no attribute 'pha'. Did you mean"
+                                     " to pass a keyword argument such as"
+                                     " 'bounds' instead?") from None
 
     # Check that it doesn't already have 2D spectra. We can just check against
     # the first element. By induction, it is equivalent to checking against
@@ -874,7 +886,10 @@ def _stage2d(dataset: ds.Dataset2D,
                                      " 'pha'. Did you mean to iterate over"
                                      " axs.flat instead of axs?") from None
             else:
-                raise e
+                raise AttributeError("The first argument passed to stage()"
+                                     " has no attribute 'pha'. Did you mean"
+                                     " to pass a keyword argument such as"
+                                     " 'bounds' instead?") from None
 
     # Check that it doesn't already have 1D spectra. We can just check against
     # the first element. By induction, it is equivalent to checking against

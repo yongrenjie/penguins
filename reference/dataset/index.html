@@ -118,8 +118,18 @@ the paths to the parameter files.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="penguins.dataset._1D_RawDataMixin.raw_data">
-<span class="sig-name descname"><span class="pre">raw_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin.raw_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shift_grpdly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin.raw_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the FID as a complex <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>shift_grpdly</strong><span class="classifier">bool, default False</span></dt><dd><p>Whether to circularly shift the group delay to the end of the FID,
+i.e. take the first N points (where N is given by the TopSpin
+GRPDLY parameter) and move them to the end of the FID.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -147,13 +157,14 @@ classes do not have this attribute.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin.proc_data">
-<span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the real part of the spectrum as a real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
+<span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'real'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the processed spectrum as a real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. By
+default this returns the real part of the spectrum, but this can be
+changed using the <code class="xref any docutils literal notranslate"><span class="pre">component</span></code> argument.</p>
 <p>Note that if (for example) a magnitude mode calculation has been
 performed, then the “real” part is actually the magnitude mode
 spectrum. In short, the “real” part is whatever is stored in the <code class="docutils literal notranslate"><span class="pre">1r</span></code>
 file.</p>
-<p>This is used in constructing the <em>y</em>-values to be plotted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -161,11 +172,15 @@ file.</p>
 floats <code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code>, upon which the appropriate slice of the
 spectrum will be taken.</p>
 </dd>
+<dt><strong>component</strong><span class="classifier">str from {“real”, “r”, “imag”, “i”} (default “real”)</span></dt><dd><p>The component of the processed data to return. <code class="xref any docutils literal notranslate"><span class="pre">&quot;real&quot;</span></code> or <code class="xref any docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code>
+return the real part of the spectrum, the others return the
+imaginary part.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>ndarray</dt><dd><p>The real spectrum or the slice of interest.</p>
+<dt>ndarray</dt><dd><p>The spectrum or the slice of interest.</p>
 </dd>
 </dl>
 </dd>
@@ -264,10 +279,10 @@ parameter files, so it’s not useless at all.</p>
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.proc_data">
-<span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the real part of the spectrum (the ‘RR quadrant’) as a
-two-dimensional, real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
-<p>This is used in constructing the <em>z</em>-values to be plotted.</p>
+<span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rr'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the processed 2D data as a two-dimensional, real-valued
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. By default this returns the real part of the spectrum (the
+‘RR quadrant’), but this can be changed using the <code class="xref any docutils literal notranslate"><span class="pre">component</span></code> argument.</p>
 <p>Note that if a magnitude mode calculation has been performed, this will
 return the magnitude mode spectrum (i.e. it returns whatever is in
 TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</span></code> file).</p>
@@ -278,11 +293,13 @@ TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</sp
 </dd>
 <dt><strong>f2_bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds for the direct dimension.</p>
 </dd>
+<dt><strong>component</strong><span class="classifier">str from {“rr”, “ri”, “ir”, “ii”} (default “ii”)</span></dt><dd><p>The quadrant of the processed data to return.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>ndarray</dt><dd><p>The doubly real spectrum, or the section of interest.</p>
+<dt>ndarray</dt><dd><p>The processed 2D data, or the section of interest.</p>
 </dd>
 </dl>
 </dd>
@@ -877,7 +894,7 @@ the same.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search/" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -899,7 +916,7 @@ the same.</p>
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

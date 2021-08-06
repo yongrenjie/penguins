@@ -167,6 +167,18 @@ def test_1d_proc_data():
         proton.proc_data(bounds=bad_bounds)
         assert "outside spectral window" in str(exc_info)
 
+    # Check other possible values for component
+    i = proton.imag
+    assert np.allclose(proton.proc_data(component="imag"), i)
+    assert np.allclose(proton.proc_data(component="i"), i)
+    assert np.allclose(proton.proc_data(component="real"), r)
+    assert np.allclose(proton.proc_data(component="r"), r)
+    assert np.allclose(proton.proc_data(bounds=good_bounds, component="imag"),
+                       i[proton.ppm_to_index(6):proton.ppm_to_index(4) + 1])
+    with pytest.raises(ValueError) as exc_info:
+        proton.proc_data(bounds=bad_bounds, component="imag")
+        assert "outside spectral window" in str(exc_info)
+
 
 def test_1d_ppm_to_index():
     """Test ppm_to_index(). Note that there are often small discrepancies
@@ -243,6 +255,7 @@ def test_2d_proc_data():
     assert ir.shape == (cosy["si"][0], cosy["si"][1])
     ii = cosy.ii
     assert ii.shape == (cosy["si"][0], cosy["si"][1])
+
     # Check proc_data() accessor
     assert np.allclose(cosy.proc_data(), rr)
     # Check bounds on proc_data(). This assumes that ppm_to_index() works
@@ -256,6 +269,34 @@ def test_2d_proc_data():
         assert "outside spectral window" in str(exc_info)
     with pytest.raises(ValueError) as exc_info:
         cosy.proc_data(f2_bounds="4..20")
+        assert "outside spectral window" in str(exc_info)
+
+    # Check other values for component
+    assert np.allclose(cosy.proc_data(component="rr"), rr)
+    assert np.allclose(cosy.proc_data(component="ri"), ri)
+    assert np.allclose(cosy.proc_data(component="ir"), ir)
+    assert np.allclose(cosy.proc_data(component="ii"), ii)
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7",
+                                      component="ri"),
+                       ri[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7",
+                                      component="ir"),
+                       ir[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    assert np.allclose(cosy.proc_data(f1_bounds="4..6", f2_bounds="5..7",
+                                      component="ii"),
+                       ii[cosy.ppm_to_index(0, 6):cosy.ppm_to_index(0, 4) + 1,
+                          cosy.ppm_to_index(1, 7):cosy.ppm_to_index(1, 5) + 1])
+    # Check for bad f1 and f2 bounds
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5", component="ri")
+        assert "outside spectral window" in str(exc_info)
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5", component="ir")
+        assert "outside spectral window" in str(exc_info)
+    with pytest.raises(ValueError) as exc_info:
+        cosy.proc_data(f1_bounds="-4..2", f2_bounds="4..5", component="ii")
         assert "outside spectral window" in str(exc_info)
 
 

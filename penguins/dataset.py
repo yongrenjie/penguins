@@ -538,15 +538,16 @@ class _1D_ProcDataMixin():
 
     def proc_data(self,
                   bounds: TBounds = "",
+                  component: str = "real",
                   ) -> np.ndarray:
-        """Returns the real part of the spectrum as a real-valued |ndarray|.
+        """Returns the processed spectrum as a real-valued |ndarray|. By
+        default this returns the real part of the spectrum, but this can be
+        changed using the `component` argument.
 
         Note that if (for example) a magnitude mode calculation has been
         performed, then the "real" part is actually the magnitude mode
         spectrum. In short, the "real" part is whatever is stored in the ``1r``
         file.
-
-        This is used in constructing the *y*-values to be plotted.
 
         Parameters
         ----------
@@ -554,13 +555,23 @@ class _1D_ProcDataMixin():
             Bounds can be specified as a string ``lower..upper`` or a tuple of
             floats ``(lower, upper)``, upon which the appropriate slice of the
             spectrum will be taken.
+        component : str from {"real", "r", "imag", "i"} (default "real")
+            The component of the processed data to return. `"real"` or `"r"`
+            return the real part of the spectrum, the others return the
+            imaginary part.
 
         Returns
         -------
         ndarray
-            The real spectrum or the slice of interest.
+            The spectrum or the slice of interest.
         """
-        return self.real[self.bounds_to_slice(bounds)]
+        if component in ['real', 'r']:
+            return self.real[self.bounds_to_slice(bounds)]
+        elif component in ['imag', 'i']:
+            return self.imag[self.bounds_to_slice(bounds)]
+        else:
+            raise ValueError(f"Invalid value '{component}' for 'component'"
+                             " argument.")
 
     def integrate(self,
                   peak: OF = None,
@@ -822,11 +833,11 @@ class _2D_ProcDataMixin():
     def proc_data(self,
                   f1_bounds: TBounds = "",
                   f2_bounds: TBounds = "",
+                  component: str = "rr",
                   ) -> np.ndarray:
-        """Returns the real part of the spectrum (the 'RR quadrant') as a
-        two-dimensional, real-valued |ndarray|.
-
-        This is used in constructing the *z*-values to be plotted.
+        """Returns the processed 2D data as a two-dimensional, real-valued
+        |ndarray|. By default this returns the real part of the spectrum (the
+        'RR quadrant'), but this can be changed using the `component` argument.
 
         Note that if a magnitude mode calculation has been performed, this will
         return the magnitude mode spectrum (i.e. it returns whatever is in
@@ -838,15 +849,28 @@ class _2D_ProcDataMixin():
             Bounds for the indirect dimension.
         f2_bounds : str or (float, float), optional
             Bounds for the direct dimension.
+        component : str from {"rr", "ri", "ir", "ii"} (default "ii")
+            The quadrant of the processed data to return.
 
         Returns
         -------
         ndarray
-            The doubly real spectrum, or the section of interest.
+            The processed 2D data, or the section of interest.
         """
+        if component == 'rr':
+            data = self.rr
+        elif component == 'ri':
+            data = self.ri
+        elif component == 'ir':
+            data = self.ir
+        elif component == 'ii':
+            data = self.ii
+        else:
+            raise ValueError(f"Invalid value '{component}' for 'component'"
+                             " argument.")
         f1_slice = self.bounds_to_slice(axis=0, bounds=f1_bounds)
         f2_slice = self.bounds_to_slice(axis=1, bounds=f2_bounds)
-        return self.rr[f1_slice, f2_slice]
+        return data[f1_slice, f2_slice]
 
     def integrate(self,
                   peak: Optional[Tuple[float, float]] = None,

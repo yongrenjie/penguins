@@ -456,12 +456,26 @@ class _1D_RawDataMixin():
             fid = fid.reshape(int(self["td"]/2), 2)          # type: ignore # mixin
             fid = np.transpose(fid)
             self._fid = fid[0] + (1j * fid[1])
+        else:
+            raise ValueError(f"Unknown dtypa value '{self['dtypa']}'.")
 
-    def raw_data(self) -> np.ndarray:
+    def raw_data(self,
+                 shift_grpdly: bool = False
+                 ) -> np.ndarray:
         """
         Returns the FID as a complex |ndarray|.
+
+        Parameters
+        ----------
+        shift_grpdly : bool, default False
+            Whether to circularly shift the group delay to the end of the FID,
+            i.e. take the first N points (where N is given by the TopSpin
+            GRPDLY parameter) and move them to the end of the FID.
         """
-        return self.fid
+        if shift_grpdly:
+            return np.roll(self.fid, -int(self["GRPDLY"]))
+        else:
+            return self.fid
 
 
 class _1D_ProcDataMixin():
@@ -703,16 +717,22 @@ class _2D_RawDataMixin():
         if self["dtypa"] == 0:                             # type: ignore # mixin
             dtype = "<" if self["bytorda"] == 0 else ">"   # type: ignore # mixin
             dtype += "i4"
+            blocksize = 256
+        elif self["dtypa"] == 2:
+            dtype = "<" if self["bytorda"] == 0 else ">"  # type: ignore # mixin
+            dtype += "d"
+            blocksize = 128
         else:
-            raise NotImplementedError("float data not yet accepted")
+            raise ValueError(f"Unknown dtypa value '{self['dtypa']}'.")
         # Read in the data from the ser file.
         ser = np.fromfile(self._p_ser, dtype=dtype)
         # Reshape the matrix according to TD. Note that in the ser file, each
-        # new FID always begins at a new block of 256 data points. Effectively,
-        # this means that TD2 is rounded up to the nearest multiple of 256.
+        # new FID always begins at a new block of 256/128 data points (256 for
+        # int, 128 for double). Effectively, this means that TD2 is rounded up
+        # to the nearest multiple of 256/128.
         td1, td2 = self["td"]   # type: ignore # mixin
-        if td2 % 256 != 0:
-            td2_eff = math.ceil(td2 / 256) * 256
+        if td2 % blocksize != 0:
+            td2_eff = math.ceil(td2 / blocksize) * blocksize
             ser = ser.reshape((td1, td2_eff))
             ser = ser[:, :td2]
         else:
@@ -724,8 +744,23 @@ class _2D_RawDataMixin():
         ser[:,:,1] = ser[:,:,1] * 1j
         self._ser = ser.sum(axis=2) * (2 ** self["nc"])  # type: ignore # mixin
 
-    def raw_data(self):
-        return self.ser
+    def raw_data(self,
+                 shift_grpdly: bool = False
+                 ) -> np.ndarray:
+        """
+        Returns the 2D raw data matrix as a 2D complex-valued |ndarray|.
+
+        Parameters
+        ----------
+        shift_grpdly : bool, default False
+            Whether to circularly shift the group delay to the end of each FID,
+            i.e. take the first N points (where N is given by the TopSpin
+            GRPDLY parameter) and move them to the end of each FID.
+        """
+        if shift_grpdly:
+            return np.roll(self.ser, -int(self["GRPDLY"]), axis=1)
+        else:
+            return self.ser
 
 
 class _2D_ProcDataMixin():

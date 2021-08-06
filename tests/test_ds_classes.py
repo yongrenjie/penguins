@@ -108,10 +108,21 @@ def test_1d_raw_fid():
     # Check raw_data accessor
     assert proton.raw_data() is fid
 
+    # Check group delay shifting
+    fid2 = proton.raw_data(shift_grpdly=True)
+    assert np.allclose(fid[67:167], fid2[:100])  # start of actual data
+    assert np.allclose(fid[0:67], fid2[-67:])    # the group delay
+
+    # Check 1D processed PSYCHE edge case
     proc_psyche = pg.read(datadir, 4)
     fid = proc_psyche.fid
     assert fid.shape == (proc_psyche["td"] / 2,)
     assert proc_psyche.raw_data() is fid
+
+    # Check double-precision data
+    double_proton = pg.read(datadir, 7)
+    assert double_proton.fid.shape == (double_proton["td"] / 2,)
+    assert double_proton.raw_data() is double_proton.fid
 
 
 def test_2d_raw_ser():
@@ -120,18 +131,28 @@ def test_2d_raw_ser():
     ser = cosy.ser
     # Note that only TD2 needs to be divided by 2, because there isn't the real
     # + imag -> complex combination in the indirect dimension. (Well, in a way
-    # there *could*, but traditionally (for example) the cosine- and
-    # sine-modulated FIDs in the States method are kept separate for
-    # appropriate processing.)
+    # there *could*, and then we would get quarternionic data; but
+    # traditionally (for example) the cosine- and sine-modulated FIDs in the
+    # States method are kept separate for appropriate processing.)
     assert ser.shape == (cosy["td"][0], cosy["td"][1] / 2)
     # Test raw_data() accessor
-    rawdata = cosy.raw_data()
-    assert rawdata is ser
+    assert cosy.raw_data() is ser
+
+    # Check group delay shifting
+    ser2 = cosy.raw_data(shift_grpdly=True)
+    assert np.allclose(ser[:,67:167], ser2[:,:100])  # start of actual data
+    assert np.allclose(ser[:,0:67], ser2[:,-67:])    # the group delay
 
     # Test the case where TD is not a multiple of 256
     hsqc = pg.read(datadir, 6)
     assert (hsqc["td"][1] / 2) % 256 != 0
     assert hsqc.ser.shape == (hsqc["td"][0], hsqc["td"][1] / 2)
+
+    # Test double-precision data
+    double_hmbc = pg.read(datadir, 8)
+    ser = double_hmbc.ser
+    assert ser.shape == (double_hmbc["td"][0], double_hmbc["td"][1] / 2)
+    assert double_hmbc.raw_data() is ser
 
 
 def test_projection_raw_ser():

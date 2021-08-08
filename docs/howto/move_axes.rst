@@ -13,7 +13,21 @@ All of them move the *y*-axis to the right, but differ in where they place the *
 
 These are more easily illustrated with a diagram rather than with text.
 
+Note that this function must be called *after* `mkplot()`.
+
 .. plot:: howto/ymove.py
 
-There is an analogous function `xmove()`, but it is not very fully developed at this point in time.
-More to come in the future.
+There is also an analogous function `xmove()`, but it is not very fully developed at this point in time, and in general should not really be needed unless you have a particular "house style" to follow.
+
+--------------
+
+Cleaning up axis ticks
+----------------------
+
+You might notice that in the last case (*"topspin"*), the *y*-axis label clashes with the axis tick at 1 ppm.
+This can also potentially be a problem with the *"topright"* option.
+
+In order to get rid of tick labels which clash with the axis label, simply call the `cleanup_axes()` function at the end of the code (just before `show()`):
+
+.. plot:: howto/ymove_cleanup.py
+

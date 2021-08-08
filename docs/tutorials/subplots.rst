@@ -48,7 +48,7 @@ If you want to specify the figure size (i.e. the size of the *entire* figure, no
 
     If you are already familiar with matplotlib, you will know that matplotlib itself has a |subplots| function.
     You can use that if you prefer: penguins' `subplots2d()` is merely a wrapper around this with a default ``figsize``.
-    penguins also provides a direct wrapper, :func:`~penguins.subplots()`, that *doesn't* set a default ``figsize``; the only purpose of this is to potentially save an import.
+    penguins also provides a direct wrapper, :func:`~penguins.subplots()`, that *doesn't* set a default ``figsize``.
 
 ----------------------------------
 
@@ -60,7 +60,8 @@ But wait! We didn't actually *specify* that we wanted this.
 It turns out that if you don't specify it, penguins takes care of automatically setting up a new Axes for us to plot on, which is why the previous plots worked perfectly well.
 
 Now, though, we need a bit more control over the process.
-We can therefore pass the ``ax`` parameter to both the staging method ``stage()``, as well as the construction function ``mkplot()``.
+There are four different Axes which we need to plot separately on, and if we don't explicitly specify which Axes we want to plot on, penguins has no way of figuring this out on its own.
+We therefore need to pass the ``ax`` parameter to both the staging method ``stage()``, as well as the construction function ``mkplot()``.
 
 .. plot::
    :context:

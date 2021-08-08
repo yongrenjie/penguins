@@ -18,4 +18,7 @@ for ax, style in zip(axs.flat[1:], styles[1:]):
 # it clear which plot is which.
 plt.subplots_adjust(hspace=0.3, wspace=0.3)
 
+# This line is newly added!
+pg.cleanup_axes()
+
 pg.show()

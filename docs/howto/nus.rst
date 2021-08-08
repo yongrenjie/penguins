@@ -5,7 +5,9 @@ Non-uniform sampling is an acquisition method where an incomplete set of *t*:sub
 
 From penguins' point of view, once they have been processed, there is almost no difference between NUS spectra and uniformly sampled spectra. However, you may need to watch out for the ``TD`` parameter::
 
-   >>> nus_hsqc = pg.read("data/rot1", 3, 1)
+   >>> # you can get this dataset from
+   >>> # https://github.com/yongrenjie/penguins-testdata
+   >>> nus_hsqc = pg.read("penguins-testdata", 9)
    >>> nus_hsqc["td"]
    array([ 128, 2048])
    >>> nus_hsqc["nustd"]

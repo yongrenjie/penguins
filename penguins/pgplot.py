@@ -658,7 +658,7 @@ def _mkplot1d(ax: Any = None,
     else:
         if autolabel == "nucl":
             xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()
-            xlabel += " (ppm)"
+            xlabel += f" ({units})"
         else:
             raise ValueError(f"Invalid value '{autolabel}' given for "
                              "parameter autolabel.")

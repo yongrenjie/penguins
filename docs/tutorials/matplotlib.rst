@@ -47,3 +47,30 @@ One of the easiest things we can do with the |Axes| object is to change the *x*-
 
 Alternatively, if you use `subplots()`, you'll get a |Figure| and a list of |Axes|.
 This was mentioned previously in :doc:`subplots`.
+It allows you to control each Axes individually.
+Here we'll add a title to each of the two Axes, and then we'll add a *suptitle* for the entire Figure.
+Because the Figure encompasses both Axes, the suptitle is sort of an overarching title for the entire plot.
+
+.. plot::
+
+    import penguins as pg
+
+    data_1d = pg.read(".", 1, 1)
+    data_2d = pg.read(".", 2, 1)
+
+    fig, axs = pg.subplots2d(1, 2)
+
+    data_1d.stage(axs[0])   # 1D data on the left
+    pg.mkplot(axs[0])
+    axs[0].set_title("1D data")
+
+    data_2d.stage(axs[1])   # 2D data on the right
+    pg.mkplot(axs[1])
+    axs[1].set_title("2D data")
+
+    fig.suptitle("Some NMR data with different dimensions")
+    pg.show()
+
+You might notice that the Figure suptitle overlaps with the Axes titles.
+This can be fixed with a call to `cleanup_figure()` at the very end (just before `show()`), but we won't delve into that here; the point is just to illustrate some of matplotlib's Axes- and Figure-based methods.
+

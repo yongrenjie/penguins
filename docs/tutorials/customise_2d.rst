@@ -62,3 +62,27 @@ The syntax is exactly the same, so either a string or a tuple can be passed:
     data_2d.stage(levels=3e5, f1_bounds="0.3..7", f2_bounds=(0.3, 7))
     pg.mkplot()
     pg.show()
+
+
+------------------------
+
+Axes label positions
+--------------------
+
+Customarily, in 2D spectra, the *y*-axis ticks and label are displayed on the right-hand side of the spectrum.
+penguins offers a convenience function, `ymove()`, for this.
+Note, however, that this must be called *after* `mkplot()`.
+
+In this particular example it doesn't happen, but sometimes you may find that this causes the axis label to collide with the axis tick labels.
+The solution to this is the `cleanup_axes()` function: just call ``pg.cleanup_axes()`` after all the ``ymove()`` bits have been done, and penguins should remove any tick labels which collide with the axis labels.
+
+There's also an equivalent `xmove()` function, but this is generally not needed, unless you have a particular "house style" to follow.
+
+.. plot::
+   :context: close-figs
+
+    data_2d.stage(levels=3e5, f1_bounds="0.3..7", f2_bounds=(0.3, 7))
+    pg.mkplot()
+    pg.ymove()
+    pg.show()
+

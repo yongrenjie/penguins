@@ -92,6 +92,9 @@ def style_axes(ax: Any,
 
 @export
 def cleanup_axes() -> None:
+    """
+    Hides any axis tick labels which collide with axis labels.
+    """
     # Need to draw the figure to get the renderer.
     fig = plt.gcf()
     fig.canvas.draw()
@@ -173,8 +176,8 @@ def xmove(ax: Any,
 
 
 @export
-def ymove(ax: Any,
-          pos: str,
+def ymove(ax: Any = None,
+          pos: str = "topright",
           tight_layout: bool = True,
           dx: float = 0,
           dy: float = 0,
@@ -187,9 +190,9 @@ def ymove(ax: Any,
 
     Parameters
     ----------
-    ax : |Axes|
+    ax : |Axes|, default currently active Axes
         The Axes instance to apply the changes to.
-    pos : str from {"topright", "midright", "topspin"}
+    pos : str from {"topright", "midright", "topspin"}, default "topright"
         The configuration of the y-axis. This is better explained through a
         picture than in words.
     tight_layout : bool, default True
@@ -211,6 +214,9 @@ def ymove(ax: Any,
         fig = plt.gcf()
         fig.canvas.draw()
         return fig.canvas.get_renderer()
+
+    if ax is None:
+        ax = plt.gca()
 
     if pos == "topright":
         move_yticks_to_right()
@@ -318,14 +324,15 @@ def label_axes(axs: Any,
         The number to start from. Values below 1 are ignored.
     fstr : str, default "{}"
         A format string with a single field. The actual string placed on the
-        axes will be fstr.format(char), where char is the actual counter. Thus,
-        if you want your graphs to be labelled (a), (b), ... set fstr to be
-        "({})", for example.
+        axes will be ``fstr.format(ctr)``, where *ctr* is the actual counter
+        (i.e. 123... or abc...) which is internally generated based on the
+        *form* argument.  Thus, if you want your graphs to be labelled ``(a)``,
+        ``(b)``, ... set *fstr* to be ``"({})"``, for example.
     **kwargs : dict
         Optional parameters which are passed to ax.text(). If there is a clash,
         the parameters passed here will override choices made using the other
         keyword arguments. For example, if you want your text in the middle of
-        the spectrum, you can call `label_axes(..., x=0.5, y=0.5)`.
+        the spectrum, you can call ``label_axes(..., x=0.5, y=0.5)``.
     """
     # Convert whatever sequence we throw at it
     if isinstance(axs, matplotlib.axes.Axes):

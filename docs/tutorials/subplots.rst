@@ -120,3 +120,31 @@ That is to say, each time we advance through the for loop, we advance through al
 
 **This is one of the most common "patterns" used for subplots in penguins.**
 As another example, you can zip together a list of datasets with ``axs.flat`` to plot a series of different spectra.
+
+
+--------
+
+Labelling axes
+--------------
+
+When preparing graphics for publication, a common requirement is that each subplot must be labelled with a letter (for example).
+The `label_axes` function takes care of this quite simply.
+It takes a list of |Axes|, and a format string ``fstr`` in which the curly braces are replaced with the relevant character.
+Further options for customisation can be found in the reference documentation.
+
+.. plot::
+   :context: close-figs
+
+   fig, axs = pg.subplots2d(2, 2)
+
+   contour_levels = [1e4, 3e4, 1e5, 3e5]
+   titles = ["Lots of noise", "Some noise",
+             "Just a bit of noise", "No noise"]
+
+   for ax, level, title in zip(axs.flat, contour_levels, titles):
+       data_2d.stage(ax=ax, levels=level)
+       pg.mkplot(ax=ax, title=title)
+
+   pg.label_axes(axs, fstr="({})", fontsize=12, fontweight="semibold")
+
+

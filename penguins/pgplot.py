@@ -596,7 +596,8 @@ def _mkplot1d(ax: Any = None,
 
     See Also
     --------
-    penguins.mkplot : The appropriate interface for plot construction.
+    penguins.mkplot : You should call ``pg.mkplot(ax)`` instead of using this
+        ``_mkplot1d`` function directly.
     """
     # Flag that determines whether ax.legend is called. This will be set to
     # True if we find any PlotObject1D with a non-empty label.
@@ -981,7 +982,8 @@ def _mkplot2d(ax: Any = None,
 
     See Also
     --------
-    penguins.mkplot : The appropriate interface for plot construction.
+    penguins.mkplot : You should call ``pg.mkplot(ax)`` instead of using this
+        ``_mkplot1d`` function directly.
     """
     make_legend = False
     legend_colors, legend_labels = [], []

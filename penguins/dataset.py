@@ -556,7 +556,7 @@ class _1D_ProcDataMixin():
                   ) -> np.ndarray:
         """Returns the processed spectrum as a real-valued |ndarray|. By
         default this returns the real part of the spectrum, but this can be
-        changed using the `component` argument.
+        changed using the ``component`` argument.
 
         Note that if (for example) a magnitude mode calculation has been
         performed, then the "real" part is actually the magnitude mode
@@ -570,7 +570,7 @@ class _1D_ProcDataMixin():
             floats ``(lower, upper)``, upon which the appropriate slice of the
             spectrum will be taken.
         component : str from {"real", "r", "imag", "i"} (default "real")
-            The component of the processed data to return. `"real"` or `"r"`
+            The component of the processed data to return. *"real"* or *"r"*
             return the real part of the spectrum, the others return the
             imaginary part.
 
@@ -872,7 +872,8 @@ class _2D_ProcDataMixin():
                   ) -> np.ndarray:
         """Returns the processed 2D data as a two-dimensional, real-valued
         |ndarray|. By default this returns the real part of the spectrum (the
-        'RR quadrant'), but this can be changed using the `component` argument.
+        'RR quadrant'), but this can be changed using the ``component``
+        argument.
 
         Note that if a magnitude mode calculation has been performed, this will
         return the magnitude mode spectrum (i.e. it returns whatever is in

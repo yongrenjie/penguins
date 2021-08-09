@@ -27,6 +27,7 @@ And here's a similar plot that can be done in under 20 lines of PEP8-compliant c
 
 ```python
 import penguins as pg
+
 hmqc, hsqc, cosy, noesy = (pg.read("penguins-testdata", expno)
                            for expno in range(22001, 22005))
 

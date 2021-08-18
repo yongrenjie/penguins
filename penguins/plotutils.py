@@ -190,8 +190,9 @@ def ymove(ax: Any = None,
 
     Parameters
     ----------
-    ax : |Axes|, default currently active Axes
-        The Axes instance to apply the changes to.
+    ax : |Axes| or iterable thereof, default currently active Axes
+        The Axes instance to apply the changes to. If an iterable is provided,
+        applies changes to all Axes in it.
     pos : str from {"topright", "midright", "topspin"}, default "topright"
         The configuration of the y-axis. This is better explained through a
         picture than in words.
@@ -217,6 +218,16 @@ def ymove(ax: Any = None,
 
     if ax is None:
         ax = plt.gca()
+    elif isinstance(ax, matplotlib.axes.Axes):
+        pass   # fall through
+    else:
+        try:
+            for x in ax:
+                ymove(x, pos, tight_layout, dx, dy)
+            return
+        except TypeError as e:
+            raise TypeError("ymove() expects an Axes or an iterable of Axes"
+                            " as its first argument.")
 
     if pos == "topright":
         move_yticks_to_right()

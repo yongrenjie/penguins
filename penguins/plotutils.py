@@ -158,16 +158,57 @@ def cleanup_figure(padding: float = 0.02
 
 
 @export
-def xmove(ax: Any,
-          pos: str,
+def xmove(ax: Any = None,
+          pos: str = "right",
           remove_ticks: int = 0,
           tight_layout: bool = True,
+          dx: float = 0,
+          dy: float = 0,
           ) -> None:
+    """
+    Utility function which moves the Axes x-label and x-axis ticks to one of
+    several preset configurations. It is a good idea to call `cleanup_axes()`
+    after using this function in order to remove any tick labels that clash
+    with the axis label.
+
+    Parameters
+    ----------
+    ax : |Axes| or iterable thereof, default currently active Axes
+        The Axes instance to apply the changes to. If an iterable is provided,
+        applies changes to all Axes in it.
+    pos : str, default "right"
+        The position of the x-axis label. The only option currently supported
+        is "right", which places the x-axis label at the bottom-right of the
+        x-axis.
+    tight_layout : bool, default True
+        Whether to call |tight_layout| after completion.
+    dx : float, default 0
+        Amount to horizontally shift the resulting x-axis label by, expressed
+        in terms of Axes coordinates (i.e. 0 is left-most part of Axes and 1 is
+        right-most). Positive numbers shift the label to the right and vice
+        versa. This should generally not be needed but can be useful for
+        tweaking the layout if the result is not satisfactory.
+    dy : float, default 0
+        Amount to vertically shift the resulting x-axis label by, expressed in
+        terms of Axes coordinates. Positive numbers shift the label up.
+    """
+    if ax is None:
+        ax = plt.gca()
+    elif isinstance(ax, matplotlib.axes.Axes):
+        pass   # fall through
+    else:
+        try:
+            for x in ax:
+                xmove(x, pos, tight_layout, dx, dy)
+            return
+        except TypeError as e:
+            raise TypeError("xmove() expects an Axes or an iterable of Axes"
+                            " as its first argument.")
+
     if pos == "right":
-        # Move the label
         ax.xaxis.label.set_horizontalalignment("center")
         ax.xaxis.label.set_verticalalignment("top")
-        ax.xaxis.set_label_coords(1.02, -0.05)
+        ax.xaxis.set_label_coords(1.02 + dx, -0.05 + dy)
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
 

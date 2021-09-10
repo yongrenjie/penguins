@@ -529,6 +529,7 @@ def _mkplot1d(ax: Any = None,
               title: OS = None,
               autolabel: str = "nucl",
               xlabel: OS = None,
+              ylabel: OS = None,
               legend_loc: Any = "best",
               units: str = "ppm",
               ) -> Tuple[Any, Any]:
@@ -571,13 +572,15 @@ def _mkplot1d(ax: Any = None,
     title : str, optional
         Plot title.
     autolabel : str, optional (default: "nucl")
-        Automatic label to use for the *x*-axis. The only option available now
-        is ``nucl`` (the default), which generates a LaTeX representation of
-        the nucleus of the first staged spectrum (e.g. for a proton spectrum,
-        using this would automatically generate the *x*-axis label
-        ``r"$\\rm ^{1}H$ (ppm)"``).
+        Automatic label to use for the *x*-axis (the *y*-axis is always set to
+        empty). The only option available now is ``nucl`` (the default), which
+        generates a LaTeX representation of the nucleus of the first staged
+        spectrum (e.g. for a proton spectrum, using this would automatically
+        generate the *x*-axis label ``r"$\\rm ^{1}H$ (ppm)"``).
     xlabel : str, optional
         *x*-Axis label. Overrides the autolabel parameter if given.
+    ylabel : str, optional
+        *y*-Axis label. Overrides the autolabel parameter if given.
     legend_loc : str or (float, float), optional
         Location to place the legend. This is passed as the *loc* parameter to
         |legend|; see the documentation there for the available options.
@@ -668,6 +671,8 @@ def _mkplot1d(ax: Any = None,
     if title:
         ax.set_title(title)
     ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)
     if not ax.xaxis_inverted():
         ax.invert_xaxis()
     if make_legend:

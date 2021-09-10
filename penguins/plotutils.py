@@ -42,7 +42,9 @@ def style_axes(ax: Any,
     None
     """
     def disable_y_axis(ax):
-        ax.yaxis.set_visible(False)
+        ax.get_yaxis().set_ticks([])
+        # Note that ax.yaxis.set_visible(False) will hide y-label text as well,
+        # which we don't want.
 
     def remove_top_left_right_spines(ax):
         for s in ["top", "left", "right"]:

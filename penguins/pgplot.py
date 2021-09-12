@@ -1205,7 +1205,7 @@ def _find_baselev(dataset: ds.Dataset2D,
 # -- Matplotlib and Seaborn wrappers --------------------------
 
 @export
-def subplots(*args, **kwargs) -> None:
+def subplots(*args, **kwargs) -> Tuple[Any, Any]:
     """Direct wrapper around |subplots|.
     """
     return plt.subplots(*args, **kwargs)

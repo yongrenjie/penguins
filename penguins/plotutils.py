@@ -7,7 +7,7 @@ wide range of figures.
 """
 
 import warnings
-from typing import (Any, Sequence, Tuple)
+from typing import Any, Sequence, Tuple, Optional
 
 import numpy as np  # type: ignore
 import matplotlib
@@ -20,7 +20,7 @@ from .exportdeco import export
 @export
 def style_axes(ax: Any,
                style: str,
-               tight_layout: bool = True,
+               tight_layout: Optional[bool] = None,
                ) -> None:
     """Styles the given |Axes| instance according to the requested style.
 
@@ -34,8 +34,11 @@ def style_axes(ax: Any,
     style : str
         Style to be applied. The available options are ``1d``, ``1d_box``,
         ``2d``, ``plot``, and ``natural``.
-    tight_layout : bool, default True
-        Whether to call |tight_layout| after completion.
+    tight_layout : bool, optional
+        Whether to call plt.tight_layout() after constructing the plot. By
+        default this is set to True unless the Figure has been set up with
+        ``constrained_layout`` (see matplotlib's
+        :std:doc:`tutorials/intermediate/constrainedlayout_guide`).
 
     Returns
     -------
@@ -69,6 +72,13 @@ def style_axes(ax: Any,
         for s in ["top", "left", "right", "bottom"]:
             ax.spines[s].set_linewidth(1.3)
 
+    # Determine tight_layout
+    if tight_layout is None:
+        try:
+            tight_layout = not ax.figure.get_constrained_layout()
+        except AttributeError:  # matplotlib < 3.4
+            tight_layout = True
+
     if style == "1d":
         disable_y_axis(ax)
         set_xaxis_ticks(ax)
@@ -99,6 +109,11 @@ def cleanup_axes() -> None:
     """
     # Need to draw the figure to get the renderer.
     fig = plt.gcf()
+    try:
+        if fig.get_constrained_layout():
+            fig.execute_constrained_layout()
+    except AttributeError:  # matplotlib <3.4
+        pass
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
     # Iterate over axes and check which ticks overlap with axes label.
@@ -129,8 +144,14 @@ def cleanup_figure(padding: float = 0.02
                    ) -> None:
     # Resize subplots so that their titles don't clash with the figure legend,
     # or figure suptitle.
-    plt.tight_layout()
     fig = plt.gcf()
+    try:
+        if fig.get_constrained_layout():
+            fig.execute_constrained_layout()
+        else:
+            fig.tight_layout()
+    except AttributeError:  # matplotlib <3.4
+        fig.tight_layout()
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
     # Get minimum bbox y-extent of figure legend(s).
@@ -163,7 +184,7 @@ def cleanup_figure(padding: float = 0.02
 def xmove(ax: Any = None,
           pos: str = "right",
           remove_ticks: int = 0,
-          tight_layout: bool = True,
+          tight_layout: Optional[bool] = None,
           dx: float = 0,
           dy: float = 0,
           ) -> None:
@@ -182,8 +203,11 @@ def xmove(ax: Any = None,
         The position of the x-axis label. The only option currently supported
         is "right", which places the x-axis label at the bottom-right of the
         x-axis.
-    tight_layout : bool, default True
-        Whether to call |tight_layout| after completion.
+    tight_layout : bool, optional
+        Whether to call plt.tight_layout() after constructing the plot. By
+        default this is set to True unless the Figure has been set up with
+        ``constrained_layout`` (see matplotlib's
+        :std:doc:`tutorials/intermediate/constrainedlayout_guide`).
     dx : float, default 0
         Amount to horizontally shift the resulting x-axis label by, expressed
         in terms of Axes coordinates (i.e. 0 is left-most part of Axes and 1 is
@@ -201,7 +225,7 @@ def xmove(ax: Any = None,
     else:
         try:
             for x in ax:
-                xmove(x, pos, tight_layout, dx, dy)
+                xmove(x, pos, remove_ticks, tight_layout, dx, dy)
             return
         except TypeError as e:
             raise TypeError("xmove() expects an Axes or an iterable of Axes"
@@ -214,6 +238,11 @@ def xmove(ax: Any = None,
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
 
+    if tight_layout is None:
+        try:
+            tight_layout = not ax.figure.get_constrained_layout()
+        except AttributeError:  # matplotlib < 3.4
+            tight_layout = True
     if tight_layout:
         plt.tight_layout()
 
@@ -221,7 +250,7 @@ def xmove(ax: Any = None,
 @export
 def ymove(ax: Any = None,
           pos: str = "topright",
-          tight_layout: bool = True,
+          tight_layout: Optional[bool] = None,
           dx: float = 0,
           dy: float = 0,
           ) -> None:
@@ -239,8 +268,11 @@ def ymove(ax: Any = None,
     pos : str from {"topright", "midright", "topspin"}, default "topright"
         The configuration of the y-axis. This is better explained through a
         picture than in words.
-    tight_layout : bool, default True
-        Whether to call |tight_layout| after completion.
+    tight_layout : bool, optional
+        Whether to call plt.tight_layout() after constructing the plot. By
+        default this is set to True unless the Figure has been set up with
+        ``constrained_layout`` (see matplotlib's
+        :std:doc:`tutorials/intermediate/constrainedlayout_guide`).
     dx : float, default 0
         Amount to horizontally shift the resulting y-axis label by, expressed
         in terms of Axes coordinates (i.e. 0 is left-most part of Axes and 1 is
@@ -316,6 +348,11 @@ def ymove(ax: Any = None,
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
 
+    if tight_layout is None:
+        try:
+            tight_layout = not ax.figure.get_constrained_layout()
+        except AttributeError:  # matplotlib < 3.4
+            tight_layout = True
     if tight_layout:
         plt.tight_layout()
 

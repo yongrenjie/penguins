@@ -190,9 +190,7 @@ def xmove(ax: Any = None,
           ) -> None:
     """
     Utility function which moves the Axes x-label and x-axis ticks to one of
-    several preset configurations. It is a good idea to call `cleanup_axes()`
-    after using this function in order to remove any tick labels that clash
-    with the axis label.
+    several preset configurations.
 
     Parameters
     ----------
@@ -245,6 +243,7 @@ def xmove(ax: Any = None,
             tight_layout = True
     if tight_layout:
         plt.tight_layout()
+    cleanup_axes()
 
 
 @export
@@ -256,9 +255,7 @@ def ymove(ax: Any = None,
           ) -> None:
     """
     Utility function which moves the Axes y-label and y-axis ticks to one of
-    several preset configurations. It is a good idea to call `cleanup_axes()`
-    after using this function in order to remove any tick labels that clash
-    with the axis label.
+    several preset configurations.
 
     Parameters
     ----------
@@ -357,6 +354,7 @@ def ymove(ax: Any = None,
             tight_layout = True
     if tight_layout:
         plt.tight_layout()
+    cleanup_axes()
 
 
 def label_generator(form):

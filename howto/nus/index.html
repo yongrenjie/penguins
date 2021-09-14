@@ -39,7 +39,9 @@
 <h1>Reading NUS data<a class="headerlink" href="#reading-nus-data" title="Permalink to this headline">¶</a></h1>
 <p>Non-uniform sampling is an acquisition method where an incomplete set of <em>t</em><sub>1</sub> increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.</p>
 <p>From penguins’ point of view, once they have been processed, there is almost no difference between NUS spectra and uniformly sampled spectra. However, you may need to watch out for the <code class="docutils literal notranslate"><span class="pre">TD</span></code> parameter:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nus_hsqc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;data/rot1&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># you can get this dataset from</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># https://github.com/yongrenjie/penguins-testdata</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nus_hsqc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;penguins-testdata&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nus_hsqc</span><span class="p">[</span><span class="s2">&quot;td&quot;</span><span class="p">]</span>
 <span class="go">array([ 128, 2048])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nus_hsqc</span><span class="p">[</span><span class="s2">&quot;nustd&quot;</span><span class="p">]</span>
@@ -139,7 +141,7 @@
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -8,6 +8,8 @@ General plotting
 
 .. autofunction:: subplots
 
+|v|
+
 .. autofunction:: subplots2d
 
 |v|
@@ -72,6 +74,10 @@ Auxiliary plotting utilities
 ----------------------------
 
 .. currentmodule:: penguins
+
+.. autofunction:: label_axes
+
+|v|
 
 .. autofunction:: style_axes
 

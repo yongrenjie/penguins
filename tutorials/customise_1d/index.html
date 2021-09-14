@@ -112,12 +112,12 @@ The following handy table describes all the possibilities (the last case is equi
 <section id="colours-and-other-aesthetics">
 <h2>Colours and other aesthetics<a class="headerlink" href="#colours-and-other-aesthetics" title="Permalink to this headline">¶</a></h2>
 <p>The other major spectrum-specific options are aesthetic choices, such as colours, linewidths, and so on.
-The way <code class="docutils literal notranslate"><span class="pre">stage()</span></code> handles this is by taking keyword arguments and passing them along to <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> function (which penguins ultimately uses to draw the actual spectrum).</p>
-<p>That means that <em>any</em> configuration option that you can pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> can <em>also</em> be passed to <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.
+The way <code class="docutils literal notranslate"><span class="pre">stage()</span></code> handles this is by taking keyword arguments and passing them along to <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>’s <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> function (which penguins ultimately uses to draw the actual spectrum).</p>
+<p>That means that <em>any</em> configuration option that you can pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> can <em>also</em> be passed to <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.
 The full list of options is described in the <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> documentation, but some of the most commonly used ones are listed here.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">color</span></code>: any of the formats listed in <a class="reference external" href="https://matplotlib.org/tutorials/colors/colors.html" title="(in Matplotlib v3.4.1)"><span>Specifying Colors</span></a>. If you don’t specify a colour, penguins will draw from the <code class="docutils literal notranslate"><span class="pre">deep</span></code> palette in the <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">color</span></code>: any of the formats listed in <a class="reference external" href="https://matplotlib.org/tutorials/colors/colors.html" title="(in Matplotlib v3.4.3)"><span>Specifying Colors</span></a>. If you don’t specify a colour, penguins will draw from the <code class="docutils literal notranslate"><span class="pre">deep</span></code> palette in the <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> package.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linewidth</span></code>: a float. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">linestyle</span></code>: set to (for example) <code class="docutils literal notranslate"><span class="pre">--</span></code> for a dashed line.</p></li>
 </ul>
@@ -219,7 +219,7 @@ The full list of options is described in the <code class="docutils literal notra
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -48,6 +48,7 @@ All of them move the <em>y</em>-axis to the right, but differ in where they plac
 <li><p><em>“topspin”</em>: Rotates tick labels as well as the axis label. This mimics the normal display in TopSpin.</p></li>
 </ul>
 <p>These are more easily illustrated with a diagram rather than with text.</p>
+<p>Note that this function must be called <em>after</em> <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
@@ -55,7 +56,7 @@ All of them move the <em>y</em>-axis to the right, but differ in where they plac
 <span class="n">ds</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;topright&quot;</span><span class="p">,</span> <span class="s2">&quot;midright&quot;</span><span class="p">,</span> <span class="s2">&quot;topspin&quot;</span><span class="p">]</span>
 
-<span class="c1"># Stage and construct -- this will probably be familiar</span>
+<span class="c1"># Stage and construct as usual</span>
 <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
     <span class="n">ds</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mf">5e5</span><span class="p">,</span> <span class="n">f1_bounds</span><span class="o">=</span><span class="s2">&quot;0.3..7&quot;</span><span class="p">,</span> <span class="n">f2_bounds</span><span class="o">=</span><span class="s2">&quot;0.3..7&quot;</span><span class="p">)</span>
     <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">style</span><span class="p">)</span>
@@ -63,9 +64,6 @@ All of them move the <em>y</em>-axis to the right, but differ in where they plac
 <span class="c1"># Apply the styles.</span>
 <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">styles</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
     <span class="n">pg</span><span class="o">.</span><span class="n">ymove</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
-
-<span class="c1"># Always call cleanup_axes() after ymove()!</span>
-<span class="n">pg</span><span class="o">.</span><span class="n">cleanup_axes</span><span class="p">()</span>
 
 <span class="c1"># This is not necessary in a real plot and is only included to make</span>
 <span class="c1"># it clear which plot is which.</span>
@@ -76,8 +74,7 @@ All of them move the <em>y</em>-axis to the right, but differ in where they plac
 </div>
 <figure class="align-default">
 <img alt="../../_images/ymove.svg" class="plot-directive" src="../../_images/ymove.svg" /></figure>
-<p>There is an analogous function <a class="reference internal" href="../../reference/plotting/#penguins.xmove" title="penguins.xmove"><code class="xref any py py-func docutils literal notranslate"><span class="pre">xmove()</span></code></a>, but it is not very fully developed at this point in time.
-More to come in the future.</p>
+<p>There is also an analogous function <a class="reference internal" href="../../reference/plotting/#penguins.xmove" title="penguins.xmove"><code class="xref any py py-func docutils literal notranslate"><span class="pre">xmove()</span></code></a>, but it is not very fully developed at this point in time, and in general should not really be needed unless you have a particular “house style” to follow.</p>
 </section>
 
 
@@ -162,7 +159,7 @@ More to come in the future.</p>
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

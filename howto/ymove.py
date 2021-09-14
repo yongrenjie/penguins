@@ -5,7 +5,7 @@ fig, axs = pg.subplots2d(2, 2)
 ds = pg.read(".", 2)
 styles = ["none", "topright", "midright", "topspin"]
 
-# Stage and construct -- this will probably be familiar
+# Stage and construct as usual
 for ax, style in zip(axs.flat, styles):
     ds.stage(ax, levels=5e5, f1_bounds="0.3..7", f2_bounds="0.3..7")
     pg.mkplot(ax, title=style)
@@ -13,9 +13,6 @@ for ax, style in zip(axs.flat, styles):
 # Apply the styles.
 for ax, style in zip(axs.flat[1:], styles[1:]):
     pg.ymove(ax, style)
-
-# Always call cleanup_axes() after ymove()!
-pg.cleanup_axes()
 
 # This is not necessary in a real plot and is only included to make
 # it clear which plot is which.

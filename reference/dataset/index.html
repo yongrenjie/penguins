@@ -160,7 +160,7 @@ classes do not have this attribute.</p>
 <span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'real'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the processed spectrum as a real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. By
 default this returns the real part of the spectrum, but this can be
-changed using the <code class="xref any docutils literal notranslate"><span class="pre">component</span></code> argument.</p>
+changed using the <code class="docutils literal notranslate"><span class="pre">component</span></code> argument.</p>
 <p>Note that if (for example) a magnitude mode calculation has been
 performed, then the “real” part is actually the magnitude mode
 spectrum. In short, the “real” part is whatever is stored in the <code class="docutils literal notranslate"><span class="pre">1r</span></code>
@@ -172,7 +172,7 @@ file.</p>
 floats <code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code>, upon which the appropriate slice of the
 spectrum will be taken.</p>
 </dd>
-<dt><strong>component</strong><span class="classifier">str from {“real”, “r”, “imag”, “i”} (default “real”)</span></dt><dd><p>The component of the processed data to return. <code class="xref any docutils literal notranslate"><span class="pre">&quot;real&quot;</span></code> or <code class="xref any docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code>
+<dt><strong>component</strong><span class="classifier">str from {“real”, “r”, “imag”, “i”} (default “real”)</span></dt><dd><p>The component of the processed data to return. <em>“real”</em> or <em>“r”</em>
 return the real part of the spectrum, the others return the
 imaginary part.</p>
 </dd>
@@ -282,7 +282,8 @@ parameter files, so it’s not useless at all.</p>
 <span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rr'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the processed 2D data as a two-dimensional, real-valued
 <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>. By default this returns the real part of the spectrum (the
-‘RR quadrant’), but this can be changed using the <code class="xref any docutils literal notranslate"><span class="pre">component</span></code> argument.</p>
+‘RR quadrant’), but this can be changed using the <code class="docutils literal notranslate"><span class="pre">component</span></code>
+argument.</p>
 <p>Note that if a magnitude mode calculation has been performed, this will
 return the magnitude mode spectrum (i.e. it returns whatever is in
 TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</span></code> file).</p>
@@ -916,7 +917,7 @@ the same.</p>
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

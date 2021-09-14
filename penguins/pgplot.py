@@ -113,7 +113,7 @@ def mkplot(ax: Any = None,
         # Reset the PHA to being empty
         if empty_pha:
             try:
-                ax.pha = PlotHoldingArea()
+                ax.pha = PlotHoldingArea()   # type: ignore
             except AttributeError:
                 pass
     return fig, ax
@@ -302,7 +302,7 @@ class PlotHoldingArea():
         self.colors_1d = self._color_generator_1d()
         self.colors_2d = self._color_generator_2d()
 
-    def _color_generator_1d(self) -> Iterator[str]:
+    def _color_generator_1d(self) -> Iterator[MplColor]:
         """Yields colors one at a time from the current palette."""
         yield from cycle(sns.color_palette(_current_palette))
 
@@ -665,7 +665,7 @@ def _mkplot1d(ax: Any = None,
     else:
         if autolabel == "nucl":
             xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()
-            xlabel += f" ({units})"
+            xlabel += f" ({units})"   # type: ignore
         else:
             raise ValueError(f"Invalid value '{autolabel}' given for "
                              "parameter autolabel.")
@@ -1047,9 +1047,9 @@ def _mkplot2d(ax: Any = None,
             # This is the default case, because the default parameters are
             # xlabel=None, ylabel=None, autolabel="nucl".
             xlabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[1]
-            xlabel += f" ({f2_units})"
+            xlabel += f" ({f2_units})"   # type: ignore
             ylabel = ax.pha.plot_objs[0].dataset.nuclei_to_str()[0]
-            ylabel += f" ({f1_units})"
+            ylabel += f" ({f1_units})"   # type: ignore
         elif autolabel == "f1f2":
             xlabel = f"$f_2$ ({f2_units})"
             ylabel = f"$f_1$ ({f1_units})"
@@ -1091,7 +1091,7 @@ def _mkplot2d(ax: Any = None,
 def _find_baselev(dataset: ds.Dataset2D,
                   increment: float = None,
                   nlev: int = 4,
-                  ) -> float:
+                  ) -> OF:
     """Create an interactive slider window to see the effect of changing
     *baselev* on the displayed spectrum.
 
@@ -1214,9 +1214,10 @@ def _find_baselev(dataset: ds.Dataset2D,
         fval = 10 ** baselev_slider.val
         fval_short = f"{fval:.2e}".replace("e+0", "e")
         print(f"The final base level was:   {fval:.2f} (or {fval_short})\n")
-    plt.close("all")
-
-    return fval if okay else None
+        plt.close("all")
+        return fval
+    else:
+        return None
 
 
 # -- Matplotlib and Seaborn wrappers --------------------------
@@ -1378,7 +1379,7 @@ def set_palette(palette: Union[str, List[str]],
 
 @export
 def color_palette(palette: Optional[Union[str, List[str]]] = None,
-                  ) -> List[str]:
+                  ) -> Any:
     """Returns a list of colors corresponding to a color palette. If *palette*
     is not provided, returns the colors in the current color palette.
 

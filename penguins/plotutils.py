@@ -220,7 +220,7 @@ def xmove(ax: Any = None,
     """
     if ax is None:
         ax = plt.gca()
-    elif isinstance(ax, matplotlib.axes.Axes):
+    elif isinstance(ax, matplotlib.axes.Axes):  # type: ignore
         pass   # fall through
     else:
         try:
@@ -293,7 +293,7 @@ def ymove(ax: Any = None,
 
     if ax is None:
         ax = plt.gca()
-    elif isinstance(ax, matplotlib.axes.Axes):
+    elif isinstance(ax, matplotlib.axes.Axes):  # type: ignore
         pass   # fall through
     else:
         try:
@@ -334,16 +334,18 @@ def ymove(ax: Any = None,
 
     elif pos == "topspin":
         move_yticks_to_right()
-        for ytick in ax.yaxis.get_major_ticks():
-            ytick.label2.set_rotation(90)
-        # The y-axis label should be bottom-aligned together with these.
-        r = draw_fig()
-        inv = ax.transAxes.inverted()
-        bbox = ytick.label2.get_window_extent(renderer=r)
-        x_base = inv.transform(bbox)[1, 0]
-        ax.yaxis.label.set_horizontalalignment("right")
-        ax.yaxis.label.set_verticalalignment("bottom")
-        ax.yaxis.set_label_coords(x_base + dx, 1 + dy)
+        y_major_ticks = ax.yaxis.get_major_ticks()
+        if len(y_major_ticks) != 0:
+            for ytick in y_major_ticks:
+                ytick.label2.set_rotation(90)
+            # The y-axis label should be bottom-aligned together with these.
+            r = draw_fig()
+            inv = ax.transAxes.inverted()
+            bbox = y_major_ticks[-1].label2.get_window_extent(renderer=r)
+            x_base = inv.transform(bbox)[1, 0]
+            ax.yaxis.label.set_horizontalalignment("right")
+            ax.yaxis.label.set_verticalalignment("bottom")
+            ax.yaxis.set_label_coords(x_base + dx, 1 + dy)
 
     else:
         raise ValueError(f"Invalid position '{pos}' provided.")
@@ -426,7 +428,7 @@ def label_axes(axs: Any,
         the spectrum, you can call ``label_axes(..., x=0.5, y=0.5)``.
     """
     # Convert whatever sequence we throw at it
-    if isinstance(axs, matplotlib.axes.Axes):
+    if isinstance(axs, matplotlib.axes.Axes):  # type: ignore
         axs = [axs]
     axs_flat = np.array(axs).flat
     # Figure out text placement. We need to use kwargs.pop() to make sure that

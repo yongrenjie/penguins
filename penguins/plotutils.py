@@ -96,7 +96,8 @@ def style_axes(ax: Any,
     elif style == "natural":
         pass
     else:
-        warnings.warn(f"Invalid style '{style}' requested.")
+        warnings.warn(f"Invalid style '{style}' requested."
+                      "Permissible values are: '1d', '1d_box', '2d', 'plot'.")
 
     if tight_layout:
         plt.tight_layout()

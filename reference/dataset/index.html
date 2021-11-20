@@ -57,7 +57,7 @@ I’ve provided “aggregate classes” which have useful groups of methods, and
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._Dataset">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._Dataset" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._Dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is common to all datasets. Specifically, this
 class defines the dictionary-style lookup of NMR parameters.</p>
 <p>This should <strong>never</strong> be instantiated directly! Use <a class="reference internal" href="../reading/#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>
@@ -78,7 +78,7 @@ etc.) are routed to the underlying <a class="reference internal" href="#penguins
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._parDict">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_parDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._parDict" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_parDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._parDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified dictionary for storing acquisition &amp; processing parameters.</p>
 <p>Parameter names are stored as lower-case strings. When looking up a
 parameter, if its value is not already stored, the dictionary will look it
@@ -104,7 +104,7 @@ dimensions at one go).</p>
 <h2>1D mixins<a class="headerlink" href="#d-mixins" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._1D_RawDataMixin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 1D raw data, i.e. <code class="docutils literal notranslate"><span class="pre">fid</span></code>
 files. Also contains a few private methods which initialise (for example)
 the paths to the parameter files.</p>
@@ -137,7 +137,7 @@ GRPDLY parameter) and move them to the end of the FID.</p>
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._1D_ProcDataMixin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 1D processed data.</p>
 <dl class="field-list">
 <dt class="field-odd">Attributes</dt>
@@ -248,7 +248,7 @@ Dataset1D object.</p>
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._1D_PlotMixin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_PlotMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_PlotMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_PlotMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_PlotMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines 1D plotting methods.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="penguins.dataset._1D_PlotMixin.stage">
@@ -264,7 +264,7 @@ Dataset1D object.</p>
 <h2>2D mixins<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._2D_RawDataMixin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 2D raw data, i.e. <code class="docutils literal notranslate"><span class="pre">ser</span></code>
 files.</p>
 <p>There are no functions which actually read the <code class="docutils literal notranslate"><span class="pre">ser</span></code> file (I haven’t
@@ -276,7 +276,7 @@ parameter files, so it’s not useless at all.</p>
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="penguins.dataset._2D_ProcDataMixin.proc_data">
 <span class="sig-name descname"><span class="pre">proc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rr'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._2D_ProcDataMixin.proc_data" title="Permalink to this definition">¶</a></dt>
@@ -413,7 +413,7 @@ efficiency reasons.</p>
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._2D_PlotMixin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_PlotMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_PlotMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_PlotMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines 2D plotting methods.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="penguins.dataset._2D_PlotMixin.stage">
@@ -437,7 +437,7 @@ efficiency reasons.</p>
 Even then, much of the interface is abstracted away: for example, the staging and plotting functions have a unified interface that delegate to different methods behind the scenes depending on the object that is being staged / plotted.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset.Dataset1D">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset object representing 1D spectra.</p>
 <p>Inherits from: <a class="reference internal" href="#penguins.dataset._1D_RawDataMixin" title="penguins.dataset._1D_RawDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_RawDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_ProcDataMixin" title="penguins.dataset._1D_ProcDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_ProcDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_PlotMixin" title="penguins.dataset._1D_PlotMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_PlotMixin</span></code></a>,
 and <a class="reference internal" href="#penguins.dataset._Dataset" title="penguins.dataset._Dataset"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_Dataset</span></code></a>.</p>
@@ -517,7 +517,7 @@ Can be directly used with e.g. matplotlib.</p>
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset.Dataset1DProj">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1DProj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1DProj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset object representing 1D projections or slices of 2D spectra,
 which have been generated inside TopSpin.</p>
 <p>Inherits from: <a class="reference internal" href="#penguins.dataset._2D_RawDataMixin" title="penguins.dataset._2D_RawDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_RawDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_ProcDataMixin" title="penguins.dataset._1D_ProcDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_ProcDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._1D_PlotMixin" title="penguins.dataset._1D_PlotMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_1D_PlotMixin</span></code></a>,
@@ -603,7 +603,7 @@ Can be directly used with e.g. matplotlib.</p>
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset.Dataset2D">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset object representing 2D spectra.</p>
 <p>Inherits from: <a class="reference internal" href="#penguins.dataset._2D_RawDataMixin" title="penguins.dataset._2D_RawDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_RawDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._2D_ProcDataMixin" title="penguins.dataset._2D_ProcDataMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_ProcDataMixin</span></code></a>, <a class="reference internal" href="#penguins.dataset._2D_PlotMixin" title="penguins.dataset._2D_PlotMixin"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_2D_PlotMixin</span></code></a>,
 and <a class="reference internal" href="#penguins.dataset._Dataset" title="penguins.dataset._Dataset"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_Dataset</span></code></a>.</p>
@@ -823,7 +823,7 @@ same manner. The actual projection or sum can be accessed using
 <p><br /> </p>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset.Dataset1DProjVirtual">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1DProjVirtual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProjVirtual" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">Dataset1DProjVirtual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset1DProjVirtual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset representing 1D projections which have been constructed by
 calling the <a class="reference internal" href="#penguins.dataset.Dataset2D.project" title="penguins.dataset.Dataset2D.project"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">project</span></code></a>, <a class="reference internal" href="#penguins.dataset.Dataset2D.slice" title="penguins.dataset.Dataset2D.slice"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">slice</span></code></a>, or <a class="reference internal" href="#penguins.dataset.Dataset2D.sum" title="penguins.dataset.Dataset2D.sum"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">sum</span></code></a> methods (or their short forms) on
 <a class="reference internal" href="#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a> objects.</p>
@@ -917,7 +917,7 @@ the same.</p>
       &copy;2020–2021, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

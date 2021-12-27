@@ -178,11 +178,10 @@ def mkinset(ax: Any,
             show_zoom: bool = True,
             parent_corners: Tuple[str, str] = ("sw", "se"),
             inset_corners: Tuple[str, str] = ("sw", "se"),
-            plot_options: Optional[dict] = None,
             inset_options: Optional[dict] = None,
             ) -> Any:
-    """Constructs an inset on a given Axes instance and plots any staged
-    spectra on the inset Axes.
+    """Creates an inset Axes on a given Axes instance. Spectra can be staged on
+    this Axes, and `mkplot` can be called, just as usual.
 
     Parameters
     ----------
@@ -204,9 +203,6 @@ def mkinset(ax: Any,
         "northwest", "sw", "se", "ne", "nw"}.
     inset_corners : (str, str), optional
         Corners of the inset axes to draw the zoom lines to.
-    plot_options : dict, optional
-        Dictionary of options passed to `mkplot()`, which is in turn passed to
-        either |plot| or |contour|.
     inset_options : dict, optional
         Dictionary of options passed to |mark_inset|.
 
@@ -219,8 +215,6 @@ def mkinset(ax: Any,
     ax = ax or plt.gca()
     # Generate inset axes
     inset_ax = ax.inset_axes([*pos, *size], transform=transform)
-    plot_options = plot_options or {}
-    # mkplot(ax=inset_ax, xlabel="", ylabel="", **plot_options)
 
     # Convert the strings to numbers
     def convert_corner(ax: Any, cornerstr: str, is_inset: bool):

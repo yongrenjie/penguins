@@ -18,7 +18,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'penguins'
-copyright = '2020–2021, Jonathan Yong'
+copyright = '2020–2022, Jonathan Yong'
 author = 'Jonathan Yong'
 
 

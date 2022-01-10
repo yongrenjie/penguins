@@ -42,25 +42,35 @@ There are two functions to be used, although you should only really be using <a 
 <dl class="py function">
 <dt class="sig sig-object py" id="penguins.read">
 <span class="sig-prename descclassname"><span class="pre">penguins.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">procno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Dataset object from a spectrum folder, expno, and procno.</p>
+<dd><p>Create one or more Dataset objects from a spectrum folder, expno, and
+procno.</p>
 <p>The subclass of Dataset returned is determined by what files are available
 in the spectrum folder. It can be either <a class="reference internal" href="../dataset/#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="../dataset/#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, or
 <a class="reference internal" href="../dataset/#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a>.</p>
-<dl class="field-list simple">
+<p>To read in a list of datasets from the same directory, a list can be passed
+as one or both of the <em>expno</em> and <em>procno</em> arguments.</p>
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>path</strong><span class="classifier">str or pathlib.Path</span></dt><dd><p>Path to the spectrum name folder.</p>
 </dd>
-<dt><strong>expno</strong><span class="classifier">int</span></dt><dd><p>Expno of experiment of interest.</p>
+<dt><strong>expno</strong><span class="classifier">int or iterable thereof</span></dt><dd><p>Expno of experiment of interest (or multiple expnos for multiple
+experiments).</p>
 </dd>
-<dt><strong>procno</strong><span class="classifier">int (optional)</span></dt><dd><p>Procno of processed data. Defaults to 1.</p>
+<dt><strong>procno</strong><span class="classifier">int or iterable thereof (optional)</span></dt><dd><p>Procno of processed data (or multiple procnos for multiple processed
+data). Defaults to 1.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>Dataset</dt><dd><p>A <a class="reference internal" href="../dataset/#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="../dataset/#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, or <a class="reference internal" href="../dataset/#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a> object depending on the
+<dd class="field-even"><dl>
+<dt>Dataset or list thereof</dt><dd><p>A <a class="reference internal" href="../dataset/#penguins.dataset.Dataset1D" title="penguins.dataset.Dataset1D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1D</span></code></a>, <a class="reference internal" href="../dataset/#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a>, or <a class="reference internal" href="../dataset/#penguins.dataset.Dataset2D" title="penguins.dataset.Dataset2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset2D</span></code></a> object depending on the
 detected spectrum dimensionality.</p>
+<p>If more than one expno or procno is provided, then returns a list of
+the corresponding datasets. If more than one expno and more than one
+procno are provided, then returns all possible combinations of (expno,
+procno). In terms of the ordering, the procno is incremented on every
+iteration (more rapidly).</p>
 </dd>
 </dl>
 </dd>

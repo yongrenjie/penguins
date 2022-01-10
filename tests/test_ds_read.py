@@ -43,6 +43,13 @@ def test_read_api():
         dontexist = pg.read(datadir, 5)
         assert "no raw data was found" in str(exc_info)
 
+    # Test reading multiple datasets
+    expnos = range(22001, 22005)
+    noah4_datasets = pg.read(datadir, expnos)
+    for i, expno in enumerate(expnos):
+        assert isinstance(noah4_datasets[i], pg.dataset.Dataset2D)
+        assert noah4_datasets[i].path == datadir / str(expno) / "pdata" / "1"
+
 
 def test_read_instance():
     """
@@ -122,7 +129,7 @@ def test_read_lazy_2d():
     assert sz4 > sz3 + 1.5e7
 
 
-def test_read_nonexistent_data():
+def test_read_unprocessed_data():
     """Test that reading in unprocessed data works (and that appropriate errors
     are thrown when attempting to read the processed data)."""
     # This is a PSYCHE dataset that hasn't been processed. The raw data exists.

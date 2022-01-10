@@ -3,8 +3,9 @@ from __future__ import annotations
 import math
 from copy import deepcopy
 from collections import UserDict, abc
+import itertools
 from pathlib import Path
-from typing import (Any, Union, Tuple, Optional,
+from typing import (Any, Union, Tuple, Optional, Iterable,
                     TypeVar, Callable, overload)
 
 import numpy as np               # type: ignore
@@ -19,31 +20,57 @@ from .type_aliases import *
 
 @export
 def read(path: Union[str, Path],
-         expno: int,
-         procno: int = 1) -> TDatasetnD:
-    """Create a Dataset object from a spectrum folder, expno, and procno.
+         expno: Union[int, Iterable[int]],
+         procno: Union[int, Iterable[int]] = 1
+         ) -> Union[TDatasetnD, List[TDatasetnD]]:
+    """Create one or more Dataset objects from a spectrum folder, expno, and
+    procno.
 
     The subclass of Dataset returned is determined by what files are available
     in the spectrum folder. It can be either `Dataset1D`, `Dataset1DProj`, or
     `Dataset2D`.
 
+    To read in a list of datasets from the same directory, a list can be passed
+    as one or both of the *expno* and *procno* arguments.
+
     Parameters
     ----------
     path : str or pathlib.Path
         Path to the spectrum name folder.
-    expno : int
-        Expno of experiment of interest.
-    procno : int (optional)
-        Procno of processed data. Defaults to 1.
+    expno : int or iterable thereof
+        Expno of experiment of interest (or multiple expnos for multiple
+        experiments).
+    procno : int or iterable thereof (optional)
+        Procno of processed data (or multiple procnos for multiple processed
+        data). Defaults to 1.
 
     Returns
     -------
-    Dataset
+    Dataset or list thereof
         A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
         detected spectrum dimensionality.
+
+        If more than one expno or procno is provided, then returns a list of
+        the corresponding datasets. If more than one expno and more than one
+        procno are provided, then returns all possible combinations of (expno,
+        procno). In terms of the ordering, the procno is incremented on every
+        iteration (more rapidly).
     """
-    p = Path(path) / str(expno) / "pdata" / str(procno)
-    return read_abs(p)
+    # One expno and one procno
+    if isinstance(expno, int) and isinstance(procno, int):
+        return read_abs(Path(path) / str(expno) / "pdata" / str(procno))
+
+    # At least one iterable passed
+    else:
+        # Convert any ints to iterables
+        if isinstance(expno, int):
+            expno = [expno]
+        if isinstance(procno, int):
+            procno = [procno]
+        # Return the datasets as a list. Since the actual NMR data is already
+        # loaded lazily, there's little point in producing a generator.
+        return [read_abs(Path(path) / str(e) / "pdata" / str(p))
+                for (e, p) in itertools.product(expno, procno)]
 
 
 @export

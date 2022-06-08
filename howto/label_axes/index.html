@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Labelling axes &#8212; penguins  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Reading NUS data" href="../nus/" />
+    <link rel="prev" title="Changing the axes layouts" href="../move_axes/" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="labelling-axes">
+<h1>Labelling axes<a class="headerlink" href="#labelling-axes" title="Permalink to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">penguins</span></code> provides a <a class="reference internal" href="../../reference/plotting/#penguins.label_axes" title="penguins.label_axes"><code class="xref any py py-func docutils literal notranslate"><span class="pre">label_axes()</span></code></a> function, which expects a list (or other iterable) of Axes objects.</p>
+<p>For a typical “publication-style” labelling, the syntax can appear a bit unusual at first:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="o">...</span>  <span class="c1"># do your plotting here</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">label_axes</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">fstr</span><span class="o">=</span><span class="s2">&quot;(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;semibold&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fstr</span></code> parameter is a string which is then <em>formatted</em> with the label you are using, meaning that the curly braces <code class="docutils literal notranslate"><span class="pre">{}</span></code> are replaced with the label text.
+By default, <code class="docutils literal notranslate"><span class="pre">penguins</span></code> uses alphabetical labels, i.e. abcdef… although numeric labels and Roman numerals are also available.
+So, the curly braces <em>inside</em> the parentheses are replaced with this label and so what <code class="docutils literal notranslate"><span class="pre">penguins</span></code> gives you is labels which read <code class="docutils literal notranslate"><span class="pre">(a)</span></code>, <code class="docutils literal notranslate"><span class="pre">(b)</span></code>, and so on.</p>
+<p>Other parameters such as <code class="docutils literal notranslate"><span class="pre">fontweight</span></code> are just passed directly to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.5.2)"><code class="xref any docutils literal notranslate"><span class="pre">ax.text()</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">label_axes</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">fstr</span><span class="o">=</span><span class="s2">&quot;(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;semibold&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/label_example1.svg" class="plot-directive" src="../../_images/label_example1.svg" /></figure>
+<p>If you don’t pass the <code class="docutils literal notranslate"><span class="pre">fstr</span></code> parameter, then by default only the label itself is printed (i.e. the letters) without anything around it.
+This style also sees some use in publications.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">label_axes</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;semibold&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/label_example2.svg" class="plot-directive" src="../../_images/label_example2.svg" /></figure>
+<p>The documentation for <a class="reference internal" href="../../reference/plotting/#penguins.label_axes" title="penguins.label_axes"><code class="xref any py py-func docutils literal notranslate"><span class="pre">label_axes()</span></code></a> provides a few more options which you can use to customise the labelling (e.g. if you want to start from a different letter/number).</p>
+</section>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../move_axes/" title="Previous document">Changing the axes layouts</a>
+        </li>
+        <li>
+          <a href="../nus/" title="Next document">Reading NUS data</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../">penguins</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">How-tos</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../move_axes/">Changing the axes layouts</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Labelling axes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nus/">Reading NUS data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../add_text/">Adding arbitrary text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../boilerplate/">Reducing boilerplate code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../#other-planned-topics">Other planned topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explanations/">Explanations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li><a href="../">How-tos</a><ul>
+      <li>Previous: <a href="../move_axes/" title="previous chapter">Changing the axes layouts</a></li>
+      <li>Next: <a href="../nus/" title="next chapter">Reading NUS data</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020–2022, Jonathan Yong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/howto/label_axes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

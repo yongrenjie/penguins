@@ -6,6 +6,7 @@ How-tos
    :maxdepth: 2
 
    move_axes
+   label_axes
    nus
    add_text
    boilerplate

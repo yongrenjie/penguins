@@ -7,17 +7,14 @@ How-tos
 
    move_axes
    nus
+   add_text
+   boilerplate
 
 Other planned topics
 --------------------
 
-* Add text
-
-* NUS data
 
 * Gridspec
 
 * How to make a legend for a figure and not axes? (feat. ``cleanup_figure()``)
-
-* How to reduce boilerplate code?
 

@@ -6,6 +6,6 @@ fig, ax = pg.mkplot()
 
 ax.text(x=0.5, y=0.5, s="A peak")
 
-ax.text(x=0.5, y=0.5, s="Middle", transform=ax.transAxes
+ax.text(x=0.5, y=0.5, s="Middle", transform=ax.transAxes)
 
 pg.show()

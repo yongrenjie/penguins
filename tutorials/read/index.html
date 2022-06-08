@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Tutorial 1: Reading data &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
@@ -37,13 +38,13 @@
           <div class="body" role="main">
             
   <section id="tutorial-1-reading-data">
-<h1>Tutorial 1: Reading data<a class="headerlink" href="#tutorial-1-reading-data" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial 1: Reading data<a class="headerlink" href="#tutorial-1-reading-data" title="Permalink to this heading">¶</a></h1>
 <p>In TopSpin, each NMR experiment has its own “expno”, and can be found in a folder numbered by its expno.
 If you downloaded the penguins test data, you will find that it contains two such numbered datasets, which correspond to different “expnos” in TopSpin.</p>
 <p>Of course, feel free to use your own data: your top-level data directory should also contain one or more numbered expno folders, and each of these datasets must have already been processed in TopSpin.</p>
 <hr class="docutils" />
 <section id="importing-spectra-pg-read">
-<h2>Importing spectra: pg.read()<a class="headerlink" href="#importing-spectra-pg-read" title="Permalink to this headline">¶</a></h2>
+<h2>Importing spectra: pg.read()<a class="headerlink" href="#importing-spectra-pg-read" title="Permalink to this heading">¶</a></h2>
 <p>Spectra can be imported using the <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function.
 <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> takes three parameters: the path to the <em>spectrum folder</em>, the <em>expno</em>, and the <em>procno</em>.</p>
 <p>We are going to assume here that you are using the penguins test data, but if you aren’t, you just need to adapt these three arguments accordingly.
@@ -72,7 +73,7 @@ If you call the <a class="reference internal" href="../../reference/reading/#pen
 </section>
 <hr class="docutils" />
 <section id="accessing-spectrum-parameters">
-<h2>Accessing spectrum parameters<a class="headerlink" href="#accessing-spectrum-parameters" title="Permalink to this headline">¶</a></h2>
+<h2>Accessing spectrum parameters<a class="headerlink" href="#accessing-spectrum-parameters" title="Permalink to this heading">¶</a></h2>
 <p>Once imported using <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>, spectrum parameters can be accessed using dictionary-like syntax.
 All parameters are referred to using their standard Bruker names, just as you would type them in the TopSpin command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span>
@@ -166,7 +167,7 @@ The first always refers to the indirect-dimension (<span class="math notranslate
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -183,7 +184,7 @@ The first always refers to the indirect-dimension (<span class="math notranslate
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

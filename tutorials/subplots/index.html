@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Tutorial 6: Subplots &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
@@ -36,13 +37,13 @@
           <div class="body" role="main">
             
   <section id="tutorial-6-subplots">
-<h1>Tutorial 6: Subplots<a class="headerlink" href="#tutorial-6-subplots" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial 6: Subplots<a class="headerlink" href="#tutorial-6-subplots" title="Permalink to this heading">¶</a></h1>
 <p>Many of the most useful plots involve having multiple plots in one figure, for example to present a series of spectra, or to compare multiple different spectra.
 In this tutorial, we will cover the basic usage of <em>subplots</em>.
 We will assume you have already read in the <code class="docutils literal notranslate"><span class="pre">data_1d</span></code> and <code class="docutils literal notranslate"><span class="pre">data_2d</span></code> objects (either using the test data provided, or with your own data).</p>
 <hr class="docutils" />
 <section id="getting-to-know-subplots2d">
-<h2>Getting to know subplots2d()<a class="headerlink" href="#getting-to-know-subplots2d" title="Permalink to this headline">¶</a></h2>
+<h2>Getting to know subplots2d()<a class="headerlink" href="#getting-to-know-subplots2d" title="Permalink to this heading">¶</a></h2>
 <p>The first part of creating a plot with multiple subplots is to first specify the layout of the subplots.
 This can be done using the <a class="reference internal" href="../../reference/plotting/#penguins.subplots2d" title="penguins.subplots2d"><code class="xref any py py-func docutils literal notranslate"><span class="pre">subplots2d</span></code></a> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots2d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    <span class="c1"># creates a 2-by-2 grid of subplots</span>
@@ -69,7 +70,7 @@ penguins also provides a direct wrapper, <a class="reference internal" href="../
 </section>
 <hr class="docutils" />
 <section id="the-ax-keyword-argument">
-<h2>The ax keyword argument<a class="headerlink" href="#the-ax-keyword-argument" title="Permalink to this headline">¶</a></h2>
+<h2>The ax keyword argument<a class="headerlink" href="#the-ax-keyword-argument" title="Permalink to this heading">¶</a></h2>
 <p>So far, we have carried out staging and construction on a single Axes.
 But wait! We didn’t actually <em>specify</em> that we wanted this.
 It turns out that if you don’t specify it, penguins takes care of automatically setting up a new Axes for us to plot on, which is why the previous plots worked perfectly well.</p>
@@ -93,7 +94,7 @@ We therefore need to pass the <code class="docutils literal notranslate"><span c
 </section>
 <hr class="docutils" />
 <section id="for-loops-and-zip">
-<h2>For loops and zip()<a class="headerlink" href="#for-loops-and-zip" title="Permalink to this headline">¶</a></h2>
+<h2>For loops and zip()<a class="headerlink" href="#for-loops-and-zip" title="Permalink to this heading">¶</a></h2>
 <p>Typing this out by hand is pretty inefficient.
 It is far better to use a for loop which accomplishes the same thing.</p>
 <p>Recall that <code class="docutils literal notranslate"><span class="pre">axs</span></code> was a 2D array of Axes instances.
@@ -133,7 +134,7 @@ As another example, you can zip together a list of datasets with <code class="do
 </section>
 <hr class="docutils" />
 <section id="labelling-axes">
-<h2>Labelling axes<a class="headerlink" href="#labelling-axes" title="Permalink to this headline">¶</a></h2>
+<h2>Labelling axes<a class="headerlink" href="#labelling-axes" title="Permalink to this heading">¶</a></h2>
 <p>When preparing graphics for publication, a common requirement is that each subplot must be labelled with a letter (for example).
 The <a class="reference internal" href="../../reference/plotting/#penguins.label_axes" title="penguins.label_axes"><code class="xref any py py-func docutils literal notranslate"><span class="pre">label_axes</span></code></a> function takes care of this quite simply.
 It takes a list of <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>, and a format string <code class="docutils literal notranslate"><span class="pre">fstr</span></code> in which the curly braces are replaced with the relevant character.
@@ -225,7 +226,7 @@ Further options for customisation can be found in the reference documentation.</
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -242,7 +243,7 @@ Further options for customisation can be found in the reference documentation.</
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Reference: Datasets &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="reference-datasets">
-<h1>Reference: Datasets<a class="headerlink" href="#reference-datasets" title="Permalink to this headline">¶</a></h1>
+<h1>Reference: Datasets<a class="headerlink" href="#reference-datasets" title="Permalink to this heading">¶</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Since you’re here, you probably deserve to know how the source code is organised.
@@ -63,7 +64,7 @@ class defines the dictionary-style lookup of NMR parameters.</p>
 <p>This should <strong>never</strong> be instantiated directly! Use <a class="reference internal" href="../reading/#penguins.read" title="penguins.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>
 for that instead.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>pars</strong><span class="classifier">_parDict</span></dt><dd><p>Case-insensitive dictionary in which the parameters are stored. See the
 <a class="reference internal" href="#penguins.dataset._parDict" title="penguins.dataset._parDict"><code class="xref any py py-class docutils literal notranslate"><span class="pre">_parDict</span></code></a> documentation for more details. This should never be
@@ -101,7 +102,7 @@ dimensions at one go).</p>
 
 <p><br /> </p>
 <section id="d-mixins">
-<h2>1D mixins<a class="headerlink" href="#d-mixins" title="Permalink to this headline">¶</a></h2>
+<h2>1D mixins<a class="headerlink" href="#d-mixins" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._1D_RawDataMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
@@ -109,7 +110,7 @@ dimensions at one go).</p>
 files. Also contains a few private methods which initialise (for example)
 the paths to the parameter files.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">fid</span></code><span class="classifier">ndarray</span></dt><dd><p>Complex-valued FID.</p>
 </dd>
@@ -121,7 +122,7 @@ the paths to the parameter files.</p>
 <span class="sig-name descname"><span class="pre">raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shift_grpdly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset._1D_RawDataMixin.raw_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the FID as a complex <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>shift_grpdly</strong><span class="classifier">bool, default False</span></dt><dd><p>Whether to circularly shift the group delay to the end of the FID,
 i.e. take the first N points (where N is given by the TopSpin
@@ -140,7 +141,7 @@ GRPDLY parameter) and move them to the end of the FID.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_1D_ProcDataMixin</span></span><a class="headerlink" href="#penguins.dataset._1D_ProcDataMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behaviour that is applicable for 1D processed data.</p>
 <dl class="field-list">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>real</strong><span class="classifier">ndarray</span></dt><dd><p>Real-valued <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> containing the real spectrum. <code class="docutils literal notranslate"><span class="pre">real[0]</span></code>
 contains the left-most point of the spectrum, i.e. the greatest
@@ -166,7 +167,7 @@ performed, then the “real” part is actually the magnitude mode
 spectrum. In short, the “real” part is whatever is stored in the <code class="docutils literal notranslate"><span class="pre">1r</span></code>
 file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds can be specified as a string <code class="docutils literal notranslate"><span class="pre">lower..upper</span></code> or a tuple of
 floats <code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code>, upon which the appropriate slice of the
@@ -178,7 +179,7 @@ imaginary part.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>ndarray</dt><dd><p>The spectrum or the slice of interest.</p>
 </dd>
@@ -196,7 +197,7 @@ the region of <em>(peak - margin)</em> to <em>(peak + margin)</em>, or manually 
 the <em>bounds</em> parameter. Note that specifying <em>(peak, margin)</em> overrules
 the <em>bounds</em> parameter if both are passed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>peak</strong><span class="classifier">float, optional</span></dt><dd><p>The chemical shift of the peak of interest.</p>
 </dd>
@@ -212,7 +213,7 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>float</dt><dd><p>The value of the integral.</p>
 </dd>
@@ -261,7 +262,7 @@ Dataset1D object.</p>
 <p><br /> </p>
 </section>
 <section id="id1">
-<h2>2D mixins<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>2D mixins<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="penguins.dataset._2D_RawDataMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">penguins.dataset.</span></span><span class="sig-name descname"><span class="pre">_2D_RawDataMixin</span></span><a class="headerlink" href="#penguins.dataset._2D_RawDataMixin" title="Permalink to this definition">¶</a></dt>
@@ -288,7 +289,7 @@ argument.</p>
 return the magnitude mode spectrum (i.e. it returns whatever is in
 TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</span></code> file).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>f1_bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds for the indirect dimension.</p>
 </dd>
@@ -298,7 +299,7 @@ TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</sp
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>ndarray</dt><dd><p>The processed 2D data, or the section of interest.</p>
 </dd>
@@ -316,7 +317,7 @@ TopSpin’s <code class="docutils literal notranslate"><span class="pre">2rr</sp
 now need to be specified as tuples of <em>(f1_shift, f2_shift)</em>, or
 <em>bounds</em> must be specified as <em>f1_bounds</em> and <em>f2_bounds</em> separately.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>peak</strong><span class="classifier">(float, float), optional</span></dt><dd><p>The chemical shifts of the peak of interest.</p>
 </dd>
@@ -337,7 +338,7 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>float</dt><dd><p>The value of the integral.</p>
 </dd>
@@ -353,7 +354,7 @@ points in the region, <code class="docutils literal notranslate"><span class="pr
 <code class="docutils literal notranslate"><span class="pre">(upper,</span> <span class="pre">lower)</span></code> to a slice object, which can be used to slice a
 spectrum <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">int from {0, 1}</span></dt><dd><p>0 for indirect dimension, 1 for direct dimension.</p>
 </dd>
@@ -361,7 +362,7 @@ spectrum <a class="reference external" href="https://numpy.org/doc/stable/refere
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>slice</dt><dd><p>Slice object for the requested axis.</p>
 </dd>
@@ -376,7 +377,7 @@ spectrum <a class="reference external" href="https://numpy.org/doc/stable/refere
 <dd><p>Calculates the magnitude mode spectrum along the specified axis and
 returns it as a new Dataset2D object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">int from {0, 1}</span></dt><dd><p>The axis along which to perform the magnitude calculation. 0 for
 f1, or 1 for f2.</p>
@@ -432,7 +433,7 @@ efficiency reasons.</p>
 <p><br /> </p>
 </section>
 <section id="actual-dataset-classes">
-<h2>Actual Dataset classes<a class="headerlink" href="#actual-dataset-classes" title="Permalink to this headline">¶</a></h2>
+<h2>Actual Dataset classes<a class="headerlink" href="#actual-dataset-classes" title="Permalink to this heading">¶</a></h2>
 <p>These are the classes that the user will see.
 Even then, much of the interface is abstracted away: for example, the staging and plotting functions have a unified interface that delegate to different methods behind the scenes depending on the object that is being staged / plotted.</p>
 <dl class="py class">
@@ -447,13 +448,13 @@ and <a class="reference internal" href="#penguins.dataset._Dataset" title="pengu
 <dd><p>Converts a chemical shift into the index which is closest to the
 chemical shift.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>ppm</strong><span class="classifier">float (optional)</span></dt><dd><p>The chemical shift of interest.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>index</strong><span class="classifier">int</span></dt><dd><p>The index, or None if ppm is None.</p>
 </dd>
@@ -469,13 +470,13 @@ chemical shift.</p>
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>-values for plotting.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds specified in the usual manner.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>scale</strong><span class="classifier">ndarray</span></dt><dd><p>The appropriate slice of chemical shifts.</p>
 </dd>
@@ -490,13 +491,13 @@ spectrum, in descending order of chemical shift.</p>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds specified in the usual manner.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>scale</strong><span class="classifier">ndarray</span></dt><dd><p>The appropriate slice of frequencies.</p>
 </dd>
@@ -533,13 +534,13 @@ the correct projection axis.</p>
 <dd><p>Converts a chemical shift into the index which is closest to the
 chemical shift.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>ppm</strong><span class="classifier">float (optional)</span></dt><dd><p>The chemical shift of interest.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>index</strong><span class="classifier">int</span></dt><dd><p>The index, or None if ppm is None.</p>
 </dd>
@@ -555,13 +556,13 @@ chemical shift.</p>
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>-values for plotting.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds specified in the usual manner.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>scale</strong><span class="classifier">ndarray</span></dt><dd><p>The appropriate slice of chemical shifts.</p>
 </dd>
@@ -576,13 +577,13 @@ spectrum, in descending order of chemical shift.</p>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>bounds</strong><span class="classifier">str or (float, float), optional</span></dt><dd><p>Bounds specified in the usual manner.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>scale</strong><span class="classifier">ndarray</span></dt><dd><p>The appropriate slice of frequencies.</p>
 </dd>
@@ -613,7 +614,7 @@ and <a class="reference internal" href="#penguins.dataset._Dataset" title="pengu
 <dd><p>Converts a chemical shift into the index which is closest to the
 chemical shift.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">int</span></dt><dd><p>0 for f1 (indirect dimension), 1 for f2 (direct dimension).</p>
 </dd>
@@ -621,7 +622,7 @@ chemical shift.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>index</strong><span class="classifier">int</span></dt><dd><p>The index, or None if ppm is None.</p>
 </dd>
@@ -637,7 +638,7 @@ chemical shift.</p>
 spectrum, in descending order of chemical shift.</p>
 <p>This is used in generating the <em>x</em>- and <em>y</em>-values for plotting.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">int</span></dt><dd><p>0 for f1 (indirect dimension), 1 for f2 (direct dimension).</p>
 </dd>
@@ -645,7 +646,7 @@ spectrum, in descending order of chemical shift.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>scale</strong><span class="classifier">ndarray</span></dt><dd><p>The appropriate slice of chemical shifts.</p>
 </dd>
@@ -660,7 +661,7 @@ spectrum, in descending order of chemical shift.</p>
 <dd><p>Constructs an <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> of the frequencies (in units of Hz) at each
 point of the spectrum, in descending order of frequency.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">int</span></dt><dd><p>0 for f1 (indirect dimension), 1 for f2 (direct dimension).</p>
 </dd>
@@ -668,7 +669,7 @@ point of the spectrum, in descending order of frequency.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>scale</strong><span class="classifier">ndarray</span></dt><dd><p>The appropriate slice of frequencies.</p>
 </dd>
@@ -682,7 +683,7 @@ point of the spectrum, in descending order of frequency.</p>
 <span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a 1D projection from a 2D spectrum.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>axis</strong><span class="classifier">int or str from {0, “column”, 1, “row”}</span></dt><dd><p>The axis to project <em>onto</em>, 0 / “column” being f1 and 1 / “row”
 being f2. This can be very confusing, so an example will help.</p>
@@ -703,7 +704,7 @@ to the entire range of chemical shifts along the collapsed axis.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>proj</strong><span class="classifier">Dataset1DProjVirtual</span></dt><dd><p>A <a class="reference internal" href="#penguins.dataset.Dataset1DProjVirtual" title="penguins.dataset.Dataset1DProjVirtual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProjVirtual</span></code></a> object that is similar in every way to a
 typical <a class="reference internal" href="#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a> and can be plotted, integrated, etc. in the
@@ -744,7 +745,7 @@ same manner. The actual projection can be accessed using
 <span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#penguins.dataset.Dataset2D.sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a 1D sum from a 2D spectrum.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">int or str from {0, “column”, 1, “row”}</span></dt><dd><p>The axis to sum onto. <code class="docutils literal notranslate"><span class="pre">0</span></code> / <code class="docutils literal notranslate"><span class="pre">column</span></code> is f1 (i.e. adding up
 multiple columns) and <code class="docutils literal notranslate"><span class="pre">1</span></code> / <code class="docutils literal notranslate"><span class="pre">row</span></code> is f2 (i.e. adding up
@@ -758,7 +759,7 @@ to the entire range of chemical shifts along the collapsed axis.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>proj</strong><span class="classifier">Dataset1DProjVirtual</span></dt><dd><p>A <a class="reference internal" href="#penguins.dataset.Dataset1DProjVirtual" title="penguins.dataset.Dataset1DProjVirtual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProjVirtual</span></code></a> object that is similar in every way to a
 typical <a class="reference internal" href="#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a> and can be plotted, integrated, etc. in the
@@ -788,7 +789,7 @@ same manner. The actual sum can be accessed using
 <dd><p>Extract a 1D slice from a 2D spectrum. You must either specify both
 <em>axis</em> and <em>ppm</em> arguments, or <em>f1</em> only, or <em>f2</em> only.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>axis</strong><span class="classifier">str from {“column”, “row”}, optional</span></dt><dd><p>Axis to slice along. To extract a column (i.e. at one particular
 value of f2), use <code class="docutils literal notranslate"><span class="pre">column</span></code>, and vice versa.</p>
@@ -806,7 +807,7 @@ used together with <em>f1</em>.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>proj</strong><span class="classifier">Dataset1DProjVirtual</span></dt><dd><p>A <a class="reference internal" href="#penguins.dataset.Dataset1DProjVirtual" title="penguins.dataset.Dataset1DProjVirtual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProjVirtual</span></code></a> object that is similar in every way to a
 typical <a class="reference internal" href="#penguins.dataset.Dataset1DProj" title="penguins.dataset.Dataset1DProj"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Dataset1DProj</span></code></a> and can be plotted, integrated, etc. in the
@@ -900,7 +901,7 @@ the same.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -917,7 +918,7 @@ the same.</p>
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

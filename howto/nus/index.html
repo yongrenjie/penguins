@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Reading NUS data &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,11 +13,12 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="Explanations" href="../../explanations/" />
+    <link rel="next" title="Adding arbitrary text" href="../add_text/" />
     <link rel="prev" title="Changing the axes layouts" href="../move_axes/" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="reading-nus-data">
-<h1>Reading NUS data<a class="headerlink" href="#reading-nus-data" title="Permalink to this headline">¶</a></h1>
+<h1>Reading NUS data<a class="headerlink" href="#reading-nus-data" title="Permalink to this heading">¶</a></h1>
 <p>Non-uniform sampling is an acquisition method where an incomplete set of <em>t</em><sub>1</sub> increments are acquired. The reconstruction of the full spectrum can be accomplished by several methods, and if signal-to-noise is not limiting, can be used to greatly speed up acquisition of multidimensional spectra.</p>
 <p>From penguins’ point of view, once they have been processed, there is almost no difference between NUS spectra and uniformly sampled spectra. However, you may need to watch out for the <code class="docutils literal notranslate"><span class="pre">TD</span></code> parameter:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># you can get this dataset from</span>
@@ -70,7 +71,7 @@
           <a href="../move_axes/" title="Previous document">Changing the axes layouts</a>
         </li>
         <li>
-          <a href="../../explanations/" title="Next document">Explanations</a>
+          <a href="../add_text/" title="Next document">Adding arbitrary text</a>
           &rarr;
         </li>
     </ul>
@@ -97,6 +98,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../">How-tos</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../move_axes/">Changing the axes layouts</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Reading NUS data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../add_text/">Adding arbitrary text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../boilerplate/">Reducing boilerplate code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../#other-planned-topics">Other planned topics</a></li>
 </ul>
 </li>
@@ -110,7 +113,7 @@
   <li><a href="../../">Documentation overview</a><ul>
   <li><a href="../">How-tos</a><ul>
       <li>Previous: <a href="../move_axes/" title="previous chapter">Changing the axes layouts</a></li>
-      <li>Next: <a href="../../explanations/" title="next chapter">Explanations</a></li>
+      <li>Next: <a href="../add_text/" title="next chapter">Adding arbitrary text</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -124,7 +127,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -141,7 +144,7 @@
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

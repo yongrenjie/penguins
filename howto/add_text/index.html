@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Adding arbitrary text &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,10 +13,13 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Reducing boilerplate code" href="../boilerplate/" />
+    <link rel="prev" title="Reading NUS data" href="../nus/" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -34,11 +37,28 @@
           <div class="body" role="main">
             
   <section id="adding-arbitrary-text">
-<h1>Adding arbitrary text<a class="headerlink" href="#adding-arbitrary-text" title="Permalink to this headline">¶</a></h1>
-<p>This uses the <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.5.2)"><code class="xref any docutils literal notranslate"><span class="pre">ax.text()</span></code></a> function.
-Note that writing <code class="docutils literal notranslate"><span class="pre">x=0.5,</span> <span class="pre">y=0.5</span></code> refers to so-called <em>data</em> coordinates, i.e. 0.5 ppm in both dimensions.
-This is most straightforward for labelling 2D data.
-If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal notranslate"><span class="pre">x=0.5,</span> <span class="pre">y=0.5</span></code> to refer to the middle of the spectrum, then you need to pass an extra argument <code class="docutils literal notranslate"><span class="pre">transform=ax.transAxes</span></code> to <code class="xref any docutils literal notranslate"><span class="pre">text()</span></code>.</p>
+<h1>Adding arbitrary text<a class="headerlink" href="#adding-arbitrary-text" title="Permalink to this heading">¶</a></h1>
+<p>This uses the <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.5.2)"><code class="xref any docutils literal notranslate"><span class="pre">Axes.text()</span></code></a> function.
+Note that in the script below, writing <code class="docutils literal notranslate"><span class="pre">x=0.5,</span> <span class="pre">y=0.5</span></code> refers to so-called <em>data</em> coordinates, i.e. 0.5 ppm in both dimensions.
+This is most straightforward for labelling 2D data.</p>
+<p>If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal notranslate"><span class="pre">x=0.5,</span> <span class="pre">y=0.5</span></code> to refer to the middle of the spectrum, then you need to pass an extra argument <code class="docutils literal notranslate"><span class="pre">transform=ax.transAxes</span></code> to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.5.2)"><code class="xref any docutils literal notranslate"><span class="pre">text()</span></code></a>, where <code class="xref any docutils literal notranslate"><span class="pre">ax</span></code> is the Axes instance you are plotting on.</p>
+<p>Coordinate transforms are covered very thoroughly in the <span class="xref std std-doc">Matplotlib transforms tutorial</span>.</p>
+<p>Other keyword arguments (to control e.g. colour, font weight, or alignment) can be found in the Matplotlib documentation for <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.5.2)"><code class="xref any docutils literal notranslate"><span class="pre">text()</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="n">data_2d</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">levels</span><span class="o">=</span><span class="mf">2e5</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="s2">&quot;A peak&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="s2">&quot;Middle&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/add_text.svg" class="plot-directive" src="../../_images/add_text.svg" /></figure>
 </section>
 
 
@@ -47,6 +67,14 @@ If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal 
                 &nbsp;
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="../nus/" title="Previous document">Reading NUS data</a>
+        </li>
+        <li>
+          <a href="../boilerplate/" title="Next document">Reducing boilerplate code</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
               </div>
@@ -65,10 +93,17 @@ If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal 
 
 
 <h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../install/">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../">How-tos</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">How-tos</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../move_axes/">Changing the axes layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nus/">Reading NUS data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Adding arbitrary text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../boilerplate/">Reducing boilerplate code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../#other-planned-topics">Other planned topics</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../explanations/">Explanations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/">Reference</a></li>
 </ul>
@@ -77,6 +112,10 @@ If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal 
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../">Documentation overview</a><ul>
+  <li><a href="../">How-tos</a><ul>
+      <li>Previous: <a href="../nus/" title="previous chapter">Reading NUS data</a></li>
+      <li>Next: <a href="../boilerplate/" title="next chapter">Reducing boilerplate code</a></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>
@@ -89,7 +128,7 @@ If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal 
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -106,7 +145,7 @@ If you want <em>axes</em> coordinates, i.e. using <code class="docutils literal 
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

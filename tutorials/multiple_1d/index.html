@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Tutorial 4: Plotting multiple 1Ds &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="tutorial-4-plotting-multiple-1ds">
-<h1>Tutorial 4: Plotting multiple 1Ds<a class="headerlink" href="#tutorial-4-plotting-multiple-1ds" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial 4: Plotting multiple 1Ds<a class="headerlink" href="#tutorial-4-plotting-multiple-1ds" title="Permalink to this heading">¶</a></h1>
 <p>It is quite common to want to plot multiple 1D spectra on the same plot: in fact, so common that we will dedicate an entire introductory tutorial to it.</p>
 <p>Because we will be doing quite a number of repetitive calls here, I suggest moving these commands into a Python script (or a Jupyter notebook), instead of typing them into the interactive REPL.
 All of the following code examples are scripts which can be run from inside the <code class="docutils literal notranslate"><span class="pre">nmrdata</span></code> folder.
@@ -51,7 +52,7 @@ You can put the script anywhere you like, but will have to adjust the path to th
 You are, of course, free to substitute this with any of your own data.</p>
 <hr class="docutils" />
 <section id="staging-multiple-spectra">
-<h2>Staging multiple spectra<a class="headerlink" href="#staging-multiple-spectra" title="Permalink to this headline">¶</a></h2>
+<h2>Staging multiple spectra<a class="headerlink" href="#staging-multiple-spectra" title="Permalink to this heading">¶</a></h2>
 <p>This is easy: just stage them with any of the options described in <a class="reference internal" href="../customise_1d/"><span class="doc">Tutorial 3: Customising 1D plots</span></a>.
 For the purposes of this tutorial, let’s focus on the multiplet at 4.63 ppm.
 The coupling is barely resolved in the <code class="docutils literal notranslate"><span class="pre">em</span></code> spectrum, but can be seen more clearly in the <code class="docutils literal notranslate"><span class="pre">gm</span></code> spectrum.
@@ -67,7 +68,7 @@ Add the following lines to your script, then run it:</p>
 </section>
 <hr class="docutils" />
 <section id="adding-a-legend">
-<h2>Adding a legend<a class="headerlink" href="#adding-a-legend" title="Permalink to this headline">¶</a></h2>
+<h2>Adding a legend<a class="headerlink" href="#adding-a-legend" title="Permalink to this heading">¶</a></h2>
 <p>To add a plot legend, do one of the following:</p>
 <ol class="arabic simple">
 <li><p>Pass the legend labels as the <code class="docutils literal notranslate"><span class="pre">label</span></code> keyword argument when staging. penguins will automatically create a legend if any of the plots are staged with the <code class="docutils literal notranslate"><span class="pre">label</span></code> keyword.</p></li>
@@ -88,7 +89,7 @@ The f-string syntax in Python 3.7+ is especially useful for this: for example, <
 </section>
 <hr class="docutils" />
 <section id="horizontal-and-vertical-offsets">
-<h2>Horizontal and vertical offsets<a class="headerlink" href="#horizontal-and-vertical-offsets" title="Permalink to this headline">¶</a></h2>
+<h2>Horizontal and vertical offsets<a class="headerlink" href="#horizontal-and-vertical-offsets" title="Permalink to this heading">¶</a></h2>
 <p>TopSpin’s multiple display mode has a few settings which allow you to stack spectra or to shift them by a constant amount, which is really useful for plotting.
 However, these are not <em>spectrum-specific</em> options: they are options which affect the <em>entire plot</em>.
 That’s why these options will be passed to <code class="docutils literal notranslate"><span class="pre">mkplot()</span></code>, rather than <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.</p>
@@ -118,7 +119,7 @@ This is commonly used, for example, when plotting a series of related spectra.</
 </section>
 <hr class="docutils" />
 <section id="voffset-and-stacked">
-<h2>voffset and stacked<a class="headerlink" href="#voffset-and-stacked" title="Permalink to this headline">¶</a></h2>
+<h2>voffset and stacked<a class="headerlink" href="#voffset-and-stacked" title="Permalink to this heading">¶</a></h2>
 <p>We’re going to do something weird for a while.
 Stage <code class="docutils literal notranslate"><span class="pre">em</span></code> one time and <code class="docutils literal notranslate"><span class="pre">gm</span></code> three times (this effectively creates a few copies of <code class="docutils literal notranslate"><span class="pre">gm</span></code> to be plotted), then call <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> with <code class="docutils literal notranslate"><span class="pre">voffset=1.1</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">em</span><span class="o">.</span><span class="n">stage</span><span class="p">();</span> <span class="n">gm</span><span class="o">.</span><span class="n">stage</span><span class="p">();</span> <span class="n">gm</span><span class="o">.</span><span class="n">stage</span><span class="p">();</span> <span class="n">gm</span><span class="o">.</span><span class="n">stage</span><span class="p">()</span>
@@ -214,7 +215,7 @@ penguins lets you do this quickly using the <code class="docutils literal notran
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -231,7 +232,7 @@ penguins lets you do this quickly using the <code class="docutils literal notran
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

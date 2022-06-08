@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Penguins’ Plot Paradigm &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="penguins-plot-paradigm">
-<h1>Penguins’ Plot Paradigm<a class="headerlink" href="#penguins-plot-paradigm" title="Permalink to this headline">¶</a></h1>
+<h1>Penguins’ Plot Paradigm<a class="headerlink" href="#penguins-plot-paradigm" title="Permalink to this heading">¶</a></h1>
 <p>It should come as no surprise that penguins is essentially a wrapper around matplotlib.
 The aim of this page is to (try to) explain a little bit of how penguins works behind the scenes, utilising matplotlib in each plotting stage.</p>
 <p>One of the general principles that I have tried to adhere to is to minimise, or even completely obviate, the need for the user to explicitly import matplotlib.
@@ -46,7 +47,7 @@ That means that should you want to customise the plot using the raw power of mat
 Indeed, in many of the more advanced examples, we will call methods on <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> to customise the plots further.
 (Note that using <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> methods doesn’t require you, the user, to import matplotlib, so that’s fair game!)</p>
 <section id="staging-and-the-pha">
-<h2>Staging and the PHA<a class="headerlink" href="#staging-and-the-pha" title="Permalink to this headline">¶</a></h2>
+<h2>Staging and the PHA<a class="headerlink" href="#staging-and-the-pha" title="Permalink to this heading">¶</a></h2>
 <p>Calling the <a class="reference internal" href="../../reference/dataset/#penguins.dataset._1D_PlotMixin.stage" title="penguins.dataset._1D_PlotMixin.stage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">1D</span></code></a> and <a class="reference internal" href="../../reference/dataset/#penguins.dataset._2D_PlotMixin.stage" title="penguins.dataset._2D_PlotMixin.stage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">2D</span></code></a> methods on Dataset objects has the main job of constructing <a class="reference internal" href="../../reference/plotting/#penguins.pgplot.PlotObject1D" title="penguins.pgplot.PlotObject1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlotObject1D</span></code></a> or <a class="reference internal" href="../../reference/plotting/#penguins.pgplot.PlotObject2D" title="penguins.pgplot.PlotObject2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlotObject2D</span></code></a> objects respectively.
 These objects essentially encapsulate <em>all</em> the information that <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.5.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> (1D) and <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.5.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a> (2D) need to plot the graphs.
 For example, for 2D spectra, all the contour levels are calculated from the parameters given inside the initialisation code of <a class="reference internal" href="../../reference/plotting/#penguins.pgplot.PlotObject2D" title="penguins.pgplot.PlotObject2D"><code class="xref any py py-class docutils literal notranslate"><span class="pre">PlotObject2D</span></code></a>.</p>
@@ -56,7 +57,7 @@ At this point, we have not yet actually called any matplotlib functions; we have
 <p>Since the PlotObjects contain <em>all</em> the information that needs to be passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.5.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.plot</span></code></a> or <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="(in Matplotlib v3.5.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.contour</span></code></a>, this means that any dataset-specific options must be passed along to <code class="docutils literal notranslate"><span class="pre">stage()</span></code>.</p>
 </section>
 <section id="constructing-a-plot">
-<h2>Constructing a plot<a class="headerlink" href="#constructing-a-plot" title="Permalink to this headline">¶</a></h2>
+<h2>Constructing a plot<a class="headerlink" href="#constructing-a-plot" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot</span></code></a> performs several jobs when it is called:</p>
 <ol class="arabic simple">
 <li><p>If the <code class="docutils literal notranslate"><span class="pre">ax</span></code> parameter is not provided, then chooses the currently active <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> to plot spectra on.</p></li>
@@ -70,13 +71,13 @@ At this point, we have not yet actually called any matplotlib functions; we have
 <p>If you want to do anything with the <a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> objects, <strong>the best time to do it is after calling</strong> <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot</span></code></a>. It conveniently returns <code class="docutils literal notranslate"><span class="pre">(fig,</span> <span class="pre">ax)</span></code> for you to carry out any other methods you may want to (if you didn’t already have a handle to the <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>).</p>
 </section>
 <section id="displaying-the-plot">
-<h2>Displaying the plot<a class="headerlink" href="#displaying-the-plot" title="Permalink to this headline">¶</a></h2>
+<h2>Displaying the plot<a class="headerlink" href="#displaying-the-plot" title="Permalink to this heading">¶</a></h2>
 <p>At this stage all the necessary matplotlib functions have been called, so all we need to do is to show the plot using <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.5.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.show()</span></code></a>.
 Penguins does not try to further complicate this step.
 The only suggestion we make is to use <a class="reference internal" href="../../reference/plotting/#penguins.show" title="penguins.show"><code class="xref any py py-func docutils literal notranslate"><span class="pre">penguins.show()</span></code></a> instead: it saves you from having to import matplotlib. :)</p>
 </section>
 <section id="addendum">
-<h2>Addendum<a class="headerlink" href="#addendum" title="Permalink to this headline">¶</a></h2>
+<h2>Addendum<a class="headerlink" href="#addendum" title="Permalink to this heading">¶</a></h2>
 <p>Depending on your familiarity with matplotlib, you may find that the three-stage model is somewhat similar to, or rather dissimilar from, matplotlib itself.
 It is rather different from typical matplotlib usage, where you don’t need to “construct” a plot; you just call <code class="docutils literal notranslate"><span class="pre">plt.plot()</span></code> or something similar, then go straight to the “display” stage.
 However, behind the scenes each call to <code class="docutils literal notranslate"><span class="pre">plt.plot()</span></code> actually creates an <a class="reference external" href="https://matplotlib.org/stable/api/artist_api.html#matplotlib.artist.Artist" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Artist</span></code></a> object which is not <em>actually</em> drawn on the figure until you call <code class="docutils literal notranslate"><span class="pre">fig.draw()</span></code> or something similar.
@@ -150,7 +151,7 @@ In a way, penguins’ staging is similar to running <code class="docutils litera
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -167,7 +168,7 @@ In a way, penguins’ staging is similar to running <code class="docutils litera
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -14,7 +14,7 @@ If matplotlib already has a way to do something, then penguins will not re-imple
 .. note::
 
    This tutorial assumes almost no prior knowledge of matplotlib.
-   However, if you are not familiar with matplotlib, it is a good idea to check out some of the `introductory matplotlib tutorials <https://matplotlib.org/tutorials/index.html>`_.
+   However, if you are not familiar with matplotlib, it is a good idea to check out some of the :std:doc:`introductory Matplotlib tutorials <tutorials/index>`
    matplotlib's documentation itself -- although very extensive -- can appear slightly intimidating to a beginner.
    There are also a great number of other tutorials online which may be more approachable.
 
@@ -72,5 +72,24 @@ Because the Figure encompasses both Axes, the suptitle is sort of an overarching
     pg.show()
 
 You might notice that the Figure suptitle overlaps with the Axes titles.
-This can be fixed with a call to `cleanup_figure()` at the very end (just before `show()`), but we won't delve into that here; the point is just to illustrate some of matplotlib's Axes- and Figure-based methods.
+This can be fixed with a call to `cleanup_figure()` at the very end. 
+.. plot::
 
+    import penguins as pg
+
+    data_1d = pg.read(".", 1, 1)
+    data_2d = pg.read(".", 2, 1)
+
+    fig, axs = pg.subplots2d(1, 2)
+
+    data_1d.stage(axs[0])   # 1D data on the left
+    pg.mkplot(axs[0])
+    axs[0].set_title("1D data")
+
+    data_2d.stage(axs[1])   # 2D data on the right
+    pg.mkplot(axs[1])
+    axs[1].set_title("2D data")
+
+    fig.suptitle("Some NMR data with different dimensions")
+    pg.cleanup_figure()
+    pg.show()

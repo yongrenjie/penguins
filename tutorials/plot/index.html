@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Tutorial 2: Plotting data &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
@@ -37,11 +38,11 @@
           <div class="body" role="main">
             
   <section id="tutorial-2-plotting-data">
-<h1>Tutorial 2: Plotting data<a class="headerlink" href="#tutorial-2-plotting-data" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial 2: Plotting data<a class="headerlink" href="#tutorial-2-plotting-data" title="Permalink to this heading">¶</a></h1>
 <p>In this tutorial (as well as all the following ones), we will reuse the <code class="docutils literal notranslate"><span class="pre">data_1d</span></code> and <code class="docutils literal notranslate"><span class="pre">data_2d</span></code> objects that we imported in the previous tutorial.</p>
 <hr class="docutils" />
 <section id="the-three-stages-of-plotting">
-<h2>The three stages of plotting<a class="headerlink" href="#the-three-stages-of-plotting" title="Permalink to this headline">¶</a></h2>
+<h2>The three stages of plotting<a class="headerlink" href="#the-three-stages-of-plotting" title="Permalink to this heading">¶</a></h2>
 <p>Plotting spectra using penguins is accomplished through three distinct steps:</p>
 <ol class="arabic">
 <li><p><strong>Staging</strong>. In this step, a spectrum (i.e. the dataset returned by <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>) is associated with an <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> which it will be plotted on.</p>
@@ -60,7 +61,7 @@
 </section>
 <hr class="docutils" />
 <section id="a-minimal-1d-example">
-<h2>A minimal 1D example<a class="headerlink" href="#a-minimal-1d-example" title="Permalink to this headline">¶</a></h2>
+<h2>A minimal 1D example<a class="headerlink" href="#a-minimal-1d-example" title="Permalink to this heading">¶</a></h2>
 <p><strong>Staging</strong> in general simply refers to calling the <code class="docutils literal notranslate"><span class="pre">stage()</span></code> method on the Dataset objects:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span>    <span class="c1"># we imported this in tutorial 1</span>
 <span class="go">Dataset1D(&#39;/Users/yongrenjie/penguins/tests/nmrdata/1/pdata/1&#39;)</span>
@@ -88,7 +89,7 @@ These will be described shortly in <a class="reference internal" href="../custom
 </section>
 <hr class="docutils" />
 <section id="a-minimal-2d-example">
-<h2>A minimal 2D example<a class="headerlink" href="#a-minimal-2d-example" title="Permalink to this headline">¶</a></h2>
+<h2>A minimal 2D example<a class="headerlink" href="#a-minimal-2d-example" title="Permalink to this heading">¶</a></h2>
 <p>2D spectra are plotted in exactly the same way:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span>   <span class="c1"># we imported this earlier, too</span>
 <span class="go">Dataset2D(&#39;/Users/yongrenjie/penguins/tests/nmrdata/2/pdata/1&#39;)</span>
@@ -106,7 +107,7 @@ In <a class="reference internal" href="../customise_2d/"><span class="doc">Tutor
 </section>
 <hr class="docutils" />
 <section id="axis-labels-and-titles">
-<h2>Axis labels and titles<a class="headerlink" href="#axis-labels-and-titles" title="Permalink to this headline">¶</a></h2>
+<h2>Axis labels and titles<a class="headerlink" href="#axis-labels-and-titles" title="Permalink to this heading">¶</a></h2>
 <p>Before moving on, let’s take a moment to look at one of the most basic ways of customising a plot.
 The <em>x</em>-axis label, <em>y</em>-axis label, and title can be specified as arguments to the <code class="docutils literal notranslate"><span class="pre">mkplot()</span></code> function during the construction stage.
 An example will likely be the clearest way of illustrating this.
@@ -190,7 +191,7 @@ The following plot is exactly the same as the 2D plot above, just with several n
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -207,7 +208,7 @@ The following plot is exactly the same as the 2D plot above, just with several n
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

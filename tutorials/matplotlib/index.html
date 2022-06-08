@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Tutorial 7: Using matplotlib &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="tutorial-7-using-matplotlib">
-<h1>Tutorial 7: Using matplotlib<a class="headerlink" href="#tutorial-7-using-matplotlib" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial 7: Using matplotlib<a class="headerlink" href="#tutorial-7-using-matplotlib" title="Permalink to this heading">¶</a></h1>
 <p>penguins is a <em>wrapper</em> around matplotlib, which is a library that provides plotting capabilities in Python.
 What this means is that all the code in penguins ultimately calls a series of matplotlib functions.
 The penguins functions are provided as “higher-level” constructs, which allow you to directly work with and plot NMR data, without worrying about “low-level” implementation details.</p>
@@ -47,16 +48,16 @@ If matplotlib already has a way to do something, then penguins will not re-imple
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This tutorial assumes almost no prior knowledge of matplotlib.
-However, if you are not familiar with matplotlib, it is a good idea to check out some of the <a class="reference external" href="https://matplotlib.org/tutorials/index.html">introductory matplotlib tutorials</a>.
+However, if you are not familiar with matplotlib, it is a good idea to check out some of the <span class="xref std std-doc">introductory Matplotlib tutorials</span>
 matplotlib’s documentation itself – although very extensive – can appear slightly intimidating to a beginner.
 There are also a great number of other tutorials online which may be more approachable.</p>
 </div>
 <hr class="docutils" />
 <section id="accessing-figures-and-axes">
-<h2>Accessing Figures and Axes<a class="headerlink" href="#accessing-figures-and-axes" title="Permalink to this headline">¶</a></h2>
+<h2>Accessing Figures and Axes<a class="headerlink" href="#accessing-figures-and-axes" title="Permalink to this heading">¶</a></h2>
 <p>Two of the key objects required for matplotlib are the <a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> objects.
 The <a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> refers to the <em>entire</em> plot area, whereas <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> refers only to one set of, well, axes.
-For more information, see the official matplotlib documentation on <a class="reference external" href="https://matplotlib.org/stable/gallery/showcase/anatomy.html" title="(in Matplotlib v3.5.2)"><span>Anatomy of a figure</span></a>, or any other online resource.</p>
+For more information, see the official matplotlib documentation on <span class="xref std std-doc">gallery/showcase/anatomy</span>, or any other online resource.</p>
 <p>The easiest way to access these is via the <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a> function.
 Up until now, we have not bothered to collect anything as the return value from <a class="reference internal" href="../../reference/plotting/#penguins.mkplot" title="penguins.mkplot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">mkplot()</span></code></a>.
 In fact, it returns precisely the <a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> and <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> objects.</p>
@@ -101,7 +102,28 @@ Because the Figure encompasses both Axes, the suptitle is sort of an overarching
 <figure class="align-default">
 <img alt="../../_images/matplotlib-2.svg" class="plot-directive" src="../../_images/matplotlib-2.svg" /></figure>
 <p>You might notice that the Figure suptitle overlaps with the Axes titles.
-This can be fixed with a call to <a class="reference internal" href="../../reference/plotting/#penguins.cleanup_figure" title="penguins.cleanup_figure"><code class="xref any py py-func docutils literal notranslate"><span class="pre">cleanup_figure()</span></code></a> at the very end (just before <a class="reference internal" href="../../reference/plotting/#penguins.show" title="penguins.show"><code class="xref any py py-func docutils literal notranslate"><span class="pre">show()</span></code></a>), but we won’t delve into that here; the point is just to illustrate some of matplotlib’s Axes- and Figure-based methods.</p>
+This can be fixed with a call to <a class="reference internal" href="../../reference/plotting/#penguins.cleanup_figure" title="penguins.cleanup_figure"><code class="xref any py py-func docutils literal notranslate"><span class="pre">cleanup_figure()</span></code></a> at the very end.
+.. plot:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">penguins</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="n">data_1d</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">data_2d</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">subplots2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">data_1d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># 1D data on the left</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;1D data&quot;</span><span class="p">)</span>
+
+<span class="n">data_2d</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>   <span class="c1"># 2D data on the right</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mkplot</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;2D data&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Some NMR data with different dimensions&quot;</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">cleanup_figure</span><span class="p">()</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -174,7 +196,7 @@ This can be fixed with a call to <a class="reference internal" href="../../refer
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -191,7 +213,7 @@ This can be fixed with a call to <a class="reference internal" href="../../refer
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

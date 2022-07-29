@@ -1650,7 +1650,7 @@ class Dataset1DProjVirtual(Dataset1DProj):
         self.sign = sign  # "positive" or "negative", or None for sums/slices
         self.index_bounds = index_bounds  # only for projections/sums
         self.index = index                # only for slice
-        self._rr = rr
+        self._rr = np.copy(rr)
         # Step 2 of the docstring
         Dataset1DProj.__init__(self, path)
         # Step 3 of the docstring

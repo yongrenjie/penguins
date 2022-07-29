@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Tutorial 1: Reading data &#8212; penguins  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -84,7 +84,7 @@ All parameters are referred to using their standard Bruker names, just as you wo
 </div>
 <p>So, we can tell that this is a proton spectrum acquired using a 90° pulse width of 9.22 µs (the units that are used are always consistent with those in TopSpin).</p>
 <p>For the 2D case, many parameters differ between the two spectral dimensions.
-In these cases, they are returned either as a numpy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><code class="xref any docutils literal notranslate"><span class="pre">ndarray</span></code></a> or as a tuple.
+In these cases, they are returned either as a numpy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.23)"><code class="xref any docutils literal notranslate"><span class="pre">ndarray</span></code></a> or as a tuple.
 The first always refers to the indirect-dimension (<span class="math notranslate nohighlight">\(f_1\)</span>) value, and the second to the direct-dimension (<span class="math notranslate nohighlight">\(f_2\)</span>) value:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span>    <span class="c1"># no difference between f1 and f2, so just a plain float</span>
 <span class="go">10.83</span>
@@ -185,7 +185,7 @@ The first always refers to the indirect-dimension (<span class="math notranslate
       &copy;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

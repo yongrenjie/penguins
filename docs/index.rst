@@ -23,7 +23,7 @@ The documentation is divided into five major sections (largely adhering to the p
 
 2. *(In progress)* **How-to guides**: ways of accomplishing specific tasks which are likely to occur frequently.
 
-3. *(Not yet written)* **Gallery**: case studies from real-life plots with step-by-step walkthroughs.
+3. *(In progress)* **Gallery**: case studies from real-life plots with step-by-step walkthroughs.
 
 4. **Explanations**: a more in-depth look at how penguins works behind the scenes.
 
@@ -45,6 +45,7 @@ Contents
    install
    tutorials/index
    howto/index
+   gallery/index
    explanations/index
    reference/index
 

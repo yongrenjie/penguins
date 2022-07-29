@@ -6,7 +6,7 @@ from collections import UserDict, abc
 import itertools
 from pathlib import Path
 from typing import (Any, Union, Tuple, Optional, Iterable,
-                    TypeVar, Callable, overload)
+                    List, TypeVar, Callable, overload)
 
 import numpy as np               # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
@@ -17,6 +17,19 @@ from .type_aliases import *
 
 
 # -- Reading in data ------------------------------------
+
+@overload
+def read(path: Union[str, Path], expno: int, procno: int) -> TDatasetnD: ...
+@overload
+def read(path: Union[str, Path], expno: int) -> TDatasetnD: ...
+@overload
+def read(path: Union[str, Path], expno: int, procno: Iterable[int]) -> List[TDatasetnD]: ...
+@overload
+def read(path: Union[str, Path], expno: Iterable[int], procno: int) -> List[TDatasetnD]: ...
+@overload
+def read(path: Union[str, Path], expno: Iterable[int]) -> List[TDatasetnD]: ...
+@overload
+def read(path: Union[str, Path], expno: Iterable[int], procno: Iterable[int]) -> List[TDatasetnD]: ...
 
 @export
 def read(path: Union[str, Path],
@@ -58,7 +71,7 @@ def read(path: Union[str, Path],
     """
     # One expno and one procno
     if isinstance(expno, int) and isinstance(procno, int):
-        return read_abs(Path(path) / str(expno) / "pdata" / str(procno))
+        return _read_abs(Path(path) / str(expno) / "pdata" / str(procno))
 
     # At least one iterable passed
     else:
@@ -69,22 +82,18 @@ def read(path: Union[str, Path],
             procno = [procno]
         # Return the datasets as a list. Since the actual NMR data is already
         # loaded lazily, there's little point in producing a generator.
-        return [read_abs(Path(path) / str(e) / "pdata" / str(p))
+        return [_read_abs(Path(path) / str(e) / "pdata" / str(p))
                 for (e, p) in itertools.product(expno, procno)]
 
 
-@export
-def read_abs(path: Union[str, Path]
+def _read_abs(path: Path
              ) -> TDatasetnD:
-    """Create a Dataset object directly from a procno folder.
-
-    There is likely no reason to ever use this because `read()` is far easier
-    to use, especially if you are plotting multiple spectra with different
-    expnos from the same folder.
+    """Create a Dataset object directly from a procno folder. You should use
+    `read()` instead of this.
 
     Parameters
     ----------
-    path : str or pathlib.Path
+    path : pathlib.Path
         Path to the procno folder.
 
     Returns
@@ -92,24 +101,19 @@ def read_abs(path: Union[str, Path]
     Dataset
         A `Dataset1D`, `Dataset1DProj`, or `Dataset2D` object depending on the
         detected spectrum dimensionality.
-
-    See Also
-    --------
-    read : The preferred interface for importing datasets.
     """
-    p = Path(path)
     # Figure out which type of spectrum it is.
-    if not (p / "procs").exists() or not (p.parents[1] / "acqus").exists():
-        raise FileNotFoundError(f"Invalid path to spectrum {p}")
-    if (p.parents[1] / "ser").exists():
-        if (p / "used_from").exists():
-            return Dataset1DProj(p)
+    if not (path / "procs").exists() or not (path.parents[1] / "acqus").exists():
+        raise FileNotFoundError(f"Invalid path to spectrum {path}")
+    if (path.parents[1] / "ser").exists():
+        if (path / "used_from").exists():
+            return Dataset1DProj(path)
         else:
-            return Dataset2D(p)
-    elif (p.parents[1] / "fid").exists():
-        return Dataset1D(p)
+            return Dataset2D(path)
+    elif (path.parents[1] / "fid").exists():
+        return Dataset1D(path)
     else:
-        raise FileNotFoundError(f"Invalid path to spectrum {p}:"
+        raise FileNotFoundError(f"Invalid path to spectrum {path}:"
                                 " no raw data was found. Have you acquired the"
                                 " spectrum yet?")
 

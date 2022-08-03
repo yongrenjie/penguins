@@ -11,7 +11,7 @@ setup(
     version=__version__,
     author="Jonathan Yong",
     author_email="yongrenjie@gmail.com",
-    description=("Penguins: an Easy, NPE-free Gateway to Unpacking and"
+    description=("Penguins: an ENjoyable Gateway to Unpacking and"
                  " Illustrating NMR Spectra"),
     long_description=long_description,
     long_description_content_type="text/markdown",

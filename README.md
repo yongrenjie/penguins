@@ -3,7 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/penguins.svg)](https://badge.fury.io/py/penguins)
 [![License](https://img.shields.io/github/license/yongrenjie/penguins)](https://en.wikipedia.org/wiki/MIT_License)
 
-## Penguins: an Easy, NPE-free Gateway to Unpacking and Illustrating NMR Spectra
+## Penguins: an ENjoyable Gateway to Unpacking and Illustrating NMR Spectra
 
 `penguins` is a Python 3 package intended mainly for generating publication-quality plots of NMR spectra in a programmatic, reproducible fashion.
 It also performs a very small number of processing and analysis of NMR spectra, namely integration as well as generation of projections/slices.
@@ -54,7 +54,3 @@ Documentation can be found at https://yongrenjie.github.io/penguins.
 There are tutorial-type articles intended for entirely new users; I'm working on documentation beyond that, but it's not my main job, so it's a little slow.
 
 Note that `penguins` is still in development, so the interface should not be assumed to be (too) stable. For now, I am working directly on the master branch, and rebasing/force pushing may occur without warning.
-
--------
-
-(The 'NPE' in the name stands for the "billion-dollar mistake", i.e. the `NullPointerException` familiar to TopSpin users.)

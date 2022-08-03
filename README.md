@@ -29,8 +29,7 @@ And here's a similar plot that can be done in under 20 lines of PEP8-compliant c
 ```python
 import penguins as pg
 
-hmqc, hsqc, cosy, noesy = (pg.read("penguins-testdata", expno)
-                           for expno in range(22001, 22005))
+hmqc, hsqc, cosy, noesy = pg.read("penguins-testdata", range(22001, 22005))
 
 fig, axs = pg.subplots2d(2, 2)
 hmqc.stage(axs[0, 0], levels=7e3, f1_bounds="110..130", f2_bounds="7..9.5")
@@ -54,3 +53,6 @@ Documentation can be found at https://yongrenjie.github.io/penguins.
 There are tutorial-type articles intended for entirely new users; I'm working on documentation beyond that, but it's not my main job, so it's a little slow.
 
 Note that `penguins` is still in development, so the interface should not be assumed to be (too) stable. For now, I am working directly on the master branch, and rebasing/force pushing may occur without warning.
+
+**NOTE: You may want to silence type checking.** There are plenty of issues with this which I have yet to fix.
+I have chosen to design penguins to provide Pythonic, friendly syntax, which unfortunately makes it *very* difficult to correctly specify types.

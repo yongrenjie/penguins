@@ -1,3 +1,13 @@
+# NOTE:
+
+`penguins` is not under active development.
+I mostly used this as a tool for my own papers and my PhD thesis, and it served me admirably; however, I've since moved on to other stuff, and I don't have the time or motivation to work on new features.
+
+If you are using it, and would like any help with using it to make plots / analyse data, I'm more than happy to help; just write to me at {myGithubUsername} at gmail dot com.
+Please put `penguins` in the subject title, or I will ignore it.
+
+---------------------------------------
+
 [![GitHub Actions Build Status](https://github.com/yongrenjie/penguins/workflows/tests/badge.svg?branch=dev-0.2)](https://github.com/yongrenjie/penguins/actions)
 [![CodeCov coverage](https://codecov.io/gh/yongrenjie/penguins/branch/dev-0.2/graph/badge.svg?token=S8U2LJFVPY)](https://codecov.io/gh/yongrenjie/penguins)
 [![PyPI version](https://badge.fury.io/py/penguins.svg)](https://badge.fury.io/py/penguins)

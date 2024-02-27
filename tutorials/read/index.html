@@ -1,22 +1,19 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Tutorial 1: Reading data &#8212; penguins  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=6173e811" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="shortcut icon" href="../../_static/favicon-32x32.png"/>
+    <link rel="icon" href="../../_static/favicon-32x32.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
     <link rel="next" title="Tutorial 2: Plotting data" href="../plot/" />
@@ -24,8 +21,9 @@
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -38,13 +36,13 @@
           <div class="body" role="main">
             
   <section id="tutorial-1-reading-data">
-<h1>Tutorial 1: Reading data<a class="headerlink" href="#tutorial-1-reading-data" title="Permalink to this heading">¶</a></h1>
+<h1>Tutorial 1: Reading data<a class="headerlink" href="#tutorial-1-reading-data" title="Link to this heading">¶</a></h1>
 <p>In TopSpin, each NMR experiment has its own “expno”, and can be found in a folder numbered by its expno.
 If you downloaded the penguins test data, you will find that it contains two such numbered datasets, which correspond to different “expnos” in TopSpin.</p>
 <p>Of course, feel free to use your own data: your top-level data directory should also contain one or more numbered expno folders, and each of these datasets must have already been processed in TopSpin.</p>
 <hr class="docutils" />
 <section id="importing-spectra-pg-read">
-<h2>Importing spectra: pg.read()<a class="headerlink" href="#importing-spectra-pg-read" title="Permalink to this heading">¶</a></h2>
+<h2>Importing spectra: pg.read()<a class="headerlink" href="#importing-spectra-pg-read" title="Link to this heading">¶</a></h2>
 <p>Spectra can be imported using the <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function.
 <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> takes three parameters: the path to the <em>spectrum folder</em>, the <em>expno</em>, and the <em>procno</em>.</p>
 <p>We are going to assume here that you are using the penguins test data, but if you aren’t, you just need to adapt these three arguments accordingly.
@@ -73,7 +71,7 @@ If you call the <a class="reference internal" href="../../reference/reading/#pen
 </section>
 <hr class="docutils" />
 <section id="accessing-spectrum-parameters">
-<h2>Accessing spectrum parameters<a class="headerlink" href="#accessing-spectrum-parameters" title="Permalink to this heading">¶</a></h2>
+<h2>Accessing spectrum parameters<a class="headerlink" href="#accessing-spectrum-parameters" title="Link to this heading">¶</a></h2>
 <p>Once imported using <a class="reference internal" href="../../reference/reading/#penguins.read" title="penguins.read"><code class="xref any py py-func docutils literal notranslate"><span class="pre">read()</span></code></a>, spectrum parameters can be accessed using dictionary-like syntax.
 All parameters are referred to using their standard Bruker names, just as you would type them in the TopSpin command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_1d</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span>
@@ -84,7 +82,7 @@ All parameters are referred to using their standard Bruker names, just as you wo
 </div>
 <p>So, we can tell that this is a proton spectrum acquired using a 90° pulse width of 9.22 µs (the units that are used are always consistent with those in TopSpin).</p>
 <p>For the 2D case, many parameters differ between the two spectral dimensions.
-In these cases, they are returned either as a numpy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.23)"><code class="xref any docutils literal notranslate"><span class="pre">ndarray</span></code></a> or as a tuple.
+In these cases, they are returned either as a numpy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref any docutils literal notranslate"><span class="pre">ndarray</span></code></a> or as a tuple.
 The first always refers to the indirect-dimension (<span class="math notranslate nohighlight">\(f_1\)</span>) value, and the second to the direct-dimension (<span class="math notranslate nohighlight">\(f_2\)</span>) value:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_2d</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span>    <span class="c1"># no difference between f1 and f2, so just a plain float</span>
 <span class="go">10.83</span>
@@ -182,11 +180,11 @@ The first always refers to the indirect-dimension (<span class="math notranslate
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020–2022, Jonathan Yong.
+      &#169;2020–2022, Jonathan Yong.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
       |
       <a href="../../_sources/tutorials/read.rst.txt"

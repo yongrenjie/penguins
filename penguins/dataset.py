@@ -1272,8 +1272,9 @@ class Dataset1DProj(_2D_RawDataMixin,
         scale : ndarray
             The appropriate slice of chemical shifts.
         """
-        max_ppm = self["o1p"][self.proj_axis] + self["sw"][self.proj_axis]/2
-        min_ppm = self["o1p"][self.proj_axis] - self["sw"][self.proj_axis]/2
+        max_ppm = self["offset"][self.proj_axis]
+        min_ppm = max_ppm - (self["sw_p"][self.proj_axis]
+                             / self["sfo1"][self.proj_axis])
         full_scale = np.linspace(max_ppm, min_ppm, self["si"])
         return full_scale[self.bounds_to_slice(bounds)]
 

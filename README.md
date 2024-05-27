@@ -1,10 +1,10 @@
-# NOTE:
+# Update 2024
 
-`penguins` is not under active development.
-I mostly used this as a tool for my own papers and my PhD thesis, and it served me admirably; however, I've since moved on to other stuff, and I don't have the time or motivation to work on new features.
+I am no longer maintaining `penguins`.
+I mostly used this as a tool for my own papers and my PhD thesis, and it served me admirably.
+However, I'm no longer working in chemistry and so I don't use this any more.
 
-If you are using it, and would like any help with using it to make plots / analyse data, I'm more than happy to help; just write to me at {myGithubUsername} at gmail dot com.
-Please put `penguins` in the subject title, or I will ignore it.
+If you run into bugs, consider them features :)
 
 ---------------------------------------
 
